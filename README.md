@@ -36,7 +36,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 - Print
 - Query
 
-![Screenshot](https://tmcgee.github.io/cmv-wab-widgets/images/wab.jpg)
+![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab.jpg)
 
 
 ### Custom `AddLayer` Widget
@@ -45,7 +45,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-addlayer)
 - [Original Widget Source](https://github.com/softwhere/AddLayer-Widget)
 
-![Screenshot](https://tmcgee.github.io/cmv-wab-widgets/images/wab-addlayer.jpg)
+![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-addlayer.jpg)
 
 
 ### Custom `Aloha Threat Zone` Widget
@@ -54,7 +54,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-alohathreatzone)
 - [Original Widget Source](https://geonet.esri.com/docs/DOC-7733)
 
-![Screenshot](https://tmcgee.github.io/cmv-wab-widgets/images/wab-alohathreatzone.jpg)
+![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-alohathreatzone.jpg)
 
 
 ### Custom `Draw & Measure` and `SaveSession` Widgets
@@ -65,7 +65,7 @@ Both of these widgets have been modified from the original to provide additional
 - [Original Measure Widget Source](https://geonet.esri.com/docs/DOC-3209)
 - [Original SaveSession Source](https://github.com/softwhere/SaveSession-Widget)
 
-![Screenshot](https://tmcgee.github.io/cmv-wab-widgets/images/wab-measure.jpg)
+![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-measure.jpg)
 
 
 ### Custom `Enhanced Bookmarks` Widget
@@ -73,7 +73,7 @@ Both of these widgets have been modified from the original to provide additional
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-ebookmarks)
 - [Original Widget Source](https://geonet.esri.com/docs/DOC-6889)
 
-![Screenshot](https://tmcgee.github.io/cmv-wab-widgets/images/wab-ebookmarks.jpg)
+![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-ebookmarks.jpg)
 
 
 ### Custom `Enhanced Query` Widget
@@ -81,7 +81,7 @@ Both of these widgets have been modified from the original to provide additional
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-enhancedquery)
 - [Original Widget Source](https://github.com/kevinsagis/EnhancedQuery)
 
-![Screenshot](https://tmcgee.github.io/cmv-wab-widgets/images/wab-enhancedquery.jpg)
+![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-enhancedquery.jpg)
 
 
 ### Custom `Wikipedia Search` Widget
@@ -89,7 +89,7 @@ Both of these widgets have been modified from the original to provide additional
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-wikipediasearch)
 - [Original Widget Source](https://github.com/kevinsagis/EnhancedQuery)
 
-![Screenshot](https://tmcgee.github.io/cmv-wab-widgets/images/wab-wikipediasearch.jpg)
+![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-wikipediasearch.jpg)
 
 
 ## Requirements
