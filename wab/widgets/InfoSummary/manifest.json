@@ -1,0 +1,23 @@
+{
+  "name": "InfoSummary",
+  "2D": true,
+  "3D": false,
+  "platform": "HTML",
+  "version": "2.0.1",
+  "wabVersion": "2.0.1",
+  "author": "ArcGIS for State Government",
+  "description": "Displays feature count based on map extent.",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {
+		"inPanel":false,
+		"hasLocale": true,
+		"hasConfig":true,
+		"hasUIFile":true,
+		"hasSettingPage":true,
+		"hasSettingUIFile":true,
+		"hasSettingLocale":true,
+		"IsController":false,
+		"keepConfigAfterMapSwitched": false
+  }
+}

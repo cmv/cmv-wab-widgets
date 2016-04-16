@@ -1,0 +1,7 @@
+<div>
+	<div class="searchArea">
+		<input type="text" name="searchquery" value="" data-dojo-type="dijit/form/TextBox" data-dojo-props="trim:true, placeholder:'Search'" id="searchquery" data-dojo-attach-point="queryText" data-dojo-attach-event="onKeyUp:searchOnKeyUpHandler" />
+		<button data-dojo-type="dojox/form/BusyButton" data-dojo-props="busyLabel:'Searching'" data-dojo-attach-point="searchButton" data-dojo-attach-event="onClick:searchButtonOnClick">Search</button>
+	</div>
+	<ul class="resultsArea" data-dojo-attach-point="resultsArea"></ul>
+</div>

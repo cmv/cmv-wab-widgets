@@ -1,0 +1,34 @@
+<div class="js-fileapi-wrapper">
+  <div data-dojo-attach-point="tabAloha">
+    <div class="aloha-tab-node" data-dojo-attach-point="tabNode1">
+      <div>
+        <label style="padding-bottom:8px;">${nls.instruct1}</label><br/>
+        <input data-dojo-attach-point="fileInput" type="file" accept=".pas" style="width:100%;padding: 8px 0px;" class="js-fileapi-wrapper"><br/>
+        <label style="padding-bottom:8px;">${nls.instruct2}</label>
+        <div data-dojo-attach-point="drawBox" data-dojo-type="jimu/dijit/DrawBox"
+           data-dojo-props="types:['point'],showClear:false" style="padding-bottom:8px;"></div>
+        <a style="float:right; margin-right:10px" href="#" data-dojo-attach-point="btnClear1">${nls.clear}</a>
+      </div>
+    </div>
+    <div class="aloha-tab-node" data-dojo-attach-point="tabNode2">
+      <div data-dojo-attach-point="progressbar"></div>
+      <div class="option-div" data-dojo-attach-point="divOptions">
+        <a style="float:right; margin-right:10px" href="#" data-dojo-attach-point="btnClear2">${nls.clear}</a>
+      </div>
+      <hr style="clear:both;">
+      <div class="ctrlsDiv" style="width: 100%; height: 48px; line-height: 48px;">
+        <label data-dojo-attach-point="divResultMessage" style="float:left;">${nls.noFootprints}</label>
+        <div data-dojo-attach-point="layerOpacityDiv" style="display:none;">
+          <img src="widgets/AlohaThreatZone/images/alpha.png" title="${nls.alohatooltip}"
+               style="float:left;padding-top: 18px;margin-left: 24px;margin-right:8px;"/>
+          <div data-dojo-attach-point="layerAlpha" data-dojo-type="jimu/dijit/_Transparency"
+               data-dojo-props="alpha:1" style="font-size:13px;float:left;width:200px;"></div>
+        </div>
+      </div>
+      <div data-dojo-type="widgets/AlohaThreatZone/List" data-dojo-attach-point="list"
+           data-dojo-attach-event="click:_selectResultItem,footprintVisibilityChange:_footprintVisChange,opacityChange:_footprintOpacityChange"
+           class="aloha-list"></div>
+    </div>
+  </div>
+  <div data-dojo-type="jimu/dijit/LoadingShelter" data-dojo-attach-point="shelter" data-dojo-props="hidden:true" style="overflow:hidden;"></div>
+</div>

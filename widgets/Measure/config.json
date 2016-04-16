@@ -1,0 +1,56 @@
+{
+    "distanceUnits": [{
+        "unit": "FEET",
+        "abbr": " ft",
+        "precision": 1
+    }, {
+		"unit": "MILES",
+        "abbr": " mi",
+        "precision": 2
+    }, {
+        "unit": "KILOMETERS",
+        "abbr": " km",
+        "precision": 2
+    }, {
+        "unit": "NAUTICAL_MILES",
+        "abbr": " nm",
+        "precision": 2
+    }, {
+        "unit": "METERS",
+        "abbr": "m",
+        "precision": 1
+    }, {
+        "unit": "YARDS",
+        "abbr": " yd",
+        "precision": 1
+    }],
+    "areaUnits": [{
+        "unit": "ACRES",
+        "abbr": " ac",
+        "precision": 2
+    }, {
+        "unit": "SQUARE_MILES",
+        "abbr": " sq mi",
+        "precision": 2
+    }, {
+        "unit": "SQUARE_KILOMETERS",
+        "abbr": " sq km",
+        "precision": 2
+    }, {
+        "unit": "HECTARES",
+        "abbr": " ha",
+        "precision": 2
+    }, {
+        "unit": "SQUARE_METERS",
+        "abbr": " sq m",
+        "precision": 1
+    }, {
+        "unit": "SQUARE_FEET",
+        "abbr": " sq ft",
+        "precision": 1
+    }, {
+        "unit": "SQUARE_YARDS",
+        "abbr": " sq yd",
+        "precision": 1
+    }]
+}

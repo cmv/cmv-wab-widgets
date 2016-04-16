@@ -1,0 +1,134 @@
+.widget-aloha {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 265px;
+  min-height: 279px;
+}
+
+.jimu-widget-frame>.widget-aloha>.jimu-tab>.control {
+  margin: -14px -14px 0 -14px;
+}
+
+.jimu-widget-frame>.widget-aloha>.jimu-tab>.jimu-viewstack,
+.jimu-container>.widget-aloha>.jimu-tab>.jimu-viewstack {
+  position: absolute !important;
+  top: 45px !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  height: auto;
+  margin-bottom: -14px;
+}
+
+.widget-aloha>.jimu-tab>.jimu-viewstack{
+  position: absolute !important;
+  top: 45px !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  height: auto;
+  margin-bottom: -14px;
+}
+
+.widget-aloha .aloha-tab-node {
+  position: absolute !important;
+  width: 100% !important;
+  height: auto !important;
+  top: 0 !important;
+  bottom: 0 !important;
+}
+
+.aloha-list-item {
+  padding: 6px 3px;
+}
+
+.aloha-list-item .iconDiv {
+  float: left;
+  width: 40px;
+  height: 40px;
+}
+
+.aloha-list-item .uvDiv {
+  width: 100%;
+  height: 40px;
+  clear: both;
+}
+
+.aloha-list-item .visibleCB {
+  float: left;
+}
+
+.aloha-list-item .uvLabel {
+  line-height: 40px;
+  white-space: pre;
+}
+
+.aloha-list-item .label {
+  white-space: pre;
+  float: left;
+}
+
+.aloha-list-item .ctrlsDiv {
+  margin-bottom: 3px;
+  width: 100%;
+  height: 20px;
+}
+
+.aloha-list-item .modeltext {
+  white-space: pre;
+}
+
+.aloha-list-item.alt {
+  background-color: #ebebeb;
+}
+
+.aloha-list-item.selected {
+  background-color: #d9dde0;
+}
+
+.aloha-list-item.selected.alt {
+  background-color: #d9dde0;
+}
+
+.aloha-list-item:hover {
+  background-color: #dcdcdc;
+}
+
+.aloha-list-item.alt:hover {
+  background-color: #dcdcdc;
+}
+
+.aloha-list-item.selected:hover {
+  background-color: #d9dde0;
+}
+
+.aloha-list-item.selected.alt:hover {
+  background-color: #d9dde0;
+}
+
+.widget-aloha .aloha-list {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  left: 0;
+  right: 0;
+  top: 85px;
+  bottom: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.aloha-list-container {
+  min-width: 100%;
+  height: 100%;
+  vertical-align: middle;
+  float: left;
+  position: relative;
+}
+
+.widget-aloha .option-div {
+  font-size: 14px;
+  padding-left: 10px;
+  height: 16px;
+}

@@ -1,0 +1,25 @@
+<div style="width:100%;height:100%;">
+  <div class="general-setting">
+    <span class="group-label">${nls.generalSetting}</span>
+    <table class="general-setting-table">
+      <tr>
+        <td class="first">
+          <span class="source-label">${nls.zoomPercent}</span>
+        </td>
+        <td class="second">
+          <input type="text" data-dojo-type="dijit/form/NumberSpinner" value="1.2" data-dojo-attach-point="zoomPercent" data-dojo-props="constraints: {min:0}, smallDelta: 0.1">
+        </td>
+      </tr>
+    </table>
+    <table class="general-setting-table">
+      <tr>
+        <td class="first">
+          <span class="source-label">${nls.pointsymbol}</span>
+        </td>
+        <td class="second">
+          <div data-dojo-attach-point="defaultPointSymbolPicker" data-dojo-type="jimu/dijit/SymbolPicker"></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

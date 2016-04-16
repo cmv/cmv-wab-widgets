@@ -1,0 +1,451 @@
+.jimu-widget-InfoSummary{
+  width: 360px;
+  height: 100%;
+}
+
+.jimu-widget-InfoSummary .legendLayer{
+  font-size: 12px;
+}
+
+.jimu-widget-InfoSummary .legendOff{
+  visibility:visible;
+  height:1px;
+  border-bottom: 1px solid #dcdcdc;
+  overflow:hidden;
+}
+
+.jimu-widget-InfoSummary .legendOn{
+  display:block;
+  width:100%;
+  visibility:visible;
+  height:auto;
+}
+
+.jimu-widget-InfoSummary .clusterSymbol{
+  margin: 4px 4px 4px 4px;
+  display:block;
+  width:35px;
+  visibility:visible;
+  height:35px;
+  float:left;
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;
+  border-radius: 30px;
+  opacity:0.60;
+  filter:alpha(opacity=30);
+  z-index:3;
+}
+
+.jimu-widget-InfoSummary .clusterSymbol2{
+  display:block;
+  width:100%;
+  visibility:visible;
+  height:auto;
+  float:left;
+  border-bottom: 1px solid #dcdcdc;
+  z-index:3;
+}
+
+/*.jimu-widget-InfoSummary .recImg2 {
+  padding-top: 4px;
+  width: 30px;
+  height: 30px;
+  z-index:1;
+}*/
+
+.jimu-widget-InfoSummary .recImg2 {
+  padding-top: 4px;
+	position: absolute;
+	left: 4px;
+	top: 5px;
+	width: 48px;
+	height: 48px;
+}
+
+.jimu-widget-InfoSummary .rounded {
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+}
+
+.jimu-widget-InfoSummary .roundedTop {
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+}
+
+.jimu-widget-InfoSummary .panelMain {
+	display: block;
+}
+
+.jimu-widget-InfoSummary .panelContent {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 360px;
+  height: 100%;
+}
+
+.jimu-widget-InfoSummary .page {
+	position: relative;
+	width: 360px;
+	margin-left: 0; /*-220px;*/
+	height: 100%;
+	display: block;
+	background-color: rgba(0,0,0,0.1);
+}
+
+.jimu-widget-InfoSummary .pageContent {
+  position:absolute;
+  left: 10px;
+  right: 10px;
+  top: 5px;
+  bottom: 5px;
+  overflow: hidden;
+  display: block;
+  background-color: rgba(255,255,255,1);
+}
+
+.jimu-widget-InfoSummary .pageHeader {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  text-align: center;
+  display: block;
+}
+
+.jimu-widget-InfoSummary .pageTitle {
+	position: absolute;
+	left: 0px;
+	bottom: 10px;
+	width : 100%;
+	height: auto;
+	font-size: 12px;
+	color: #ffffff;
+	/*line-height: 20px;*/
+	text-align: center;
+}
+
+.jimu-widget-InfoSummary .pageCounter {
+  position: absolute;
+  top: 40px;
+  width: auto;
+  height: auto;
+  bottom:25px;
+  left: 15px;
+  right:15px;
+  /*line-height: 140px;
+  font-family: Steelfish;*/
+  /*border: 10px solid rgba(0,0,0,1);
+  -moz-border-radius: 80px;
+  -webkit-border-radius: 80px;
+  border-radius: 80px;*/
+  /*opacity:0.3;
+  filter:alpha(opacity=30);*/
+}
+
+.jimu-widget-InfoSummary .pageClose {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: url(../images/btn4.png) no-repeat;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.jimu-widget-InfoSummary .pageBody {
+  position: absolute;
+  top: 280px;
+  bottom: 0px;
+  width: 100%;
+  display: block;
+  color: #000000;
+  font-size: 10px;
+  text-align: center;
+  padding: 0px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.jimu-widget-InfoSummary .resultsContent {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.jimu-widget-InfoSummary .rec {
+  position: relative;
+  width: 100%;
+  height: 70px;
+  display: block;
+  border-bottom: 1px solid #dcdcdc;
+  text-align: center;
+  line-height: 70px;
+  color: #6e6e6e;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+.jimu-widget-InfoSummary .recIcon {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(0,0,0,1);
+  -moz-border-radius: 41px;
+  -webkit-border-radius: 41px;
+  border-radius: 41px;
+  opacity:0.3;
+  filter:alpha(opacity=30);
+  cursor: pointer;
+}
+
+.jimu-widget-InfoSummary .thumb2{
+  width:43px; 
+  height:43px; 
+  align-content:center;
+  vertical-align:super;
+  z-index:1;
+}
+
+.jimu-widget-InfoSummary .active {
+  opacity:0.8;
+  filter:alpha(opacity=80);
+  background-color: rgba(0,0,0,0.25);
+}
+
+.jimu-widget-InfoSummary .recLabel {
+  position: absolute;
+  /*top: 20px;*/
+  /*max-width: 120px;*/
+  left: 60px;
+  /*right: 60px;*/
+  height: 100%;
+  display: block;
+  line-height: 50px;
+  font-size: 16px;
+  font-family: sans-serif;
+  font-weight: 500;
+  text-align: center;
+  /*margin-top: 1px;*/
+  vertical-align: central;
+  color: #000000;
+  margin-left: 20px;
+  margin-right: 20px;
+  /*margin-top: 20px;*/
+  /*margin-bottom: 20px;*/
+  text-overflow: ellipsis;
+}
+
+.jimu-widget-InfoSummary .recNum {
+  position: absolute;
+  right: 0px;
+  max-width: 120px;
+  min-width: 30px;
+  height: 100%;
+  line-height: 70px;
+  color: #000000;
+  text-align: center;
+  font-size: 28px;
+  font-family: Steelfish;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.jimu-widget-InfoSummary .innerMainPanelIcon {
+  max-width: 320px;
+  max-height: 200px;
+  vertical-align: middle;
+}
+
+.jimu-widget-InfoSummary .innerSVGPosition {
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.jimu-widget-InfoSummary .innerCirclePosition {
+  position: relative;
+  top: 8px;
+  left: 8px;
+}
+
+.jimu-widget-InfoSummary .pageBodyNoIcon {
+    position: absolute;
+	  top: 30px;
+	  bottom: 0px;
+	  width: 100%;
+	  display: block;
+	  color: #000000;
+	  font-size: 10px;
+	  text-align: center;
+	  padding: 0px;
+	  overflow-x: hidden;
+	  overflow-y:auto;
+	}
+
+ .jimu-widget-InfoSummary .pageHeaderNoIcon {
+	  position: relative;
+	  width: 100%;
+	  height: 30px;
+	  text-align: center;
+	  display: block;
+	}
+
+  .jimu-widget-InfoSummary .pageLabel {
+    padding-top: 10px;
+    padding-left: 20px;
+    float: left;
+    color: whitesmoke;
+    font-size: 16px;
+	}
+
+ 
+
+/* MEDIA SPECIFIC: SMALL TABLETS */
+
+@media only screen and (max-width: 750px) {
+
+	.jimu-widget-InfoSummary .pageContent {
+		/*top: 60px;*/
+	}
+	
+	.jimu-widget-InfoSummary .pageHeader {
+	  position: relative;
+	  width: 100%;
+	  height: 30px;
+	  text-align: center;
+	  display: block;
+	}
+	
+	.jimu-widget-InfoSummary .pageTitle {
+    position: absolute;
+	  left: 10px;
+	  right: 30px;
+	  width: auto;
+	  height: auto;
+	  font-size: 12px;
+	  color: #ffffff;
+	  overflow: hidden;
+	  text-align: left;
+	}
+		
+	.jimu-widget-InfoSummary .pageCounter {
+    display: none;
+	  position: absolute;
+	  left: 5px;
+	  margin-left: 0px;
+	  top: 5px;
+	  width: 70px;
+	  font-size: 40px;
+	  height: 70px;
+	  line-height: 70px;
+	  font-family: Steelfish;
+	  border: 5px solid rgba(0,0,0,1);
+	  -moz-border-radius: 40px;
+	  -webkit-border-radius: 40px;
+	  border-radius: 40px;
+	  /*opacity:0.3;
+	  filter:alpha(opacity=30);*/
+	}
+	
+	.jimu-widget-InfoSummary .pageBody {
+    position: absolute;
+	  top: 30px;
+    bottom: 0px;
+	  width: 100%;
+	  display: block;
+	  color: #000000;
+	  font-size: 10px;
+	  text-align: center;
+	  padding: 0px;
+	  overflow-x: hidden;
+	  overflow-y:auto;
+	}
+ 
+}
+
+/* MEDIA SPECIFIC: PHONES */
+
+@media only screen and (max-width: 470px) {
+
+  .jimu-widget-InfoSummary{
+    width: 100% !important;
+    height: 50%;
+  }
+	
+	.jimu-widget-InfoSummary .panelContent {
+    position: absolute;
+	  right: 0px;
+	  bottom: 0px;
+	  width: 100%;
+	}
+	
+	.jimu-widget-InfoSummary .page {
+    position: relative;
+	  width: 100%;
+	  height: 100%;
+	  display: block;
+	  background-color: rgba(0,0,0,0.15);
+	}
+
+	.jimu-widget-InfoSummary .pageHeader {
+	  position: relative;
+	  width: 100%;
+	  height: 30px;
+	  text-align: center;
+	  display: block;
+	}
+	
+	.jimu-widget-InfoSummary .pageTitle {
+		position: absolute;
+		left: 10px;
+		right: 30px;
+		width: auto;
+		height: auto;
+		font-size: 12px;
+		color: #ffffff;
+		overflow: hidden;
+		text-align: left;
+	}
+		
+	.jimu-widget-InfoSummary .pageCounter {
+    display: none;
+	  position: absolute;
+	  left: 5px;
+	  margin-left: 0px;
+	  top: 5px;
+	  width: 70px;
+	  font-size: 40px;
+	  height: 70px;
+	  line-height: 70px;
+	  font-family: Steelfish;
+	  border: 5px solid rgba(0,0,0,1);
+	  -moz-border-radius: 40px;
+	  -webkit-border-radius: 40px;
+	  border-radius: 40px;
+	  opacity:0.3;
+	  filter:alpha(opacity=30);
+	}
+	
+	.jimu-widget-InfoSummary .pageBody {
+    position: absolute;
+	  top: 30px;
+	  bottom: 0px;
+	  width: 100%;
+	  display: block;
+	  color: #000000;
+	  font-size: 10px;
+	  text-align: center;
+	  padding: 0px;
+	  overflow-x: hidden;
+	  overflow-y:auto;
+	}
+}
+	
+
+

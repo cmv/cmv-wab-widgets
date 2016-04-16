@@ -1,0 +1,48 @@
+.aloha-widget-setting{
+  overflow: hidden;
+  width: 100%;
+  /*margin-top: 20px;*/
+  color: #596679;
+  font-size: 14px;
+}
+
+.aloha-widget-setting .group-label{
+  display: inline-block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.general-setting .group-label{
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+.aloha-widget-setting .general-setting-table{
+  width: 100%;
+}
+
+.aloha-widget-setting .general-setting-table > tbody > tr > td{
+  padding-bottom: 10px;
+}
+
+.aloha-widget-setting .general-setting-table > tbody > tr > .first{
+  width: auto;
+  text-align: left;
+  padding-right: 10px;
+  white-space: nowrap;
+}
+
+.aloha-widget-setting .general-setting-table > tbody > tr > .second{
+  width: 650px;
+}
+
+.jimu-rtl .aloha-widget-setting .general-setting-table > tbody > tr > .first{
+  padding-left: 10px;
+  padding-right: 0;
+}
+
+.jimu-rtl .aloha-widget-setting .general-setting-table > tbody > tr > .first{
+  text-align: right;
+  padding-left: 10px;
+  padding-right: auto;
+}

@@ -1,0 +1,28 @@
+{
+  "zoompercent": 1.2,
+  "simplemarkersymbol": {
+    "color": [
+      68,
+      140,
+      203,
+      153
+    ],
+    "size": 15,
+    "angle": 0,
+    "xoffset": 0,
+    "yoffset": 0,
+    "type": "esriSMS",
+    "style": "esriSMSCircle",
+    "outline": {
+      "color": [
+        255,
+        255,
+        255,
+        153
+      ],
+      "width": 1,
+      "type": "esriSLS",
+      "style": "esriSLSSolid"
+    }
+  }
+}

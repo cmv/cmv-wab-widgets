@@ -1,0 +1,359 @@
+.jimu-widget-InfoSummary-setting {
+  width:100%;
+  height:100%;
+}
+
+/*Add Layer*/
+.jimu-widget-InfoSummary-setting .btn-add-section {
+  display: inline-block;
+  overflow: hidden;
+  height: 24px;
+  margin-left: 1px;
+  margin-bottom: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #538ec8;
+  margin-top: 8px;
+}
+
+.jimu-widget-InfoSummary-setting .btn-add-section .btn-add-icon {
+  height: 100%;
+  width: 14px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: url(images/add.png);
+  display: inline-block;
+  vertical-align: top;
+}
+
+.jimu-widget-InfoSummary-setting .btn-add-section .btn-add-icon:hover {
+  background-image: url(images/add_hover.png);
+}
+
+.jimu-widget-InfoSummary-setting .btn-add-section .btn-add-label {
+  height: 100%;
+  line-height: 24px;
+  margin-left: 7px;
+  text-decoration: underline;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.jimu-widget-InfoSummary-setting .instruction2{
+  float: left;
+  padding-top: 3px;
+}
+
+.jimu-widget-InfoSummary-setting .instruction2 span{
+  color: #596679;
+}
+
+.jimu-widget-InfoSummary-setting .panelContent {
+  position: relative;
+  width: 360px;
+  height: 240px;
+}
+
+.jimu-widget-InfoSummary-setting .page {
+  position: relative;
+  width: 360px;
+  height: 240px;
+  display: block;
+  background-color: rgba(0,0,0,0.15);
+}
+
+.jimu-widget-InfoSummary-setting .pageHeader {
+  position: relative;
+  /*width: 100%;
+  height: 200px;*/
+  text-align: center;
+  display: block;
+}
+
+.jimu-widget-InfoSummary-setting .pageCounter {
+  position: absolute;
+  top: 20px;
+  width: auto;
+  height: auto;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  /*line-height: 140px;*/
+  /*font-family: Steelfish;
+  opacity:0.3;
+  filter:alpha(opacity=30);*/
+}
+
+.jimu-widget-InfoSummary-setting .bg {
+  display: block;
+  background-color: rgb(255,255,255);
+  -moz-opacity: 0.9;
+  -khtml-opacity: 0.9;
+  opacity: 0.9;
+  filter: alpha(opacity=90);
+}
+
+.jimu-widget-InfoSummary-setting .rounded {
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+}
+
+.jimu-widget-InfoSummary-setting .roundedTop {
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+
+.jimu-widget-InfoSummary-setting .pageContent {
+  position:relative;
+  top:0px;
+}
+
+.jimu-widget-InfoSummary-setting .panelMain {
+  display: block;
+}
+
+.jimu-widget-InfoSummary-setting .footer {
+  text-align: right;
+  /*padding-top: 5px;*/
+  width: 100%;
+  /*height: 30px;*/
+}
+
+.jimu-widget-InfoSummary-setting .mainPanelPreview {
+  float:left;
+  /*height:185px;
+  padding:5px 5px 5px 5px;*/
+  /*padding-right: 20px;*/
+}
+
+.jimu-widget-InfoSummary-setting .mainPanelPreviewButton {
+  float:left;
+  /*padding:80px 15px 15px 15px;*/
+  padding-right: 20px;
+}
+
+.jimu-widget-InfoSummary-setting .mainPanelPreviewContainer {
+  width: 540px;
+  /*height:250px;*/
+  /*border: 5px dashed gray;*/
+  float:left;
+}
+
+.jimu-widget-InfoSummary-setting .mainPanelPreviewContainerOn {
+  display:block;
+}
+
+.jimu-widget-InfoSummary-setting .mainPanelPreviewContainerOff {
+  display:none;
+}
+
+.jimu-widget-InfoSummary-setting .refreshOff {
+  display:none;
+}
+
+.jimu-widget-InfoSummary-setting .refreshOn {
+  display:block;
+}
+
+.jimu-widget-InfoSummary-setting .uploadCustom {
+  display: block;
+  width: 25px;
+  height: 25px;
+  float: left;
+  cursor: pointer;
+  background-image: url(../css/images/edit_default.png);
+  background-repeat: no-repeat;
+  padding-bottom:10px;
+  margin-left: 10px;
+}
+
+.jimu-widget-InfoSummary-setting .uploadCustom:hover {
+  display: block;
+  width: 25px;
+  height: 25px;
+  float: left;
+  cursor: pointer;
+  background-image: url(../css/images/edit_hover.png);
+  background-repeat: no-repeat;
+  padding-bottom:10px;
+  margin-left: 10px;
+}
+
+.jimu-widget-InfoSummary-setting .customPlaceholder {
+  display: block;
+  width: 25px;
+  height: 25px;
+  float: left;
+  cursor: pointer;
+}
+
+.jimu-widget-InfoSummary-setting .imageDataGFX {
+  width:30px;
+  height:30px;
+}
+
+.jimu-widget-InfoSummary-setting .imageDataGFX2 {
+  display: block;
+  float:left;
+}
+
+.jimu-widget-InfoSummary-setting .imageDataGFXMulti {
+  width:100%;
+}
+
+.jimu-widget-InfoSummary-setting .symPickers{
+  float:right;
+  overflow:visible;
+}
+
+.jimu-widget-InfoSummary-setting .symPick {
+  padding-left: 10px;
+}
+
+.jimu-widget-InfoSummary-setting .symbolPreview {
+  float: left;
+  width: 280px;
+  height: 340px;
+  margin-left: 20px;
+  margin-top:10px;
+  border: 5px dashed gray;
+}
+
+.jimu-widget-InfoSummary-setting .iconPreview {
+  float: left;
+  width: 280px;
+  height: 90px;
+  margin-left: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 5px dashed gray;
+}
+
+.jimu-widget-InfoSummary-setting .symbolOptionsContainer {
+  /*float: left; 
+  min-width: 200px;*/ 
+  /*min-height: 500px;*/
+  overflow: hidden;
+}
+
+.jimu-widget-InfoSummary-setting .symbolPickerContainer {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  padding-bottom: 8px;
+}
+
+.jimu-widget-InfoSummary-setting .symbolOptionText {
+  font-weight: bold;
+}
+
+.jimu-widget-InfoSummary-setting .symbolOptions{
+  float: left; 
+  width: 240px;
+}
+
+.jimu-widget-InfoSummary-setting .rdoCustomSym{
+  vertical-align: middle;
+}
+
+.jimu-widget-InfoSummary-setting .clusterOptions{
+  min-width: 250px;
+}
+
+.jimu-widget-InfoSummary-setting .grpClusterOptions{
+  padding-top: 16px;
+}
+
+.jimu-widget-InfoSummary-setting .iconOptionsText{
+  padding-top: 25px; 
+  font-weight: bold; 
+  width: 200px;
+  display: -webkit-inline-box;
+}
+
+.jimu-widget-InfoSummary-setting .iconOptions{
+  float: left; 
+  min-width: 250px;
+}
+
+.jimu-widget-InfoSummary-setting .fileInput{
+  opacity: 0; 
+  width: 0px; 
+  height: 0px;
+}
+
+.jimu-widget-InfoSummary-setting .height30{
+  height: 30px;
+}
+
+.jimu-widget-InfoSummary-setting .padTop10{
+  padding-top: 10px;
+}
+
+.jimu-widget-InfoSummary-setting .padTop20{
+  padding-top: 20px;
+}
+
+.jimu-widget-InfoSummary-setting .padTop30{
+  padding-top: 30px;
+}
+
+
+.jimu-widget-InfoSummary-setting .optionsText{
+  padding-top: 25px;
+  font-weight: bold;
+}
+
+.jimu-widget-InfoSummary-setting .mainPanelText{
+  width: 360px;
+  float: right;
+}
+
+.jimu-widget-InfoSummary-setting .refreshOptions{
+  /*width:380px; 
+  height:50px; 
+  border: 5px dashed gray;*/ 
+  float:right;
+}
+
+.jimu-widget-InfoSummary-setting .refreshIntervalTitle{
+  float:left; 
+  padding-left:5px; 
+  padding-top: 5px; 
+  padding-bottom: 13px;
+}
+
+.jimu-widget-InfoSummary-setting .refreshInterval{
+  width:240px; 
+  padding-left: 10px;
+}
+
+.jimu-widget-InfoSummary-setting .dijitSelectLabel {
+    text-align:left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width:260px;
+    width:260px;
+}
+
+.jimu-widget-InfoSummary-setting .innerMainPanelIcon {
+  max-width: 320px;
+  max-height: 200px;
+  vertical-align: middle;
+}
+
+.jimu-widget-InfoSummary-setting .mainPanelTextContainer {
+  margin-top: 10px;
+  float: left;
+  min-width: 500px;
+  max-width: 540px;
+}
+
+.jimu-widget-InfoSummary-setting .claro .dijitTextBox .dijitInputInner{
+  font-size: 4px;
+}
+
+
+

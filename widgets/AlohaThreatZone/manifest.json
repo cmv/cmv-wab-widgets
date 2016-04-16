@@ -1,0 +1,24 @@
+{
+  "name": "AlohaThreatZone",
+  "2D": true,
+  "3D": false,
+  "platform": "HTML",
+  "version": "1.3.0.1",
+  "wabVersion": "1.4",
+  "author": "Robert J. Scheitlin",
+  "description": "This widget allows for the plotting of the Aloha threat zones in Web AppBuilder",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {
+    "inPanel": true,
+    "hasLocale": true,
+    "hasStyle": true,
+    "hasConfig": true,
+    "hasUIFile": true,
+    "hasSettingPage": true,
+    "hasSettingUIFile": true,
+    "hasSettingLocale": true,
+    "hasSettingStyle": true,
+    "IsController": false
+  }
+}

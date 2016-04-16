@@ -1,0 +1,33 @@
+/* optional customizations for jimu and WAB widgets in cmv */
+.cmv .jimu-btn {
+    font-family: Tahoma;
+    min-width: 50px;
+    background-color: #F0F0F0;
+    color: #000;
+    border-color: #BBB;
+    padding: 6px;
+    line-height: 100%;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.cmv .jimu-btn.jimu-state-disabled {
+    background-color: #F0F0F0;
+    color: #9e9e9e;
+}
+.cmv .jimu-draw-box .draw-items .draw-item {
+    margin: 3px;
+}
+
+.cmv .jimu-symbol-chooser .line-symbol-section .icon-tables,
+.cmv .jimu-symbol-chooser .fill-symbol-section .icon-tables {
+    display: none;
+}
+
+.cmv .jimu-widget-measure .jimu-color-picker {
+    width: 36px !important;
+}
+
+.cmv .jimu-widget-measure .dijitNumberTextBox {
+    width: 70px !important;
+}

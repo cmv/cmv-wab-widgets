@@ -1,0 +1,32 @@
+﻿define(
+   ({
+    routeUrl: "Rute-URL",
+    locatorUrl: "Geokoder-URL",
+    geocoderOptions: "Geokoderalternativer",
+    autoComplete: "Autofullfør",
+    maxLocations: "Maks. antall lokasjoner",
+    minCharacters: "Minste antall tegn",
+    searchDelay: "Søkeforsinkelse",
+    placeholder: "Plassholder",
+    routeOptions: "Rutealternativer",
+    directionsLanguage: "Språk for rutebeskrivelser",
+    directionsLengthUnits: "Lengdeenheter for rutebeskrivelser",
+    directionsOutputType: "Resultattype for rutebeskrivelser",
+    impedanceAttribute: "Impedansattributt",
+    kilometers: "Kilometer",
+    miles: "Miles",
+    meters: "Meter",
+    feet: "Fot",
+    yards: "Yards",
+    nauticalMiles: "Nautiske mil",
+    parametersTip: "Angi parametrene riktig!",
+    complete: "Fullfør",
+    completeNoEvents: "Fullfør – ingen hendelser",
+    instructionsOnly: "Bare instruksjoner",
+    standard: "Standard",
+    summaryOnly: "Bare sammendrag",
+    travelModesUrl: "URL for reisemåter",
+    searchPlaceholder: "Finn adresse eller sted",
+    trafficLayerUrl: "Trafikklag-URL"
+  })
+);

@@ -1,0 +1,18 @@
+/* changes so the default jimu theme plays nice with cmv */
+.cmv .dijitReset {
+    line-height: normal;
+}
+.cmv .jimu-panel {
+    position: relative;
+    border: 0;
+    box-shadow: none;
+    overflow: visible;
+}
+.cmv .jimu-widget-frame.jimu-container {
+    overflow: hidden;
+}
+.cmv .map .jimu-panel,
+.cmv .map .jimu-widget-frame.jimu-container {
+    padding: 0;
+    background-color: transparent;
+}
