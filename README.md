@@ -57,7 +57,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 ![Screenshot](https://tmcgee.github.io/cmv-wab-widgets/images/wab-alohathreatzone.jpg)
 
 
-### Custom `Draw & Measure` and 'SaveSession' Widgets
+### Custom `Draw & Measure` and `SaveSession` Widgets
 Both of these widgets have been modified from the original to provide additional functionality
 
 - [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-measure.js)
@@ -455,4 +455,4 @@ You can find WAB widgets:
 
 ## License
 
-[MIT](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/LICENSE)
+[MIT](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/LICENSE.md)
