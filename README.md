@@ -41,7 +41,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 
 ### Custom `AddLayer` Widget
 
-- [Config file](https//github.com/tmcgee/cmv-wab-widgets/config/wab-addlayer.js)
+- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-addlayer.js)
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-addlayer)
 - [Original Widget Source](https://github.com/softwhere/AddLayer-Widget)
 
@@ -50,7 +50,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 
 ### Custom `Aloha Threat Zone` Widget
 
-- [Config file](https//github.com/tmcgee/cmv-wab-widgets/config/wab-alohathreatzone.js)
+- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-alohathreatzone.js)
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-alohathreatzone)
 - [Original Widget Source](https://geonet.esri.com/docs/DOC-7733)
 
@@ -60,7 +60,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 ### Custom `Draw & Measure` and 'SaveSession' Widgets
 Both of these widgets have been modified from the original to provide additional functionality
 
-- [Config file](https//github.com/tmcgee/cmv-wab-widgets/config/wab-measure.js)
+- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-measure.js)
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-measure)
 - [Original Measure Widget Source](https://geonet.esri.com/docs/DOC-3209)
 - [Original SaveSession Source](https://github.com/softwhere/SaveSession-Widget)
@@ -69,7 +69,7 @@ Both of these widgets have been modified from the original to provide additional
 
 
 ### Custom `Enhanced Bookmarks` Widget
-- [Config file](https//github.com/tmcgee/cmv-wab-widgets/config/wab-ebookmarks.js)
+- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-ebookmarks.js)
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-ebookmarks)
 - [Original Widget Source](https://geonet.esri.com/docs/DOC-6889)
 
@@ -77,7 +77,7 @@ Both of these widgets have been modified from the original to provide additional
 
 
 ### Custom `Enhanced Query` Widget
-- [Config file](https//github.com/tmcgee/cmv-wab-widgets/config/wab-enhancedquery.js)
+- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-enhancedquery.js)
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-enhancedquery)
 - [Original Widget Source](https://github.com/kevinsagis/EnhancedQuery)
 
@@ -85,7 +85,7 @@ Both of these widgets have been modified from the original to provide additional
 
 
 ### Custom `Wikipedia Search` Widget
-- [Config file](https//github.com/tmcgee/cmv-wab-widgets/config/wab-wikipediasearch.js)
+- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-wikipediasearch.js)
 - [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-wikipediasearch)
 - [Original Widget Source](https://github.com/kevinsagis/EnhancedQuery)
 
@@ -101,9 +101,9 @@ Both of these widgets have been modified from the original to provide additional
 ## Changes to your CMV application
 Currently, the process requires 3 simple changes to your CMV application. I anticipate these changes will be incorporated into the main cmv-app project and so most of these steps will be eliminated and it will be a simple configuration exercise to use WAB widgets in CMV.
 
-1. Add the new [_WABMixin.js](https//github.com/tmcgee/cmv-wab-widgets/blob/master/config/_WABMixin.js) controller mixin to your app. I placed mine in the config folder.
+1. Add the new [_WABMixin.js](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/_WABMixin.js) controller mixin to your app. I placed mine in the config folder.
 
-2. Modification to [app.js](https//github.com/tmcgee/cmv-wab-widgets/blob/master/config/app.js):
+2. Modification to [app.js](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/app.js):
 
     - Add packages for jimu, lib and widgets folders from WAB to dojoConfig:
         ``` javascript
@@ -162,7 +162,7 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
         });
         ```
 
-3. Modifications to the [index.html](https//github.com/tmcgee/cmv-wab-widgets/blob/master/index.html) to include:
+3. Modifications to the [index.html](https://github.com/tmcgee/cmv-wab-widgets/blob/master/index.html) to include:
 
     - Add the jimu-theme.css stylesheet.
         ``` html
