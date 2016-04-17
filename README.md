@@ -42,7 +42,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 ### Custom `AddLayer` Widget
 
 - [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-addlayer.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-addlayer)
+- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-addlayer)
 - [Original Widget Source](https://github.com/softwhere/AddLayer-Widget)
 
 ![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-addlayer.jpg)
@@ -51,7 +51,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 ### Custom `Aloha Threat Zone` Widget
 
 - [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-alohathreatzone.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-alohathreatzone)
+- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-alohathreatzone)
 - [Original Widget Source](https://geonet.esri.com/docs/DOC-7733)
 
 ![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-alohathreatzone.jpg)
@@ -61,7 +61,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 Both of these widgets have been modified from the original to provide additional functionality
 
 - [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-measure.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-measure)
+- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-measure)
 - [Original Measure Widget Source](https://geonet.esri.com/docs/DOC-3209)
 - [Original SaveSession Source](https://github.com/softwhere/SaveSession-Widget)
 
@@ -70,7 +70,7 @@ Both of these widgets have been modified from the original to provide additional
 
 ### Custom `Enhanced Bookmarks` Widget
 - [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-ebookmarks.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-ebookmarks)
+- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-ebookmarks)
 - [Original Widget Source](https://geonet.esri.com/docs/DOC-6889)
 
 ![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-ebookmarks.jpg)
@@ -78,7 +78,7 @@ Both of these widgets have been modified from the original to provide additional
 
 ### Custom `Enhanced Query` Widget
 - [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-enhancedquery.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-enhancedquery)
+- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-enhancedquery)
 - [Original Widget Source](https://github.com/kevinsagis/EnhancedQuery)
 
 ![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-enhancedquery.jpg)
@@ -86,7 +86,7 @@ Both of these widgets have been modified from the original to provide additional
 
 ### Custom `Wikipedia Search` Widget
 - [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-wikipediasearch.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab-wikipediasearch)
+- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-wikipediasearch)
 - [Original Widget Source](https://github.com/kevinsagis/EnhancedQuery)
 
 ![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-wikipediasearch.jpg)
@@ -162,9 +162,9 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
         });
         ```
 
-3. Modifications to the [index.html](https://github.com/tmcgee/cmv-wab-widgets/blob/master/index.html) to include:
+3. Modifications to the [html](https://github.com/tmcgee/cmv-wab-widgets/blob/master/demo.html):
 
-    - Add the jimu-theme.css stylesheet.
+    - Add the jimu-theme.css stylesheet:
         ``` html
         <link rel="stylesheet" type="text/css" href="./wab/jimu.js/css/jimu-theme.css">
         ```
@@ -175,7 +175,7 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
         ```
         All widget-specific stylesheets will be loaded above this stylesheet in the HEAD.
 
-    - Add stylesheets to help the cmv and cmv themes co-exist
+    - Add stylesheets to help the cmv and cmv themes co-exist:
         ``` html
         <!-- needed so that jimu styles play nice with cmv -->
         <link rel="stylesheet" type="text/css" href="./css/cmv-jimu.css">
@@ -183,7 +183,7 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
         <link rel="stylesheet" type="text/css" href="./css/cmv-wab.css">
         ```
 
-    - Some WAB widgets require another lib added globally
+    - Some WAB widgets require another lib added globally:
         ``` html
         <!-- needed by some wab widgets like Print -->
         <script src="./wab/libs/caja-html-sanitizer-minified.js"></script>
