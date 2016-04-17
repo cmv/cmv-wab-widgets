@@ -149,7 +149,7 @@ define([
                     type = options.type;
                     delete options.placeAt;
                     delete options.type;
-                    delete options.collapsible;
+                    //delete options.collapsible;
                     if (placeAt) {
                         if (type === 'border') {
                             this.panes[key] = new BorderContainer(options).placeAt(placeAt);
