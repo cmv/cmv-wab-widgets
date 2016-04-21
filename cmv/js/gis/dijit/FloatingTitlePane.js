@@ -42,7 +42,7 @@ define([
             if (this.titleBarNode && this.canFloat) {
                 this._moveable = new Moveable(this.domNode, {
                     handle: this.titleBarNode,
-                    delay: 10
+                    delay: 5
                 });
                 this._titleBarHeight = domStyle.get(this.titleBarNode, 'height');
                 aspect.after(this._moveable, 'onMove', lang.hitch(this, '_dragging'), true);
