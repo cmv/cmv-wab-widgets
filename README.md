@@ -19,7 +19,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 ## Examples
 ### Out-of-the-box WAB Widgets
 
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/?config=wab)
+- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab)
 
 ### Includes the following widgets:
 - Basemap Gallery
