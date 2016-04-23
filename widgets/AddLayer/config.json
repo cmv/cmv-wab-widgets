@@ -3,7 +3,7 @@
         {
             "type": "Feature",
             "name": "Land Use",
-            "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Louisville/LOJIC_LandRecords_Louisville/MapServer/1",
+            "url": "https://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Louisville/LOJIC_LandRecords_Louisville/MapServer/1",
             "opacity": 0.5,
             "visible": true,
             "autorefresh": 0,
@@ -29,13 +29,13 @@
             "imageformat": "png32",
             "imagedpi": 96,
             "opacity": 1,
-            "url": "http://services.arcgisonline.com/arcgis/rest/services/Specialty/Soil_Survey_Map/MapServer",
+            "url": "https://services.arcgisonline.com/arcgis/rest/services/Specialty/Soil_Survey_Map/MapServer",
             "visible": true,
             "visiblelayers": "0,1"
       }, {
             "type": "Dynamic",
             "name": "Public Safety Hazards and Risks",
-            "url": "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/PublicSafety/PublicSafetyHazardsandRisks/MapServer",
+            "url": "https://sampleserver1.arcgisonline.com/ArcGIS/rest/services/PublicSafety/PublicSafetyHazardsandRisks/MapServer",
             "opacity": 0.6,
             "visible": true,
             "imageformat": "png8",
@@ -246,7 +246,7 @@
       }, {
             "type": "Tiled",
             "name": "DeLorme’s basemap",
-            "url": "http://services.arcgisonline.com/arcgis/rest/services/Specialty/DeLorme_World_Base_Map/MapServer",
+            "url": "https://services.arcgisonline.com/arcgis/rest/services/Specialty/DeLorme_World_Base_Map/MapServer",
             "opacity": 1
         }
     ]

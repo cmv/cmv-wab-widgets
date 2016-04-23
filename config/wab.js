@@ -30,7 +30,7 @@ define([
         operationalLayers: [
             {
                 type: 'dynamic',
-                url: 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/MapServer',
+                url: 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/MapServer',
                 title: 'Damage Assessment',
                 options: {
                     id: 'DamageAssessment',
@@ -144,7 +144,7 @@ define([
                                 config: {
                                     "charts": [
                                         {
-                                            "url": "http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
+                                            "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
                                             "filter": {
                                                 "logicalOperator": "AND",
                                                 "parts": [],
@@ -218,7 +218,7 @@ define([
                                             "sortOrder": "asc"
                                         },
                                         {
-                                            "url": "http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
+                                            "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
                                             "filter": {
                                                 "logicalOperator": "AND",
                                                 "parts": [],
@@ -293,7 +293,7 @@ define([
                                             "sortOrder": "asc"
                                         },
                                         {
-                                            "url": "http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
+                                            "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
                                             "filter": {
                                                 "logicalOperator": "AND",
                                                 "parts": [],
@@ -364,7 +364,7 @@ define([
                                             "sortOrder": "asc"
                                         },
                                         {
-                                            "url": "http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
+                                            "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
                                             "filter": {
                                                 "logicalOperator": "AND",
                                                 "parts": [],
@@ -460,7 +460,7 @@ define([
                                 id: 'WABdirections',
                                 uri: 'wabwidgets/Directions/Widget',
                                 config: {
-                                    routeTaskUrl: 'http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Network/USA/NAServer/Route',
+                                    routeTaskUrl: 'https://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Network/USA/NAServer/Route',
                                     routeParams: {
                                         directionsLanguage: 'en-US',
                                         directionsLengthUnits: esriUnits.MILES
@@ -468,7 +468,7 @@ define([
                                     geocoderOptions: {
                                         geocoders: [
                                             {
-                                                url: 'http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer'
+                                                url: 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer'
                                             }
                                         ]
                                     }
@@ -619,7 +619,7 @@ define([
                                     queries: [
                                         {
                                             name: 'Cities',
-                                            url: 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0',
+                                            url: 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0',
                                             filter: {
                                                 logicalOperator: 'AND',
                                                 parts: [

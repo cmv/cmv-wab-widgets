@@ -303,7 +303,7 @@ query: {
                         queries: [
                             {
                                 name: 'Cities',
-                                url: 'http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0',
+                                url: 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0',
                                 filter: {
                                     logicalOperator: 'AND',
                                     parts: [
