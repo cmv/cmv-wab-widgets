@@ -20,7 +20,6 @@
             name: 'xstyle',
             main: 'css',
             location: 'https://cdn.rawgit.com/kriszyp/xstyle/v0.3.2'
-        }
         /* customizations for WAB widgets */
         },{
             name: 'jimu',
