@@ -12,6 +12,15 @@
         },{
             name: 'widgets',
             location: path + 'widgets'
+        }, {
+            name: 'put-selector',
+            main: 'put',
+            location: 'https://cdn.rawgit.com/kriszyp/put-selector/v0.3.6'
+        }, {
+            name: 'xstyle',
+            main: 'css',
+            location: 'https://cdn.rawgit.com/kriszyp/xstyle/v0.3.2'
+        }
         /* customizations for WAB widgets */
         },{
             name: 'jimu',
