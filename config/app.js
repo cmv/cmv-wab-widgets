@@ -51,7 +51,7 @@
         'viewer/_MapMixin', // build and manage the Map
         'viewer/_WidgetsMixin', // build and manage the Widgets
 
-        'config/_WABMixin' // cusom mix-in to use WAB widgets
+        'viewer/_WABMixin' // cusom mix-in to use WAB widgets
 
     ], function (
         declare,
