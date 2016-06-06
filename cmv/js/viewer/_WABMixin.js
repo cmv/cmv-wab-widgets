@@ -94,7 +94,8 @@ define([
             //minimal configuration of global vars
             // polluting the global namespace is bad! ;)
             window.jimuConfig = {
-                layoutId: this.config.layout.map || 'mapCenter'
+                layoutId: this.config.layout.map || 'mapCenter',
+                breakPoints: [0]
             };
             window.jimuNls = mainBundle;
             window.isRTL = false;
