@@ -1,0 +1,22 @@
+define({
+  "showArcgisBasemaps": "Uključi pozadinske mape portala",
+  "add": "Kliknite da biste dodali novu pozadinsku mapu",
+  "edit": "Svojstva",
+  "titlePH": "Naslov pozadinske mape",
+  "thumbnailHint": "Kliknite na snimak da biste ažurirali",
+  "urlPH": "URL adresa sloja",
+  "addlayer": "Dodaj pozadinsku mapu",
+  "warning": "Netačan unos",
+  "save": "Nazad i sačuvaj",
+  "back": "Nazad i otkaži",
+  "addUrl": "Dodaj URL adresu",
+  "autoCheck": "Automatsko proveravanje",
+  "checking": "Proveravanje...",
+  "result": "Uspešno sačuvano",
+  "spError": "Sve pozadinske mape dodate u galeriju moraju da imaju istu prostornu referencu.",
+  "invalidTitle1": "Pozadinska mapa „",
+  "invalidTitle2": "“ već postoji. Izaberite drugi naslov.",
+  "invalidBasemapUrl1": "Ovaj tip sloja ne može da bude korišćen kao pozadinska mapa.",
+  "invalidBasemapUrl2": "Pozadinska mapa koju dodajete ima drugu prostornu referencu od trenutne mape.",
+  "addBaselayer": "Dodaj sloj pozadinske mape"
+});

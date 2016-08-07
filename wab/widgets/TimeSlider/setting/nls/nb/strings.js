@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    showLayerLabels: "Vis navn på tidsbevisste lag i widgeten."
-  })
-);
+define({
+  "showLayerLabels": "Vis navn på tidsbevisste lag i widgeten."
+});

@@ -144,6 +144,14 @@ define([
         });
         this.editor.startup();
 
+        var instrBox = html.getMarginBox(this.instructionNode);
+        var footerBox = html.getMarginBox(this.splashFooterNode);
+
+        html.setStyle(this.editorContainer, {
+          top: instrBox.h + 4 + 'px',
+          bottom: footerBox.h + 10 + 'px'
+        });
+
         if (has('ie') !== 8) {
           this.editor.resize({
             w: '100%',

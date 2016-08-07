@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "قياس الصورة"
-  })
-);
+define({
+  "_widgetLabel": "قياس الصورة"
+});

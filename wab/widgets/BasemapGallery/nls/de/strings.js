@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Grundkarten-Galerie"
-  })
-);
+define({
+  "_widgetLabel": "Grundkarten-Galerie"
+});

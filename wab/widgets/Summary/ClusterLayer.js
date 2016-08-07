@@ -50,7 +50,7 @@ define([
 
       //set features
       setFeatures: function(features) {
-        if (this._map.infoWindow.isShowing) {
+        if (this._map && this._map.infoWindow.isShowing) {
           this._map.infoWindow.hide();
         }
         this._features = features;

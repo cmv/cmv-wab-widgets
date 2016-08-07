@@ -18,7 +18,6 @@ define([
     'dojo/_base/declare',
     'dojo/_base/array',
     'dojo/_base/lang',
-    'dojo/_base/html',
     'dojo/dom-style',
     'dojo/dom-construct',
     'dojo/on',
@@ -26,6 +25,7 @@ define([
     'dijit/form/Select',
     'dijit/form/ValidationTextBox',
     'dijit/_WidgetsInTemplateMixin',
+    'dijit/focus',
     './FeaturelayerSource',
     './FieldPicker',
     'jimu/BaseWidgetSetting',
@@ -38,41 +38,29 @@ define([
     'jimu/dijit/RadioBtn'
 ],
   function(
-    declare, array, lang, html, domStyle, domConstruct, on, query,
-    Select, ValidationTextBox, _WidgetsInTemplateMixin,
+    declare, array, lang, domStyle, domConstruct, on, query,
+    Select, ValidationTextBox, _WidgetsInTemplateMixin, focusUtil,
     FeaturelayerSource, FieldPicker, BaseWidgetSetting, Message, Popup,
     LayerInfos, TemplatePicker, domClass
   ) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
 
-      //these two properties is defined in the BaseWidget
       baseClass: 'jimu-widget-SAT-setting',
-
-      //solutions: added to hold array of field operations for each summary layer
-      //summaryFields: [],
       opLayers: [],
       curRow: null,
 
       postCreate: function() {
         this.inherited(arguments);
-        // this._setLayers();
-        // this._setTypes();
         this._getAllLayers();
         this.own(on(this.btnAddTab, 'click', lang.hitch(this, this._addTabRow)));
-        // this.own(on(this.tabTable, 'row-delete', lang.hitch(this, function(tr) {
-        //   if (tr.select) {
-        //     tr.select.destroy();
-        //     delete tr.select;
-        //   }
-        // })));
         this.own(on(this.tabTable, 'actions-edit', lang.hitch(this, function(tr) {
           this._onEditLayerClicked(tr);
         })));
+        this.own(on(this.tabTable, 'row-delete', lang.hitch(this, this._rowDeleted)));
       },
 
       startup: function() {
         this.inherited(arguments);
-        //this.setConfig(this.config);
       },
 
       setConfig: function(config) {
@@ -99,12 +87,6 @@ define([
             this.currentlySelectedLayer.innerHTML = this.weatherTabAdditionalLayers;
           } else {
             this._populateTabTableRow(aTab);
-            //solutions: added to see if advanced stats exist. if it does, add it to summary fields
-            // if(typeof(aTab.advStat) !== 'undefined') {
-            //   var temp = [];
-            //   temp.push({name:aTab.layers, stats:aTab.advStat.stats, url:aTab.advStat.url, statTypes:aTab.advStat.text});
-            //   this.summaryFields.push(temp);
-            // }
           }
         }
 
@@ -188,9 +170,6 @@ define([
           tabs.push(aTab);
         }
 
-        //solutions: added to check fields then append to the tab struct object.
-        //this.updateSummaryFields();
-
         var trs = this.tabTable.getRows();
         array.forEach(trs, lang.hitch(this, function(tr) {
           var selectLayers = tr.selectLayers;
@@ -203,16 +182,6 @@ define([
           if(tr.tabInfo && tr.tabInfo.advStat) {
             aTab.advStat = tr.tabInfo.advStat;
           }
-          //solutions: extending the structure to add the advance stats details
-          //jh: added the statTypes check so we can distinguish one row from the next if we have multiple summary layer instances for a single layer name
-          //array.forEach(this.summaryFields, lang.hitch(this, function (fieldsItem) {
-          //   if (fieldsItem[0].name === selectLayers.value && selectTypes.value === 'summary' && Object.keys(fieldsItem[0].stats).join(", ") === statTypes) {
-          //     aTab.advStat = {};
-          //     aTab.advStat.url = fieldsItem[0].url;
-          //     aTab.advStat.stats = fieldsItem[0].stats;
-          //   aTab.advStat.text = statTypes;
-          //   }
-          // }));
           tabs.push(aTab);
         }));
 
@@ -256,21 +225,30 @@ define([
         }
       },
 
-      _setLayers: function() {
+      _setLayers: function () {
+        var supportedLayerTypes = ["ArcGISFeatureLayer", "ArcGISMapServiceLayer", "CSV",
+                           "KML", "GeoRSS", "Feature Layer", "FeatureCollection"];
         var options = [];
         var saveOptions = [];
-        array.forEach(this.opLayers._layerInfos, lang.hitch(this, function(OpLyr) {
-          if(OpLyr.newSubLayers.length > 0) {
+        array.forEach(this.opLayers._layerInfos, lang.hitch(this, function (OpLyr) {
+          var skipLayer = false;
+          if (OpLyr.layerObject && OpLyr.layerObject.hasOwnProperty('tileInfo')) {
+            skipLayer = true;
+          } else if (OpLyr.newSubLayers.length > 0) {
             this._recurseOpLayers(OpLyr.newSubLayers, options, saveOptions);
           } else {
-            var skipLayer = false;
             if (OpLyr.layerObject) {
-              if (OpLyr.layerObject.url && OpLyr.layerObject.url.indexOf('ImageServer') > -1) {
+              if (OpLyr.layerObject.url && (OpLyr.layerObject.url.indexOf('ImageServer') > -1)) {
                 skipLayer = true;
-                new Message({
-                  message: this.nls.layer_type_not_supported + OpLyr.layerObject.url
-                });
               }
+              if (OpLyr.layerObject.type && supportedLayerTypes.indexOf(OpLyr.layerObject.type) === -1) {
+                skipLayer = true;
+              }
+            }
+            if (skipLayer) {
+              new Message({
+                message: this.nls.layer_type_not_supported + OpLyr.title
+              });
             }
             if (!skipLayer) {
               options.push({
@@ -278,10 +256,8 @@ define([
                 value: OpLyr.title
               });
 
-              //solutions: added to only show editable poygon layers
               if (OpLyr.layerObject) {
                 var lo = OpLyr.layerObject;
-                //TODO: Check if strings like Create and Edit need to be in NLS.
                 if (lo.geometryType === 'esriGeometryPolygon' &&
                     (lo.capabilities.indexOf("Edit") > 0 ||
                     lo.capabilities.indexOf("Create") > 0)) {
@@ -319,7 +295,6 @@ define([
               value: Node.title
             });
 
-            //solutions: added to only show editable poygon layers
             if (Node.layerObject) {
               var lo = Node.layerObject;
               if (lo.geometryType === 'esriGeometryPolygon' &&
@@ -346,6 +321,9 @@ define([
         }, {
           value: 'summary',
           label: this.nls.summary
+        }, {
+          value: 'groupedSummary',
+          label: this.nls.groupedSummary
         }];
       },
 
@@ -353,14 +331,40 @@ define([
         var result = this.tabTable.addRow({});
         if (result.success && result.tr) {
           var tr = result.tr;
+          tr.tabInfo = tabInfo;
           this._addTabLayers(tr);
           this._addTabTypes(tr);
           this._addTabLabel(tr);
           tr.selectLayers.set("value", tabInfo.layers);
-          tr.selectTypes.set("value", tabInfo.type);
+          tr.selectTypes.set("value", tabInfo.type, false);
           tr.labelText.set("value", tabInfo.label);
-          tr.tabInfo = tabInfo;
         }
+      },
+
+      _rowDeleted: function () {
+        var trs = this.tabTable.getRows();
+        var allValid = true;
+        array.forEach(trs, lang.hitch(this, function (tr) {
+          if (tr.selectTypes) {
+            var v = tr.selectTypes.get('value');
+            if (v === 'groupedSummary') {
+              if (tr.tabInfo && tr.tabInfo.advStat) {
+                var stats = tr.tabInfo.advStat.stats;
+                if (!stats.hasOwnProperty('pre') && !stats.hasOwnProperty('suf')) {
+                  allValid = false;
+                }
+              } else {
+                allValid = false;
+              }
+            }
+          }
+        }));
+        var s = query(".button-container")[0];
+        domStyle.set(s.children[2], "display", allValid ? "inline-block" : "none");
+        domStyle.set(s.children[3], "display", allValid ? "none" : "inline-block");
+
+        //p.parentNode.tabInfo = undefined;
+        //focusUtil.focus(p.offsetParent);
       },
 
       _addTabRow: function() {
@@ -377,12 +381,12 @@ define([
         var lyrOptions = lang.clone(this.layer_options);
         var td = query('.simple-table-cell', tr)[0];
         if (td) {
-          html.setStyle(td, "verticalAlign", "middle");
           var tabLayers = new Select({
             style: {
               width: "100%",
-              height: "30px"
+              height: "26px"
             },
+            "class": "medSelect",
             options: lyrOptions
           });
           tabLayers.placeAt(td);
@@ -395,27 +399,97 @@ define([
         var typeOptions = lang.clone(this.analysis_options);
         var td = query('.simple-table-cell', tr)[1];
         if (td) {
-          html.setStyle(td, "verticalAlign", "middle");
           var tabTypes = new Select({
             style: {
               width: "100%",
-              height: "30px"
+              height: "26px"
             },
-            options: typeOptions
+            required: true,
+            isValid: this.validateType,
+            options: typeOptions,
+            'class': 'shortTypeSelect'
           });
           tabTypes.placeAt(td);
           tabTypes.startup();
+          tabTypes._missingMsg = this.nls.need_group_field;
+          tabTypes.on("change", function () {
+            var p = this.domNode.parentNode;
+            var table = p.parentNode.parentNode;
+            var allValid = true;
+            for (var i = 0; i < table.rows.length; i++) {
+              var r = table.rows[i];
+              if (r.selectTypes) {
+                var v = r.selectTypes.get('value');
+                if (v === 'groupedSummary') {
+                  //var pn = p.parentNode;
+                  if (r.tabInfo && r.tabInfo.advStat) {
+                    var stats = r.tabInfo.advStat.stats;
+                    if (!stats.hasOwnProperty('pre') && !stats.hasOwnProperty('suf')) {
+                      allValid = false;
+                    }
+                  } else {
+                    allValid = false;
+                  }
+                }
+              }
+            }
+
+            var s = query(".button-container")[0];
+            domStyle.set(s.children[2], "display", allValid ? "inline-block" : "none");
+            domStyle.set(s.children[3], "display", allValid ? "none" : "inline-block");
+
+            p.parentNode.tabInfo = undefined;
+            focusUtil.focus(p.offsetParent);
+          });
+          //tabTypes
           tr.selectTypes = tabTypes;
+        }
+      },
+
+      validateType: function () {
+        var p = this.domNode.parentNode.parentNode;
+        var table = p.parentNode;
+        var allValid = true;
+        var stats;
+        for (var i = 0; i < table.rows.length; i++) {
+          var r = table.rows[i];
+          if (r.selectTypes) {
+            var v = r.selectTypes.get('value');
+            if (v === 'groupedSummary') {
+              //var pn = p.parentNode;
+              if (r.tabInfo && r.tabInfo.advStat) {
+                stats = r.tabInfo.advStat.stats;
+                if (!stats.hasOwnProperty('pre') && !stats.hasOwnProperty('suf')) {
+                  allValid = false;
+                }
+              } else {
+                allValid = false;
+              }
+            }
+          }
+        }
+        var s = query(".button-container")[0];
+        domStyle.set(s.children[2], "display", allValid ? "inline-block" : "none");
+        domStyle.set(s.children[3], "display", allValid ? "none" : "inline-block");
+        if (this.value === 'groupedSummary') {
+          if (p.tabInfo && p.tabInfo.advStat) {
+            stats = p.tabInfo.advStat.stats;
+            if (stats.hasOwnProperty('pre') || stats.hasOwnProperty('suf')) {
+              return true;
+            }
+          }
+          return false;
+        } else {
+          return true;
         }
       },
 
       _addTabLabel: function(tr) {
         var td = query('.simple-table-cell', tr)[2];
-        html.setStyle(td, "verticalAlign", "middle");
         var labelTextBox = new ValidationTextBox({
           style: {
             width: "100%",
-            height: "30px"
+            height: "26px"
           }
         });
         labelTextBox.placeAt(td);
@@ -447,7 +521,6 @@ define([
           sourceDijit.destroy();
           sourceDijit = null;
           popup.close();
-
         })));
 
         this.own(on(sourceDijit, 'cancel', lang.hitch(this, function() {
@@ -458,15 +531,6 @@ define([
       },
 
       _onEditLayerClicked: function(tr) {
-
-        // var parameters = tr.selectLayers;
-        // for (var i = 0; i < this.config.tabs.length; i++) {
-        //   var aTab = this.config.tabs[i];
-        //   if (aTab.type === tr.selectTypes.value && aTab.layers === tr.selectLayers.value) {
-        //     parameters = aTab;
-        //     break;
-        //   }
-        // }
         this.curRow = tr;
 
         var aTab = tr.tabInfo;
@@ -502,6 +566,9 @@ define([
 
         this.own(on(sourceDijit, 'ok', lang.hitch(this, function(items) {
           this.curRow.tabInfo.advStat = items;
+          var n = this.curRow.selectTypes.domNode;
+          focusUtil.focus(n);
+          focusUtil.focus(n.parentNode.offsetParent);
           this.curRow = null;
           //this.summaryFields.push(items);
           sourceDijit.destroy();
@@ -516,30 +583,6 @@ define([
           popup.close();
         })));
       },
-
-      //solutions: added to handle field summary array manipulation
-      /*jshint loopfunc: true */
-      // updateSummaryFields: function() {
-      //   console.log("Before", this.summaryFields);
-      //   if(this.summaryFields.length > 0) {
-      //     var trs = this.tabTable.getRows();
-      //     var flag = false;
-      //     for(var i = this.summaryFields.length-1; i >= 0; i--){
-      //       flag = false;
-      //       array.forEach(trs, lang.hitch(this, function(tr) {
-      //         //if (this.summaryFields[i][0].name === tr.selectLayers.value &&
-      //         // tr.selectTypes.value === 'summary') {
-      //         if (this.summaryFields[i][0].name === tr.selectLayers.value) {
-      //           flag = true;
-      //         }
-      //       }));
-      //       if(!flag) {
-      //         this.summaryFields.splice(i, 1);
-      //       }
-      //     }
-      //   }
-      //   console.log("After", this.summaryFields);
-      // },
 
       //solutions: added to support save when a layer has more than one template
       _updateTemplatePicker: function (layer) {
@@ -568,7 +611,6 @@ define([
       //solutions: added to support save
       createTemplatePicker: function (layers) {
         var tpdDIV = domConstruct.create("div", {
-          id: "divTemplatePicker",
           style: "padding-top: 10px;"
         }, this.tpd);
 
@@ -621,6 +663,11 @@ define([
             "dojoxGridCell  dojoxGridCellOver dojoxGridCellFocus selectedItem");
         } else {
           this.selectedTemplateIndex = 0;
+          if (widget._flItems && widget._flItems.length > 0) {
+            this.selectedTemplate = widget._flItems[0][0].template;
+          } else if (widget.featureLayers && widget.featureLayers.length > 0) {
+            this.selectedTemplate = widget.featureLayers[0].templates[0];
+          }
           domClass.add(row.cells[this.selectedTemplateIndex],
             "dojoxGridCell  dojoxGridCellOver dojoxGridCellFocus selectedItem");
           domClass.add(row1.cells[this.selectedTemplateIndex],

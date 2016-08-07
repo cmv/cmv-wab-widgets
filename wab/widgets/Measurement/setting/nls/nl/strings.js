@@ -1,19 +1,22 @@
-﻿define(
-   ({
-    defaultAreaUnit: "Standaard oppervlakte-eenheid",
-    defaultLengthUnit: "Standaard lengte-eenheid",
-    acres: "Acres",
-    sqMiles: "Vierkante mile",
-    sqKilometers: "Vierkante kilometer",
-    hectares: "Hectare",
-    sqYards: "Vierkante yard",
-    sqFeet: "Vierkante voet",
-    sqMeters: "Vierkante meter",
-    miles: "Mijl",
-    kilometers: "Kilometer",
-    feet: "Voet",
-    meters: "Meter",
-    yards: "Yard",
-    nauticalMiles: "Zeemijl"
-  })
-);
+define({
+  "defaultAreaUnit": "Standaard oppervlakte-eenheid",
+  "defaultLengthUnit": "Standaard lengte-eenheid",
+  "acres": "Acres",
+  "sqMiles": "Vierkante mile",
+  "sqKilometers": "Vierkante kilometer",
+  "hectares": "Hectare",
+  "sqYards": "Vierkante yard",
+  "sqFeet": "Vierkante voet",
+  "sqMeters": "Vierkante meter",
+  "miles": "Mijl",
+  "kilometers": "Kilometer",
+  "feet": "Voet",
+  "meters": "Meter",
+  "yards": "Yard",
+  "nauticalMiles": "Zeemijl",
+  "showArea": "Regio",
+  "showDistance": "Afstand",
+  "showLocation": "Locatie",
+  "showtools": "Toon meetgereedschappen:",
+  "allHidedTips": "Er moet minimaal één gereedschap worden geselecteerd."
+});

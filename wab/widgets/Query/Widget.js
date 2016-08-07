@@ -15,54 +15,47 @@
 ///////////////////////////////////////////////////////////////////////////
 
 define([
-    'dojo/_base/declare',
+    'dojo/on',
+    'dojo/query',
+    'dojo/Deferred',
     'dojo/_base/lang',
-    'dojo/_base/query',
     'dojo/_base/html',
     'dojo/_base/array',
-    'dojo/_base/fx',
     'dojo/promise/all',
-    'dojo/Deferred',
+    'dojo/_base/declare',
     'dijit/_WidgetsInTemplateMixin',
-    'dijit/TitlePane',
     'jimu/BaseWidget',
     'jimu/dijit/Message',
-    'jimu/dijit/DrawBox',
     'jimu/utils',
+    'jimu/MapManager',
     'jimu/filterUtils',
-    'jimu/dijit/FilterParameters',
-    'esri/layers/GraphicsLayer',
     'esri/layers/FeatureLayer',
+    'esri/dijit/PopupTemplate',
     'esri/renderers/SimpleRenderer',
-    'esri/InfoTemplate',
     'esri/symbols/jsonUtils',
     'esri/lang',
     'esri/request',
-    './SingleTask',
-    'jimu/dijit/LoadingShelter'
+    './TaskSetting',
+    './SingleQueryLoader',
+    './SingleQueryResult',
+    './utils',
+    'jimu/LayerInfos/LayerInfos',
+    'jimu/dijit/LoadingShelter',
+    'dijit/form/Select'
   ],
-  function(declare, lang, query, html, array, fx, all, Deferred, _WidgetsInTemplateMixin,
-    TitlePane, BaseWidget, Message, DrawBox, jimuUtils, FilterUtils, FilterParameters,
-    GraphicsLayer, FeatureLayer, SimpleRenderer, InfoTemplate, symbolJsonUtils, esriLang,
-    esriRequest, SingleTask) {
+  function(on, query, Deferred, lang, html, array, all, declare, _WidgetsInTemplateMixin, BaseWidget,
+    Message, jimuUtils, MapManager, FilterUtils, FeatureLayer, PopupTemplate, SimpleRenderer, symbolJsonUtils,
+    esriLang, esriRequest, TaskSetting, SingleQueryLoader, SingleQueryResult, queryUtils, LayerInfos) {
 
     return declare([BaseWidget, _WidgetsInTemplateMixin], {
       name: 'Query',
       baseClass: 'jimu-widget-query',
-      isValidConfig:false,
-      currentAttrs:null,
-      tempResultLayer: null,
-
-      operationalLayers: null,
-
-      currentSingleTask: null,
-
-      _getCurrentAttrs: function(){
-        if(this.currentSingleTask){
-          return this.currentSingleTask.getCurrentAttrs();
-        }
-        return null;
-      },
+      currentTaskSetting: null,
+      hiddenClass: "not-visible",
+      _resultLayerInfos: null,//[{value,label,taskIndex,singleQueryResult}]
+      _activeLayerId: null,//save the current visible layer id
+      mapManager: null,
+      layerInfosObj: null,
 
       /*
       test:
@@ -80,13 +73,16 @@ define([
 
       postMixInProperties: function(){
         this.inherited(arguments);
-        this.operationalLayers = [];
+        this._resultLayerInfos = [];
         var strClearResults = this.nls.clearResults;
         var tip = esriLang.substitute({clearResults:strClearResults}, this.nls.operationalTip);
         this.nls.operationalTip = tip;
         if(this.config){
+          this.config = queryUtils.getConfigWithValidDataSource(this.config);
           this._updateConfig();
         }
+        this.mapManager = MapManager.getInstance();
+        this.layerInfosObj = LayerInfos.getInstanceSync();
       },
 
       _updateConfig: function(){
@@ -112,410 +108,392 @@ define([
 
       postCreate:function(){
         this.inherited(arguments);
-        this._combineRadioCheckBoxWithLabel();
-        this._initDrawBox();
-        this._resetAndAddTempResultLayer();
         this._initSelf();
+        this._updateResultDetailUI();
+        var trs = query('.single-task', this.tasksTbody);
+        if(trs.length === 1){
+          html.addClass(this.domNode, 'only-one-task');
+          this._showTaskSettingPane();
+          this._onClickTaskTr(trs[0]);
+        }
       },
 
       onOpen: function(){
-        if(this.tempResultLayer){
-          this.tempResultLayer.show();
+        // var resultLayers = this._getAllResultLayers();
+        // array.forEach(resultLayers, lang.hitch(this, function(layer){
+        //   layer.show();
+        // }));
+
+        if(this._activeLayerId){
+          var layer = this.map.getLayer(this._activeLayerId);
+          if(layer){
+            layer.show();
+          }
         }
       },
 
       onActive: function(){
-        this.map.setInfoWindowOnClick(false);
+        //this.map.setInfoWindowOnClick(false);
+        this.mapManager.disableWebMapPopup();
       },
 
       onDeActive: function(){
         //deactivate method of DrawBox dijit will call this.map.setInfoWindowOnClick(true) inside
-        this.drawBox.deactivate();
+        // this.drawBox.deactivate();
+        if(this.currentTaskSetting){
+          this.currentTaskSetting.deactivate();
+        }
+        this.mapManager.enableWebMapPopup();
       },
 
       onClose:function(){
-        if(this.tempResultLayer){
-          this.tempResultLayer.hide();
-        }
+        // var resultLayers = this._getAllResultLayers();
+        // array.forEach(resultLayers, lang.hitch(this, function(layer){
+        //   if(!layer.keepResultsOnMapAfterCloseWidget){
+        //     layer.hide();
+        //   }
+        // }));
+        this._hideAllLayers();
         this._hideInfoWindow();
-        this.drawBox.clear();
         this.inherited(arguments);
       },
 
       destroy:function(){
         this._hideInfoWindow();
-        this.drawBox.clear();
-        this._removeAllResultLayers(true);
+        this._removeResultLayerInfos(this._resultLayerInfos);
         this.inherited(arguments);
       },
 
-      _combineRadioCheckBoxWithLabel: function(){
-        jimuUtils.combineRadioCheckBoxWithLabel(this.cbxUseSpatial, this.useSpatialLabel);
-        jimuUtils.combineRadioCheckBoxWithLabel(this.cbxUseMapExtent, this.currentExtentLabel);
-        jimuUtils.combineRadioCheckBoxWithLabel(this.cbxDrawGraphic, this.drawGraphicLabel);
-        jimuUtils.combineRadioCheckBoxWithLabel(this.cbxOperational, this.operationalLayerLabel);
-      },
-
-      _isServiceSupportsOrderBy: function(layerInfo){
-        var isSupport = false;
-        if(layerInfo.advancedQueryCapabilities){
-          if(layerInfo.advancedQueryCapabilities.supportsOrderBy){
-            isSupport = true;
-          }
-        }
-        return isSupport;
-      },
-
-      _isServiceSupportsPagination: function(layerInfo){
-        var isSupport = false;
-        if(layerInfo.advancedQueryCapabilities){
-          if(layerInfo.advancedQueryCapabilities.supportsPagination){
-            isSupport = true;
-          }
-        }
-        return isSupport;
-      },
-
-      _tryLocaleNumber: function(value){
-        var result = jimuUtils.localizeNumber(value);
-        if(result === null || result === undefined){
-          result = value;
-        }
-        return result;
-      },
-
-      _tryLocaleDate: function(date){
-        var result = jimuUtils.localizeDate(date);
-        if(!result){
-          result = date.toLocaleDateString();
-        }
-        return result;
-      },
-
-      _resetAndAddTempResultLayer: function(){
-        this._removeTempResultLayer();
-        this.tempResultLayer = new GraphicsLayer();
-        this.map.addLayer(this.tempResultLayer);
-      },
-
-      _removeTempResultLayer: function(){
-        if(this.tempResultLayer){
-          this.map.removeLayer(this.tempResultLayer);
-        }
-        this.tempResultLayer = null;
-      },
-
-      _removeAllResultLayers: function(/*optional*/ dontSlide){
-        this._hideInfoWindow();
-        this._removeTempResultLayer();
-        this._removeAllOperatonalLayers();
-        this._clearResultPage();
-        //the default value of dontSlide is false.
-        //if true, it means the widgte will destroy and it needn't slide.
-        if(!dontSlide){
-          this._fromCurrentPageToQueryList();
-        }
-      },
-
-      _addOperationalLayer: function(resultLayer){
-        this.operationalLayers.push(resultLayer);
-        this.map.addLayer(resultLayer);
-      },
-
-      _fromCurrentPageToQueryList: function(){
-        html.setStyle(this.queryList, 'display', 'block');
-
-        if(html.getStyle(this.queryParams, 'display') === 'block'){
-          this._slide(this.queryList, -100, 0);
-          this._slide(this.queryParams, 0, 100);
-        }
-        else if(html.getStyle(this.queryResults, 'display') === 'block'){
-          this._slide(this.queryList, -100, 0);
-          this._slide(this.queryResults, 0, 100);
-        }
-      },
-
-      _removeAllOperatonalLayers: function(){
-        var layers = this.operationalLayers;
-        while(layers.length > 0){
-          var layer = layers[0];
-          if(layer){
-            this.map.removeLayer(layer);
-          }
-          layers[0] = null;
-          layers.splice(0, 1);
-        }
-        this.operationalLayers = [];
-      },
-
-      _isConfigValid:function(){
-        return this.config && typeof this.config === 'object';
-      },
-
-      _initDrawBox: function(){
-        this.drawBox = new DrawBox({
-          types: ['point', 'polyline', 'polygon'],
-          map: this.map,
-          showClear: true,
-          keepOneGraphic: true
-        });
-        this.drawBox.placeAt(this.drawBoxDiv);
-        this.drawBox.startup();
-      },
-
       _initSelf:function(){
-        var uniqueId = jimuUtils.getRandomString();
-        var cbxName = "Query_" + uniqueId;
-        this.cbxUseMapExtent.name = cbxName;
-        this.cbxDrawGraphic.name = cbxName;
-
-        this.paramsDijit = new FilterParameters();
-        this.paramsDijit.placeAt(this.parametersDiv);
-        this.paramsDijit.startup();
-
-        this.isValidConfig = this._isConfigValid();
-        if(!this.isValidConfig){
-          html.setStyle(this.queriesNode, 'display', 'none');
-          html.setStyle(this.invalidConfigNode, {
-            display:'block',
-            left:0
-          });
-          html.setStyle(this.btnClearAll, 'display', 'none');
-          return;
-        }
-
         var queries = this.config.queries;
 
         if(queries.length === 0){
-          html.setStyle(this.queriesNode, 'display', 'none');
+          html.setStyle(this.tasksNode, 'display', 'none');
           html.setStyle(this.noQueryTipSection, 'display', 'block');
-          html.setStyle(this.btnClearAll, 'display', 'none');
           return;
         }
 
+        //create query tasks
         array.forEach(queries, lang.hitch(this, function(singleConfig, index){
+          // var strEmptyTr = '<tr class="empty-single-task"><td></td><td></td></tr>';
+          // var emptyTr = html.toDom(strEmptyTr);
+          // html.place(emptyTr, this.tasksTbody);
+
           var name = singleConfig.name;
-          var strTr = '<tr class="single-query jimu-table-row">' +
-          '<td class="first-td"></td>' +
-          '<td class="second-td">' +
-            '<div class="query-name-div"></div>' +
-          '</td>' +
-          '<td class="third-td">' +
-            '<div class="arrow"></div>' +
-          '</td>' +
+          var strTr = '<tr class="single-task">' +
+            '<td class="first-td"><img class="task-icon" /></td>' +
+            '<td class="second-td">' +
+              '<div class="list-item-name task-name-div"></div>' +
+            '</td>' +
           '</tr>';
           var tr = html.toDom(strTr);
-          var queryNameDiv = query(".query-name-div", tr)[0];
-          queryNameDiv.innerHTML = jimuUtils.stripHTML(name);
-          html.place(tr, this.queriesTbody);
+          var queryNameDiv = query(".task-name-div", tr)[0];
+          queryNameDiv.innerHTML = name;
+          html.place(tr, this.tasksTbody);
+          var img = query("img", tr)[0];
+          if(singleConfig.icon){
+            img.src = singleConfig.icon;
+          }else{
+            img.src = this.folderUrl + "css/images/default_task_icon.png";
+          }
+          tr.taskIndex = index;
           tr.singleConfig = singleConfig;
           if(index % 2 === 0){
             html.addClass(tr, 'even');
-          }
-          else{
+          }else{
             html.addClass(tr, 'odd');
           }
         }));
       },
 
-      _slide:function(dom, startLeft, endLeft){
-        html.setStyle(dom, 'display', 'block');
-        html.setStyle(dom, 'left', startLeft + "%");
-        fx.animateProperty({
-          node: dom,
-          properties:{
-            left:{
-              start: startLeft,
-              end: endLeft,
-              units:'%'
-            }
-          },
-          duration: 500,
-          onEnd: lang.hitch(this, function(){
-            html.setStyle(dom, 'left', endLeft);
-            if(endLeft === 0){
-              html.setStyle(dom, 'display', 'block');
-            }
-            else{
-              html.setStyle(dom, 'display', 'none');
-            }
-          })
-        }).play();
+      _onTabHeaderClicked: function(event){
+        var target = event.target || event.srcElement;
+        if(target === this.taskQueryItem){
+          this._switchToTaskTab();
+        }else if(target === this.resultQueryItem){
+          this._switchToResultTab();
+        }
       },
 
-      _onQueryListClicked:function(event){
+      _switchToTaskTab: function(){
+        html.removeClass(this.resultQueryItem, 'selected');
+        html.removeClass(this.resultTabView, 'selected');
+        html.addClass(this.taskQueryItem, 'selected');
+        html.addClass(this.taskTabView, 'selected');
+      },
+
+      _switchToResultTab: function(){
+        this._updateResultDetailUI();
+        html.removeClass(this.taskQueryItem, 'selected');
+        html.removeClass(this.taskTabView, 'selected');
+        html.addClass(this.resultQueryItem, 'selected');
+        html.addClass(this.resultTabView, 'selected');
+      },
+
+      _updateResultDetailUI: function(){
+        if(this._resultLayerInfos.length > 0){
+          html.removeClass(this.resultSection, this.hiddenClass);
+          html.addClass(this.noresultSection, this.hiddenClass);
+        }else{
+          html.addClass(this.resultSection, this.hiddenClass);
+          html.removeClass(this.noresultSection, this.hiddenClass);
+        }
+      },
+
+      _showTaskListPane: function(){
+        this._switchToTaskTab();
+        html.setStyle(this.taskList, 'display', 'block');
+        html.setStyle(this.taskSettingContainer, 'display', 'none');
+      },
+
+      _showTaskSettingPane: function(){
+        this._switchToTaskTab();
+        html.setStyle(this.taskList, 'display', 'none');
+        html.setStyle(this.taskSettingContainer, 'display', 'block');
+      },
+
+      /*------------------------------task list------------------------------------*/
+
+      _onTaskListClicked: function(event){
         var target = event.target || event.srcElement;
         var tr = jimuUtils.getAncestorDom(target, lang.hitch(this, function(dom){
-          return html.hasClass(dom, 'single-query');
+          return html.hasClass(dom, 'single-task');
         }), 10);
+
         if(!tr){
           return;
         }
 
-        var singleConfig = tr.singleConfig;
-        var currentAttrs = SingleTask.getCleanCurrentAttrsTemplate();
+        this._onClickTaskTr(tr);
+      },
 
-        this.currentSingleTask = new SingleTask(this.map, currentAttrs);
-
-        currentAttrs.queryTr = tr;
-        currentAttrs.config = lang.clone(singleConfig);
-        currentAttrs.layerInfo = currentAttrs.queryTr.layerInfo;//may be null
-
-        var filterInfo = currentAttrs.config.filter;
-        var filterUtils = new FilterUtils();
-        currentAttrs.askForValues = filterUtils.isAskForValues(filterInfo);
-
-        if(currentAttrs.askForValues){
-          html.setStyle(this.parametersDiv, 'display', 'block');
-        }
-        else{
-          html.setStyle(this.parametersDiv, 'display', 'none');
-        }
-
-        query('tr.single-query', this.queriesTbody).removeClass('jimu-state-active');
-        html.addClass(currentAttrs.queryTr, 'jimu-state-active');
-
-        var callback = lang.hitch(this, function() {
-          var layerDefinition = currentAttrs.queryTr.layerInfo;
-          currentAttrs.layerInfo = layerDefinition;
-
-          if(this._isServiceSupportsOrderBy(layerDefinition) &&
-            this._isServiceSupportsPagination(layerDefinition)){
-            currentAttrs.queryType = 1;
-          }else if(this._isSupportObjectIds(layerDefinition)){
-            currentAttrs.queryType = 2;
+      _onClickTaskTr: function(tr){
+        //this._getLayerInfoAndServiceInfo(tr).then(lang.hitch(this, function(response){
+        this._getLayerInfoAndRelationshipLayerInfos(tr).then(lang.hitch(this, function(response){
+          var layerInfo = response.layerInfo;
+          //var serviceInfo = response.serviceInfo;
+          var relationshipLayerInfos = response.relationshipLayerInfos;
+          var relationshipPopupTemplates = response.relationshipPopupTemplates;
+          tr.singleConfig.objectIdField = jimuUtils.getObjectIdField(layerInfo);
+          var popupInfo = this._getPopupInfo(layerInfo, tr.singleConfig);
+          if(!popupInfo){
+            console.error("can't get popupInfo");
           }
-          else{
+          popupInfo.fieldInfos = queryUtils.getPortalFieldInfosWithoutShape(layerInfo, popupInfo.fieldInfos);
+          delete popupInfo.readFromWebMap;
+          //we prepare currentAttrs here
+          var currentAttrs = SingleQueryLoader.getCleanCurrentAttrsTemplate();
+          currentAttrs.queryTr = tr;
+          currentAttrs.config = lang.clone(tr.singleConfig);
+          currentAttrs.config.popupInfo = popupInfo; //add popupInfo attribute
+          currentAttrs.layerInfo = layerInfo;
+          //currentAttrs.serviceInfo = serviceInfo;
+          currentAttrs.relationshipLayerInfos = relationshipLayerInfos;
+          currentAttrs.relationshipPopupTemplates = relationshipPopupTemplates;
+          currentAttrs.query.maxRecordCount = layerInfo.maxRecordCount || 1000;
+
+          if (this._isServiceSupportsOrderBy(layerInfo) &&
+            this._isServiceSupportsPagination(layerInfo)) {
+            currentAttrs.queryType = 1;
+          } else if (this._isSupportObjectIds(layerInfo)) {
+            currentAttrs.queryType = 2;
+          } else {
             currentAttrs.queryType = 3;
           }
 
-          this._fromQueryListToQueryParams();
-        });
+          //after get currentAttrs, we can show task setting pane
+          //destroy the old TaskSetting dijit and create a new one
+          if (this.currentTaskSetting) {
+            this.currentTaskSetting.destroy();
+          }
+          this.currentTaskSetting = null;
+          this._showTaskSettingPane();
+          this.currentTaskSetting = new TaskSetting({
+            nls: this.nls,
+            map: this.map,
+            currentAttrs: currentAttrs,
+            layerInfosObj: this.layerInfosObj,
+            onBack: lang.hitch(this, function() {
+              this._showTaskListPane();
+            }),
+            onApply: lang.hitch(this, function(currentAttrs) {
+              this._onBtnApplyClicked(currentAttrs);
+            })
+          });
 
-        if(currentAttrs.queryTr.layerInfo){
-          callback();
-        }
-        else{
-          var layerUrl = currentAttrs.config.url;
-          this.shelter.show();
-          this._getLayerInfoWithRelationships(layerUrl).then(lang.hitch(this, function(layerInfo){
-            if (!this.domNode) {
-              return;
-            }
-            this.shelter.hide();
-            currentAttrs.queryTr.layerInfo = layerInfo;
-            currentAttrs.layerInfo = currentAttrs.queryTr.layerInfo;
-            callback();
-          }), lang.hitch(this, function(err){
-            console.error(err);
-            if (!this.domNode) {
-              return;
-            }
-            this.shelter.hide();
-            var errMsg = "";
-            if(err && err.httpCode === 403){
-              errMsg = this.nls.noPermissionsMsg;
-            }
-            this._showQueryErrorMsg(errMsg);
-          }));
-        }
+          // query('tr.single-task', this.tasksTbody).removeClass('selected');
+          // html.addClass(currentAttrs.queryTr, 'selected');
+
+          if (this.currentTaskSetting.canAutoRunning()) {
+            this._switchToResultTab();
+            //if the task can run without specify other parameters, then we run it automatically
+            this.currentTaskSetting.run();
+          }
+
+          this.currentTaskSetting.placeAt(this.taskSettingContainer);
+
+          //this._fromQueryListToQueryParams();
+        }), lang.hitch(this, function(err){
+          console.error("can't get layerInfo", err);
+        }));
       },
 
-      _getLayerInfoWithRelationships: function(layerUrl){
+      _getLayerInfoAndServiceInfo: function(tr){
         var def = new Deferred();
-        esriRequest({
-          url: layerUrl,
-          content: {
-            f: 'json'
-          },
-          handleAs: 'json',
-          callbackParamName: 'callback'
-        }).then(lang.hitch(this, function(layerInfo){
-          if(!layerInfo.relationships){
-            layerInfo.relationships = [];
+        var layerDef = this._getLayerInfo(tr);
+        var serviceDef = this._getServiceInfo(tr);
+        this.shelter.show();
+        all([layerDef, serviceDef]).then(lang.hitch(this, function(results) {
+          if (!this.domNode) {
+            return;
           }
-          var serviceUrl = this._getServiceUrlByLayerUrl(layerUrl);
-          var defs = array.map(layerInfo.relationships, lang.hitch(this, function(relationship){
-            return esriRequest({
-              url: serviceUrl + '/' + relationship.relatedTableId,
-              content: {
-                f: 'json'
-              },
-              handleAs: 'json',
-              callbackParamName: 'callback'
+          this.shelter.hide();
+          tr.layerInfo = results[0];
+          tr.serviceInfo = results[1];
+          def.resolve({
+            layerInfo: tr.layerInfo,
+            serviceInfo: tr.serviceInfo
+          });
+        }), lang.hitch(this, function(err) {
+          console.error(err);
+          if (!this.domNode) {
+            return;
+          }
+          this.shelter.hide();
+          var errMsg = "";
+          if (err && err.httpCode === 403) {
+            errMsg = this.nls.noPermissionsMsg;
+          }
+          this._showQueryErrorMsg(errMsg);
+          def.reject();
+        }));
+        return def;
+      },
+
+      _getLayerInfoAndRelationshipLayerInfos: function(tr){
+        var def = new Deferred();
+        this.shelter.show();
+        var layerDef = this._getLayerInfo(tr);
+        layerDef.then(lang.hitch(this, function(layerInfo){
+          tr.layerInfo = layerInfo;
+          this._getRelationshipLayerInfos(tr).then(lang.hitch(this, function(relationshipLayerInfos){
+            if(!this.domNode){
+              return;
+            }
+
+            tr.relationshipLayerInfos = relationshipLayerInfos;
+            var relationshipPopupTemplates = {};
+            for(var layerId in relationshipLayerInfos){
+              var popupInfo = queryUtils.getDefaultPopupInfo(relationshipLayerInfos[layerId], false, true);
+              relationshipPopupTemplates[layerId] = new PopupTemplate(popupInfo);
+            }
+            this.shelter.hide();
+            def.resolve({
+              layerInfo: layerInfo,
+              relationshipLayerInfos: relationshipLayerInfos,
+              relationshipPopupTemplates: relationshipPopupTemplates
             });
-          }));
-          all(defs).then(lang.hitch(this, function(results){
-            array.forEach(results, lang.hitch(this, function(relationshipInfo, index){
-              var relationship = layerInfo.relationships[index];
-              relationship.name = relationshipInfo.name;
-              //ignore shape field
-              relationship.fields = array.filter(relationshipInfo.fields,
-                lang.hitch(this, function(relationshipFieldInfo){
-                return relationshipFieldInfo.type !== 'esriFieldTypeGeometry';
-              }));
-            }));
-            def.resolve(layerInfo);
           }), lang.hitch(this, function(err){
+            if(!this.domNode){
+              return;
+            }
+            this.shelter.hide();
             def.reject(err);
           }));
         }), lang.hitch(this, function(err){
+          if(!this.domNode){
+            return;
+          }
+          this.shelter.hide();
           def.reject(err);
         }));
         return def;
       },
 
-      _onCbxUseSpatialClicked: function(){
-        if(this.cbxUseSpatial.checked){
-          html.setStyle(this.selectSpatialDiv, 'display', 'block');
+      _getLayerInfo: function(tr){
+        var def = new Deferred();
+        if(tr.layerInfo){
+          def.resolve(tr.layerInfo);
+        }else{
+          var layerUrl = tr.singleConfig.url;
+          esriRequest({
+            url: layerUrl,
+            content: {
+              f: 'json'
+            },
+            handleAs: 'json',
+            callbackParamName: 'callback'
+          }).then(lang.hitch(this, function(layerInfo){
+            tr.layerInfo = layerInfo;
+            def.resolve(layerInfo);
+          }), lang.hitch(this, function(err){
+            def.reject(err);
+          }));
         }
-        else{
-          html.setStyle(this.selectSpatialDiv, 'display', 'none');
+        return def;
+      },
+
+      _getServiceInfo: function(tr){
+        var def = new Deferred();
+        if(tr.serviceInfo){
+          def.resolve(tr.serviceInfo);
+        }else{
+          var layerUrl = tr.singleConfig.url;
+          var serviceUrl = this._getServiceUrlByLayerUrl(layerUrl);
+          esriRequest({
+            url: serviceUrl,
+            content: {
+              f: 'json'
+            },
+            handleAs: 'json',
+            callbackParamName: 'callback'
+          }).then(lang.hitch(this, function(serviceInfo){
+            tr.serviceInfo = serviceInfo;
+            def.resolve(serviceInfo);
+          }), lang.hitch(this, function(err){
+            def.reject(err);
+          }));
         }
+        return def;
+      },
 
-        if (this.cbxUseMapExtent.checked) {
-          this._onCbxUseMapExtentClicked();
-        } else {
-          this._onCbxDrawGraphicClicked();
+      _getRelationshipLayerInfos: function(tr){
+        var def = new Deferred();
+        if(tr.relationshipLayerInfos){
+          def.resolve(tr.relationshipLayerInfos);
+        }else{
+          var layerInfo = tr.layerInfo;
+          var relationships = layerInfo.relationships;
+          if(relationships && relationships.length > 0){
+            var layerUrl = tr.singleConfig.url;
+            var serviceUrl = this._getServiceUrlByLayerUrl(layerUrl);
+            var defs = array.map(relationships, lang.hitch(this, function(relationship){
+              var url = serviceUrl + "/" + relationship.relatedTableId;
+              return esriRequest({
+                url: url,
+                content: {
+                  f: 'json'
+                },
+                handleAs: 'json',
+                callbackParamName: 'callback'
+              });
+            }));
+            all(defs).then(lang.hitch(this, function(results){
+              tr.relationshipLayerInfos = {};
+              array.forEach(relationships, lang.hitch(this, function(relationship, index){
+                tr.relationshipLayerInfos[relationship.relatedTableId] = results[index];
+              }));
+              def.resolve(tr.relationshipLayerInfos);
+            }), lang.hitch(this, function(err){
+              tr.relationshipLayerInfos = null;
+              def.reject(err);
+            }));
+          }else{
+            tr.relationshipLayerInfos = {};
+            def.resolve(tr.relationshipLayerInfos);
+          }
         }
-
-        this._resetDrawBox();
-      },
-
-      _onCbxUseMapExtentClicked: function(){
-        if(this.cbxUseMapExtent.checked){
-          this._resetDrawBox();
-          html.setStyle(this.drawBoxDiv, 'display', 'none');
-        }
-      },
-
-      _onCbxDrawGraphicClicked: function(){
-        if(this.cbxDrawGraphic.checked){
-          html.setStyle(this.drawBoxDiv, 'display', 'block');
-        }
-      },
-
-      _onBtnClearAllClicked: function(){
-        this._removeAllResultLayers();
-      },
-
-      _resetDrawBox: function(){
-        this.drawBox.deactivate();
-        this.drawBox.clear();
-      },
-
-      _resetQueryParamsPage: function(){
-        this.paramsDijit.clear();
-        this.cbxOperational.checked = false;
-        this.cbxUseSpatial.checked = false;
-        this._onCbxUseSpatialClicked();
-        this._resetDrawBox();
-      },
-
-      _getLayerIndexByLayerUrl: function(layerUrl){
-        var lastIndex = layerUrl.lastIndexOf("/");
-        var a = layerUrl.slice(lastIndex + 1, layerUrl.length);
-        return parseInt(a, 10);
+        return def;
       },
 
       _getServiceUrlByLayerUrl: function(layerUrl){
@@ -524,249 +502,116 @@ define([
         return serviceUrl;
       },
 
-      _fromQueryListToQueryParams:function(){
-        //reset UI of params page
-        this._resetQueryParamsPage();
-        var currentAttrs = this._getCurrentAttrs();
-        var layerUrl = currentAttrs.config.url;
-        // this.btnResultsBack.innerHTML = '&lt; ' + this.nls.parameters;
-        var partsObj = lang.clone(currentAttrs.config.filter);
-        // this.paramsDijit.url = layerUrl;
-        this.paramsDijit.build(layerUrl, currentAttrs.layerInfo, partsObj);
+      _getPopupInfo: function(layerDefinition, config){
+        var result = null;
+        var defaultPopupInfo = queryUtils.getDefaultPopupInfo(layerDefinition, false, false);
+        result = defaultPopupInfo;
+        var popupInfo = null;
+        if(config.popupInfo){
+          //new query
+          if(config.popupInfo.readFromWebMap){
+            if(config.webMapLayerId){
+              var layerInfo = null;
+              if(queryUtils.isTable(layerDefinition)){
+                layerInfo = this.layerInfosObj.getTableInfoById(config.webMapLayerId);
+              }else{
+                layerInfo = this.layerInfosObj.getLayerInfoById(config.webMapLayerId);
+              }
+              if (layerInfo) {
+                popupInfo = layerInfo.getPopupInfo();
+                if (popupInfo) {
+                  popupInfo = lang.clone(popupInfo);
+                  result = popupInfo;
+                } else {
+                  result = defaultPopupInfo;
+                }
+              } else {
+                result = defaultPopupInfo;
+              }
+            }else{
+              result = defaultPopupInfo;
+            }
+          }else{
+            popupInfo = lang.clone(config.popupInfo);
+            delete popupInfo.readFromWebMap;
+            result = popupInfo;
+          }
+        }else if(config.popup){
+          //old query, update old config.popup to new config.popupInfo
+          result = queryUtils.upgradePopupToPopupInfo(layerDefinition, config.popup);
+        }else{
+          result = defaultPopupInfo;
+        }
 
-        //slide
-        var showDom = this.queryParams;
-        var hideDom = this.queryResults;
+        if(!result){
+          result = defaultPopupInfo;
+        }
 
-        html.setStyle(this.queryList, {
-          left: 0,
-          display: 'block'
-        });
-
-        html.setStyle(showDom, {
-          left: '100%',
-          display: 'block'
-        });
-
-        html.setStyle(hideDom, 'display', 'none');
-        this._slide(this.queryList, 0, -100);
-        this._slide(showDom, 100, 0);
+        //before we return popupInfo, we should remove unsupported field names, such as: "relationships/0/OBJECTID"
+        queryUtils.removePopupInfoUnsupportFields(layerDefinition, result);
+        return result;
       },
 
-      _onBtnParamsBackClicked:function(){
-        this._resetDrawBox();
-        html.setStyle(this.queryList, 'display', 'block');
-        html.setStyle(this.queryParams, 'display', 'block');
-        html.setStyle(this.queryResults, 'display', 'none');
-        this._slide(this.queryList, -100, 0);
-        this._slide(this.queryParams, 0, 100);
-      },
+      /*------------------------------task list------------------------------------*/
 
       //start to query
-      _onBtnApplyClicked:function(){
-        //reset result page
-        this._clearResultPage();
-        html.setStyle(this.resultsNumberDiv, 'display', 'none');
+      _onBtnApplyClicked:function(currentAttrs){
+        //we should enable web map popup here
+        this.mapManager.enableWebMapPopup();
 
-        var currentAttrs = this._getCurrentAttrs();
-
-        var layerInfo = currentAttrs.layerInfo;
-
-        //query{maxRecordCount,resultLayer,where,nextIndex,objectIds}
-        //set query.where
-        if(currentAttrs.askForValues){
-          var newExpr = this.paramsDijit.getFilterExpr();
-          var validExpr = newExpr && typeof newExpr === 'string';
-          if(!validExpr){
-            return;
-          }
-          currentAttrs.query.where = newExpr;
-        }
-        else{
-          currentAttrs.query.where = currentAttrs.config.filter.expr;
-        }
-
-        //set query.maxRecordCount
-        //maxRecordCount is added at 10.1
-        currentAttrs.query.maxRecordCount = layerInfo.maxRecordCount || 1000;
-
-        //set query.nextIndex
-        currentAttrs.query.nextIndex = 0;
-
-        //set query.objectIds
-        currentAttrs.query.objectIds = [];
-
-        var where = currentAttrs.query.where;
-
-        var geometry = null;
-
-        if(this.cbxUseSpatial.checked){
-          if(this.cbxUseMapExtent.checked){
-            geometry = this.map.extent;
-          }
-          else{
-            var gs = this.drawBox.drawLayer.graphics;
-            if(gs.length > 0){
-              var g = gs[0];
-              geometry = g.geometry;
-            }
-          }
-          if(!geometry){
-            new Message({message: this.nls.specifySpatialFilterMsg});
-            return;
-          }
-        }
-
-        //set query.geometry
-        currentAttrs.query.geometry = geometry;
-
-        if(this.tempResultLayer){
-          this.map.removeLayer(this.tempResultLayer);
-        }
-        this.tempResultLayer = null;
+        html.addClass(this.resultTabView, this.hiddenClass);
 
         //set query.resultLayer
-        this._createQueryResultLayer();
+        var singleResultLayer = currentAttrs.config.singleResultLayer;
+        if(singleResultLayer){
+          var taskIndex = currentAttrs.queryTr.taskIndex;
+          var taskOptions = this._getResultLayerInfosByTaskIndex(taskIndex);
+          if(taskOptions.length > 0){
+            //When SingleQueryResult is destroyed, the releated feature layer is removed
+            this._removeResultLayerInfos(taskOptions);
+          }
+        }
 
-        this._resetDrawBox();
+        var queryName = this._getBestQueryName(currentAttrs.config.name || '');
 
-        html.setStyle(this.queryList, 'display', 'none');
-        html.setStyle(this.queryParams, 'display', 'block');
-        html.setStyle(this.queryResults, 'display', 'block');
-        this._slide(this.queryParams, 0, -100);
-        this._slide(this.queryResults, 100, 0);
+        this._createNewResultLayer(currentAttrs, queryName);
 
-        // this.currentSingleTask.executeQueryForFirstTime();
-        var resultLayer = currentAttrs.query.resultLayer;
+        this.shelter.show();
 
-        var callback = lang.hitch(this, function(response) {
+        var singleQueryResult = new SingleQueryResult({
+          map: this.map,
+          nls: this.nls,
+          label: queryName,
+          currentAttrs: currentAttrs,
+          queryWidget: this,
+          onBack: lang.hitch(this, function(){
+            this._switchToResultTab();
+          })
+        });
+        this.own(on(singleQueryResult, 'show-related-records', lang.hitch(this, this._onShowRelatedRecords)));
+        this.own(on(singleQueryResult, 'hide-related-records', lang.hitch(this, this._onHideRelatedRecords)));
+        //we should put singleQueryResult into the dom tree when _onSingleQueryFinished is called
+        //singleQueryResult.placeAt(this.singleResultDetails);
+
+        singleQueryResult.executeQueryForFirstTime().then(lang.hitch(this, function(/*allCount*/){
           if (!this.domNode) {
             return;
           }
           this.shelter.hide();
-          var allCount = currentAttrs.query.allCount;
-          this.numSpan.innerHTML = jimuUtils.localizeNumber(allCount);
-          if (allCount > 0) {
-            if (resultLayer instanceof FeatureLayer) {
-              this._addOperationalLayer(resultLayer);
-            }
-            var features = response.features;
-            var relatedResults = response.relatedResults;
-            var relatedTableIds = response.relatedTableIds;
-            this._addResultItems(features, resultLayer, relatedResults, relatedTableIds);
-          }
-        });
-
-        var errorCallback = lang.hitch(this, function(err) {
+          html.removeClass(this.resultTabView, this.hiddenClass);
+          // if(allCount > 0){
+          //   this._onSingleQueryFinished(singleQueryResult, queryName);
+          // }
+          this._onSingleQueryFinished(singleQueryResult, queryName);
+          this._updateResultDetailUI();
+        }), lang.hitch(this, function(err){
           console.error(err);
-          if (!this.domNode) {
+          if(!this.domNode){
             return;
           }
           this.shelter.hide();
-          if (resultLayer) {
-            this.map.removeLayer(resultLayer);
-          }
-          resultLayer = null;
-          this._showQueryErrorMsg();
-        });
-
-        if(currentAttrs.queryType === 1){
-          html.setStyle(this.resultsNumberDiv, 'display', 'block');
-          this.shelter.show();
-          this.currentSingleTask.doQuery_SupportOrderByAndPagination(where, geometry)
-          .then(callback, errorCallback);
-        }else if(currentAttrs.queryType === 2){
-          html.setStyle(this.resultsNumberDiv, 'display', 'block');
-          this.shelter.show();
-          this.currentSingleTask.doQuery_SupportObjectIds(where, geometry)
-          .then(callback, errorCallback);
-        }else{
-          this.currentSingleTask.doQuery_NotSupportObjectIds(where, geometry)
-          .then(callback, errorCallback);
-        }
-      },
-
-      _isSupportObjectIds: function(layerInfo){
-        //http://resources.arcgis.com/en/help/arcgis-rest-api/#/Layer_Table/02r3000000zr000000/
-        //currentVersion is added from 10.0 SP1
-        //typeIdField is added from 10.0
-        var currentVersion = 0;
-        if(layerInfo.currentVersion){
-          currentVersion = parseFloat(layerInfo.currentVersion);
-        }
-        return currentVersion >= 10.0 || layerInfo.hasOwnProperty('typeIdField');
-      },
-
-      _isImageServiceLayer: function(url) {
-        return (url.indexOf('/ImageServer') > -1);
-      },
-
-      _isTable: function(layerDefinition){
-        return layerDefinition.type === "Table";
-      },
-
-      _createQueryResultLayer: function(){
-        var resultLayer = null;
-        var renderer = null;
-
-        var currentAttrs = this._getCurrentAttrs();
-
-        if(currentAttrs.config.resultsSymbol){
-          //if the layer is a table, resultsSymbol will be null
-          var symbol = symbolJsonUtils.fromJson(currentAttrs.config.resultsSymbol);
-          renderer = new SimpleRenderer(symbol);
-        }
-
-        if (this.cbxOperational.checked) {
-          //new a feature layer
-          var layerInfo = lang.clone(currentAttrs.layerInfo);
-          var queryName = this._getBestQueryName(currentAttrs.config.name || '');
-
-          //override layerInfo
-          layerInfo.name = queryName;
-          //ImageServiceLayer doesn't have drawingInfo
-          if(!layerInfo.drawingInfo){
-            layerInfo.drawingInfo = {};
-          }
-          if(renderer){
-            layerInfo.drawingInfo.renderer = renderer.toJson();
-          }
-
-          layerInfo.drawingInfo.transparency = 0;
-          layerInfo.minScale = 0;
-          layerInfo.maxScale = 0;
-          layerInfo.effectiveMinScale = 0;
-          layerInfo.effectiveMaxScale = 0;
-          layerInfo.defaultVisibility = true;
-          delete layerInfo.extent;
-
-          //only keep necessary fields
-          var necessaryFieldNames = this._getOutputFields();
-          layerInfo.fields = array.filter(layerInfo.fields, lang.hitch(this, function(fieldInfo){
-            return necessaryFieldNames.indexOf(fieldInfo.name) >= 0;
-          }));
-
-          var featureCollection = {
-            layerDefinition: layerInfo,
-            featureSet: null
-          };
-          //Fornow, we should not add the FeatureLayer into map.
-          resultLayer = new FeatureLayer(featureCollection);
-        } else {
-          //use graphics layer
-          this._resetAndAddTempResultLayer();
-          resultLayer = this.tempResultLayer;
-        }
-
-        currentAttrs.query.resultLayer = resultLayer;
-        this.queryResults.resultLayer = resultLayer;
-
-        //set renderer
-        if(renderer){
-          resultLayer.setRenderer(renderer);
-        }
-
-        return resultLayer;
+          html.removeClass(this.resultTabView, this.hiddenClass);
+        }));
       },
 
       _getBestQueryName: function(queryName){
@@ -789,549 +634,304 @@ define([
         return finalName;
       },
 
-      _onResultsScroll:function(){
-        if(!jimuUtils.isScrollToBottom(this.resultsContainer)){
-          return;
+      //create a FeatureLayer
+      _createNewResultLayer: function(currentAttrs, queryName){
+        var resultLayer = null;
+        var renderer = null;
+        var taskIndex = currentAttrs.queryTr.taskIndex;
+
+        var layerInfo = lang.clone(currentAttrs.layerInfo);
+
+        //override layerInfo
+        layerInfo.name = queryName;
+        //ImageServiceLayer doesn't have drawingInfo
+        if (!layerInfo.drawingInfo) {
+          layerInfo.drawingInfo = {};
         }
 
-        //this.currentSingleTask.executeQueryWhenScrollToBottom();
-        var currentAttrs = this._getCurrentAttrs();
+        layerInfo.drawingInfo.transparency = 0;
+        layerInfo.minScale = 0;
+        layerInfo.maxScale = 0;
+        layerInfo.effectiveMinScale = 0;
+        layerInfo.effectiveMaxScale = 0;
+        layerInfo.defaultVisibility = true;
+        delete layerInfo.extent;
 
-        var resultLayer = currentAttrs.query.resultLayer;
+        //only keep necessary fields
+        var singleQueryLoader = new SingleQueryLoader(this.map, currentAttrs);
+        var necessaryFieldNames = singleQueryLoader.getOutputFields();
+        layerInfo.fields = array.filter(layerInfo.fields, lang.hitch(this, function(fieldInfo) {
+          return necessaryFieldNames.indexOf(fieldInfo.name) >= 0;
+        }));
+        var featureCollection = {
+          layerDefinition: layerInfo,
+          featureSet: null
+        };
 
-        var callback = lang.hitch(this, function(response) {
-          if (!this.domNode) {
-            return;
-          }
-          this.shelter.hide();
-          var features = response.features;
-          var relatedResults = response.relatedResults;
-          var relatedTableIds = response.relatedTableIds;
-          this._addResultItems(features, resultLayer, relatedResults, relatedTableIds);
-        });
-
-        var errorCallback = lang.hitch(this, function(err) {
-          console.error(err);
-          if (!this.domNode) {
-            return;
-          }
-          this._showQueryErrorMsg();
-          this.shelter.hide();
-        });
-
-        var nextIndex = currentAttrs.query.nextIndex;
-
-        if(currentAttrs.queryType === 1){
-          var allCount = currentAttrs.query.allCount;
-          if(nextIndex >= allCount){
-            return;
-          }
-
-          this.currentSingleTask.onResultsScroll_SupportOrderByAndPagination()
-          .then(callback, errorCallback);
-        }else if(currentAttrs.queryType === 2){
-          var allObjectIds = currentAttrs.query.objectIds;
-          if(nextIndex >= allObjectIds.length){
-            return;
-          }
-          this.currentSingleTask.onResultsScroll_SupportObjectIds().then(callback, errorCallback);
+        //For now, we should not add the FeatureLayer into map.
+        resultLayer = new FeatureLayer(featureCollection);
+        // resultLayer.keepResultsOnMapAfterCloseWidget = currentAttrs.config.keepResultsOnMapAfterCloseWidget;
+        //set taskIndex for resutlLayer
+        resultLayer._queryWidgetTaskIndex = taskIndex;
+        //set popupTemplate
+        var popupInfo = lang.clone(currentAttrs.config.popupInfo);
+        var popupTemplate = new PopupTemplate(popupInfo);
+        if(popupInfo.showAttachments){
+          var url = currentAttrs.config.url;
+          var objectIdField = currentAttrs.config.objectIdField;
+          queryUtils.overridePopupTemplateMethodGetAttachments(popupTemplate, url, objectIdField);
         }
+        resultLayer.setInfoTemplate(popupTemplate);
+
+        currentAttrs.query.resultLayer = resultLayer;
+
+        //set renderer
+        //if the layer is a table, resultsSymbol will be null
+        if(!queryUtils.isTable(currentAttrs.layerInfo)){
+          if(!currentAttrs.config.useLayerSymbol && currentAttrs.config.resultsSymbol){
+            var symbol = symbolJsonUtils.fromJson(currentAttrs.config.resultsSymbol);
+            renderer = new SimpleRenderer(symbol);
+            resultLayer.setRenderer(renderer);
+          }
+        }
+
+        return resultLayer;
+      },
+
+      /*---------------------------query result list-------------------------------*/
+
+      _onSingleQueryFinished: function(singleQueryResult, queryName){
+        this.currentTaskSetting.onGetQueryResponse();
+        singleQueryResult.placeAt(this.singleResultDetails);
+        this._hideAllSingleQueryResultDijits();
+        this._switchToResultTab();
+        html.setStyle(singleQueryResult.domNode, 'display', 'block');
+        var currentAttrs = singleQueryResult.getCurrentAttrs();
+        var taskIndex = currentAttrs.queryTr.taskIndex;
+
+        var resultLayerInfo = {
+          value: jimuUtils.getRandomString(),
+          label: queryName,
+          taskIndex: taskIndex,
+          singleQueryResult: singleQueryResult
+        };
+
+        this._resultLayerInfos.push(resultLayerInfo);
+
+        this.resultLayersSelect.addOption({
+          value: resultLayerInfo.value,
+          label: resultLayerInfo.label
+        });
+        this.resultLayersSelect.set('value', resultLayerInfo.value);
+
+        this._showResultLayerInfo(resultLayerInfo);
+
+        this._updateResultDetailUI();
+      },
+
+      _onResultLayerSelectChanged: function(){
+        var value = this.resultLayersSelect.get('value');
+        if(value){
+          var resultLayerInfo = this._getResultLayerInfoByValue(value);
+          if (resultLayerInfo) {
+            this._showResultLayerInfo(resultLayerInfo);
+            var singleQueryResult = resultLayerInfo.singleQueryResult;
+            if(singleQueryResult){
+              singleQueryResult.zoomToLayer();
+            }
+          }
+        }
+      },
+
+      _getAllResultLayers: function(){
+        var resultLayers = [];
+        array.map(this._resultLayerInfos, lang.hitch(this, function(resultLayerInfo){
+          if(resultLayerInfo.singleQueryResult){
+            var currentAttrs = resultLayerInfo.singleQueryResult.getCurrentAttrs();
+            if(currentAttrs && currentAttrs.query){
+              var layer = currentAttrs.query.resultLayer;
+              if(layer){
+                resultLayers.push(layer);
+              }
+            }
+          }
+        }));
+        return resultLayers;
+      },
+
+      _hideAllLayers: function(/*optional*/ ignoreLayer){
+        var resultLayers = this._getAllResultLayers();
+        array.forEach(resultLayers, lang.hitch(this, function(layer){
+          if(layer !== ignoreLayer){
+            layer.hide();
+          }
+        }));
+      },
+
+      _removeResultLayerInfosByTaskIndex: function(taskIndex){
+        var resultLayerInfos = this._getResultLayerInfosByTaskIndex(taskIndex);
+        this._removeResultLayerInfos(resultLayerInfos);
+      },
+
+      _getResultLayerInfoByValue: function(value){
+        var resultLayerInfo = null;
+        array.some(this._resultLayerInfos, lang.hitch(this, function(item){
+          if(item.value === value){
+            resultLayerInfo = item;
+            return true;
+          }else{
+            return false;
+          }
+        }));
+        return resultLayerInfo;
+      },
+
+      _getResultLayerInfosByTaskIndex: function(taskIndex){
+        var resultLayerInfos = this._resultLayerInfos;
+        resultLayerInfos = array.filter(resultLayerInfos, lang.hitch(this, function(resultLayerInfo){
+          return resultLayerInfo.taskIndex === taskIndex;
+        }));
+        return resultLayerInfos;
+      },
+
+      _removeResultLayerInfoByValues: function(values){
+        var indexArray = [];
+        array.forEach(this._resultLayerInfos, lang.hitch(this, function(resultLayerInfo, index){
+          if(values.indexOf(resultLayerInfo.value) >= 0){
+            indexArray.push(index);
+            if(resultLayerInfo.singleQueryResult && resultLayerInfo.singleQueryResult.domNode){
+              resultLayerInfo.singleQueryResult.destroy();
+            }
+            resultLayerInfo.singleQueryResult = null;
+          }
+        }));
+        indexArray.reverse();
+        array.forEach(indexArray, lang.hitch(this, function(index){
+          this._resultLayerInfos.splice(index, 1);
+        }));
+        this.resultLayersSelect.removeOption(values);
+
+        var options = this.resultLayersSelect.getOptions();
+        if(options && options.length > 0){
+          this.resultLayersSelect.set('value', options[0].value);
+        }else{
+          if(typeof this.resultLayersSelect._setDisplay === "function"){
+            this.resultLayersSelect._setDisplay("");
+          }
+        }
+
+        this._updateResultDetailUI();
+      },
+
+      _removeResultLayerInfos: function(resultLayerInfos){
+        var values = array.map(resultLayerInfos, lang.hitch(this, function(resultLayerInfo){
+          return resultLayerInfo.value;
+        }));
+        return this._removeResultLayerInfoByValues(values);
+      },
+
+      _getAllSingleQueryResultDijits: function(){
+        var dijits = [];
+
+        if(this._resultLayerInfos && this._resultLayerInfos.length > 0){
+          array.forEach(this._resultLayerInfos, lang.hitch(this, function(resultLayerInfo){
+            if(resultLayerInfo && resultLayerInfo.singleQueryResult){
+              dijits.push(resultLayerInfo.singleQueryResult);
+            }
+          }));
+        }
+
+        return dijits;
+      },
+
+      _hideAllSingleQueryResultDijits: function(){
+        var dijits = this._getAllSingleQueryResultDijits();
+        array.forEach(dijits, lang.hitch(this, function(dijit){
+          html.setStyle(dijit.domNode, 'display', 'none');
+        }));
+      },
+
+      _showResultLayerInfo: function(resultLayerInfo){
+        this._hideAllSingleQueryResultDijits();
+        var singleQueryResult = resultLayerInfo.singleQueryResult;
+        var resutlLayer = null;
+        if (singleQueryResult) {
+          html.setStyle(singleQueryResult.domNode, 'display', 'block');
+          var currentAttrs = singleQueryResult.getCurrentAttrs();
+          resutlLayer = lang.getObject("query.resultLayer", false, currentAttrs);
+        }
+
+        if (resutlLayer) {
+          this._activeLayerId = resutlLayer.id;
+          this._hideAllLayers(resutlLayer);
+          resutlLayer.show();
+        }else{
+          this._activeLayerId = null;
+          this._hideAllLayers();
+        }
+      },
+
+      removeSingleQueryResult: function(singleQueryResult){
+        var value = null;
+        array.some(this._resultLayerInfos, lang.hitch(this, function(resultLayerInfo){
+          if(resultLayerInfo.singleQueryResult === singleQueryResult){
+            value = resultLayerInfo.value;
+            return true;
+          }else{
+            return false;
+          }
+        }));
+        if(value !== null){
+          this._removeResultLayerInfoByValues([value]);
+        }
+      },
+
+      _onShowRelatedRecords: function(){
+        html.addClass(this.resultLayersSelectDiv, this.hiddenClass);
+      },
+
+      _onHideRelatedRecords: function(){
+        html.removeClass(this.resultLayersSelectDiv, this.hiddenClass);
       },
 
       /*-------------------------common functions----------------------------------*/
-      _clearResultPage: function(){
-        this._hideInfoWindow();
-        this._unSelectResultTr();
-        html.empty(this.resultsTbody);
-        this.numSpan.innerHTML = '0';
-      },
-
-      _unSelectResultTr: function(){
-        if(this.queryResults.resultTr){
-          html.removeClass(this.queryResults.resultTr, 'jimu-state-active');
-        }
-        this.queryResults.resultTr = null;
-      },
-
-      _selectResultTr: function(tr){
-        this._unSelectResultTr();
-        this.queryResults.resultTr = tr;
-        if(this.queryResults.resultTr){
-          html.addClass(this.queryResults.resultTr, 'jimu-state-active');
-        }
-      },
-
-      _zoomToLayer: function(gl){
-        var currentAttrs = this._getCurrentAttrs();
-        if(!this._isTable(currentAttrs.layerInfo)){
-          var ext = jimuUtils.graphicsExtent(gl.graphics, 1.4);
-          if(ext){
-            this.map.setExtent(ext);
+      _isServiceSupportsOrderBy: function(layerInfo){
+        var isSupport = false;
+        if(layerInfo.advancedQueryCapabilities){
+          if(layerInfo.advancedQueryCapabilities.supportsOrderBy){
+            isSupport = true;
           }
         }
+        return isSupport;
       },
 
-      _getObjectIdField: function(){
-        var currentAttrs = this._getCurrentAttrs();
-        return currentAttrs.config.objectIdField;
+      _isServiceSupportsPagination: function(layerInfo){
+        var isSupport = false;
+        if(layerInfo.advancedQueryCapabilities){
+          if(layerInfo.advancedQueryCapabilities.supportsPagination){
+            isSupport = true;
+          }
+        }
+        return isSupport;
       },
 
-      _getOutputFields: function(){
-        var currentAttrs = this._getCurrentAttrs();
-        var fields = currentAttrs.config.popup.fields;
-        var outFields = array.map(fields, lang.hitch(this, function(fieldInfo){
-          return fieldInfo.name;
-        }));
-        //we need to add objectIdField into outFields because relationship query
-        //needs objectId infomation
-        var objectIdField = currentAttrs.config.objectIdField;
-        if(array.indexOf(outFields, objectIdField) < 0){
-          outFields.push(objectIdField);
+      _isSupportObjectIds: function(layerInfo){
+        //http://resources.arcgis.com/en/help/arcgis-rest-api/#/Layer_Table/02r3000000zr000000/
+        //currentVersion is added from 10.0 SP1
+        //typeIdField is added from 10.0
+        var currentVersion = 0;
+        if(layerInfo.currentVersion){
+          currentVersion = parseFloat(layerInfo.currentVersion);
         }
-        //"Name:${CITY_NAME}, Population: ${POP}"
-        var title = currentAttrs.config.popup.title;
-        //["${CITY_NAME}", "${POP}"]
-        var matches = title.match(/\$\{\w+\}/g);
-        if(matches && matches.length > 0){
-          array.forEach(matches, lang.hitch(this, function(match){
-            //"${CITY_NAME}"
-            var fieldName = match.replace('${', '').replace('}', '');
-            if(outFields.indexOf(fieldName) < 0){
-              outFields.push(fieldName);
-            }
-          }));
-        }
-
-        var allFieldInfos = currentAttrs.layerInfo.fields;
-        var allFieldNames = array.map(allFieldInfos, lang.hitch(this, function(fieldInfo){
-          return fieldInfo.name;
-        }));
-        //make sure every fieldName of outFields exists in fieldInfo
-        outFields = array.filter(outFields, lang.hitch(this, function(fieldName){
-          return allFieldNames.indexOf(fieldName) >= 0;
-        }));
-
-        return outFields;
+        return currentVersion >= 10.0 || layerInfo.hasOwnProperty('typeIdField');
       },
 
-      _getCurrentRelationships: function(){
-        var currentAttrs = this._getCurrentAttrs();
-        return currentAttrs.queryTr.layerInfo.relationships || [];
-      },
-
-      _findRelationshipInfo: function(relationshipId){
-        var relationships = this._getCurrentRelationships();
-        for(var i = 0; i < relationships.length; i++){
-          if(relationships[i].id === relationshipId){
-            return relationships[i];
-          }
-        }
-        return null;
-      },
-
-      _findRelationshipName: function(relationshipId){
-        var relationshipName = '';
-        var relationship = this._findRelationshipInfo(relationshipId);
-
-        if(relationship){
-          relationshipName = relationship.name;
-        }
-
-        return relationshipName;
-      },
-
-      _findRelationshipFields: function(relationshipId){
-        var fields = [];
-
-        var relationship = this._findRelationshipInfo(relationshipId);
-
-        if(relationship){
-          fields = relationship.fields;
-        }
-
-        return fields;
-      },
-
-      _getPopupFieldsWithFieldInfos: function(){
-        var currentAttrs = this._getCurrentAttrs();
-        var result = [];
-        var allFieldInfos = lang.clone(currentAttrs.layerInfo.fields);
-        var fieldInfosHash = {};
-        array.forEach(allFieldInfos, lang.hitch(this, function(fieldInfo){
-          fieldInfosHash[fieldInfo.name] = fieldInfo;
-        }));
-        var popupFields = lang.clone(currentAttrs.config.popup.fields);
-        array.forEach(popupFields, lang.hitch(this, function(popupFieldInfo){
-          //popupFieldInfo:{name,alias,specialType}
-          var fieldName = popupFieldInfo.name;
-          var fieldInfo = fieldInfosHash[fieldName];
-          if(fieldInfo){
-            //use popupFieldInfo.alias override fieldInfo.alias
-            //add popupFieldInfo.specialType into fieldInfo.specialType
-            fieldInfo = lang.mixin(fieldInfo, popupFieldInfo);
-            result.push(fieldInfo);
-          }
-        }));
-        return result;
-      },
-
-      _addResultItems: function(features, resultLayer, relatedResults, relatedTableIds){
-        //var featuresCount = features.length;
-        var currentAttrs = this._getCurrentAttrs();
-        var sym = null;
-
-        if(currentAttrs.config.resultsSymbol){
-          //if the layer is a table, resultsSymbol will be null
-          sym = symbolJsonUtils.fromJson(currentAttrs.config.resultsSymbol);
-        }
-
-        var allFieldInfos = lang.clone(currentAttrs.layerInfo.fields);
-
-        var popupFields = this._getPopupFieldsWithFieldInfos();
-
-        array.forEach(features, lang.hitch(this, function(feature, i){
-          var trClass = '';
-          if(i % 2 === 0){
-            trClass = 'even';
-          }
-          else{
-            trClass = 'odd';
-          }
-
-          //relationship attributes
-          var relatedFeatures = [];
-          if(relatedResults && relatedResults.length > 0){
-            var objectIdField = currentAttrs.config.objectIdField;
-            var objectId = feature.attributes[objectIdField];
-
-            array.forEach(relatedResults, lang.hitch(this, function(relatedResult, idx){
-              if(relatedResult[objectId]){
-                var relatedName = this._findRelationshipName(relatedTableIds[idx]);
-                var features = relatedResult[objectId].features;
-
-                relatedFeatures.push({
-                  tableId: relatedTableIds[idx],
-                  name: relatedName,
-                  features: features
-                });
-              }
-            }));
-          }
-
-          if(feature.geometry){
-            if(sym){
-              feature.setSymbol(sym);
-            }
-          }
-
-          resultLayer.add(feature);
-
-          var options = {
-            feature: feature,
-            allFieldInfos: allFieldInfos,
-            titleTemplate: currentAttrs.config.popup.title,
-            fieldInfosInAttrContent: popupFields,
-            trClass: trClass,
-            relatedFeatures: relatedFeatures
-          };
-
-          this._createQueryResultItem(options);
-        }));
-
-        this._zoomToLayer(resultLayer);
-      },
-
-      _createQueryResultItem:function(options){
-        var feature = options.feature;
-        var allFieldInfos = options.allFieldInfos;
-        var titleTemplate = options.titleTemplate;
-        var fieldInfosInAttrContent = options.fieldInfosInAttrContent;
-        var trClass = options.trClass;
-        var relatedFeatures = options.relatedFeatures;
-
-        var attributes = feature && feature.attributes;
-        if(!attributes){
-          return;
-        }
-
-        var strItem = '<tr class="jimu-table-row jimu-table-row-separator query-result-item" ' +
-        ' cellpadding="0" cellspacing="0">' +
-        '<td><span class="result-item-title"></span>' +
-        '<table class="feature-attributes" valign="top">' +
-        '<colgroup><col width="40%" /><col width="60%" /></colgroup>' +
-        '<tbody></tbody></table></td></tr>';
-        var trItem = html.toDom(strItem);
-        html.addClass(trItem, trClass);
-        html.place(trItem, this.resultsTbody);
-        trItem.feature = feature;
-        var spanTitle = query("span.result-item-title", trItem)[0];
-        var tbody = query("tbody", trItem)[0];
-        //We should not set value to attributes[fieldName] because it will influence the display
-        //value in Attribute widget.
-        var displayAttributes = jimuUtils.getBestDisplayAttributes(attributes, allFieldInfos);
-        var title = esriLang.substitute(displayAttributes, titleTemplate);
-        if(!title){
-          title = this.nls.noValue;
-        }
-        spanTitle.innerHTML = title;
-        var infoTemplateTitle = '';
-        var infoTemplateContent = '';
-        var rowsStr = "";
-
-        array.forEach(fieldInfosInAttrContent, lang.hitch(this, function(fieldInfo){
-          var fieldName = fieldInfo.name;
-          var fieldAlias = fieldInfo.alias || fieldName;
-          var displayValue = displayAttributes[fieldName];
-
-          var fieldValueInWidget = displayValue;
-          var fieldValueInPopup = displayValue;
-          var specialType = fieldInfo.specialType;
-          if(specialType === 'image'){
-            if(displayValue && typeof displayValue === 'string'){
-              fieldValueInWidget = '<a href="' + displayValue +
-              '" target="_blank">' + displayValue + '</a>';
-              fieldValueInPopup = '<img src="' + displayValue + '" />';
-            }
-          }
-          else if(specialType === 'link'){
-            if(displayValue && typeof displayValue === 'string'){
-              fieldValueInWidget = '<a href="' + displayValue +
-              '" target="_blank">' + displayValue + '</a>';
-              fieldValueInPopup = fieldValueInWidget;
-            }
-          }
-
-          if (displayValue === null || displayValue === undefined) {
-            fieldValueInWidget = fieldValueInPopup = "";
-          }
-
-          var strFieldTr = '<tr><td class="attr-name">' + fieldAlias +
-          ':</td><td class="attr-value">' + fieldValueInWidget + '</td></tr>';
-          var fieldTr = html.toDom(strFieldTr);
-          html.place(fieldTr, tbody);
-
-          var rowStr = '<tr valign="top">' +
-            '<td class="attr-name">' + fieldAlias + '</td>' +
-            '<td class="attr-value">' + fieldValueInPopup + '</td>' +
-          '</tr>';
-          rowsStr += rowStr;
-        }));
-
-        //related features
-        array.forEach(relatedFeatures, lang.hitch(this, function(relatedFeature){
-          var trNode = html.create('tr');
-          var tdNode = html.create('td', {
-            colspan: 2
-          }, trNode);
-          var relationContainter = html.create('div');
-          var titlePane = new TitlePane({
-            title: this.nls.attributesFromRelationship + ': ' + relatedFeature.name,
-            content: relationContainter,
-            open: false,
-            'class': 'relationship-attr'
-          });
-          titlePane.placeAt(tdNode);
-          html.place(trNode, tbody);
-
-          var rowStr = '<tr valign="top">' +
-            '<td class="attr-name" colspan="2">' + this.nls.attributesFromRelationship + ": " +
-              relatedFeature.name + '<td>' +
-          '</tr>';
-          rowsStr += rowStr;
-
-          var relatedFields = this._findRelationshipFields(relatedFeature.tableId);
-
-          array.forEach(relatedFeature.features, lang.hitch(this, function(feature, i){
-            var strFieldTr = '<span>' + (i + 1) + '</span><br/>';
-            var fieldTr = html.toDom(strFieldTr);
-            html.place(fieldTr, relationContainter);
-
-            var rowStr = '<tr valign="top"><td class="attr-name" colspan="2">' +
-            (i + 1) + '</td><tr>';
-            rowsStr += rowStr;
-
-            if(relatedFields){
-              array.forEach(relatedFields, lang.hitch(this, function(relatedFieldInfo){
-                var fieldValue = feature.attributes[relatedFieldInfo.name];
-
-                if(relatedFieldInfo.type === 'esriFieldTypeDate'){
-                  if(fieldValue){
-                    var date = new Date(parseInt(fieldValue, 10));
-                    fieldValue = this._tryLocaleDate(date);
-                  }
-                }else if(typeof fieldValue === 'number'){
-                  if(relatedFieldInfo.domain && relatedFieldInfo.domain.type === 'codedValue'){
-                    array.some(relatedFieldInfo.domain.codedValues, function(codedValue){
-                      if(codedValue.code === fieldValue){
-                        fieldValue = codedValue.name;
-                        return true;
-                      }
-                    });
-                  }else{
-                    fieldValue = this._tryLocaleNumber(fieldValue);
-                  }
-                }
-
-
-
-                // var strFieldTr = '<span>' + (relatedFieldInfo.alias || relatedFieldInfo.name) +
-                // ' : ' + fieldValue + '</span><br/>';
-                // var fieldTr = html.toDom(strFieldTr);
-                // html.place(fieldTr, relationContainter);
-
-                var relatedAlias = relatedFieldInfo.alias || relatedFieldInfo.name;
-                var rowStr = '<tr valign="top">' +
-                    '<td class="attr-name">' + relatedAlias + '</td>' +
-                    '<td class="attr-value">' + fieldValue + '</td>' +
-                  '</tr>';
-                rowsStr += rowStr;
-
-                var strFieldRow = '<div class="related-row">' +
-                    '<div class="related-name jimu-float-leading">' + relatedAlias + ':</div>' +
-                    '<div class="related-value jimu-float-leading">' + fieldValue + '</div>' +
-                '</div>';
-                var fieldRowDiv = html.toDom(strFieldRow);
-                html.place(fieldRowDiv, relationContainter);
-              }));
-            }
-          }));
-        }));
-
-        infoTemplateContent = '<div class="header">' + title + '</div>';
-
-        if(rowsStr){
-          infoTemplateContent += '<div class="hzLine"></div>';
-          infoTemplateContent += '<table class="query-popup-table" ' +
-          ' cellpadding="0" cellspacing="0">' +
-          '<colgroup><col width="40%" /><col width="60%" /></colgroup>' +
-          '<tbody>' + rowsStr + '</tbody></table>';
-        }
-
-        infoTemplateContent = '<div class="query-popup">' + infoTemplateContent + '</div>';
-
-        trItem.infoTemplateContent = infoTemplateContent;
-        var infoTemplate = new InfoTemplate();
-        //if title is empty, popup header will disappear
-        if(this.map.infoWindow && this.map.infoWindow.declaredClass &&
-           this.map.infoWindow.declaredClass.indexOf("PopupMobile") >= 0){
-          //MobilePopup
-          infoTemplateTitle = '<div class="query-popup-title">' + title + '</div>';
-        }else{
-          infoTemplateTitle = '<div class="query-popup-title"></div>';
-        }
-        infoTemplate.setTitle(infoTemplateTitle);
-        trItem.infoTemplateTitle = infoTemplateTitle;
-        infoTemplate.setContent(infoTemplateContent);
-        feature.setInfoTemplate(infoTemplate);
+      _isImageServiceLayer: function(url) {
+        return (url.indexOf('/ImageServer') > -1);
       },
 
       _showQueryErrorMsg: function(/* optional */ msg){
         new Message({message: msg || this.nls.queryError});
-      },
-
-      _onResultsTableClicked: function(event){
-        var target = event.target || event.srcElement;
-        if(!html.isDescendant(target, this.resultsTable)){
-          return;
-        }
-        var tr = jimuUtils.getAncestorDom(target, lang.hitch(this, function(dom){
-          return html.hasClass(dom, 'query-result-item');
-        }), 10);
-        if(!tr){
-          return;
-        }
-
-        this._selectResultTr(tr);
-
-        //var spanTitle = query("span.result-item-title",tr)[0];
-        //var featureAttrTable = query(".feature-attributes",tr)[0];
-        //var attrTable = lang.clone(featureAttrTable);
-
-        html.addClass(tr, 'jimu-state-active');
-        var feature = tr.feature;
-        var geometry = feature.geometry;
-        if(geometry){
-          var infoTitle = tr.infoTemplateTitle;
-          var infoContent = tr.infoTemplateContent;
-          var geoType = geometry.type;
-          var centerPoint, extent;
-          var def = null;
-
-          if(geoType === 'point' || geoType === 'multipoint'){
-            var singlePointFlow = lang.hitch(this, function(){
-              def = new Deferred();
-              var maxLevel = this.map.getNumLevels();
-              var currentLevel = this.map.getLevel();
-              var level2 = Math.floor(maxLevel * 2 / 3);
-              var zoomLevel = Math.max(currentLevel, level2);
-              if(this.map.getMaxZoom() >= 0){
-                //use tiled layer as base map
-                this.map.setLevel(zoomLevel).then(lang.hitch(this, function(){
-                  this.map.centerAt(centerPoint).then(lang.hitch(this, function(){
-                    def.resolve();
-                  }));
-                }));
-              }else{
-                //use dynamic layer
-                this.map.centerAt(centerPoint).then(lang.hitch(this, function() {
-                  def.resolve();
-                }));
-              }
-            });
-
-            if(geoType === 'point'){
-              centerPoint = geometry;
-              singlePointFlow();
-            }
-            else if(geoType === 'multipoint'){
-              if(geometry.points.length === 1){
-                centerPoint = geometry.getPoint(0);
-                singlePointFlow();
-              }
-              else if(geometry.points.length > 1){
-                extent = geometry.getExtent();
-                if(extent){
-                  extent = extent.expand(1.4);
-                  centerPoint = geometry.getPoint(0);
-                  def = this.map.setExtent(extent);
-                }
-              }
-            }
-          }
-          else if(geoType === 'polyline'){
-            extent = geometry.getExtent();
-            extent = extent.expand(1.4);
-            centerPoint = extent.getCenter();
-            def = this.map.setExtent(extent);
-          }
-          else if(geoType === 'polygon'){
-            extent = geometry.getExtent();
-            extent = extent.expand(1.4);
-            centerPoint = extent.getCenter();
-            def = this.map.setExtent(extent);
-          }
-          else if(geoType === 'extent'){
-            extent = geometry;
-            extent = extent.expand(1.4);
-            centerPoint = extent.getCenter();
-            def = this.map.setExtent(extent);
-          }
-
-          if(def){
-            def.then(lang.hitch(this, function(){
-              if(typeof this.map.infoWindow.setFeatures === 'function'){
-                this.map.infoWindow.setFeatures([feature]);
-              }
-              //if title is empty, popup header will disappear
-              this.map.infoWindow.setTitle(infoTitle);
-              this.map.infoWindow.setContent(infoContent);
-              if(typeof this.map.infoWindow.reposition === 'function'){
-                this.map.infoWindow.reposition();
-              }
-              this.map.infoWindow.show(centerPoint);
-            }));
-          }
-        }
       },
 
       _hideInfoWindow:function(){
@@ -1340,24 +940,7 @@ define([
           if(typeof this.map.infoWindow.setFeatures === 'function'){
             this.map.infoWindow.setFeatures([]);
           }
-          this.map.infoWindow.setTitle('');
-          this.map.infoWindow.setContent('');
         }
-      },
-
-      _onBtnResultsBackClicked: function(){
-        var showDom, hideDom;
-
-        showDom = this.queryParams;
-        hideDom = this.queryList;
-
-        html.setStyle(hideDom, 'display', 'none');
-        html.setStyle(showDom, {
-          display:'block',
-          left:'-100%'
-        });
-        this._slide(showDom, -100, 0);
-        this._slide(this.queryResults, 0, 100);
       }
 
     });

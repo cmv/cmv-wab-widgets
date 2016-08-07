@@ -15,93 +15,66 @@
 ///////////////////////////////////////////////////////////////////////////
 
 define(['dojo/_base/declare',
+  'dojo/Deferred',
   'dojo/_base/lang',
-  'dojo/_base/array',
-  'dojo/_base/html',
-  'dojo/on',
   'dijit/_TemplatedMixin',
-  'jimu/dijit/FeaturelayerChooserFromMap',
+  'jimu/dijit/SpatialFilterByFeatures',
   'jimu/utils',
-  'esri/tasks/FeatureSet',
-  'esri/tasks/query',
-  '../BaseEditor',
-  'dojo/text!./SelectFeatureSetFromLayer.html'
-],
-function(declare, lang, array, html, on, _TemplatedMixin, FeaturelayerChooserFromMap,
-  jimuUtils, FeatureSet, Query, BaseEditor,  template) {
+  './BaseFeatureSetEditor',
+  'dojo/text!./SelectFeatureSetFromLayer.html',
+  'esri/tasks/query'
+], function(declare, Deferred, lang, _TemplatedMixin, SpatialFilterByFeatures, jimuUtils,
+ BaseFeatureSetEditor, template, Query){
   //from layers in map
-  var clazz = declare([BaseEditor, _TemplatedMixin], {
+  var clazz = declare([BaseFeatureSetEditor, _TemplatedMixin], {
     templateString: template,
     editorName: 'SelectFeatureSetFromLayer',
 
     postCreate: function(){
       this.inherited(arguments);
-      this.selectedLayer = null;
 
-      var args = {
-        multiple: false,
-        createMapResponse: this.map.webMapResponse,
-        showLayerFromFeatureSet: true,
+      this.spatialFilterByFeatures = new SpatialFilterByFeatures({
+        map: this.map,
         types: this.param.defaultValue && this.param.defaultValue.geometryType?
                [jimuUtils.getTypeByGeometryType(this.param.defaultValue.geometryType)]:
                ['point', 'polyline', 'polygon']
-      };
-      this.layerChooserFromMap = new FeaturelayerChooserFromMap(args);
-      this.layerChooserFromMap.placeAt(this.layerChooseNode);
-      this.layerChooserFromMap.startup();
-
-      this.own(on(this.layerChooserFromMap, 'tree-click', lang.hitch(this, this._onTreeClick)));
-      html.addClass(this.domNode, 'jimu-gp-editor-sffl');
-      html.addClass(this.domNode, 'jimu-gp-editor-base');
+      });
+      this.spatialFilterByFeatures.placeAt(this.layerChooseNode);
+      this.spatialFilterByFeatures.startup();
     },
 
-    _onDropDownClick: function(){
-      if(html.getStyle(this.layerChooseNode, 'display') === 'none'){
-        this._openLayerChooser();
-      }else{
-        this._closeLayerChooser();
-      }
-    },
-
-    _openLayerChooser: function(){
-      html.setStyle(this.layerChooseNode, 'display', '');
-    },
-
-    _closeLayerChooser: function(){
-      html.setStyle(this.layerChooseNode, 'display', 'none');
-    },
-
-    _onTreeClick: function(){
-      var selected = false;
-      array.forEach(this.layerChooserFromMap.getSelectedItems(), function(item) {
-        this.layerNameNode.innerHTML = item.layerInfo.title;
-        this.selectedLayer = item.layerInfo.layerObject;
-        selected = true;
-      }, this);
-      if(selected){
-        this._closeLayerChooser();
-      }
-    },
-
-    getValue: function(){
-      return this.selectedLayer;
+    setFeatureSet: function(featureset, layer) {
+      //jshint unused:false
+      this.spatialFilterByFeatures.setSelectedLayer(layer).then(lang.hitch(this, function() {
+        this.spatialFilterByFeatures.checkSelectedFeaturesRadio();
+      }));
     },
 
     getGPValue: function(){
-      var layer = this.selectedLayer;
-      if(layer === null){
-        return this.wrapValueToDeferred(null);
-      }
+      var def = new Deferred();
 
-      if(layer.url){
-        var query = new Query();
-        query.where = '1=1';
-        return layer.queryFeatures(query);
-      }else{
-        var featureset = new FeatureSet();
-        featureset.features = layer.graphics;
-        return this.wrapValueToDeferred(featureset);
-      }
+      this.spatialFilterByFeatures.getFeatureSet(true).then(lang.hitch(this, function(featureSet){
+        def.resolve(featureSet);
+      }), lang.hitch(this, function(err){
+        if(err && err.type === SpatialFilterByFeatures.NONE_SELECTED_FEATURES_NOT_DRAW_SHAPES){
+          var layer = this.spatialFilterByFeatures.getSelectedLayer();
+          if(layer && layer.url){
+            var query = new Query();
+            query.where = '1=1';
+            layer.queryFeatures(query).then(lang.hitch(this, function(response){
+              def.resolve(response);
+            }), lang.hitch(this, function(error){
+              def.reject(error);
+            }));
+          }else{
+            def.reject(err);
+          }
+        }else{
+          def.reject(err);
+        }
+      }));
+
+      return def;
     }
   });
 

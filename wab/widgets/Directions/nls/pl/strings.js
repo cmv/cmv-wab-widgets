@@ -1,6 +1,6 @@
-﻿define(
-   ({
-    _widgetLabel: "Kierunki",
-    searchPlaceholder: "Znajdź adres lub miejsce"
-  })
-);
+define({
+  "_widgetLabel": "Kierunki",
+  "_featureAction_DirectionFrom": "Wskazówki dojazdu z tego miejsca",
+  "_featureAction_DirectionTo": "Wskazówki dojazdu do tego miejsca",
+  "searchPlaceholder": "Znajdź adres lub miejsce"
+});

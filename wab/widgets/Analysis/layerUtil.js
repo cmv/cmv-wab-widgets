@@ -17,12 +17,17 @@
 define([
   'dojo/_base/array',
   'dojo/promise/all',
+  'dojo/Deferred',
+  'esri/layers/FeatureLayer',
+  'esri/layers/GeoRSSLayer',
   'jimu/LayerInfos/LayerInfos'
-], function(array, all, LayerInfos) {
+], function(array, all, Deferred, FeatureLayer, GeoRSSLayer, LayerInfos) {
   var mo = {};
 
   mo.getLayerObjects = function(theMap){
-    return LayerInfos.getInstance(theMap, theMap.itemInfo).then(function(
+    var retDef = new Deferred();
+
+    LayerInfos.getInstance(theMap, theMap.itemInfo).then(function(
           layerInfosObject){
       var layerInfos = [];
       layerInfosObject.traversal(function(layerInfo){
@@ -30,24 +35,38 @@ define([
       });
 
       var defs = array.map(layerInfos, function(layerInfo){
-        return layerInfo.getLayerObject();
+        // if layerInfo.getLayerType() is "GeoRSSLayer", assgin name to layerObject if it is undefined
+        return layerInfo.getLayerType().then(function(type){
+          if(type === 'GeoRSSLayer') {
+            if(!layerInfo.isLeaf()) {
+              array.forEach(layerInfo.getSubLayers(), function(subLayerInfo) {
+                if(!subLayerInfo.layerObject.name) {
+                  subLayerInfo.layerObject.name = subLayerInfo.title;
+                }
+              });
+            }
+          }
+          return layerInfo.getLayerObject();
+        });
       });
       return all(defs).then(function(layerObjects){
         var resultArray = [];
         array.forEach(layerObjects, function(layerObject, i){
-          layerObject.id = layerObject.id || layerInfos[i].id;
-          if(layerObject && layerObject.declaredClass === "esri.layers.FeatureLayer"){
+          if((layerObject instanceof FeatureLayer &&
+            layerObject.declaredClass !== 'esri.layers.StreamLayer') ||
+              layerObject instanceof GeoRSSLayer) {
+            layerObject.id = layerObject.id || layerInfos[i].id;
             resultArray.push(layerObject);
           }
         });
-        return {
-          layerInfosObject: layerInfosObject,
-          layerInfos: layerInfos,
-          layerObjects: resultArray
-        };
+        retDef.resolve(resultArray);
       });
+    }, function() {
+      retDef.resolve([]);
     });
+
+    return retDef;
   };
-  //----------------------end--------------------------//
+
   return mo;
 });

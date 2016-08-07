@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "底图库"
-  })
-);
+define({
+  "_widgetLabel": "底图库"
+});

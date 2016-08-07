@@ -71,6 +71,8 @@ define([
           })));
 
           this.measurement.startup();
+
+          this._hideToolsByConfig();
         }), lang.hitch(this, function(err) {
           new Message({
             message: err.message || err
@@ -98,6 +100,18 @@ define([
         }
 
         return this._pcDef.promise;
+      },
+
+      _hideToolsByConfig: function() {
+        if (false === this.config.showArea) {
+          this.measurement.hideTool("area");
+        }
+        if (false === this.config.showDistance) {
+          this.measurement.hideTool("distance");
+        }
+        if (false === this.config.showLocation) {
+          this.measurement.hideTool("location");
+        }
       },
 
       disableWebMapPopup: function() {

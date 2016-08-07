@@ -1,19 +1,22 @@
-﻿define(
-   ({
-    defaultAreaUnit: "Oletuspinta-alayksikkö",
-    defaultLengthUnit: "Oletuspituusyksikkö",
-    acres: "Eekkeriä",
-    sqMiles: "Neliömailia",
-    sqKilometers: "Neliökilometriä",
-    hectares: "Hehtaaria",
-    sqYards: "Neliöjaardia",
-    sqFeet: "Neliöjalkaa",
-    sqMeters: "Neliömetriä",
-    miles: "Mailia",
-    kilometers: "Kilometriä",
-    feet: "Jalkaa",
-    meters: "Metriä",
-    yards: "Jaardia",
-    nauticalMiles: "Meripeninkulmaa"
-  })
-);
+define({
+  "defaultAreaUnit": "Oletuspinta-alayksikkö",
+  "defaultLengthUnit": "Oletuspituusyksikkö",
+  "acres": "Eekkeriä",
+  "sqMiles": "Neliömailia",
+  "sqKilometers": "Neliökilometriä",
+  "hectares": "Hehtaaria",
+  "sqYards": "Neliöjaardia",
+  "sqFeet": "Neliöjalkaa",
+  "sqMeters": "Neliömetriä",
+  "miles": "Mailia",
+  "kilometers": "Kilometriä",
+  "feet": "Jalkaa",
+  "meters": "Metriä",
+  "yards": "Jaardia",
+  "nauticalMiles": "Meripeninkulmaa",
+  "showArea": "Alue",
+  "showDistance": "Etäisyys",
+  "showLocation": "Sijainti",
+  "showtools": "Näytä mittaustyökalut:",
+  "allHidedTips": "Vähintään yksi työkalu on valittava."
+});

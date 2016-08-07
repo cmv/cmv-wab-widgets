@@ -52,7 +52,11 @@ function(utils, simpleResultRenderers) {
       }else if(param.dataType === 'GPRecordSet'){
         text = 'table';
       }else if(param.dataType === 'GPDataFile' || param.dataType === 'GPRasterDataLayer'){
-        text = '<a target="_blank" href="' + value.value.url + '">' + value.value.url + '</a>';
+        if(value.value.url) {
+          text = '<a target="_blank" href="' + value.value.url + '">' + value.value.url + '</a>';
+        }else{
+          text = param.paramName + ': null';
+        }
       }
 
       o.message = text;

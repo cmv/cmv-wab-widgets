@@ -1,5 +1,10 @@
 {
     "fontColor": "#000000",
+    "bufferInfo": {
+        "isVisible": false
+    },
+    "zoomToFeature": false,
+    "intersectSearchedLocation": false,
     "defaultBufferDistance": 5,
     "maxBufferDistance": 15,
     "bufferDistanceUnit": {
@@ -19,6 +24,27 @@
         "value": "miles"
     },
     "symbols": {
+	"bufferSymbol": {
+            "color": [
+                255,
+                189,
+                1,
+                0
+            ],
+            "outline": {
+                "color": [
+                    255,
+                    189,
+                    1,
+                    255
+                ],
+                "width": 2.25,
+                "type": "esriSLS",
+                "style": "esriSLSSolid"
+            },
+            "type": "esriSFS",
+            "style": "esriSFSSolid"
+        },
         "routeSymbol": {
             "color": [
                 21,

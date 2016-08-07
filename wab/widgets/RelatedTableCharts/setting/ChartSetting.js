@@ -40,13 +40,29 @@ define([
     'dijit/popup',
     'dojox/charting/themes/GreySkies',
     'jimu/dijit/SimpleTable',
-    'dijit/form/Textarea'
+    'dijit/Editor',
+    'dojo/_base/html',
+    'dojo/sniff',
+    'jimu/utils',
+    'dijit/_editor/plugins/LinkDialog',
+    'dijit/_editor/plugins/ViewSource',
+    'dijit/_editor/plugins/FontChoice',
+    'dojox/editor/plugins/Preview',
+    'dijit/_editor/plugins/TextColor',
+    'dojox/editor/plugins/ToolbarLineBreak',
+    'dojox/editor/plugins/FindReplace',
+    'dojox/editor/plugins/PasteFromWord',
+    'dojox/editor/plugins/InsertAnchor',
+    'dojox/editor/plugins/Blockquote',
+    'dojox/editor/plugins/UploadImage',
+    './ChooseImage',
+    'jimu/dijit/CheckBox'
   ],
   function (_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, domAttr,
     domConstruct, declare, lang, on, Evented, template, TabContainer3,
     ChartThemeSelector, FieldSelector, ColorPicker, domClass,
     dojoQuery, Color, array, Query, QueryTask, domStyle, Message, ChartLayout,
-    popup, GreySkiesTheme, SimpleTable) {
+    popup, GreySkiesTheme, SimpleTable, Editor, html, has, utils) {
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
 
@@ -72,6 +88,8 @@ define([
       selectedNode: null, //to store selected node from the table
       fieldColorPicker: null, //to store the instance of color picker
       defaultColor: "#000000", //to set default color in color picker
+      _editor: null, //to contain editor instance
+      _displayFieldsTable: null, //to contain fields table fro polar graph
       constructor: function () {
         //reinitialize array
         this._widgets = [];
@@ -83,6 +101,7 @@ define([
       postCreate: function () {
         this._createColorByFieldTable();
         this._initSelf();
+        this._initEditor();
       },
 
       destroy: function () {
@@ -121,13 +140,8 @@ define([
           config.sectionTitle = this.sectionTitleTextBox.get('value');
         }
         config.chartTitle = this.chartTitleTextBox.get('value');
-        config.description = this.chartDescriptionTextBoxArea.get(
-          'value');
+        config.description = this._editorObj.get('value');
         config.chartType = this._getChartType();
-        config.dataSeriesField = this.dataSeriesFieldDropdown.get(
-          'value');
-        config.labelField = this.labelSeriesFieldDropdown.get('value');
-
         // validate if color by field value is not empty
         if (showError && this.rdoColorByFieldValue.checked && this.ColorByFieldValueDropdown
           .value === "esriCTEmptyOption") {
@@ -136,10 +150,34 @@ define([
         } else {
           config.chartColor = lang.clone(this._getChartColorConfig());
         }
+        if (config.chartType !== "PolarChart") {
+          config.dataSeriesField = this.dataSeriesFieldDropdown.get(
+          'value');
+          config.labelField = this.labelSeriesFieldDropdown.get('value');
 
-        config.labelXAxis = this.xAxisTextBox.get('value');
-        config.labelYAxis = this.yAxisTextBox.get('value');
-
+          config.labelXAxis = this.xAxisTextBox.get('value');
+          config.labelYAxis = this.yAxisTextBox.get('value');
+        } else {
+          var field, fieldInfos = {}, i, count = 0, data;
+          data = this._displayFieldsTable.getData();
+          config.polarChartConfig = {};
+          for (i = 0; i < data.length; i++) {
+            field = {};
+            if (data[i].isVisible) {
+              field.fieldName = data[i].fieldName;
+              field.alias = data[i].alias;
+              field.isVisible = data[i].isVisible;
+              fieldInfos[data[i].fieldName] = field;
+              count++;
+            }
+          }
+          if (count < 3) {
+            this._errorMessage(this.nls.errMsgPolarFieldsRequired);
+            return false;
+          }
+          config.showPolygonFill = this.polarChartFillColor.getValue();
+          config.polarChartConfig = fieldInfos;
+        }
         return config;
       },
 
@@ -166,10 +204,10 @@ define([
 
           //set description
           if (config.description) {
-            this.chartDescriptionTextBoxArea.set('value', config.description);
+            this._editorObj.set('value', config.description);
           }
 
-          //set chart type if availeble else set defult chart type to bar chart
+          //set chart type if available else set default chart type to bar chart
           if (config.chartType) {
             this._setChartType(config.chartType);
           } else {
@@ -188,8 +226,11 @@ define([
 
           //set chart type and color
           if (config.chartColor) {
-            this._setChartColorType(config.chartColor);
+            this._setChartColorType(config.chartColor, config.chartType);
           }
+
+          // set polygon fill visibility
+          this.polarChartFillColor.setValue(config.showPolygonFill);
 
           //set x-axis label of the chart
           if (config.labelXAxis) {
@@ -199,9 +240,9 @@ define([
           if (config.labelYAxis) {
             this.yAxisTextBox.set('value', config.labelYAxis);
           }
-
+          this._onChartTypeChanged();
         } else {
-          //by deafult set layer title in section title textbox
+          //by default set layer title in section title textbox
           this.sectionTitleTextBox.set("value", this.layerDetails.polygonLayerInfo
             .title);
         }
@@ -217,7 +258,7 @@ define([
           title: this.nls.fieldColorColor,
           "class": "label",
           type: "empty",
-          width: "50px"
+          width: "60px"
         }, {
           name: this.nls.fieldColorLabel,
           title: this.nls.fieldColorLabel,
@@ -249,12 +290,13 @@ define([
       **/
       _getChartType: function () {
         var chartType;
-        //if radio button of bar chart is checked
-        //else if pie chart is selected then return selected chart
+        //return selected chart type
         if (this.rdoBarChart.get('checked')) {
           chartType = "BarChart";
         } else if (this.rdoPieChart.get('checked')) {
           chartType = "PieChart";
+        } else if (this.rdoPolarChart.get('checked')) {
+          chartType = "PolarChart";
         }
         return chartType;
       },
@@ -266,10 +308,10 @@ define([
       _setChartType: function (chartType) {
         if (chartType === "BarChart") {
           this.rdoBarChart.set('checked', true);
-          this.rdoPieChart.set('checked', false);
         } else if (chartType === "PieChart") {
           this.rdoPieChart.set('checked', true);
-          this.rdoBarChart.set('checked', false);
+        } else {
+          this.rdoPolarChart.set('checked', true);
         }
       },
 
@@ -293,7 +335,9 @@ define([
         //create color picker to set the color of table node
         this._createFieldColorPicker();
         //create chart theme selector
-        this._createThemeSelector(this.themeSelectorDiv);
+        if (!this.chartThemeSelector) {
+          this.chartThemeSelector = this._createThemeSelector(this.themeSelectorDiv);
+        }
         // check radio buttons on selecting controls
         on(this.colorPicker, "click", lang.hitch(this, function () {
           this.rdoSingleColor.set("checked", true);
@@ -310,8 +354,129 @@ define([
           //create options for dropdown ColorByFields
           this._createColorByFieldSelector();
         }
+        this._createPolarChartFieldsGrid();
       },
 
+      /**
+      * create table for polar chart fields
+      * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
+      **/
+      _createPolarChartFieldsGrid: function () {
+        var args, fields = [{
+          name: 'isVisible',
+          title: this.nls.visibilityText,
+          type: 'checkbox',
+          'class': 'update',
+          width: '100px'
+        }, {
+          name: 'fieldName',
+          title: this.nls.fieldNameText,
+          type: 'text',
+          width: '230px'
+        }, {
+          name: 'alias',
+          title: this.nls.aliasNameText,
+          type: 'text',
+          editable: 'true',
+          width: '230px'
+        }];
+        args = {
+          fields: fields,
+          selectable: false
+        };
+        this._displayFieldsTable = new SimpleTable(args);
+        this._displayFieldsTable.placeAt(this.polarChartFieldInfos);
+        this._displayFieldsTable.startup();
+        this._createFieldsRows();
+      },
+
+      /**
+      * create rows for polar chart fields in table
+      * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
+      **/
+      _createFieldsRows: function () {
+        var fieldsArray, polarChartConfig, i, isVisible = "", aliasName = "";
+        fieldsArray = this.layerDetails.relatedLayerInfo.fields;
+        polarChartConfig = this.config && this.config.polarChartConfig;
+        for (i = 0; i < fieldsArray.length; i++) {
+          if (this._numberFieldTypes.indexOf(fieldsArray[i].type) !== -1) {
+            if (polarChartConfig && polarChartConfig.hasOwnProperty(fieldsArray[i].name)) {
+              isVisible = polarChartConfig[fieldsArray[i].name].isVisible;
+              aliasName = polarChartConfig[fieldsArray[i].name].alias;
+            } else {
+              isVisible = fieldsArray[i].isVisible;
+              aliasName = fieldsArray[i].alias;
+            }
+            this._displayFieldsTable.addRow({
+              isVisible: (isVisible === "") ? false : isVisible,
+              fieldName: fieldsArray[i].name,
+              alias: (aliasName === "") ? fieldsArray[i].name : aliasName
+            });
+          }
+        }
+      },
+
+      /**
+      * this function instantiates the editor tool
+      * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
+      **/
+      _initEditor: function () {
+        this._initEditorPluginsCSS();
+        this._editorObj = new Editor({
+          plugins: [
+            'bold', 'italic', 'underline', 'foreColor', 'hiliteColor',
+            '|', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull',
+            '|', 'insertOrderedList', 'insertUnorderedList', 'indent', 'outdent'
+          ],
+          extraPlugins: [
+            '|', 'createLink', 'unlink', 'pastefromword', '|', 'undo', 'redo',
+            '|', 'chooseImage', 'uploadImage', 'toolbarlinebreak',
+            'fontName', 'fontSize', 'formatBlock'
+          ]
+        }, this.editor);
+        html.setStyle(this._editorObj.domNode, {
+          width: '100%',
+          height: '100%'
+        });
+        this._editorObj.startup();
+
+        if (has('ie') !== 8) {
+          this._editorObj.resize({
+            w: '100%',
+            h: '100%'
+          });
+        } else {
+          var box = html.getMarginBox(this.editorContainer);
+          this._editorObj.resize({
+            w: box.w,
+            h: box.h
+          });
+        }
+      },
+
+      /**
+      * this function loads the editor tool plugins CSS
+      * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
+      **/
+      _initEditorPluginsCSS: function () {
+        var head, tcCssHref, tcCss, epCssHref, epCss, pfCssHref, pfCss;
+        head = document.getElementsByTagName('head')[0];
+        tcCssHref = window.apiUrl + "dojox/editor/plugins/resources/css/TextColor.css";
+        tcCss = dojoQuery('link[href="' + tcCssHref + '"]', head)[0];
+        if (!tcCss) {
+          utils.loadStyleLink("editor_plugins_resources_TextColor", tcCssHref);
+        }
+        epCssHref = window.apiUrl + "dojox/editor/plugins/resources/editorPlugins.css";
+        epCss = dojoQuery('link[href="' + epCssHref + '"]', head)[0];
+        if (!epCss) {
+          utils.loadStyleLink("editor_plugins_resources_editorPlugins", epCssHref);
+        }
+        pfCssHref = window.apiUrl + "dojox/editor/plugins/resources/css/PasteFromWord.css";
+        pfCss = dojoQuery('link[href="' + pfCssHref + '"]', head)[0];
+        if (!pfCss) {
+          utils.loadStyleLink("editor_plugins_resources_PasteFromWord", pfCssHref);
+        }
+      },
       /**
       * Creates a color picker popup
       * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
@@ -365,8 +530,37 @@ define([
       },
 
       /**
+      * disable/enable polygon fill checkbox on changing chart color option
+      * show/hide field values on changing chart color option
+      * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
+      **/
+      _onChartColorChanged: function () {
+        if (this.rdoColorByFieldValue.get('checked')) {
+          //show field values if any option is selected in dropdown
+          if (this.ColorByFieldValueDropdown.value !== "esriCTEmptyOption") {
+            domClass.remove(this.colorByFieldTableContainer,
+              "esriCTHidden");
+          }
+          //enable check box
+          this.polarChartFillColor.setStatus(true);
+        } else {
+          //disable checkbox if chart theme is selected
+          if (this.rdoColorByTheme.get('checked')) {
+            //disable check box and set it to true
+            this.polarChartFillColor.check();
+            this.polarChartFillColor.setStatus(false);
+          } else {
+            this.polarChartFillColor.setStatus(true);
+          }
+          //hide field values if color by field option is not selected
+          domClass.add(this.colorByFieldTableContainer,
+            "esriCTHidden");
+        }
+      },
+
+      /**
       * This function sets selected colors to the field color div
-      * {string} config chart color by field value is saved in the configuration file
+      * @param{string} config chart color by field value is saved in the configuration file
       * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
       **/
       _setChartColorType: function (config) {
@@ -461,7 +655,7 @@ define([
 
       /**
       * This function creates static data for the layout(preview) chart
-      * @param {string} : chartType (BarChart, PieChart)
+      * @param {string} : chartType (BarChart, PieChart, PolarChart)
       * @param {string} : labelField
       * @param {string} : dataSeriesField
       * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
@@ -493,6 +687,21 @@ define([
             ];
             chartData.chartLabels = [{ "value": 1, "y": 65 }, { "value": 2, "y": 35}];
             break;
+          case "PolarChart":
+            var i, j, value = 10, dataObj, data = this._displayFieldsTable.getData(), obj;
+            chartData.chartSeries = [];
+            for (j = 0; j < 5; j++) {
+              dataObj = {};
+              obj = {};
+              for (i = 0; i < data.length; i++) {
+                if (data[i].isVisible) {
+                  dataObj[data[i].alias] = value + 10;
+                }
+              }
+              obj[j] = { "data": dataObj };
+              chartData.chartSeries.push(obj);
+            }
+            break;
         }
         return chartData;
       },
@@ -509,9 +718,8 @@ define([
           this.layerDetails.polygonLayerInfo.fields);
 
         //create descriptionFieldSelector
-        this._createFieldSelector(this.descriptionFieldSelectorDiv,
-          this.chartDescriptionTextBoxArea, this.layerDetails.polygonLayerInfo
-          .fields);
+        this._createFieldSelector(this.descriptionFieldSelectorDiv, this.editor,
+          this.layerDetails.polygonLayerInfo.fields);
 
         //create x-axis label field selector
         this._createFieldSelector(this.xAxisFieldSelectorDiv, this
@@ -527,9 +735,9 @@ define([
 
       /**
       * This function the creates FieldSelector for respective fields
-      * {string} container FieldSelector container Node
-      * {string} textNode FieldSelector text content Node
-      * {array} fieldsArray array of field selector values
+      * @param {string} container FieldSelector container Node
+      * @param {string} textNode FieldSelector text content Node
+      * @param {array} fieldsArray array of field selector values
       * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
       **/
       _createFieldSelector: function (container, textNode, fieldsArray) {
@@ -539,12 +747,21 @@ define([
           "hideOnSelect": true
         }, domConstruct.create("div", {}, container));
         fieldSelector.onSelect = lang.hitch(this, function (sectedField) {
-          var newLabel = domAttr.get(textNode, "value");
+          var newLabel;
+          if (textNode.className !== "dijitEditor") {
+            newLabel = domAttr.get(textNode, "value");
+          } else {
+            newLabel = this._editorObj.get("value");
+          }
           newLabel = newLabel + "{" + sectedField.name + "}";
           if (textNode.set) {
             textNode.set("value", newLabel);
           } else {
-            domAttr.set(textNode, "value", newLabel);
+            if (textNode.className !== "dijitEditor") {
+              domAttr.set(textNode, "value", newLabel);
+            } else {
+              this._editorObj.set('value', newLabel);
+            }
           }
         });
         //add to the widgets array
@@ -554,17 +771,17 @@ define([
 
       /**
       * This function the creates ThemeSelector
-      * {string} container node where theme selector created
+      * @param {string} container node where theme selector created
       * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
       **/
       _createThemeSelector: function (container) {
-        if (!this.chartThemeSelector) {
-          this.chartThemeSelector = new ChartThemeSelector({},
-            domConstruct.create("div", {}, container));
-          //add to the widgets array
-          this._widgets.push(this.chartThemeSelector);
-        }
-        return this.chartThemeSelector;
+        var themSelectorObj = new ChartThemeSelector({
+          "nls": this.nls
+        }, domConstruct.create("div", {}, container));
+        //add to the widgets array
+        this._widgets.push(themSelectorObj);
+        themSelectorObj.startup();
+        return themSelectorObj;
       },
 
       /* Events */
@@ -582,12 +799,20 @@ define([
       },
 
       _onChartTypeChanged: function () {
-        if (this.rdoPieChart.get('checked')) {
-          domClass.add(this.xAxisArea, "esriCTHidden");
-          domClass.add(this.yAxisArea, "esriCTHidden");
+        if (this.rdoPolarChart.get('checked')) {
+          //display polar chart configuration setting and hide other charts setting
+          domClass.add(this.labelSection, "esriCTHidden");
+          domClass.add(this.axisSection, "esriCTHidden");
+          domClass.remove(this.polarChartSection, "esriCTHidden");
         } else {
-          domClass.remove(this.xAxisArea, "esriCTHidden");
-          domClass.remove(this.yAxisArea, "esriCTHidden");
+          //hide polar chart configuration setting and display other charts setting
+          domClass.remove(this.labelSection, "esriCTHidden");
+          domClass.add(this.polarChartSection, "esriCTHidden");
+          if (this.rdoPieChart.get('checked')) {
+            domClass.add(this.axisSection, "esriCTHidden");
+          } else {
+            domClass.remove(this.axisSection, "esriCTHidden");
+          }
         }
       },
 
@@ -595,9 +820,9 @@ define([
 
       /**
       * This function the creates Related Layer Field Options
-      * {string} dropDown node where Field drop down created
-      * {boolean} addFirstValueAsSelect flag value which decides default option
-      * {array} showFieldsArray array of integer data types
+      * @param {string} dropDown node where Field drop down created
+      * @param {boolean} addFirstValueAsSelect flag value which decides default option
+      * @param {array} showFieldsArray array of integer data types
       * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
       **/
       _createRelatedLayerFieldOptions: function (dropDown,
@@ -641,7 +866,6 @@ define([
       * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
       **/
       _createColorByFieldSelector: function () {
-        domConstruct.empty(this.ColorByFieldValueDropdown);
         this._createRelatedLayerFieldOptions(this.ColorByFieldValueDropdown,
           true);
         // binding on change event on drop down value change
@@ -784,9 +1008,9 @@ define([
       /**
       * This function create field color div for every fields in table row
       * sets the default color or previously saved color from this.config
-      * {object} tr instance of created row and
-      * {string} value distinct value of layer Field
-      * {object} td instance of created column
+      * @param {object} tr instance of created row and
+      * @param {string} value distinct value of layer Field
+      * @param {object} td instance of created column
       * @memberOf widgets/RelatedTableCharts/setting/ChartSetting
       **/
       _createColorPicker: function (tr, value, td) {
@@ -862,7 +1086,7 @@ define([
 
       /**
       * This function sort the list for chart color by field value
-      * {string} data type of selected field value
+      * @param {string} data type of selected field value
       * @memberOf widgets/RelatedTableCharts/setting/settings
       **/
       _sortUniqueValueData: function (dataType) {
@@ -880,7 +1104,7 @@ define([
 
       /**
       * This function return a locale date value
-      * {number} UTC date format value
+      * @param {number} UTC date format value
       * @memberOf widgets/RelatedTableCharts/setting/settings
       **/
       _getLocaleFormatedDate: function (dateFieldValue) {

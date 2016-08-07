@@ -1,4 +1,4 @@
-﻿<div class="esriCTMainContainer" style="width: 100%;height: 100%;">
+﻿<div class="esriCTMainContainer" style="width: 100%; height: 100%;">
     <div data-dojo-attach-point="tabDiv" class="esriCTFullHeight">
         <!-- Search Settings tab -->
         <div class="esriCTSearchTabNode" data-dojo-attach-point="searchTabNode" class="esriCTFullHeight">
@@ -22,12 +22,49 @@
                 <div class="esriCTLayerField">
                     <div class="esriCTSelectedLayersDiv" data-dojo-attach-point="layerListNode">
                     </div>
-                    <div class="esriCTAddLayerButton jimu-btn jimu-float-trailing"
-                        title="${nls.layerSelector.addLayerButton}" data-dojo-attach-point="addLayerButton">
+                    <div class="esriCTAddLayerButton jimu-btn jimu-float-trailing" title="${nls.layerSelector.addLayerButton}"
+                        data-dojo-attach-point="addLayerButton">
                         ${nls.layerSelector.addLayerButton}</div>
                     <div class="esriCTHint">
                         ${nls.layerSelector.layerSelectionHint}
                     </div>
+                </div>
+            </div>
+            <div class="esriCTLayerContainer row">
+                <div class="esriCTlabel" title="${nls.searchSetting.searchLayerResultLabel}">
+                    ${nls.searchSetting.searchLayerResultLabel}
+                </div>
+                <div class="esriCTLayerField ">
+                    <div data-dojo-type="jimu/dijit/CheckBox" class="esriCTCheckBox" data-dojo-attach-point="searchLayerResultNode">
+                    </div>
+                    <div class="esriCTHint esriCTHintInline esriCTHintLeftMargin">
+                        ${nls.searchSetting.searchLayerResultHint}
+                    </div>
+                </div>
+            </div>
+            <div class="esriCTLayerContainer row">
+                <div class="esriCTlabel" data-dojo-attach-point="bufferColorPickerLabelNode" title="${nls.searchSetting.bufferVisibilityLabel}">
+                    ${nls.searchSetting.bufferVisibilityLabel}
+                </div>
+                <div class="esriCTLayerField">
+                    <div class="esriCTCheckBox" checked="false" data-dojo-type="jimu/dijit/CheckBox"
+                        data-dojo-attach-point="bufferVisibiliyCheckBox">
+                    </div>
+                    <div class="esriCTHint esriCTHintInline esriCTHintLeftMargin">
+                        ${nls.searchSetting.bufferVisibilityHintText}
+                    </div>
+                </div>
+            </div>
+            <div class="esriCTLayerContainer row" data-dojo-attach-point="bufferColorSetting"
+                class="esriCTHidden">
+                <div class="esriCTlabel" title="${nls.searchSetting.bufferColorLabel}">
+                    ${nls.searchSetting.bufferColorLabel}
+                </div>
+                <div class="esriCTLayerField">
+                    <div class="esriCTPreviewField" data-dojo-attach-point="polygonSymbolNode">
+                    </div>
+                    <div class="esriCTHint esriCTPreviewHintField">
+                        ${nls.searchSetting.bufferColorHintText}</div>
                 </div>
             </div>
             <div class="esriCTLayerContainer row">
@@ -84,6 +121,32 @@
                         ${nls.searchSetting.graphicLocationSymbolHintText}</div>
                 </div>
             </div>
+            <div class="esriCTLayerContainer row">
+                <div class="esriCTlabel" title="${nls.searchSetting.zoomToSelectedFeature}">
+                    ${nls.searchSetting.zoomToSelectedFeature}
+                </div>
+                <div class="esriCTLayerField">
+                    <div data-dojo-type="jimu/dijit/CheckBox" class="esriCTCheckBox" data-dojo-attach-point="zoomToSelectedFeature"
+                        class="jimu-checkbox">
+                    </div>
+                    <div class="esriCTHint esriCTHintInline esriCTHintLeftMargin">
+                        ${nls.searchSetting.zoomToSelectedFeatureHintText}
+                    </div>
+                </div>
+            </div>
+            <div class="esriCTLayerContainer row">
+                <div class="esriCTlabel" title="${nls.searchSetting.intersectSearchLocation}">
+                    ${nls.searchSetting.intersectSearchLocation}
+                </div>
+                <div class="esriCTLayerField">
+                    <div data-dojo-type="jimu/dijit/CheckBox" class="esriCTCheckBox" data-dojo-attach-point="intersectSearchLocation"
+                        class="jimu-checkbox">
+                    </div>
+                    <div class="esriCTHint esriCTHintInline esriCTHintLeftMargin">
+                        ${nls.searchSetting.intersectSearchLocationHintText}
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- Direction Settings tab -->
         <div class="esriCTDirectionTabNode" data-dojo-attach-point="directionTabNode">
@@ -101,23 +164,6 @@
                         ${nls.routeSetting.buttonSet}</div>
                     <div class="esriCTHint">
                         ${nls.routeSetting.routeServiceUrlHintText}
-                    </div>
-                </div>
-                <div class="esriCTLayerContainer row">
-                    <div class="esriCTlabel esriCTLabelContainer" data-dojo-attach-point="travelModeServiceLabelNode"
-                        title="${nls.routeSetting.travelModeServiceUrl}">
-                        ${nls.routeSetting.travelModeServiceUrl}
-                    </div>
-                    <div class="esriCTLayerField">
-                        <div class="esriCTSetRouteURL" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="travelModeServiceURLNode"
-                            trim="true" disabled>
-                        </div>
-                        <div class="esriCTURLSetButton jimu-btn jimu-float-trailing jimu-leading-margin1"
-                            data-dojo-attach-point="travelModeSetBtnNode" title="${nls.routeSetting.buttonSet}">
-                            ${nls.routeSetting.buttonSet}</div>
-                        <div class="esriCTHint">
-                            ${nls.routeSetting.travelModeServiceUrlHintText}
-                        </div>
                     </div>
                 </div>
                 <div class="esriCTLayerContainer row">

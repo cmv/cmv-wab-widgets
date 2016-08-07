@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "關於"
-  })
-);
+define({
+  "_widgetLabel": "關於"
+});

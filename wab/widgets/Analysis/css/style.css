@@ -399,3 +399,9 @@
 .esriAnalysis .esriAnalysisExpressionGrid .dijitButtonNode {
   height: auto;
 }
+
+/* for enrich layer Select Variables */
+.calcite.esriAnalysisEnrichDataBrowser {
+  height: 480px;
+  width: 720px;
+}

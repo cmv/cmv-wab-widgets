@@ -1,11 +1,5 @@
-﻿define(
-   ({
-    title: "情報サマリー ウィジェット",
-    helpText: "TODO 情報サマリー ヘルプ テキスト",
-    labels: {
-      status: "ステータス",
-      result: "結果"
-    },
-    _widgetLabel: "情報サマリー (ベータ版)"
-  })
-);
+define({
+  "_widgetLabel": "情報サマリー",
+  "title": "情報サマリー ウィジェット",
+  "helpText": "情報サマリー ヘルプ テキスト"
+});

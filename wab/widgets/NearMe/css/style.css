@@ -184,13 +184,17 @@
     -webkit-overflow-scrolling: touch;
 }
 
+.jimu-widget-nearme .esriCTItemListOverrideMainContainer
+{
+    height: calc(100% - 80px);
+}
+
 .jimu-widget-nearme .esriCTItemlList
 {
     width: 100%;
     border-bottom: 1px solid #DDDDDD;
     height: 36px;
     cursor: pointer;
-    color: #3e3e3e;
 }
 
 .jimu-widget-nearme .esriCTItemName
@@ -220,12 +224,12 @@
 
 .jimu-widget-nearme .esriCTItemRightArrow
 {
-    margin: 7px 20px 0px 0px;    
+    margin: 7px 20px 0px 0px;
 }
 
 .jimu-widget-nearme .esriCTItemLeftArrow
 {
-    margin: 7px 10px 0px 20px;
+    margin: 7px 10px 0px 0px;
 }
 
 .jimu-widget-nearme .esriCTItemCount
@@ -284,14 +288,13 @@
 
 .jimu-widget-nearme .esriCTBackButton
 {
-    cursor: pointer;
     float: left;
 }
 
 .jimu-widget-nearme .esriCTPanelHeader
 {
     font-weight: bold;
-    cursor: default !important;
+    padding-left: 20px;
 }
 
 .esriCTDirectionInfoPanel .esriCTItemlList
@@ -365,12 +368,29 @@
     -webkit-overflow-scrolling: touch;
 }
 
+.jimu-widget-nearme .esriCTOverrideHeight
+{
+       height: calc(100% - 46px);
+}
+
+
 .jimu-widget-nearme .esriCTFeatureInfo
 {
     height: calc(100% - 35px);
     min-height: 80px;
     -webkit-overflow-scrolling: touch;
 }
+
+.jimu-widget-nearme .esriCTBorderBottom
+{
+    border-bottom: 1px solid #464646;
+}
+
+.jimu-widget-nearme .esriCTTopBorder
+{
+    border-top: 1px solid #464646;
+}
+
 /*-------------End of styles to override tab container css-----------------*/
 
 /*---------------------Styles for popup attachments------------------------*/
@@ -452,7 +472,7 @@
     margin: 0px 0px 0px 20px;
 }
 
-.esriRtl .jimu-widget-nearme .esriCTItemRightArrow 
+.esriRtl .jimu-widget-nearme .esriCTItemRightArrow
 {
     background-image: url('../images/left-arrow.png');
     float: left;
@@ -460,7 +480,7 @@
 }
 
 .esriRtl .jimu-widget-nearme .esriCTBackButton
-{    
+{
     float: right;
 }
 

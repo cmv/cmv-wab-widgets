@@ -1,0 +1,20 @@
+/*global define*/
+define({
+  "_widgetLabel": "Blizu mene",
+  "searchHeaderText": "Pretraži adresu ili pronađi na karti",
+  "invalidSearchLayerMsg": "Slojevi za pretraživanje nisu ispravno konfigurirani",
+  "bufferSliderText": "Prikaži rezultate unutar ${BufferDistance} ${BufferUnit}",
+  "bufferSliderValueString": "Odredite udaljenost veću od 0",
+  "unableToCreateBuffer": "Rezultat(i) nije/nisu pronađen(i)",
+  "selectLocationToolTip": "Postavi lokaciju",
+  "noFeatureFoundText": "Nema rezultata ",
+  "attachmentHeader": "Privitci",
+  "unableToFetchResults": "Nije moguće dohvatiti rezultate sa sloja/eva:",
+  "informationTabTitle": "Informacije",
+  "directionTabTitle": "Upute za vožnju",
+  "failedToGenerateRouteMsg": "Stvaranje rute nije uspjelo.",
+  "geometryServicesNotFound": "Geometrijska usluga nije dostupna.",
+  "allPopupsDisabledMsg": "Skočni prozori nisu konfigurirani, rezultati se ne mogu prikazati.",
+  "worldGeocoderName": "Adresa",
+  "searchLocationTitle": "Pretražene lokacije"
+});

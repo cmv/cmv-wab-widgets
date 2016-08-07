@@ -22,6 +22,7 @@ define([
   'dijit/_WidgetBase',
   'dojo/topic',
   'dojo/on',
+  'dojo/query',
   'dojo/dom-construct',
   'dojo/dom-geometry',
   'dojo/Deferred',
@@ -37,7 +38,7 @@ define([
   './dijit/LoadingShelter'
 ],
 
-function(declare, lang, array, html, _WidgetBase, topic, on,  domConstruct, domGeometry,
+function(declare, lang, array, html, _WidgetBase, topic, on, query, domConstruct, domGeometry,
   Deferred, all, when, require, WidgetManager, PanelManager,
   MapManager, utils, OnScreenWidgetIcon, WidgetPlaceholder, LoadingShelter) {
   /* global jimuConfig:true */
@@ -56,6 +57,8 @@ function(declare, lang, array, html, _WidgetBase, topic, on,  domConstruct, domG
       this.own(topic.subscribe("mapChanged", lang.hitch(this, this.onMapChanged)));
       this.own(topic.subscribe("beforeMapDestory", lang.hitch(this, this.onBeforeMapDestory)));
 
+      this.own(topic.subscribe("preloadModulesLoaded", lang.hitch(this, this._onPreloadModulesLoaded)));
+
       this.own(topic.subscribe("builder/actionTriggered",
         lang.hitch(this, this.onActionTriggered)));
 
@@ -71,6 +74,8 @@ function(declare, lang, array, html, _WidgetBase, topic, on,  domConstruct, domG
       this.own(on(window, 'resize', lang.hitch(this, this.resize)));
 
       this.id = domId;
+
+      this.preloadModulesLoadDef = new Deferred();
     },
 
     postCreate: function(){
@@ -95,10 +100,18 @@ function(declare, lang, array, html, _WidgetBase, topic, on,  domConstruct, domG
 
     onAppConfigLoaded: function(config){
       this.appConfig = lang.clone(config);
-      if(this.appConfig.theme){
-        this._loadTheme(this.appConfig.theme);
-      }
+
       this._loadMap();
+
+      this.preloadModulesLoadDef.then(lang.hitch(this, function(){
+        if(this.appConfig.theme){
+          this._loadTheme(this.appConfig.theme);
+        }
+      }));
+    },
+
+    _onPreloadModulesLoaded: function(){
+      this.preloadModulesLoadDef.resolve();
     },
 
     onAppConfigChanged: function(appConfig, reason, changeData){
@@ -136,7 +149,9 @@ function(declare, lang, array, html, _WidgetBase, topic, on,  domConstruct, domG
     onMapLoaded: function(map) {
       this.map = map;
       this.panelManager.setMap(map);
-      this._loadPreloadWidgets(this.appConfig);
+      this.preloadModulesLoadDef.then(lang.hitch(this, function(){
+        this._loadPreloadWidgets(this.appConfig);
+      }));
     },
 
     onMapChanged: function(map){
@@ -429,17 +444,22 @@ function(declare, lang, array, html, _WidgetBase, topic, on,  domConstruct, domG
 
       this._removeThemeCommonStyle(this.appConfig.theme);
       this._removeThemeCurrentStyle(this.appConfig.theme);
+      this._removeCustomStyle();
 
       require(['themes/' + appConfig.theme.name + '/main'], lang.hitch(this, function(){
         this._loadThemeCommonStyle(appConfig.theme);
         this._loadThemeCurrentStyle(appConfig.theme);
+        this._addCustomStyle(appConfig.theme);
         this._changeMapPosition(appConfig);
         this._loadPreloadWidgets(appConfig);
       }));
     },
 
     _onResetConfig: function(appConfig){
-      topic.publish('appConfigChanged', appConfig, 'mapChange', appConfig);
+      var oldAC = this.appConfig;
+      topic.publish('appConfigChanged', appConfig, 'mapChange', appConfig);//this line will change this.appConfig
+      this.appConfig = oldAC;
+
       this._updateCommonStyle(appConfig);
       this._onStyleChange(appConfig);
       this._changeMapPosition(appConfig);
@@ -490,6 +510,8 @@ function(declare, lang, array, html, _WidgetBase, topic, on,  domConstruct, domG
       var currentTheme = this.appConfig.theme;
       this._removeThemeCurrentStyle(currentTheme);
       this._loadThemeCurrentStyle(appConfig.theme);
+      this._removeCustomStyle();
+      this._addCustomStyle(appConfig.theme);
     },
 
     _onLayoutChange: function(appConfig){
@@ -528,6 +550,7 @@ function(declare, lang, array, html, _WidgetBase, topic, on,  domConstruct, domG
       require(['themes/' + theme.name + '/main'], lang.hitch(this, function(){
         this._loadThemeCommonStyle(theme);
         this._loadThemeCurrentStyle(theme);
+        this._addCustomStyle(theme);
       }));
     },
 
@@ -553,6 +576,78 @@ function(declare, lang, array, html, _WidgetBase, topic, on,  domConstruct, domG
     _removeThemeCurrentStyle: function(theme){
       html.removeClass(this.domNode, theme.styles[0]);
       html.destroy(this._getThemeCurrentStyleId(theme));
+    },
+
+    _addCustomStyle: function(theme) {
+      var customStyles = lang.getObject('customStyles', false, theme);
+      if(!customStyles){
+        return;
+      }
+      var cssText = ".jimu-main-background{background-color: ${mainBackgroundColor} !important;}";
+      var themeCssText = this._getFixedThemeStyles(theme);
+      if(themeCssText){
+        cssText += themeCssText;
+      }
+      cssText = lang.replace(cssText, customStyles, /\$\{([^\}]+)\}/g);
+
+      var style = html.create('style', {
+        type: 'text/css'
+      });
+      try {
+        style.appendChild(document.createTextNode(cssText));
+      } catch(err) {
+        style.styleSheet.cssText = cssText;
+      }
+      style.setAttribute('source', 'custom');
+
+      document.head.appendChild(style);
+    },
+
+    /**
+     * This is a temp fix because the custom color can override one color only.
+     * @param  {Object} theme
+     * @return {String} The CSS string
+     */
+    _getFixedThemeStyles: function(theme){
+      //fix popup
+      var cssText = '.esriPopup .titlePane {background-color: ${mainBackgroundColor} !important;}';
+      if(theme.name === 'PlateauTheme'){
+        cssText += '.jimu-widget-header-controller .jimu-title, .jimu-widget-header-controller .jimu-subtitle' +
+          '{color: ${mainBackgroundColor} !important;}';
+        cssText += '.jimu-widget-header-controller .links .jimu-link' +
+          '{color: ${mainBackgroundColor} !important;}';
+        cssText += '.jimu-widget-homebutton .HomeButton .home, .jimu-widget-mylocation,' +
+          ' .jimu-widget-mylocation .place-holder, .jimu-widget-zoomslider.vertical .zoom-in,' +
+          ' .jimu-widget-zoomslider.vertical .zoom-out' +
+          '{background-color: ${mainBackgroundColor} !important;}';
+        cssText += '.jimu-preload-widget-icon-panel > .jimu-panel-title,' +
+          ' .jimu-foldable-panel > .jimu-panel-title, .jimu-title-panel > .title' +
+          '{color: ${mainBackgroundColor} !important;}';
+        cssText += '.jimu-panel{border-color: ${mainBackgroundColor} !important;}';
+        cssText += '.jimu-widget-header-controller' +
+          '{border-bottom-color: ${mainBackgroundColor} !important;}';
+      }else if(theme.name === 'BillboardTheme'){
+        cssText += '.jimu-widget-homebutton .HomeButton .home, .jimu-widget-mylocation,' +
+          ' .jimu-widget-mylocation .place-holder, .jimu-widget-zoomslider.vertical .zoom-in,' +
+          ' .jimu-widget-zoomslider.vertical .zoom-out' +
+          '{background-color: ${mainBackgroundColor} !important;}';
+        cssText += '.jimu-widget-onscreen-icon' +
+          '{background-color: ${mainBackgroundColor} !important;}';
+      }else if(theme.name === 'BoxTheme'){
+        cssText += '.jimu-widget-homebutton .HomeButton .home, .jimu-widget-mylocation,' +
+          ' .jimu-widget-mylocation .place-holder, .jimu-widget-zoomslider.vertical .zoom-in,' +
+          ' .jimu-widget-zoomslider.vertical .zoom-out' +
+          '{background-color: ${mainBackgroundColor} !important;}';
+      }else if(theme.name === 'TabTheme'){
+        cssText += '.tab-widget-frame .title-label{color: ${mainBackgroundColor} !important;}';
+      }
+      return cssText;
+    },
+
+    _removeCustomStyle: function() {
+      query('style[source="custom"]', document.head).forEach(function(s) {
+        html.destroy(s);
+      });
     },
 
     _getThemeCommonStyleId: function(theme){

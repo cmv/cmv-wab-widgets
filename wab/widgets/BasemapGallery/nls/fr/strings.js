@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Bibliothèque de fonds de carte"
-  })
-);
+define({
+  "_widgetLabel": "Bibliothèque de fonds de carte"
+});

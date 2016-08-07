@@ -13,20 +13,19 @@ define({
       selectRelatedTableLayerHintText: "Hint: Only tables with numeric fields are displayed", // shown as a hint text in config UI dialog box for selecting table related to layer.
       errorInSelectingPolygonLayer: "Please select a layer which has a related point layer.", // shown as an error label in alert box for selecting layer from map.
       errorInSelectingRelatedLayer: "Please select a valid related table/layer to  layer.", // shown as an error in alert box if error in selecting related table layer.
-      polygonLayerNotHavingRelationships: "Selected layer don't have any related table/layer.", // shown as an error in alert box if Selected layer don't have any related table/layer.
-      okButton: "OK", //shown as a button text.
-      cancelButton: "Cancel" //shown as a button text.
+      polygonLayerNotHavingRelationships: "Selected layer don't have any related table/layer." // shown as an error in alert box if Selected layer don't have any related table/layer.
     },
     ChartSetting: {
       sectionTitle: "Section title", // shown as a label in config UI dialog box.
       sectionTitleHintText: "Hint: Displayed in section header title", // shown as a hint text in config UI dialog box for section title.
       chartTitle: "Chart title", // shown as a label in config UI dialog box.
-      chartTitleHintText: "Hint:Displayed centered on top of chart", // shown as a hint text in config UI dialog box for section title.
+      chartTitleHintText: "Hint: Displayed centered on top of chart", // shown as a hint text in config UI dialog box for section title.
       chartDescription: "Description", // shown as a label in cofig UI.
-      chartDescriptionHintText: "Hint:Displayed below chart", // shown as a hint text in config UI dialog box.
+      chartDescriptionHintText: "Hint: Displayed below chart", // shown as a hint text in config UI dialog box.
       chartType: "Chart type", // shown as a label which shows type of chart.
       barChart: "Bar chart", // shown as a label for bar chart radio button.
       pieChart: "Pie chart", // shown as a label for pie chart radio button.
+      polarChart: "Polar chart", // shown as a label for polar chart radio button
       dataSeriesField: "Data series field", // shown as a label for selecting data series set.
       labelField: "Label field", // shown as a label for selecting label field set.
       chartColor: "Chart color", // shown as a label which shows color for chart.
@@ -44,7 +43,44 @@ define({
       errMsgSectionTitle: "Please enter the section title", // shown as an error in alert box if section title is empty.
       errMsgFieldByValue: "Please select field value", // shown as an error in alert box if color by field value is empty.
       settingTabTitle: "Setting", // shown as a label of tab in config UI
-      layoutTabTitle: "Layout" // shown as a label of tab in config UI
+      layoutTabTitle: "Layout", // shown as a label of tab in config UI
+      polarChartSelectFieldsHintText: "Hint: Select fields to generate polar chart", // shown as hint text to select fields for polar graph.
+      visibilityText: "Visibility", //show as header in polar graph field table
+      fieldNameText: "Field Name", //show as header in polar graph field table
+      aliasNameText: "Alias", //show as header in polar graph field table
+      errMsgPolarFieldsRequired: "Please select three or more fields to generate polar chart", // shown as an error in alert box if less than 3 fields selected.
+      polarChartPolygonFillLabel: "Fill polygon", // shown as label to set visibility of polygons in polar graph
+      polarChartPolygonFillHintText: "Hint: Select checkbox to show polygon fill in polar graph", // shown as hint text to select the checkbox to show the filled polygons in polar graph
+      ThemeSelector: { // Themes Labels
+        themeAdobebricks: "Adobebricks",
+        themeAlgae: "Algae",
+        themeBahamation: "Bahamation",
+        themeBlueDusk: "BlueDusk",
+        themeCubanShirts: "CubanShirts",
+        themeDesert: "Desert",
+        themeDistinctive: "Distinctive",
+        themeDollar: "Dollar",
+        themeGrasshopper: "Grasshopper",
+        themeGrasslands: "Grasslands",
+        themeGreySkies: "GreySkies",
+        themeHarmony: "Harmony",
+        themeIndigoNation: "IndigoNation",
+        themeIreland: "Ireland",
+        themeMiamiNice: "MiamiNice",
+        themeMinty: "Minty",
+        themePurpleRain: "PurpleRain",
+        themeRoyalPurples: "RoyalPurples",
+        themeSageToLime: "SageToLime",
+        themeTufte: "Tufte",
+        themeWatersEdge: "WatersEdge",
+        themeWetlandText: "Wetland",
+        themePlotKitblue: "PlotKit.blue",
+        themePlotKitcyan: "PlotKit.cyan",
+        themePlotKitgreen: "PlotKit.green",
+        themePlotKitorange: "PlotKit.orange",
+        themePlotKitpurple: "PlotKit.purple",
+        themePlotKitred: "PlotKit.red"
+      }
     },
     GeneralSetting: {
       legendGeneralSettingText: "General Settings", // shown as a label of general setting legend.
@@ -66,6 +102,7 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
+  "hr": 1,
   "it": 1,
   "ja": 1,
   "ko": 1,
@@ -78,6 +115,7 @@ define({
   "pt-pt": 1,
   "ro": 1,
   "ru": 1,
+  "sr": 1,
   "sv": 1,
   "th": 1,
   "tr": 1,

@@ -44,7 +44,8 @@ define({
     "count_checkBox": "Show Count",
     "area_checkBox": "Show Area",
     "length_checkBox": "Show Length",
-    "max_records": "Maximum limit reached"
+    "max_records": "Maximum limit reached",
+    "disable_checkBox": "Disable layer visibility management"
   }),
   "ar": 1,
   "cs": 1,
@@ -56,6 +57,7 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
+  "hr": 1,
   "it": 1,
   "ja": 1,
   "ko": 1,
@@ -68,6 +70,7 @@ define({
   "pt-pt": 1,
   "ro": 1,
   "ru": 1,
+  "sr": 1,
   "sv": 1,
   "th": 1,
   "tr": 1,

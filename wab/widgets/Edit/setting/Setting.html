@@ -2,7 +2,7 @@
   <div data-dojo-attach-point="firstPageDiv">
     <table class="setting-table input-table" cellspacing="0">
       <tbody>
-        <tr style="display:none">
+        <tr>
             <td class="first jimu-trailing-padding1">${nls.useFilterEdit}</td>
             <td class="second jimu-leading-padding1">
                 <div class="" style="">
@@ -25,7 +25,8 @@
           <td class="first jimu-trailing-padding1  toolbar-options-td" data-dojo-attach-point="toolbarOptionsLabel">${nls.toolbarOptions}</td>
           <td class="second jimu-leading-padding1  toolbar-options-td" data-dojo-attach-point="toolbarOptionsTd">
             <span class="jimu-trailing-margin05 jimu-float-leading">${nls.mergeVisible}</span>
-            <div class="jimu-trailing-margin2 jimu-float-leading">
+            <div class="jimu-trailing-margin2 jimu-float-leading" style="position: relative">
+              <div class="toolbar-options-coverage" data-dojo-attach-point="toolbarOptionsCoverage"></div>
               <input   data-dojo-attach-point="mergeVisible" 
               data-dojo-type="dijit/form/CheckBox"/>
             </div>
@@ -49,6 +50,51 @@
             </div>
           </td>
           <td><div style="height: 40px;"></div></td>
+        </tr>
+        <tr>
+          <td class="first jimu-trailing-padding1">${nls.autoApplyEditWhenGeometryIsMoved}</td>
+          <td class="second jimu-leading-padding1">
+            <div class="" style="">
+              <input data-dojo-attach-point="autoApplyEditWhenGeometryIsMoved" 
+              data-dojo-type="dijit/form/CheckBox"/>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="first jimu-trailing-padding1">${nls.snappingTolerance}</td>
+          <td class="second jimu-leading-padding1">
+            <div class="" style="">
+              <input data-dojo-attach-point="snappingTolerance" 
+              data-dojo-type="dijit/form/NumberSpinner"
+              data-dojo-props="smallDelta:5, constraints:{min:0,max:1000,places:0}"
+              name="snappingTolerance"
+              />
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="first jimu-trailing-padding1">${nls.popupTolerance}</td>
+          <td class="second jimu-leading-padding1">
+            <div class="" style="">
+              <input data-dojo-attach-point="popupTolerance" 
+              data-dojo-type="dijit/form/NumberSpinner"
+              data-dojo-props="smallDelta:5, constraints:{min:0,max:1000,places:0}"
+              name="popupTolerance"
+              />
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="first jimu-trailing-padding1">${nls.stickyMoveTolerance}</td>
+          <td class="second jimu-leading-padding1">
+            <div class="" style="">
+              <input data-dojo-attach-point="stickyMoveTolerance" 
+              data-dojo-type="dijit/form/NumberSpinner"
+              data-dojo-props="smallDelta:5, constraints:{min:0,max:2000,places:0}"
+              name="stickyMoveTolerance"
+              />
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>

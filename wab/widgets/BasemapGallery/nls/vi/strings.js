@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Bộ sưu tập bản đồ nền"
-  })
-);
+define({
+  "_widgetLabel": "Bộ sưu tập bản đồ nền"
+});

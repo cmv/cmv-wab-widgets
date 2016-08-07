@@ -24,6 +24,7 @@
   width: 100%;
   height: 7px;
   top: 0px;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 .jimu-widget-attributetable-move:hover{
   cursor: n-resize;
@@ -69,24 +70,37 @@
   margin: auto;
   position: absolute;
   cursor: pointer;
-  border-radius: 2px 2px 0 0;
+  border-radius: 8px 8px 0 0;
   background-position: center;
   background-repeat: no-repeat;
+  background-color: rgba(0,0,0,0.7);
+  border: 2px solid rgba(255,255,255,0.8);
+  border-bottom-style: none;
 }
+/*.jimu-widget-attributetable-highlight-line{
+  height: 3px;
+  left: 0;
+  right: 0;
+  top: -3px;
+  margin: auto;
+  position: absolute;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.7);
+}*/
 .jimu-widget-attributetable-switch.open{
-  background-image: url(images/arrow_down.png);
-  border: none;
+  background-image: url(images/arrow_down.svg);
+  /*border: none;*/
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
 .jimu-widget-attributetable-switch.open:hover{
-  background-image: url(images/arrow_down_hover.png);
+  background-image: url(images/arrow_down_hover.svg);
 }
 .jimu-widget-attributetable-switch.close{
-  background-image: url(images/arrow_up.png)
+  background-image: url(images/arrow_up.svg)
 }
 .jimu-widget-attributetable-switch.close:hover{
-  background-image: url(images/arrow_up_hover.png);
+  background-image: url(images/arrow_up_hover.svg);
 }
 .jimu-widget-attributetable-arrowImage{
   width: 30px;
@@ -111,22 +125,46 @@
 .jimu-widget-attributetable .dijitTabContainerTopChildWrapper .dijitContentPane{
   height: 100% !important;
   width: 100% !important;
+  padding: 0;
 }
 .jimu-widget-attributetable .dijitToggleButton.dijitToggleButtonChecked .dijitButtonText{
-  font-weight: bold;
+  /*font-weight: bold;*/
   color: #518dca;
 }
 
+/*override dgrid*/
 .jimu-widget-attributetable .esriAttributeTable{
   width: 100%;
   height: 100%;
   position: relative;
 }
+.jimu-widget-attributetable .dgrid-header .dgrid-column-selectionHandle.selection-handle-column div.dgrid-resize-header-container{
+  display: none;
+}
+.jimu-widget-attributetable .dgrid-column-selectionHandle.selection-handle-column{
+  width: 20px;
+  background-color: #eee;
+  padding: 0 !important;
+  border-bottom: 1px solid #ccc !important;
+  cursor: pointer;
+}
+.dojoDndSource.dojoDndTarget.dojoDndHorizontal.dojoDndContainer .dgrid-column-selectionHandle.selection-handle-column{
+  pointer-events: none;
+}
+/*.jimu-widget-attributetable .dgrid-column-selectionHandle.selection-handle-column .selection-handle{
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  min-height: 28px;
+  vertical-align:middle;
+}*/
 .jimu-widget-attributetable .dgrid-sortable {
   /*font-weight: bold;*/
 }
 .jimu-widget-attributetable .dgrid-cell {
   border-right: solid 1px #ccc;
+  /*width: auto;
+  min-width: 100px;*/
   width: 100px;
 }
 .jimu-widget-attributetable .dgrid-row .dgrid-cell {
@@ -166,7 +204,7 @@ background-color:#E1F0FB;
   background-color: #F7F8F8;
 }
 .jimu-widget-attributetable .ui-state-active {
-  background-color: #AEC7E3;
+  background-color: rgb(0, 255, 255) !important;
 }
 .jimu-widget-attributetable .dgrid-status {
   white-space: pre;
@@ -238,6 +276,9 @@ background-color:#E1F0FB;
   background-image: url("../images/close.png");
   width: 13px;
   height: 13px;
+  position: absolute;
+  right: 0;
+  top: -13px;
 }
 .esriAttributeTableColumnsImage{
   background-image: url("../images/columns.png");
@@ -245,11 +286,7 @@ background-color:#E1F0FB;
   height: 13px;
 }
 
-.jimu-widget-attributetable .jimu-widget-attributetable-main .dijitToolbar .close-button {
-  position: absolute;
-  right: 0;
-}
-.jimu-rtl .jimu-widget-attributetable .jimu-widget-attributetable-main .dijitToolbar .close-button {
+.jimu-rtl .jimu-widget-attributetable .close-button {
   right: auto;
   left: 0;
 }
@@ -263,7 +300,15 @@ background-color:#E1F0FB;
   position: relative;
 }
 
-.jimu-widget-attributetable .jimu-widget-attributetable-relationship-table{
-  height: 100%;
-  position: relative;
+/* for column menu*/
+.jimu-widget-attributetable-feature-menu .menuItemClass{
+  cursor: pointer;
+}
+.jimu-widget-attributetable-feature-menu.dijitMenu{
+  background-color: #fff !important;
+}
+.jimu-widget-attributetable-feature-menu.dijitMenu .dijitMenuItemSelected td,
+.jimu-widget-attributetable-feature-menu.dijitMenu .dijitMenuItemSelected{
+  background-color: #f1f1f1 !important;
+  color: #000!important;
 }

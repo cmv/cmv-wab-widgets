@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "정보"
-  })
-);
+define({
+  "_widgetLabel": "정보"
+});

@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Galleri för baskartor"
-  })
-);
+define({
+  "_widgetLabel": "Galleri för baskartor"
+});

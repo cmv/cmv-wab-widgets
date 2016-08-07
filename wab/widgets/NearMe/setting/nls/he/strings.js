@@ -1,4 +1,4 @@
-﻿/*global define*/
+/*global define*/
 ///////////////////////////////////////////////////////////////////////////
 // Copyright © 2015 Esri. All Rights Reserved.
 //
@@ -14,83 +14,84 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////
-define(
-   ({
-    units: { // label shown in config UI dialog box(options for dropdown) and also shown as label for slider text(slider unit) and acronym in feature list
-      miles: {
-        displayText: "מיילים",
-        acronym: "מיילים"
-      },
-      kilometers: {
-        displayText: "קילומטרים",
-        acronym: "ק\"מ"
-      },
-      feet: {
-        displayText: "רגל",
-        acronym: "רגל"
-      },
-      meters: {
-        displayText: "מטרים",
-        acronym: "מ\'"
-      }
+define({
+  "units": {
+    "miles": {
+      "displayText": "מיילים",
+      "acronym": "מיילים"
     },
-    searchSetting: {
-      searchSettingTabTitle: "הגדרות חיפוש", // shown as a label in config UI dialog box for search setting
-      defaultBufferDistanceLabel: "הגדר ערך ברירת מחדל של מרחק חיץ", // shown as a label in config UI dialog box for selecting default buffer distance
-      maxBufferDistanceLabel: "הגדר ערך מקסימום של מרחק חיץ לחיפוש ישויות", // shown as a label in config UI dialog box for selecting maximum buffer distance value
-      bufferDistanceUnitLabel: "יחידות מרחק חיץ", // shown as a label(options) of select(dropdown) in config UI dialog box
-      defaultBufferHintLabel: "רמז: משמש להגדרת ערך ברירת מחדל של אזור חיץ", // shown as a label in config UI dialog box to set default value for a buffer
-      maxBufferHintLabel: "רמז: משמש להגדרת ערך מקסימלי של אזור חיץ", // shown as a label in config UI dialog box to set maximum value for a buffer
-      bufferUnitLabel: "רמז: הגדר יחידה ליצירת אזור חיץ", // shown as a label in config UI dialog box to set unit of buffer
-      selectGraphicLocationSymbol: "סמל כתובת או מיקום", // shown as label in config UI dialog box for graphic symbol in search setting
-      graphicLocationSymbolHintText: "רמז: סמל עבור כתובת שחיפשת או מיקום שלחצת עליו", // shown as hint label in config UI dialog box for selecting graphic symbol
-      fontColorLabel: "בחר צבע גופן עבור תוצאות החיפוש", //Show as label in config UI to set the font color in widget panel.
-      fontColorHintText: "רמז: צבע גופן של תוצאות החיפוש" //Show as label in config UI to set the font color in widget panel.
+    "kilometers": {
+      "displayText": "קילומטרים",
+      "acronym": "ק\"מ"
     },
-    layerSelector: {
-      selectLayerLabel: "בחר שכבות חיפוש", // shown as a label in config UI dialog box for selecting layer on map
-      layerSelectionHint: "רמז: השתמש בלחצן ההגדרה לבחירת שכבות", // shown as a label in config UI dialog box to select multiple layers
-      addLayerButton: "הגדר", //Shown as a button text to add the layer for search
-      okButton: "אישור", // shown as a button text for layer selector popup
-      cancelButton: "בטל" // shown as a button text for layer selector popup
+    "feet": {
+      "displayText": "רגל",
+      "acronym": "רגל"
     },
-    routeSetting: {
-      routeSettingTabTitle: "הגדרות כיוון", // shown as a label in config UI dialog box for route setting
-      routeServiceUrl: "שירות מסלול", // shown as a label in config UI dialog box for setting the route url
-      travelModeServiceUrl: "שירות מצב נסיעה", // shown as a label in config UI dialog box for setting the travelmode url
-      buttonSet: "הגדר", // shown as a button text for route setting to set route url in config UI dialog box
-      routeServiceUrlHintText: "רמז: לחץ על \'הגדר\' כדי לנתב לשירות מסלול ולבחור אותו", // shown as a hint label in config UI dialog box to select a route url
-      directionLengthUnit: "יחידות אורך של כיוון", // shown as a label(options) of select(dropdown) in config UI dialog box in routing section
-      unitsForRouteHintText: "רמז: משמש להצגת יחידות עבור מסלול", // shown as hint label in config UI dialog box to display routing unit
-      selectRouteSymbol: "בחר סמל להצגת מסלול", // shown as label in config UI dialog box for selecting symbol for routing
-      routeSymbolHintText: "רמז: משמש להצגת סמל קווי של המסלול", //shown as hint to select route symbol
-      travelModeServiceUrlHintText: "רמז: לחץ על \'הגדר\' כדי לנתב לשירות מצב נסיעה ולבחור אותו", // shown as a hint label in config UI dialog box to select a travelMode service url
-      invalidTravelmodeServiceUrl: "ציין שירות מצב נסיעה חוקי ", // shown as an error label in alert box when invalid travel mode service url is configured
-      routingDisabledMsg: "כדי לאפשר הוראות נסיעה, ודא שניתוב מסלולים מאופשר בפריט ה- ArcGIS Online." // shown as message in routeSettings tab when routing is disabled in webmap
-    },
-    networkServiceChooser: {
-      arcgislabel: "הוסף מ-ArcGIS Online", // shown as a label in route service configuration panel to select route url from portal
-      serviceURLabel: "הוסף כתובת URL של שירות", // shown as a label in route service configuration panel to add service url
-      routeURL: "URL של המסלול", // shown as a label in route service configuration panel
-      validateRouteURL: "אמת", // shown as a button text in route service configuration panel to validate url
-      exampleText: "דוגמה", // shown as a label in route service configuration panel to consider example of route services
-      hintRouteURL1: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/", // shown as a label hint in route service configuration panel
-      hintRouteURL2: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World", // shown as a label hint in route service configuration panel
-      okButton: "אישור", // shown as a button text for route service configuration panel
-      cancelButton: "בטל", // shown as a button text for route service configuration panel
-      nextButton: "הבא", // shown as a button text for route service configuration panel
-      backButton: "קודם", // shown as a button text for route service configuration panel
-      invalidRouteServiceURL: "ציין שירות מסלול חוקי." // Shown as an error in alert box invalid route service url is configured.
-    },
-    errorStrings: {
-      bufferErrorString: "הזן ערך מספרי חוקי.", // shown as an error label in text box for buffer
-      selectLayerErrorString: "בחר שכבה/ות לחיפוש.", // shown as an error label in alert box for selecting layer from map to search
-      invalidDefaultValue: "מרחק החיץ המוגדר כברירת מחדל לא יכול להיות ריק. ציין את מרחק החיץ", // shown as an error label in alert box for blank or empty text box
-      invalidMaximumValue: "מרחק החיץ המקסימלי לא יכול להיות ריק. ציין את מרחק החיץ", // shown as an error label in alert box for blank or empty text box
-      defaultValueLessThanMax: "ציין את מרחק החיץ המוגדר כברירת מחדל בטווח האפשרי עד לגבול המקסימלי", // shown as an error label in alert box when default value is greater than maximum value of slider
-      defaultBufferValueGreaterThanZero: "ציין את מרחק החיץ המוגדר כברירת מחדל כשהוא גדול מ-0", // shown as an error label in alert box when we configure default value of slider is zero
-      maximumBufferValueGreaterThanZero: "ציין את מרחק החיץ המקסימלי כשהוא גדול מ-0" // shown as an error label in alert box when we configure maximum value of slider is zero
-    },
-    symbolPickerPreviewText: "תצוגה מקדימה:"
-  })
-);
+    "meters": {
+      "displayText": "מטרים",
+      "acronym": "מ'"
+    }
+  },
+  "searchSetting": {
+    "searchSettingTabTitle": "הגדרות חיפוש",
+    "defaultBufferDistanceLabel": "הגדר ברירת מחדל של מרחק חיץ",
+    "maxBufferDistanceLabel": "הגדר מרחק חיץ מקסימלי",
+    "bufferDistanceUnitLabel": "יחידות מרחק חיץ",
+    "defaultBufferHintLabel": "רמז: הגדר ערך ברירת מחדל עבור מחוון החיץ",
+    "maxBufferHintLabel": "רמז: הגדר ערך מקסימום עבור מחוון החיץ",
+    "bufferUnitLabel": "רמז: הגדר יחידה ליצירת אזור חיץ",
+    "selectGraphicLocationSymbol": "סמל כתובת או מיקום",
+    "graphicLocationSymbolHintText": "רמז: סמל עבור כתובת שחיפשת או מיקום שלחצת עליו",
+    "fontColorLabel": "בחר צבע גופן עבור תוצאות החיפוש",
+    "fontColorHintText": "רמז: צבע גופן של תוצאות החיפוש",
+    "zoomToSelectedFeature": "התמקד לישות שנבחרה",
+    "zoomToSelectedFeatureHintText": "רמז: התמקד לישות שנבחרה במקום לחיץ",
+    "intersectSearchLocation": "החזר פוליגונים מצטלבים",
+    "intersectSearchLocationHintText": "רמז: החזר פוליגונים שמכילים את המיקום שבו נערך החיפוש במקום פוליגונים בתוך החיץ",
+    "bufferVisibilityLabel": "הגדר ניראות של חיץ",
+    "bufferVisibilityHintText": "רמז: החיץ יוצג על המפה",
+    "bufferColorLabel": "הגדר סמל חיץ",
+    "bufferColorHintText": "רמז: בחר צבע ושקיפות עבור החיץ",
+    "searchLayerResultLabel": "צייר רק את תוצאות השכבה שנבחרה",
+    "searchLayerResultHint": "רמז: רק השכבה שנבחרה בתוצאות החיפוש תצויר על המפה"
+  },
+  "layerSelector": {
+    "selectLayerLabel": "בחר שכבות חיפוש",
+    "layerSelectionHint": "רמז: השתמש בלחצן ההגדרה לבחירת שכבות",
+    "addLayerButton": "הגדר"
+  },
+  "routeSetting": {
+    "routeSettingTabTitle": "הגדרות הוראות נסיעה",
+    "routeServiceUrl": "שירות מסלול",
+    "buttonSet": "הגדר",
+    "routeServiceUrlHintText": "רמז: לחץ על 'הגדר' כדי לנווט לשירות מסלול ולבחור אותו",
+    "directionLengthUnit": "יחידות אורך של כיוון",
+    "unitsForRouteHintText": "רמז: משמש להצגת יחידות עבור מסלול",
+    "selectRouteSymbol": "בחר סמל להצגת מסלול",
+    "routeSymbolHintText": "רמז: משמש להצגת סמל קווי של המסלול",
+    "routingDisabledMsg": "כדי לאפשר הוראות נסיעה, ודא שניתוב מסלולים מאופשר בפריט ה- ArcGIS Online."
+  },
+  "networkServiceChooser": {
+    "arcgislabel": "הוסף מ-ArcGIS Online",
+    "serviceURLabel": "הוסף כתובת URL של שירות",
+    "routeURL": "URL של המסלול",
+    "validateRouteURL": "אמת",
+    "exampleText": "דוגמה",
+    "hintRouteURL1": "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/",
+    "hintRouteURL2": "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World",
+    "invalidRouteServiceURL": "ציין שירות מסלול חוקי.",
+    "rateLimitExceeded": "עברת את מגבלת השיעור. נסה שוב מאוחר יותר.",
+    "errorInvokingService": "שם משתמש או סיסמה שגויים."
+  },
+  "errorStrings": {
+    "bufferErrorString": "הזן ערך מספרי חוקי.",
+    "selectLayerErrorString": "בחר שכבה/ות לחיפוש.",
+    "invalidDefaultValue": "מרחק החיץ המוגדר כברירת מחדל לא יכול להיות ריק. ציין את מרחק החיץ",
+    "invalidMaximumValue": "מרחק החיץ המקסימלי לא יכול להיות ריק. ציין את מרחק החיץ",
+    "defaultValueLessThanMax": "ציין את מרחק החיץ המוגדר כברירת מחדל בטווח האפשרי עד לגבול המקסימלי",
+    "defaultBufferValueGreaterThanZero": "ציין את מרחק החיץ המוגדר כברירת מחדל כשהוא גדול מ-0",
+    "maximumBufferValueGreaterThanZero": "ציין את מרחק החיץ המקסימלי כשהוא גדול מ-0"
+  },
+  "symbolPickerPreviewText": "תצוגה מקדימה:"
+});

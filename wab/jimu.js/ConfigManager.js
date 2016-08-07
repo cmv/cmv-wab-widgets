@@ -60,7 +60,12 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         window.parent.setPreviewViewerTopic(topic);
       }
 
-      on(window, 'resize', lang.hitch(this, this._onWindowResize));
+      if (!jimuUtils.isMobileUa()) {
+        //mobile devices do NOT listen to the 'resize' event
+        //avoid to virtual-keyboard appears and then app switches between "Mobile Mode" and "Desktop Mode"
+        on(window, 'resize', lang.hitch(this, this._onWindowResize));
+      }
+      on(window, "orientationchange", lang.hitch(this, this._onOrientationChange));
     },
 
     listenBuilderEvents: function(){
@@ -96,6 +101,12 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
 
       topic.subscribe('builder/templateConfigChanged',
         lang.hitch(this, this._onTemplateConfigChanged));
+
+      topic.subscribe('builder/appProxyForMapChanged', lang.hitch(this,
+        this._onAppProxyForMapChanged));
+
+      topic.subscribe('builder/appProxyForUrlChanged', lang.hitch(this,
+        this._onAppProxyForUrlChanged));
     },
 
     loadConfig: function(){
@@ -167,12 +178,16 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       return c;
     },
 
+    _onOrientationChange: function() {
+      if (this.appConfig) {
+        topic.publish("appConfigChanged", this.getAppConfig(), 'layoutChange');
+      }
+    },
     _onWindowResize: function () {
       var runInMobile = this._isRunInMobile();
       if(window.appInfo.isRunInMobile === runInMobile){
         return;
       }
-
       window.appInfo.isRunInMobile = runInMobile;
 
       if(this.appConfig){
@@ -180,7 +195,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       }
     },
 
-    _isRunInMobile: function(){
+    _isRunInMobile: function() {
       var layoutBox = html.getMarginBox(window.jimuConfig.layoutId);
       if (layoutBox.w <= window.jimuConfig.breakPoints[0] ||
         layoutBox.h <= window.jimuConfig.breakPoints[0]) {
@@ -210,6 +225,8 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       for(var p in newJson){
         oldJson[p] = newJson[p];
       }
+
+      delete oldJson.isDefaultConfig;
 
       this.configLoader.addNeedValues(this.appConfig);
       this._addDefaultValues(this.appConfig);
@@ -276,8 +293,11 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         });
       }
       this.configLoader.addNeedValues(this.appConfig);
-      this._addDefaultValues(this.appConfig);
-      topic.publish('appConfigChanged', this.getAppConfig(), 'widgetPoolChange', newJson);
+      this.configLoader.loadAndUpgradeAllWidgetsConfig(this.appConfig).then(lang.hitch(this, function(appConfig){
+        this.appConfig = appConfig;
+        this._addDefaultValues(this.appConfig);
+        topic.publish('appConfigChanged', this.getAppConfig(), 'widgetPoolChange', newJson);
+      }));
     },
 
     _removeWidgetOrGroupFromPoolById: function(appConfig, id){
@@ -372,6 +392,67 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       topic.publish('appConfigChanged', this.getAppConfig(), 'loadingPageChange', newJson);
     },
 
+    /**
+     * _newJson pattern:
+     * {
+     *   mapItemId: itemId,
+     *   proxyItems: [{
+     *     sourceUrl: string;
+     *     title: string;
+     *     premium: boolean;
+     *     consumeCredits: boolean;
+     *     useProxy: boolean;
+     *     proxyUrl?: string;
+     *     proxyId?: string;
+     *   }]
+     * }
+     */
+    _onAppProxyForMapChanged: function(_newJson) {
+      var newJson = jimuUtils.reCreateObject(_newJson);
+
+      if (!('appProxy' in this.appConfig.map)) {
+        // Set appProxy if there is no such property
+        this.appConfig.map.appProxy = newJson;
+      } else if (this.appConfig.map.appProxy.mapItemId !== newJson.mapItemId) {
+        // Replace the app proxy if map changed.
+        this.appConfig.map.appProxy = newJson;
+      } else {
+        // Update proxy items
+        array.forEach(newJson.proxyItems, lang.hitch(this, function(item) {
+          array.some(this.appConfig.map.appProxy.proxyItems, function(configItem) {
+            if (configItem.sourceUrl === item.sourceUrl) {
+              configItem.useProxy = item.useProxy;
+              configItem.proxyUrl = item.proxyUrl || '';
+              configItem.proxyId = item.proxyId || '';
+              return true;
+            }
+          });
+        }));
+      }
+
+      topic.publish('appConfigChanged', this.getAppConfig(), 'appProxyChange', newJson);
+    },
+
+    /**
+     * _newJson pattern is array of:
+     * {
+     *   sourceUrl: string,
+     *   proxyUrl?: string,
+     *   proxyId?: string,
+     *   useProxy: boolean,
+     *   title: string,
+     *   premium: boolean,
+     *   consumeCredits: boolean
+     * }
+     */
+    _onAppProxyForUrlChanged: function(_newJson) {
+      var newJson = jimuUtils.reCreateObject(_newJson);
+
+      this.appConfig.appProxies = newJson;
+
+      topic.publish('appConfigChanged', this.getAppConfig(), 'appProxyChange', newJson);
+    },
+
     _onTemplateConfigChanged: function(_newJson){
       var newJson = jimuUtils.reCreateObject(_newJson);
       this.appConfig.templateConfig = newJson;
@@ -393,8 +474,12 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       lang.mixin(this.appConfig.map, newJson);
 
       this.configLoader.addNeedValues(this.appConfig);
-      this._addDefaultValues(this.appConfig);
-      topic.publish('appConfigChanged', this.getAppConfig(), 'mapChange', newJson);
+
+      this.configLoader.loadAndUpgradeAllWidgetsConfig(this.appConfig).then(lang.hitch(this, function(appConfig){
+        this.appConfig = appConfig;
+        this._addDefaultValues(this.appConfig);
+        topic.publish('appConfigChanged', this.getAppConfig(), 'mapChange', newJson);
+      }));
     },
 
     _onMapOptionsChanged: function(_newJson){
@@ -430,6 +515,13 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
 
     _onStyleChanged: function(style){
       this.appConfig.theme.styles = this._genStyles(this.appConfig.theme.styles, style.name);
+      if (style.isCustom) {
+        this.appConfig.theme.customStyles = {
+          mainBackgroundColor: style.styleColor
+        };
+      } else {
+        delete this.appConfig.theme.customStyles;
+      }
       topic.publish('appConfigChanged', this.getAppConfig(), 'styleChange', style.name);
     },
 
@@ -519,7 +611,9 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       }
 
       this.configLoader.addNeedValues(config);
-      this.configLoader.loadWidgetsManifest(config).then(lang.hitch(this, function(){
+      this.configLoader.loadWidgetsManifest(config).then(lang.hitch(this, function(config){
+        return this.configLoader.loadAndUpgradeAllWidgetsConfig(config);
+      })).then(lang.hitch(this, function(){
         this._addDefaultValues(config);
         def.resolve(config);
       }));
@@ -603,19 +697,22 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       this.configLoader.processProxy(c);
 
       this.configLoader.addNeedValues(c);
-      this._addDefaultValues(c);
 
-      tokenUtils.setPortalUrl(c.portalUrl);
+      this.configLoader.loadAndUpgradeAllWidgetsConfig(c).then(lang.hitch(this, function(c){
+        this._addDefaultValues(c);
 
-      if(this.appConfig){
-        //remove the options that are relative to map's display when map is changed.
-        jimuUtils.deleteMapOptions(c.map.mapOptions);
-        this.appConfig = c;
-        topic.publish('appConfigChanged', this.getAppConfig(), 'resetConfig', c);
-      }else{
-        this.appConfig = c;
-        topic.publish("appConfigLoaded", this.getAppConfig());
-      }
+        tokenUtils.setPortalUrl(c.portalUrl);
+
+        if(this.appConfig){
+          //remove the options that are relative to map's display when map is changed.
+          jimuUtils.deleteMapOptions(c.map.mapOptions);
+          this.appConfig = c;
+          topic.publish('appConfigChanged', this.getAppConfig(), 'resetConfig', c);
+        }else{
+          this.appConfig = c;
+          topic.publish("appConfigLoaded", this.getAppConfig());
+        }
+      }));
     },
 
     /**********************************************
@@ -878,7 +975,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         }else{
           e.gid = info.groupId;
           if(e.uri){
-            jimuUtils.processWidgetSetting(e);
+            jimuUtils.widgetJson.processWidgetJson(e);
           }
         }
       }));
@@ -887,7 +984,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
     _getDefaultIconFromUri: function(uri){
       var segs = uri.split('/');
       segs.pop();
-      return segs.join('/') + '/images/icon.png';
+      return segs.join('/') + '/images/icon.png?wab_dv=' + window.deployVersion;
     },
 
     _addIndexForWidgetPool: function(config){
@@ -962,6 +1059,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       delete e.configFile;
       delete e.gid;
       delete e.isOnScreen;
+      delete e.isRemote;
 
       properties.forEach(function(p){
         delete e[p];
@@ -972,6 +1070,10 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         delete e.visible;
       }
       delete e.manifest;
+      if(e.isDefaultConfig){
+        delete e.config;
+        delete e.isDefaultConfig;
+      }
     });
     delete newConfig.rawAppConfig;
     //the _ssl property is added by esriRequest

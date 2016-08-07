@@ -42,6 +42,8 @@ define([
     'esri/geometry/webMercatorUtils',
     'esri/tasks/GeometryService',
     'esri/tasks/ProjectParameters',
+    'esri/tasks/FeatureSet',
+    'esri/symbols/PictureMarkerSymbol',
     'esri/urlUtils',
     'esri/request',
     'esri/graphicsUtils',
@@ -52,7 +54,8 @@ define([
 function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json, cookie,
   dojoNumber, dateLocale, nlsBundle, base64, esriLang, arcgisUtils, PopupTemplate, SpatialReference,
   Extent, Multipoint,
-  Polyline, Polygon, webMercatorUtils, GeometryService, ProjectParameters,
+  Polyline, Polygon, webMercatorUtils, GeometryService, ProjectParameters, FeatureSet,
+  PictureMarkerSymbol,
   esriUrlUtils, esriRequest, graphicsUtils, portalUrlUtils, sharedUtils) {
   /* global esriConfig, dojoConfig, ActiveXObject, testLoad */
   var mo = {};
@@ -152,14 +155,14 @@ function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json
         id: id,
         rel: "stylesheet",
         type: "text/css",
-        href: hrefPath
+        href: hrefPath + '?wab_dv=' + window.deployVersion
       }, html.byId(beforeId), 'before');
     } else {
       styleLinkNode = html.create('link', {
         id: id,
         rel: "stylesheet",
         type: "text/css",
-        href: hrefPath
+        href: hrefPath + '?wab_dv=' + window.deployVersion
       }, document.getElementsByTagName('head')[0]);
     }
 
@@ -588,24 +591,6 @@ function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json
     setTimeout(doSet, 10);
   }
 
-  /**
-   * get uri info from the configured uri property,
-   * the info contains: folderUrl, name
-   */
-  function getUriInfo(uri) {
-    var pos, firstSeg, info = {},
-      amdFolder;
-
-    pos = uri.indexOf('/');
-    firstSeg = uri.substring(0, pos);
-
-    //config using package
-    amdFolder = uri.substring(0, uri.lastIndexOf('/') + 1);
-    info.folderUrl = require(mo.getRequireConfig()).toUrl(amdFolder);
-    info.amdFolder = amdFolder;
-    return info;
-  }
-
   mo.file = {
     loadFileAPI: function() {
       var def = new Deferred();
@@ -763,22 +748,84 @@ function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json
     }
   };
 
-  mo.processWidgetSetting = function(setting) {
-    if (!setting.uri) {
-      return setting;
-    }
-    lang.mixin(setting, getUriInfo(setting.uri));
+  ///////////////////widget json(in app config json) processing
+  mo.widgetJson = (function(){
+    var ret = {};
 
-    if (!setting.icon) {
-      setting.icon = setting.amdFolder + 'images/icon.png';
-    }
-    if (!setting.thumbnail) {
-      setting.thumbnail = setting.amdFolder + 'images/thumbnail.png';
+    /**
+     * get uri info from the configured uri property,
+     * the info contains: folderUrl, name
+     */
+    function getUriInfo(uri) {
+      var pos, firstSeg, info = {},
+        amdFolder;
+
+      pos = uri.indexOf('/');
+      firstSeg = uri.substring(0, pos);
+
+      //config using package
+      amdFolder = uri.substring(0, uri.lastIndexOf('/') + 1);
+      info.folderUrl = require(mo.getRequireConfig()).toUrl(amdFolder);
+      info.amdFolder = amdFolder;
+      return info;
     }
 
-    //setting.label has been processed when loading config.
-    return setting;
-  };
+    function processRemoteUri(widgetJson){
+      if(!widgetJson.uri.toLowerCase().endWith('.js')){
+        widgetJson.uri = widgetJson.uri + '.js';
+      }
+    }
+
+    ret.processWidgetJson = function(widgetJson) {
+      if (!widgetJson.uri) {
+        return widgetJson;
+      }
+      if(widgetJson.uri.toLowerCase().startWith('http')){
+        widgetJson.isRemote = true;
+        processRemoteUri(widgetJson);
+      }
+      lang.mixin(widgetJson, getUriInfo(widgetJson.uri));
+
+      if (!widgetJson.icon) {
+        widgetJson.icon = widgetJson.amdFolder + 'images/icon.png?wab_dv=' + window.deployVersion;
+      }
+      if (!widgetJson.thumbnail) {
+        widgetJson.thumbnail = widgetJson.amdFolder + 'images/thumbnail.png';
+      }
+
+      //widgetJson.label has been processed when loading config.
+      return widgetJson;
+    };
+
+    ret.addManifest2WidgetJson = function(widgetJson, manifest){
+      lang.mixin(widgetJson, manifest.properties);
+      widgetJson.name = manifest.name;
+      if(!widgetJson.label){
+        widgetJson.label = manifest.label;
+      }
+      widgetJson.manifest = manifest;
+      if(manifest.featureActions){
+        widgetJson.featureActions = manifest.featureActions;
+      }
+    };
+
+    ret.removeManifestFromWidgetJson = function(widgetJson){
+      //we set property to undefined, instead of delete them.
+      //The reason is: configmanager can't hanle delete properties for now
+      if(!widgetJson.manifest){
+        return;
+      }
+      for(var p in widgetJson.manifest.properties){
+        widgetJson[p] = undefined;
+      }
+      widgetJson.name = undefined;
+      widgetJson.label = undefined;
+      widgetJson.featureActions = undefined;
+      widgetJson.manifest = undefined;
+    };
+    return ret;
+  })();
+
 
   mo.getRequireConfig = function() {
     /* global jimuConfig */
@@ -1242,16 +1289,117 @@ function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json
     return obj;
   };
 
+  /////////////widget and theme manifest processing/////////
+  mo.manifest = (function(){
+    var ret = {};
 
-  mo.addManifestProperies = function(manifest) {
-    manifest.icon = manifest.url + 'images/icon.png';
+    function addThemeManifestProperies(manifest) {
+      manifest.panels.forEach(function(panel) {
+        panel.uri = 'panels/' + panel.name + '/Panel.js';
+      });
 
-    if(manifest.category === "theme") {
-      addThemeManifestProperies(manifest);
-    } else {
-      addWidgetManifestProperties(manifest);
+      manifest.styles.forEach(function(style) {
+        style.uri = 'styles/' + style.name + '/style.css';
+      });
+
+      manifest.layouts.forEach(function(layout) {
+        layout.uri = 'layouts/' + layout.name + '/config.json';
+        layout.icon = 'layouts/' + layout.name + '/icon.png';
+        layout.RTLIcon = 'layouts/' + layout.name + '/icon_rtl.png';
+      });
     }
-  };
+
+    function addWidgetManifestProperties(manifest) {
+      //because tingo db engine doesn't support 2D, 3D property, so, change here
+      if (typeof manifest['2D'] !== 'undefined') {
+        manifest.support2D = manifest['2D'];
+      }
+      if (typeof manifest['3D'] !== 'undefined') {
+        manifest.support3D = manifest['3D'];
+      }
+
+      if (typeof manifest['2D'] === 'undefined' && typeof manifest['3D'] === 'undefined') {
+        manifest.support2D = true;
+      }
+
+      delete manifest['2D'];
+      delete manifest['3D'];
+
+      if (typeof manifest.properties === 'undefined') {
+        manifest.properties = {};
+      }
+
+      sharedUtils.processWidgetProperties(manifest);
+    }
+
+    ret.addManifestProperies = function(manifest) {
+      manifest.icon = manifest.url + 'images/icon.png?wab_dv=' + window.deployVersion;
+
+      if(manifest.category === "theme") {
+        addThemeManifestProperies(manifest);
+      } else {
+        addWidgetManifestProperties(manifest);
+      }
+    };
+
+    ret.processManifestLabel = function(manifest, locale){
+      var langCode = locale.split('-')[0];
+      manifest.label = manifest.i18nLabels && (manifest.i18nLabels[locale] || manifest.i18nLabels[langCode] ||
+        manifest.i18nLabels.defaultLabel) ||
+        manifest.label ||
+        manifest.name;
+      if(manifest.layouts){
+        array.forEach(manifest.layouts, function(layout){
+          var key = 'i18nLabels_layout_' + layout.name;
+          layout.label = manifest[key] && (manifest[key][locale] ||
+            manifest[key].defaultLabel) ||
+            layout.label ||
+            layout.name;
+        });
+      }
+      if(manifest.styles){
+        array.forEach(manifest.styles, function(_style){
+          var key = 'i18nLabels_style_' + _style.name;
+          _style.label = manifest[key] && (manifest[key][locale] ||
+            manifest[key].defaultLabel) ||
+            _style.label ||
+            _style.name;
+        });
+      }
+    };
+
+    ret.addI18NLabel = function(manifest){
+      var def = new Deferred();
+      if(manifest.i18nLabels){
+        def.resolve(manifest);
+        return def;
+      }
+      manifest.i18nLabels = {};
+
+      if(manifest.properties && manifest.properties.hasLocale === false){
+        def.resolve(manifest);
+        return def;
+      }
+
+      //theme or widget label
+      var nlsFile;
+      if(manifest.amdFolder.toLowerCase().startWith('http')){
+        nlsFile = manifest.amdFolder + 'nls/strings.js';
+      }else{
+        nlsFile = manifest.amdFolder + 'nls/strings';
+      }
+      require(mo.getRequireConfig(), ['dojo/i18n!' + nlsFile],
+      function(localeStrings){
+        var localesStrings = {};
+        localesStrings[dojoConfig.locale] = localeStrings;
+        sharedUtils.addI18NLabelToManifest(manifest, null, localesStrings);
+        def.resolve(manifest);
+      });
+
+      return def;
+    };
+    return ret;
+  })();
 
   mo.getUniqueValues = function(url, fieldName){
     var def = new Deferred();
@@ -1305,6 +1453,20 @@ function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json
     }
   };
 
+  //return handle array, the handles can be owned by widget
+  mo.groupRadios = function(radios, /*optional*/ listener){
+    var handles = [];
+    var name = "radiogroup_" + mo.getRandomString();
+    array.forEach(radios, function(radio){
+      radio.name = name;
+      if(listener){
+        var handle = on(radio, 'change', listener);
+        handles.push(handle);
+      }
+    });
+    return handles;
+  };
+
   mo.convertExtentToPolygon = function(extent){
     //order: left-top right-top right-bottom left-bottom left-top
     var xLeft = extent.xmin;
@@ -1334,11 +1496,15 @@ function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json
     function combinePoints(geos){
       //geos is an array of point or multipoint
       var mpJson = {
-        "points": [],
+        "points": [],//each element is [x,y]
         "spatialReference": geos[0].spatialReference.toJson()
       };
       array.forEach(geos, function(geo){
-        mpJson.points = mpJson.points.concat(geo.points);
+        if(geo.type === 'point'){
+          mpJson.points = mpJson.points.concat([[geo.x, geo.y]]);
+        }else if(geo.type === 'multipoint'){
+          mpJson.points = mpJson.points.concat(geo.points);
+        }
       });
       var multipoint = new Multipoint(mpJson);
       return multipoint;
@@ -1431,6 +1597,17 @@ function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json
     return geometry;
   };
 
+  mo.combineGeometriesByGraphics = function(graphics){
+    var geometry = null;
+    if(graphics && graphics.length > 0){
+      var geometries = array.map(graphics, function(graphic){
+        return graphic.geometry;
+      });
+      geometry = mo.combineGeometries(geometries);
+    }
+    return geometry;
+  };
+
   mo.isFeaturelayerUrlSupportQuery = function(featureLayerUrl, capabilities){
     var isSupportQuery = false;
     var isFeatureService = (/\/featureserver\//gi).test(featureLayerUrl);
@@ -1452,123 +1629,6 @@ function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json
 
   mo.isStringEndWith = function(s, endS){
     return (s.lastIndexOf(endS) + endS.length === s.length);
-  };
-
-  function addThemeManifestProperies(manifest) {
-    manifest.panels.forEach(function(panel) {
-      panel.uri = 'panels/' + panel.name + '/Panel.js';
-    });
-
-    manifest.styles.forEach(function(style) {
-      style.uri = 'styles/' + style.name + '/style.css';
-    });
-
-    manifest.layouts.forEach(function(layout) {
-      layout.uri = 'layouts/' + layout.name + '/config.json';
-      layout.icon = 'layouts/' + layout.name + '/icon.png';
-      layout.RTLIcon = 'layouts/' + layout.name + '/icon_rtl.png';
-    });
-  }
-
-  function addWidgetManifestProperties(manifest) {
-    //because tingo db engine doesn't support 2D, 3D property, so, change here
-    if (typeof manifest['2D'] !== 'undefined') {
-      manifest.support2D = manifest['2D'];
-    }
-    if (typeof manifest['3D'] !== 'undefined') {
-      manifest.support3D = manifest['3D'];
-    }
-
-    if (typeof manifest['2D'] === 'undefined' && typeof manifest['3D'] === 'undefined') {
-      manifest.support2D = true;
-    }
-
-    delete manifest['2D'];
-    delete manifest['3D'];
-
-    if (typeof manifest.properties === 'undefined') {
-      manifest.properties = {};
-    }
-
-    sharedUtils.processWidgetProperties(manifest);
-  }
-
-  mo.processManifestLabel = function(manifest, locale){
-    var langCode = locale.split('-')[0];
-    manifest.label = manifest.i18nLabels && (manifest.i18nLabels[locale] || manifest.i18nLabels[langCode] ||
-      manifest.i18nLabels.defaultLabel) ||
-      manifest.label ||
-      manifest.name;
-    if(manifest.layouts){
-      array.forEach(manifest.layouts, function(layout){
-        var key = 'i18nLabels_layout_' + layout.name;
-        layout.label = manifest[key] && (manifest[key][locale] ||
-          manifest[key].defaultLabel) ||
-          layout.label ||
-          layout.name;
-      });
-    }
-    if(manifest.styles){
-      array.forEach(manifest.styles, function(_style){
-        var key = 'i18nLabels_style_' + _style.name;
-        _style.label = manifest[key] && (manifest[key][locale] ||
-          manifest[key].defaultLabel) ||
-          _style.label ||
-          _style.name;
-      });
-    }
-  };
-
-  mo.addManifest2WidgetJson = function(widgetJson, manifest){
-    lang.mixin(widgetJson, manifest.properties);
-    widgetJson.name = manifest.name;
-    if(!widgetJson.label){
-      widgetJson.label = manifest.label;
-    }
-    widgetJson.manifest = manifest;
-  };
-
-  mo.addI18NLabel = function(manifest){
-    var def = new Deferred();
-    if(manifest.i18nLabels){
-      def.resolve(manifest);
-      return def;
-    }
-    manifest.i18nLabels = {};
-
-    if(manifest.properties && manifest.properties.hasLocale === false){
-      def.resolve(manifest);
-      return def;
-    }
-
-    //theme or widget label
-    var key = manifest.category === 'widget'? '_widgetLabel': '_themeLabel';
-    require(mo.getRequireConfig(), ['dojo/i18n!' + manifest.amdFolder + 'nls/strings'],
-      function(localeStrings){
-      manifest.i18nLabels[dojoConfig.locale] = localeStrings[key];
-
-      //theme's layout and style label
-      if(manifest.category === 'theme'){
-        if(manifest.layouts){
-          manifest.layouts.forEach(function(layout){
-            manifest['i18nLabels_layout_' + layout.name] = {};
-            manifest['i18nLabels_layout_' + layout.name][dojoConfig.locale] =
-            localeStrings['_layout_' + layout.name];
-          });
-        }
-
-        if(manifest.styles){
-          manifest.styles.forEach(function(style){
-            manifest['i18nLabels_style_' + style.name] = {};
-            manifest['i18nLabels_style_' + style.name][dojoConfig.locale] =
-            localeStrings['_style_' + style.name];
-          });
-        }
-      }
-      def.resolve(manifest);
-    });
-
-    return def;
   };
 
   /*
@@ -2557,6 +2617,45 @@ function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json
     return displayValue;
   };
 
+  //return {fieldName,label,tooltip,visible,format,stringFieldOption}
+  mo.getDefaultPortalFieldInfo = function(serviceFieldInfo){
+    //serviceFieldInfo: {name,alias,type,...}
+    var fieldName = serviceFieldInfo.name;
+    var item = {
+      fieldName: fieldName,
+      label: serviceFieldInfo.alias || fieldName,
+      tooltip: '',
+      visible: false,
+      format: null,
+      stringFieldOption: 'textbox'
+    };
+
+    //https://developers.arcgis.com/javascript/jsapi/field-amd.html#type
+    var type = serviceFieldInfo.type;
+    switch (type) {
+      case 'esriFieldTypeSmallInteger':
+      case 'esriFieldTypeInteger':
+        item.format = {
+          places: 0,
+          digitSeparator: true
+        };
+        break;
+      case 'esriFieldTypeSingle':
+      case 'esriFieldTypeDouble':
+        item.format = {
+          places: 2,
+          digitSeparator: true
+        };
+        break;
+      case 'esriFieldTypeDate':
+        item.format = {
+          dateFormat: "longMonthDayYear"
+        };
+        break;
+    }
+    return item;
+  };
+
   mo._tryLocaleNumber = function(value) {
     var result = mo.localizeNumber(value);
     if (result === null || result === undefined) {
@@ -2636,6 +2735,418 @@ function(lang, array, html, has, config, ioQuery, query, nlt, Deferred, on, json
       return v;
     }
   };
+
+  mo.detectUserAgent = function() {
+    var os = {}, browser = {},
+      ua = navigator.userAgent, platform = navigator.platform,
+      webkit = ua.match(/Web[kK]it[\/]{0,1}([\d.]+)/),
+      android = ua.match(/(Android);?[\s\/]+([\d.]+)?/),
+      osx = !!ua.match(/\(Macintosh\; Intel /),
+      ipad = ua.match(/(iPad).*OS\s([\d_]+)/),
+      ipod = ua.match(/(iPod)(.*OS\s([\d_]+))?/),
+      iphone = !ipad && ua.match(/(iPhone\sOS)\s([\d_]+)/),
+      webos = ua.match(/(webOS|hpwOS)[\s\/]([\d.]+)/),
+      win = /Win\d{2}|Windows/.test(platform),
+      wp = ua.match(/Windows Phone ([\d.]+)/),
+      touchpad = webos && ua.match(/TouchPad/),
+      kindle = ua.match(/Kindle\/([\d.]+)/),
+      silk = ua.match(/Silk\/([\d._]+)/),
+      blackberry = ua.match(/(BlackBerry).*Version\/([\d.]+)/),
+      bb10 = ua.match(/(BB10).*Version\/([\d.]+)/),
+      rimtabletos = ua.match(/(RIM\sTablet\sOS)\s([\d.]+)/),
+      playbook = ua.match(/PlayBook/),
+      chrome = ua.match(/Chrome\/([\d.]+)/) || ua.match(/CriOS\/([\d.]+)/),
+      firefox = ua.match(/Firefox\/([\d.]+)/),
+      firefoxos = ua.match(/\((?:Mobile|Tablet); rv:([\d.]+)\).*Firefox\/[\d.]+/),
+      ie = ua.match(/MSIE\s([\d.]+)/) || ua.match(/Trident\/[\d](?=[^\?]+).*rv:([0-9.].)/),
+      webview = !chrome && ua.match(/(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/),
+      safari = webview || ua.match(/Version\/([\d.]+)([^S](Safari)|[^M]*(Mobile)[^S]*(Safari))/);
+
+    browser.webkit = !!webkit;
+    if (browser.webkit) {
+      browser.version = webkit[1];
+    }
+
+    if (android) {
+      os.android = true;
+      os.version = android[2];
+    }
+    if (iphone && !ipod) {
+      os.ios = os.iphone = true;
+      os.version = iphone[2].replace(/_/g, '.');
+    }
+    if (ipad) {
+      os.ios = os.ipad = true;
+      os.version = ipad[2].replace(/_/g, '.');
+    }
+    if (ipod) {
+      os.ios = os.ipod = true;
+      os.version = ipod[3] ? ipod[3].replace(/_/g, '.') : null;
+    }
+    if (wp) {
+      os.wp = true;
+      os.version = wp[1];
+    }
+    if (webos) {
+      os.webos = true;
+      os.version = webos[2];
+    }
+    if (touchpad) {
+      os.touchpad = true;
+    }
+    if (blackberry) {
+      os.blackberry = true;
+      os.version = blackberry[2];
+    }
+    if (bb10) {
+      os.bb10 = true;
+      os.version = bb10[2];
+    }
+    if (rimtabletos) {
+      os.rimtabletos = true;
+      os.version = rimtabletos[2];
+    }
+    if (playbook) {
+      browser.playbook = true;
+    }
+    if (kindle) {
+      os.kindle = true;
+      os.version = kindle[1];
+    }
+    if (silk) {
+      browser.silk = true;
+      browser.version = silk[1];
+    }
+    if (!silk && os.android && ua.match(/Kindle Fire/)) {
+      browser.silk = true;
+    }
+    if (chrome) {
+      browser.chrome = true;
+      browser.version = chrome[1];
+    }
+    if (firefox) {
+      browser.firefox = true;
+      browser.version = firefox[1];
+    }
+    if (firefoxos) {
+      os.firefoxos = true;
+      os.version = firefoxos[1];
+    }
+    if (ie) {
+      browser.ie = true;
+      browser.version = ie[1];
+    }
+    if (safari && (osx || os.ios || win)) {
+      browser.safari = true;
+      if (!os.ios) {
+        browser.version = safari[1];
+      }
+    }
+    if (webview) {
+      browser.webview = true;
+    }
+
+    os.tablet = !!(ipad || playbook || (android && !ua.match(/Mobile/)) ||
+    (firefox && ua.match(/Tablet/)) || (ie && !ua.match(/Phone/) && ua.match(/Touch/)));
+    os.phone = !!(!os.tablet && !os.ipod && (android || iphone || webos || blackberry || bb10 ||
+    (chrome && ua.match(/Android/)) || (chrome && ua.match(/CriOS\/([\d.]+)/)) ||
+    (firefox && ua.match(/Mobile/)) || (ie && ua.match(/Touch/))));
+
+    return {
+      os: os,
+      browser: browser
+    };
+  };
+  mo.isMobileUa = function() {
+    var uaInfo = mo.detectUserAgent();
+    if (true === uaInfo.os.phone || true === uaInfo.os.tablet) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  mo.getObjectIdField = function(layerDefinition){
+    if(layerDefinition.objectIdField){
+      return layerDefinition.objectIdField;
+    }else{
+      var fieldInfos = layerDefinition.fields;
+      for(var i = 0; i < fieldInfos.length; i++){
+        var fieldInfo = fieldInfos[i];
+        if(fieldInfo.type === 'esriFieldTypeOID'){
+          return fieldInfo.name;
+        }
+      }
+    }
+    return null;
+  };
+
+  //if browser(such as Chrome50) have window.isSecureContext, and not in https origin, return true
+  //for example: if true===isNendHttpsButNot(), MyLocateButton should be disabled
+  mo.isNeedHttpsButNot = function() {
+    if (window.hasOwnProperty("isSecureContext") && !window.isSecureContext) {
+      return true;
+    }
+    return false;
+  };
+
+  /**
+   * @param graphics Array of esri/Graphic
+   * @return esri/tasks/FeatureSet
+   */
+  mo.toFeatureSet = function(graphics) {
+    var fs = new FeatureSet();
+    //if it's object, we consider it as a feature.
+    if(Object.prototype.toString.call(graphics) === '[object Object]'){
+      graphics = [graphics];
+    }
+    fs.features = graphics;
+
+    if(graphics.length > 0){
+      var g;
+      // Find the first graphic whose geometry has value.
+      array.some(graphics, function(graphic) {
+        if(graphic.geometry) {
+          g = graphic;
+          return true;
+        }
+      });
+      if(g) {
+        var layer = g.getLayer(), fieldAliases = {};
+        if(layer) {
+          fs.displayFieldName = layer.displayField;
+
+          array.forEach(layer.fields, lang.hitch(this, function(fieldInfo) {
+            var fieldName = fieldInfo.name;
+            var fieldAlias = fieldInfo.alias || fieldName;
+            fieldAliases[fieldName] = fieldAlias;
+          }));
+
+          fs.fieldAliases = fieldAliases;
+        }
+        fs.geometryType = g.geometry.type;
+        fs.spatialReference = g.geometry.spatialReference;
+      }
+    }
+    return fs;
+  };
+
+  mo.showValidationErrorTipForFormDijit = function(_dijit){
+    try{
+      if (!_dijit.validate() && _dijit.domNode) {
+        if (_dijit.focusNode) {
+          _dijit.focusNode.focus();
+          setTimeout(lang.hitch(this, function() {
+            _dijit.focusNode.blur();
+          }), 100);
+        }
+      }
+    }catch(e){
+      console.error(e);
+    }
+  };
+
+  mo.getFeatureLayerDefinition = function(featureLayer){
+    var layerDefinition = null;
+    var features = featureLayer.graphics;
+    featureLayer.graphics = [];
+    var json = featureLayer.toJson();
+    featureLayer.graphics = features;
+    if(json){
+      layerDefinition = json.layerDefinition;
+    }
+    return layerDefinition;
+  };
+
+  mo.simulateClickEvent = function(dom){
+    if(has('safari')){
+      //create an event
+      var mouseEvent = document.createEvent("MouseEvents");
+      //initialize the event
+      mouseEvent.initEvent("click",/* bubble */ true, /* cancelable */ true);
+      //trigger the evevnt
+      dom.dispatchEvent(mouseEvent);
+    }else{
+      dom.click();
+    }
+  };
+
+  mo.getFeatureSetByLayerAndFeatures = function(layer, features){
+    var featureSet = new FeatureSet();
+    featureSet.fields = lang.clone(layer.fields);
+    featureSet.features = features;
+    featureSet.geometryType = layer.geometryType;
+    featureSet.fieldAliases = {};
+    array.forEach(featureSet.fields, lang.hitch(this, function(fieldInfo) {
+      var fieldName = fieldInfo.name;
+      var fieldAlias = fieldInfo.alias || fieldName;
+      featureSet.fieldAliases[fieldName] = fieldAlias;
+    }));
+    return featureSet;
+  };
+
+  mo.featureAction = (function(){
+    var result = {};
+
+    //options: {extentFactor}
+    result.zoomTo = function(map, arr, /*optional*/ options) {
+      if(!options){
+        options = {};
+      }
+      if(!options.hasOwnProperty('extentFactor')){
+        options.extentFactor = 1.2;
+      }
+      if (map && arr && arr.length > 0) {
+        var isGeometries = array.every(arr, function(a) {
+          return a && a.spatialReference && a.type;
+        });
+        var isGraphics = array.every(arr, function(a) {
+          return a && a.geometry && a.geometry.spatialReference && a.geometry.type;
+        });
+        if (isGraphics || isGeometries) {
+          if (isGeometries) {
+            arr = array.map(arr, function(a) {
+              return {
+                geometry: a
+              };
+            });
+          }
+
+          if (arr.length === 1 && arr[0].type === 'point') {
+            var levelOrFactor = 15;
+            levelOrFactor = map.getMaxZoom() > -1 ? map.getMaxZoom() : 0.1;
+            map.centerAndZoom(arr[0].geometry, levelOrFactor);
+          } else {
+            var extent = graphicsUtils.graphicsExtent(arr);
+            map.setExtent(extent.expand(options.extentFactor));
+          }
+        }
+      }
+    };
+
+    result.flash = function(graphics, layer) {
+      var isGraphics = array.every(graphics || [], function(g) {
+        return g && g.geometry;
+      });
+      if (!isGraphics) {
+        return;
+      }
+
+      var features = graphics;
+      var first = features[0];
+      var featureSymbols = array.map(features, function(f){
+        return f.symbol;
+      });
+      var gurdSymbol = first.symbol ||
+        lang.getObject('renderer.symbol', false, layer);
+      var cSymbol = null;
+      if (layer && layer.geometryType === 'esriGeometryPoint') {
+        cSymbol = new PictureMarkerSymbol(require.toUrl('jimu') + '/images/flash.gif', 20, 20);
+      } else {
+        cSymbol = lang.clone(gurdSymbol);
+        if (cSymbol) {
+          if (cSymbol.outline) {
+            cSymbol.outline.setColor("#ffc500");
+          } else {
+            cSymbol.setColor("#ffc500");
+          }
+        }
+      }
+
+      function changeSymbol(s, flash) {
+        array.forEach(features, function(f, idx) {
+          f.setSymbol(flash ? s : featureSymbols[idx] || gurdSymbol);
+        });
+      }
+
+      function flash(cb) {
+        return function() {
+          setTimeout(function() {
+            changeSymbol(cSymbol, true);
+            if (features[0] && layer) {
+              layer.redraw();
+            }
+            setTimeout(function() {
+              changeSymbol(null, false);
+              if (features[0] && layer) {
+                layer.redraw();
+              }
+              cb();
+            }, 200);
+          }, 200);
+        };
+      }
+
+      if (first && gurdSymbol && cSymbol && layer) {
+        if (layer.geometryType === 'esriGeometryPoint') {
+          changeSymbol(cSymbol, true);
+          layer.redraw();
+          setTimeout(function() {
+            changeSymbol(null, false);
+            layer.redraw();
+          }, 2000);
+        } else {
+          flash(flash(flash(function() {})))();
+        }
+      }
+    };
+
+    result.panTo = function(map, graphics) {
+      var isGraphics = array.every(graphics || [], function(g) {
+        return g && g.geometry;
+      });
+      if (!isGraphics) {
+        return;
+      }
+
+      var center;
+      if(graphics.length > 0){
+        var extent = graphicsUtils.graphicsExtent(graphics);
+        center = extent.getCenter();
+      }else{
+        var geometry = graphics[0].geometry;
+        if(geometry.type === 'polyline' || geometry.type === 'polygon'){
+          center = geometry.getExtent().getCenter();
+        }else if(geometry.type === 'extent'){
+          center = geometry.getCenter();
+        }else if(geometry.type === 'multipoint'){
+          if(geometry.points.length > 1){
+            center = geometry.getExtent().getCenter();
+          }else{
+            center = geometry.getPoint(0);
+          }
+        }else{
+          center = geometry;
+        }
+      }
+
+      map.centerAt(center);
+    };
+
+    result.showPopup = function(map, graphics) {
+      var isGraphics = array.every(graphics || [], function(g) {
+        return g && g.geometry;
+      });
+      if (!isGraphics) {
+        return;
+      }
+
+      var popup = map.infoWindow;
+      popup.setFeatures(graphics);
+      var f = graphics[0];
+      if (f.geometry.type === 'point') {
+        popup.show(f.geometry, {
+          closetFirst: true
+        });
+      } else {
+        popup.show(f.geometry.getExtent().getCenter(), {
+          closetFirst: true
+        });
+      }
+    };
+
+    return result;
+  }());
 
   return mo;
 });

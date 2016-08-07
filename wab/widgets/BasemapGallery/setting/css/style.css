@@ -17,7 +17,7 @@
   height:40px;
   line-height:40px;
   vertical-align:middle;
- 
+
 }
 
 .jimu-widget-basemapgallery-setting .input-table > tbody > tr > .first{
@@ -27,7 +27,7 @@
 }
 
 .jimu-widget-basemapgallery-setting .input-table > tbody > tr > .second{
- 
+
 }
 
 .jimu-widget-basemapgallery-setting .actions{
@@ -45,7 +45,7 @@
   width: 100%;
   min-width:1000px;
   top: 0;
-  bottom: 0;  
+  bottom: 0;
 }*/
 
 .jimu-widget-basemapgallery-setting .maps-table-div{
@@ -81,11 +81,11 @@
   color:#999999;
   font-size:16px;
   border:1px dotted gray;
-  -webkit-border-radius:5px;
+  /*-webkit-border-radius:5px;
   -moz-border-radius:5px;
   -o-border-radius:5px;
   -ms-border-radius:5px;
-  border-radius:5px;
+  border-radius:5px;*/
   background-size:cover;
   cursor: pointer;
 }
@@ -126,7 +126,7 @@
   line-height:28px;
   text-align:center;
   color:#999999;
-  font-size:13px;  
+  font-size:13px;
 }
 
 .jimu-widget-basemapgallery-setting .map-item-div .map-item-bg .map-item-thumbnail{
@@ -135,11 +135,11 @@
   background-repeat:no-repeat;
   background-position:center center;
   border:1px solid gray;
-  -webkit-border-radius:5px;
+  /*-webkit-border-radius:5px;
   -moz-border-radius:5px;
   -o-border-radius:5px;
   -ms-border-radius:5px;
-  border-radius:5px;
+  border-radius:5px;*/
   background-size:cover;
 
 }
@@ -168,11 +168,11 @@
   background-repeat:no-repeat;
   background-position:center center;
   background-image:url(images/edit_map.png);
-  -webkit-border-radius:3px;
+  /*-webkit-border-radius:3px;
   -moz-border-radius:3px;
   -o-border-radius:3px;
   -ms-border-radius:3px;
-  border-radius:3px;
+  border-radius:3px;*/
   cursor:pointer;
 }
 
@@ -196,11 +196,11 @@
   background-repeat:no-repeat;
   background-position:center center;
   background-image:url(images/delete_map.png);
-  -webkit-border-radius:3px;
+  /*-webkit-border-radius:3px;
   -moz-border-radius:3px;
   -o-border-radius:3px;
   -ms-border-radius:3px;
-  border-radius:3px;
+  border-radius:3px;*/
   cursor:pointer;
 }
 
@@ -224,11 +224,11 @@
   background-repeat:no-repeat;
   background-position:center center;
   background-image:url(images/!.png);
-  -webkit-border-radius:3px;
+  /*-webkit-border-radius:3px;
   -moz-border-radius:3px;
   -o-border-radius:3px;
   -ms-border-radius:3px;
-  border-radius:3px;
+  border-radius:3px;*/
   cursor:pointer;
 }
 

@@ -1,4 +1,4 @@
-﻿/*global define*/
+/*global define*/
 ///////////////////////////////////////////////////////////////////////////
 // Copyright © 2015 Esri. All Rights Reserved.
 //
@@ -14,83 +14,84 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////
-define(
-   ({
-    units: { // label shown in config UI dialog box(options for dropdown) and also shown as label for slider text(slider unit) and acronym in feature list
-      miles: {
-        displayText: "英里",
-        acronym: "mi"
-      },
-      kilometers: {
-        displayText: "公里",
-        acronym: "km"
-      },
-      feet: {
-        displayText: "英呎",
-        acronym: "ft"
-      },
-      meters: {
-        displayText: "公尺",
-        acronym: "m"
-      }
+define({
+  "units": {
+    "miles": {
+      "displayText": "英里",
+      "acronym": "mi"
     },
-    searchSetting: {
-      searchSettingTabTitle: "搜尋設定", // shown as a label in config UI dialog box for search setting
-      defaultBufferDistanceLabel: "設定緩衝區距離預設值", // shown as a label in config UI dialog box for selecting default buffer distance
-      maxBufferDistanceLabel: "設定用於尋找圖徵的緩衝區距離值上限", // shown as a label in config UI dialog box for selecting maximum buffer distance value
-      bufferDistanceUnitLabel: "緩衝區距離單位", // shown as a label(options) of select(dropdown) in config UI dialog box
-      defaultBufferHintLabel: "提示: 用來設定緩衝區的預設值", // shown as a label in config UI dialog box to set default value for a buffer
-      maxBufferHintLabel: "提示: 用來設定緩衝區的最大值", // shown as a label in config UI dialog box to set maximum value for a buffer
-      bufferUnitLabel: "提示: 定義用於建立緩衝區的單位", // shown as a label in config UI dialog box to set unit of buffer
-      selectGraphicLocationSymbol: "地址或位置符號", // shown as label in config UI dialog box for graphic symbol in search setting
-      graphicLocationSymbolHintText: "提示: 搜尋的地址或按一下的位置所適用的符號", // shown as hint label in config UI dialog box for selecting graphic symbol
-      fontColorLabel: "選擇搜尋結果的字型顏色", //Show as label in config UI to set the font color in widget panel.
-      fontColorHintText: "提示: 搜尋結果的字型顏色" //Show as label in config UI to set the font color in widget panel.
+    "kilometers": {
+      "displayText": "公里",
+      "acronym": "km"
     },
-    layerSelector: {
-      selectLayerLabel: "選擇搜尋圖層", // shown as a label in config UI dialog box for selecting layer on map
-      layerSelectionHint: "提示: 使用設定按鈕以選擇圖層", // shown as a label in config UI dialog box to select multiple layers
-      addLayerButton: "設定", //Shown as a button text to add the layer for search
-      okButton: "確定", // shown as a button text for layer selector popup
-      cancelButton: "取消" // shown as a button text for layer selector popup
+    "feet": {
+      "displayText": "英呎",
+      "acronym": "ft"
     },
-    routeSetting: {
-      routeSettingTabTitle: "方向設定", // shown as a label in config UI dialog box for route setting
-      routeServiceUrl: "路線規劃服務", // shown as a label in config UI dialog box for setting the route url
-      travelModeServiceUrl: "行進模式服務", // shown as a label in config UI dialog box for setting the travelmode url
-      buttonSet: "設定", // shown as a button text for route setting to set route url in config UI dialog box
-      routeServiceUrlHintText: "提示: 按一下「設定」以瀏覽和選擇路線規劃服務", // shown as a hint label in config UI dialog box to select a route url
-      directionLengthUnit: "方向長度單位", // shown as a label(options) of select(dropdown) in config UI dialog box in routing section
-      unitsForRouteHintText: "提示: 用來顯示路線的單位", // shown as hint label in config UI dialog box to display routing unit
-      selectRouteSymbol: "選擇要顯示路線的符號", // shown as label in config UI dialog box for selecting symbol for routing
-      routeSymbolHintText: "提示: 用來顯示路線的線條符號", //shown as hint to select route symbol
-      travelModeServiceUrlHintText: "提示: 按一下「設定」以瀏覽和選擇行進模式服務", // shown as a hint label in config UI dialog box to select a travelMode service url
-      invalidTravelmodeServiceUrl: "請指定有效的行進模式服務 ", // shown as an error label in alert box when invalid travel mode service url is configured
-      routingDisabledMsg: "若要啟用方向，請確定在 ArcGIS Online 項目中啟用路線規劃。" // shown as message in routeSettings tab when routing is disabled in webmap
-    },
-    networkServiceChooser: {
-      arcgislabel: "從 ArcGIS Online 新增", // shown as a label in route service configuration panel to select route url from portal
-      serviceURLabel: "新增服務 URL", // shown as a label in route service configuration panel to add service url
-      routeURL: "路徑 URL", // shown as a label in route service configuration panel
-      validateRouteURL: "驗證", // shown as a button text in route service configuration panel to validate url
-      exampleText: "範例", // shown as a label in route service configuration panel to consider example of route services
-      hintRouteURL1: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/", // shown as a label hint in route service configuration panel
-      hintRouteURL2: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World", // shown as a label hint in route service configuration panel
-      okButton: "確定", // shown as a button text for route service configuration panel
-      cancelButton: "取消", // shown as a button text for route service configuration panel
-      nextButton: "下一頁", // shown as a button text for route service configuration panel
-      backButton: "返回", // shown as a button text for route service configuration panel
-      invalidRouteServiceURL: "請指定有效的路線服務。" // Shown as an error in alert box invalid route service url is configured.
-    },
-    errorStrings: {
-      bufferErrorString: "請輸入有效的數值。", // shown as an error label in text box for buffer
-      selectLayerErrorString: "請選擇要搜尋的圖層。", // shown as an error label in alert box for selecting layer from map to search
-      invalidDefaultValue: "緩衝區預設距離不可空白。請指定緩衝區距離", // shown as an error label in alert box for blank or empty text box
-      invalidMaximumValue: "緩衝區最大距離不可空白。請指定緩衝區距離", // shown as an error label in alert box for blank or empty text box
-      defaultValueLessThanMax: "請指定位於上限內的緩衝區預設距離", // shown as an error label in alert box when default value is greater than maximum value of slider
-      defaultBufferValueGreaterThanZero: "請指定大於 0 的緩衝區預設距離", // shown as an error label in alert box when we configure default value of slider is zero
-      maximumBufferValueGreaterThanZero: "請指定大於 0 的緩衝區最大距離" // shown as an error label in alert box when we configure maximum value of slider is zero
-    },
-    symbolPickerPreviewText: "預覽:"
-  })
-);
+    "meters": {
+      "displayText": "公尺",
+      "acronym": "m"
+    }
+  },
+  "searchSetting": {
+    "searchSettingTabTitle": "搜尋設定",
+    "defaultBufferDistanceLabel": "設定預設緩衝區距離",
+    "maxBufferDistanceLabel": "設定最大緩衝區距離",
+    "bufferDistanceUnitLabel": "緩衝區距離單位",
+    "defaultBufferHintLabel": "提示: 設定緩衝區滑桿的預設值",
+    "maxBufferHintLabel": "提示: 設定緩衝區滑桿的最大值",
+    "bufferUnitLabel": "提示: 定義用於建立緩衝區的單位",
+    "selectGraphicLocationSymbol": "地址或位置符號",
+    "graphicLocationSymbolHintText": "提示: 搜尋的地址或按一下的位置所適用的符號",
+    "fontColorLabel": "選擇搜尋結果的字型顏色",
+    "fontColorHintText": "提示: 搜尋結果的字型顏色",
+    "zoomToSelectedFeature": "縮放至所選圖徵",
+    "zoomToSelectedFeatureHintText": "提示: 縮放至所選圖徵而非緩衝區",
+    "intersectSearchLocation": "傳回相交的多邊形",
+    "intersectSearchLocationHintText": "提示: 傳回包含搜尋之位置的多邊形，而非緩衝區內的多邊形",
+    "bufferVisibilityLabel": "設定緩衝區能見度",
+    "bufferVisibilityHintText": "提示: 緩衝區將顯示在地圖上",
+    "bufferColorLabel": "設定緩衝區符號",
+    "bufferColorHintText": "提示: 選擇緩衝區的顏色和透明度",
+    "searchLayerResultLabel": "僅繪製所選圖層結果",
+    "searchLayerResultHint": "提示: 只會在地圖上繪製搜尋結果中的所選圖層"
+  },
+  "layerSelector": {
+    "selectLayerLabel": "選擇搜尋圖層",
+    "layerSelectionHint": "提示: 使用設定按鈕以選擇圖層",
+    "addLayerButton": "設定"
+  },
+  "routeSetting": {
+    "routeSettingTabTitle": "方向設定",
+    "routeServiceUrl": "路線規劃服務",
+    "buttonSet": "設定",
+    "routeServiceUrlHintText": "提示: 按一下「設定」以瀏覽和選擇路線規劃服務",
+    "directionLengthUnit": "方向長度單位",
+    "unitsForRouteHintText": "提示: 用來顯示路線的單位",
+    "selectRouteSymbol": "選擇要顯示路線的符號",
+    "routeSymbolHintText": "提示: 用來顯示路線的線條符號",
+    "routingDisabledMsg": "若要啟用方向，請確定在 ArcGIS Online 項目中啟用路線規劃。"
+  },
+  "networkServiceChooser": {
+    "arcgislabel": "從 ArcGIS Online 新增",
+    "serviceURLabel": "新增服務 URL",
+    "routeURL": "路徑 URL",
+    "validateRouteURL": "驗證",
+    "exampleText": "範例",
+    "hintRouteURL1": "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/",
+    "hintRouteURL2": "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World",
+    "invalidRouteServiceURL": "請指定有效的路線服務。",
+    "rateLimitExceeded": "已超過比率限制。請稍後再試。",
+    "errorInvokingService": "使用者名稱或密碼不正確。"
+  },
+  "errorStrings": {
+    "bufferErrorString": "請輸入有效的數值。",
+    "selectLayerErrorString": "請選擇要搜尋的圖層。",
+    "invalidDefaultValue": "緩衝區預設距離不可空白。請指定緩衝區距離",
+    "invalidMaximumValue": "緩衝區最大距離不可空白。請指定緩衝區距離",
+    "defaultValueLessThanMax": "請指定位於上限內的緩衝區預設距離",
+    "defaultBufferValueGreaterThanZero": "請指定大於 0 的緩衝區預設距離",
+    "maximumBufferValueGreaterThanZero": "請指定大於 0 的緩衝區最大距離"
+  },
+  "symbolPickerPreviewText": "預覽:"
+});

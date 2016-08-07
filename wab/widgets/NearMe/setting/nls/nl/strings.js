@@ -1,4 +1,4 @@
-﻿/*global define*/
+/*global define*/
 ///////////////////////////////////////////////////////////////////////////
 // Copyright © 2015 Esri. All Rights Reserved.
 //
@@ -14,83 +14,84 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////
-define(
-   ({
-    units: { // label shown in config UI dialog box(options for dropdown) and also shown as label for slider text(slider unit) and acronym in feature list
-      miles: {
-        displayText: "Mijl",
-        acronym: "mi"
-      },
-      kilometers: {
-        displayText: "Kilometer",
-        acronym: "km"
-      },
-      feet: {
-        displayText: "Voet",
-        acronym: "ft"
-      },
-      meters: {
-        displayText: "Meter",
-        acronym: "m"
-      }
+define({
+  "units": {
+    "miles": {
+      "displayText": "Mijl",
+      "acronym": "mi"
     },
-    searchSetting: {
-      searchSettingTabTitle: "Zoekinstellingen", // shown as a label in config UI dialog box for search setting
-      defaultBufferDistanceLabel: "Stel de standaard bufferafstandswaarde in", // shown as a label in config UI dialog box for selecting default buffer distance
-      maxBufferDistanceLabel: "Stel de maximale bufferafstandswaarde in om objecten te vinden", // shown as a label in config UI dialog box for selecting maximum buffer distance value
-      bufferDistanceUnitLabel: "Bufferafstandseenheden", // shown as a label(options) of select(dropdown) in config UI dialog box
-      defaultBufferHintLabel: "Tip: Gebruiken voor het instellen van de standaardwaarde voor een buffer", // shown as a label in config UI dialog box to set default value for a buffer
-      maxBufferHintLabel: "Tip: Gebruiken voor het instellen van de maximumwaarde voor een buffer", // shown as a label in config UI dialog box to set maximum value for a buffer
-      bufferUnitLabel: "Tip: eenheid definiëren voor het creëren van een buffer", // shown as a label in config UI dialog box to set unit of buffer
-      selectGraphicLocationSymbol: "Adres of locatiesymbool", // shown as label in config UI dialog box for graphic symbol in search setting
-      graphicLocationSymbolHintText: "Tip: symbool voor gezocht adres of aangeklikte locatie", // shown as hint label in config UI dialog box for selecting graphic symbol
-      fontColorLabel: "Selecteer fontkleur voor zoekresultaten", //Show as label in config UI to set the font color in widget panel.
-      fontColorHintText: "Tip: fontkleur van zoekresultaten" //Show as label in config UI to set the font color in widget panel.
+    "kilometers": {
+      "displayText": "Kilometer",
+      "acronym": "km"
     },
-    layerSelector: {
-      selectLayerLabel: "Zoekla(a)g(en) selecteren", // shown as a label in config UI dialog box for selecting layer on map
-      layerSelectionHint: "Tip: gebruik de instelknop om la(a)g(en) te selecteren", // shown as a label in config UI dialog box to select multiple layers
-      addLayerButton: "Instellen", //Shown as a button text to add the layer for search
-      okButton: "OK", // shown as a button text for layer selector popup
-      cancelButton: "Annuleren" // shown as a button text for layer selector popup
+    "feet": {
+      "displayText": "Voet",
+      "acronym": "ft"
     },
-    routeSetting: {
-      routeSettingTabTitle: "Instellingen richting", // shown as a label in config UI dialog box for route setting
-      routeServiceUrl: "Routingservice", // shown as a label in config UI dialog box for setting the route url
-      travelModeServiceUrl: "Service manier van reizen", // shown as a label in config UI dialog box for setting the travelmode url
-      buttonSet: "Instellen", // shown as a button text for route setting to set route url in config UI dialog box
-      routeServiceUrlHintText: "Tip: Klik op \'Instellen\' om te bladeren en selecteer een routingservice", // shown as a hint label in config UI dialog box to select a route url
-      directionLengthUnit: "Lengte-eenheden richting", // shown as a label(options) of select(dropdown) in config UI dialog box in routing section
-      unitsForRouteHintText: "Tip: gebruikt voor de weergave van eenheden voor route", // shown as hint label in config UI dialog box to display routing unit
-      selectRouteSymbol: "Selecteer symbool om de route weer te geven", // shown as label in config UI dialog box for selecting symbol for routing
-      routeSymbolHintText: "Tip: gebruikt voor de weergave van lijnsymbool van de route", //shown as hint to select route symbol
-      travelModeServiceUrlHintText: "Tip: klik op \'Instellen\' om te bladeren en selecteer een manier van reizen", // shown as a hint label in config UI dialog box to select a travelMode service url
-      invalidTravelmodeServiceUrl: "Geef een geldige service voor de manier van reizen op. ", // shown as an error label in alert box when invalid travel mode service url is configured
-      routingDisabledMsg: "Zorg er om richtingen in te schakelen voor dat de routing is ingeschakeld in het ArcGIS Online item." // shown as message in routeSettings tab when routing is disabled in webmap
-    },
-    networkServiceChooser: {
-      arcgislabel: "Toevoegen vanuit ArcGIS Online", // shown as a label in route service configuration panel to select route url from portal
-      serviceURLabel: "Service-URL toevoegen", // shown as a label in route service configuration panel to add service url
-      routeURL: "Route-URL", // shown as a label in route service configuration panel
-      validateRouteURL: "Valideren", // shown as a button text in route service configuration panel to validate url
-      exampleText: "Voorbeeld", // shown as a label in route service configuration panel to consider example of route services
-      hintRouteURL1: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/", // shown as a label hint in route service configuration panel
-      hintRouteURL2: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World", // shown as a label hint in route service configuration panel
-      okButton: "OK", // shown as a button text for route service configuration panel
-      cancelButton: "Annuleren", // shown as a button text for route service configuration panel
-      nextButton: "Volgende", // shown as a button text for route service configuration panel
-      backButton: "Terug", // shown as a button text for route service configuration panel
-      invalidRouteServiceURL: "Geef een geldige routeservice op." // Shown as an error in alert box invalid route service url is configured.
-    },
-    errorStrings: {
-      bufferErrorString: "Voer een geldige numerieke waarde in.", // shown as an error label in text box for buffer
-      selectLayerErrorString: "Selecteer la(a)g(en) om te zoeken.", // shown as an error label in alert box for selecting layer from map to search
-      invalidDefaultValue: "Standaard bufferafstand mag niet leeg zijn. Geef de bufferafstand op", // shown as an error label in alert box for blank or empty text box
-      invalidMaximumValue: "Maximale bufferafstand mag niet leeg zijn. Geef de bufferafstand op", // shown as an error label in alert box for blank or empty text box
-      defaultValueLessThanMax: "Geef de standaardbufferafstand op binnen de bovengrens", // shown as an error label in alert box when default value is greater than maximum value of slider
-      defaultBufferValueGreaterThanZero: "Geef de standaardbufferafstand groter dan 0 op", // shown as an error label in alert box when we configure default value of slider is zero
-      maximumBufferValueGreaterThanZero: "Geef de maximale bufferafstand groter dan 0 op" // shown as an error label in alert box when we configure maximum value of slider is zero
-    },
-    symbolPickerPreviewText: "Voorbeeld:"
-  })
-);
+    "meters": {
+      "displayText": "Meter",
+      "acronym": "m"
+    }
+  },
+  "searchSetting": {
+    "searchSettingTabTitle": "Zoekinstellingen",
+    "defaultBufferDistanceLabel": "Stel de standaard bufferafstand in",
+    "maxBufferDistanceLabel": "Stel de maximale bufferafstand in",
+    "bufferDistanceUnitLabel": "Bufferafstandseenheden",
+    "defaultBufferHintLabel": "Tip: stel de standaardwaarde voor de bufferschuif in",
+    "maxBufferHintLabel": "Tip: stel de maximale waarde voor de bufferschuif in",
+    "bufferUnitLabel": "Tip: eenheid definiëren voor het creëren van een buffer",
+    "selectGraphicLocationSymbol": "Adres of locatiesymbool",
+    "graphicLocationSymbolHintText": "Tip: symbool voor gezocht adres of aangeklikte locatie",
+    "fontColorLabel": "Selecteer fontkleur voor zoekresultaten",
+    "fontColorHintText": "Tip: fontkleur van zoekresultaten",
+    "zoomToSelectedFeature": "Zoomen naar het geselecteerde object",
+    "zoomToSelectedFeatureHintText": "Tip: zoomen naar het geselecteerde object in plaats van de buffer",
+    "intersectSearchLocation": "Kruisende polygo(o)n(en) retourneren",
+    "intersectSearchLocationHintText": "Tip: Retourneer polygo(o)n(en) die de gezochte locatie bevatten in plaats van polygonen binnen de buffer",
+    "bufferVisibilityLabel": "Stel de zichtbaarheid van de buffer in",
+    "bufferVisibilityHintText": "Tip: De buffer wordt weergegeven op de kaart",
+    "bufferColorLabel": "Stel het symbool van de buffer in",
+    "bufferColorHintText": "Tip: Selecteer de kleur en transparantie van de buffer",
+    "searchLayerResultLabel": "Teken alleen geselecteerde laagresultaten",
+    "searchLayerResultHint": "Tip: Alleen de geselecteerde laag in de zoekresultaten wordt op de kaart getekend"
+  },
+  "layerSelector": {
+    "selectLayerLabel": "Zoekla(a)g(en) selecteren",
+    "layerSelectionHint": "Tip: gebruik de instelknop om la(a)g(en) te selecteren",
+    "addLayerButton": "Instellen"
+  },
+  "routeSetting": {
+    "routeSettingTabTitle": "Instellingen routebeschrijving",
+    "routeServiceUrl": "Routingservice",
+    "buttonSet": "Instellen",
+    "routeServiceUrlHintText": "Tip: Klik op â€˜Setâ€™ om te bladeren en selecteer een routingservice",
+    "directionLengthUnit": "Lengte-eenheden richting",
+    "unitsForRouteHintText": "Tip: gebruikt voor de weergave van eenheden voor route",
+    "selectRouteSymbol": "Selecteer symbool om de route weer te geven",
+    "routeSymbolHintText": "Tip: gebruikt voor de weergave van lijnsymbool van de route",
+    "routingDisabledMsg": "Zorg er om richtingen in te schakelen voor dat de routing is ingeschakeld in het ArcGIS Online item."
+  },
+  "networkServiceChooser": {
+    "arcgislabel": "Toevoegen vanuit ArcGIS Online",
+    "serviceURLabel": "Service-URL toevoegen",
+    "routeURL": "Route-URL",
+    "validateRouteURL": "Valideren",
+    "exampleText": "Voorbeeld",
+    "hintRouteURL1": "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/",
+    "hintRouteURL2": "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World",
+    "invalidRouteServiceURL": "Geef een geldige routeservice op.",
+    "rateLimitExceeded": "Tarieflimiet overschreden. Probeer het later nogmaals.",
+    "errorInvokingService": "Gebruikersnaam of wachtwoord is onjuist."
+  },
+  "errorStrings": {
+    "bufferErrorString": "Voer een geldige numerieke waarde in.",
+    "selectLayerErrorString": "Selecteer la(a)g(en) om te zoeken.",
+    "invalidDefaultValue": "Standaard bufferafstand mag niet leeg zijn. Geef de bufferafstand op",
+    "invalidMaximumValue": "Maximale bufferafstand mag niet leeg zijn. Geef de bufferafstand op",
+    "defaultValueLessThanMax": "Geef de standaardbufferafstand op binnen de bovengrens",
+    "defaultBufferValueGreaterThanZero": "Geef de standaardbufferafstand groter dan 0 op",
+    "maximumBufferValueGreaterThanZero": "Geef de maximale bufferafstand groter dan 0 op"
+  },
+  "symbolPickerPreviewText": "Voorbeeld:"
+});

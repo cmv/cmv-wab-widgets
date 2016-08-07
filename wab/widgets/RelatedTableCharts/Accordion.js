@@ -60,7 +60,7 @@
         chartContent = domConstruct.create("div", {
           "class": "esriCTChartContent"
         }, chartRow);
-        if (currentObject.chartData) {
+        if (currentObject.chartData && currentObject.selectedFeature) {
           //create chart
           chartObj = new ChartLayout({
             nls: this.nls,
@@ -75,6 +75,12 @@
               domClass.add(chartContent, "esriCTHidden");
             }
           });
+          chartObj.onChartResize = lang.hitch(this, function () {
+            if (this.openPanels.length) {
+              this._setFocusOnChart();
+            }
+          });
+
           this.chartArray.push(chartObj);
           chartObj.startup();
           //Handle toggling of chart content
@@ -115,6 +121,20 @@
     },
 
     /**
+    * set focus on chart
+    * @memberOf widgets/ElectionResults/Accordion
+    **/
+    _setFocusOnChart: function () {
+      var chartContent, outerChartContainer, index = this.config.charts.highlightedChartIndex;
+      chartContent = query('.esriCTChartRow', this.node)[index];
+      outerChartContainer = query('.esriCTResultsPanel')[0];
+      if (chartContent && outerChartContainer) {
+        //scroll to highlighted chart
+        outerChartContainer.scrollTop = chartContent.offsetTop - 81;
+      }
+    },
+
+    /**
     * toggle selected chart
     * @param {object} currentChartHeader: header node of selected chart
     * @param {boolean} isChartOpen:boolean value which indicates whether the chart is open or close
@@ -138,7 +158,7 @@
           domClass.add(currentChartHeader, "esriCTChartSelected");
           //on opening the chart resize it
           if (this.chartArray[index]) {
-            this.chartArray[index].resize(0);
+            this.chartArray[index].resizeChart(0);
           }
           //highlight the chart
           //if the highlight index matches then emit event to highlight on map and highlight the chart row
@@ -163,8 +183,8 @@
       this.emit('chartSelected', index);
       //remove last highlighted row if any
       if (query(".esriCTChartHighlighted").length) {
-          domClass.remove(query(".esriCTChartHighlighted")[0], "esriCTSelectedChartBorder");
-          domClass.remove(query(".esriCTChartHighlighted")[0], "esriCTChartHighlighted");
+        domClass.remove(query(".esriCTChartHighlighted")[0], "esriCTSelectedChartBorder");
+        domClass.remove(query(".esriCTChartHighlighted")[0], "esriCTChartHighlighted");
       }
       //highlight current row and add selected theme colors band to row
       domClass.add(currentChartHeader, "esriCTChartHighlighted");
@@ -179,9 +199,11 @@
     resizeContents: function () {
       array.forEach(this.chartArray, lang.hitch(this, function (
         chartObject, index) {
-        //if panel is open then only resize the contents
-        if (chartObject && this.openPanels.indexOf("Chart" + index) !== -1) {
-          chartObject.resize(300);
+        if (chartObject && chartObject.config.chartData) {
+          //if panel is open then only resize the contents
+          if (this.openPanels.indexOf("Chart" + index) !== -1) {
+            chartObject.resizeChart(300);
+          }
         }
       }));
 

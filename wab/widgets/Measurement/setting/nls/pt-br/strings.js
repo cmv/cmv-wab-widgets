@@ -1,19 +1,22 @@
-﻿define(
-   ({
-    defaultAreaUnit: "Unidade de Área Padrão",
-    defaultLengthUnit: "Unidade de Comprimento Padrão",
-    acres: "Acres",
-    sqMiles: "Milhas Quadradas",
-    sqKilometers: "Quilômetros Quadrados",
-    hectares: "Hectares",
-    sqYards: "Jardas Quadradas",
-    sqFeet: "Pés Quadrados",
-    sqMeters: "Metros Quadrados",
-    miles: "Milhas",
-    kilometers: "Quilômetros",
-    feet: "Pés",
-    meters: "Metros",
-    yards: "Jardas",
-    nauticalMiles: "Milhas Náuticas"
-  })
-);
+define({
+  "defaultAreaUnit": "Unidade de Área Padrão",
+  "defaultLengthUnit": "Unidade de Comprimento Padrão",
+  "acres": "Acres",
+  "sqMiles": "Milhas Quadradas",
+  "sqKilometers": "Quilômetros Quadrados",
+  "hectares": "Hectares",
+  "sqYards": "Jardas Quadradas",
+  "sqFeet": "Pés Quadrados",
+  "sqMeters": "Metros Quadrados",
+  "miles": "Milhas",
+  "kilometers": "Quilômetros",
+  "feet": "Pés",
+  "meters": "Metros",
+  "yards": "Jardas",
+  "nauticalMiles": "Milhas Náuticas",
+  "showArea": "Área",
+  "showDistance": "Distância",
+  "showLocation": "Localização",
+  "showtools": "Mostrar ferramentas de medição:",
+  "allHidedTips": "Pelo menos uma ferramenta deve ser selecionada."
+});

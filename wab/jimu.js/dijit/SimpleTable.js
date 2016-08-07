@@ -310,9 +310,13 @@ define([
 
       clear: function() {
         var trs = this._getNotEmptyRows();
+        var data = array.map(trs, lang.hitch(this, function(tr){
+          return this.getRowData(tr);
+        }));
         html.empty(this.tbody);
-        array.forEach(trs, lang.hitch(this, function(tr) {
-          this._onDeleteRow(tr);
+        array.forEach(trs, lang.hitch(this, function(tr, index) {
+          var rowData = data[index];
+          this._onDeleteRow(tr, rowData);
         }));
         //this.addEmptyRow();
         this.updateUI();
@@ -408,9 +412,10 @@ define([
 
       deleteRow:function(tr){
         if(tr){
+          var rowData = this.getRowData(tr);
           html.destroy(tr);
           this.updateUI();
-          this._onDeleteRow(tr);
+          this._onDeleteRow(tr, rowData);
         }
       },
 
@@ -434,6 +439,12 @@ define([
             html.addClass(this.domNode, this._classVerticalScroll);
           }
         }
+
+        array.forEach(this.fields, lang.hitch(this, function(fieldMeta) {
+          if (fieldMeta.type === 'checkbox') {
+            this._delaySyncThCheckBoxStatusWithAllTdCheckBoxes(fieldMeta.name);
+          }
+        }));
       },
 
       _updateHeadTableWidth: function(){
@@ -547,19 +558,19 @@ define([
         var editableInput = query('input', td)[0];
         editableDiv.innerHTML = fieldData || "";
         if (editableDiv.innerHTML !== "") {
-          editableDiv.title = editableDiv.innerHTML;
+          editableDiv.title = editableDiv.innerText || editableDiv.innerHTML;
         }
         editableInput.value = editableDiv.innerHTML;
         this.own(on(editableDiv, 'dblclick', lang.hitch(this, function(event) {
           event.stopPropagation();
-          editableInput.value = editableDiv.innerHTML;
+          editableInput.value = editableDiv.innerText || editableDiv.innerHTML;
           html.setStyle(editableDiv, 'display', 'none');
           html.setStyle(editableInput, 'display', 'inline');
           editableInput.focus();
         })));
         this.own(on(editableInput, 'blur', lang.hitch(this, function() {
           editableInput.value = lang.trim(editableInput.value);
-          var oldValue = editableDiv.innerHTML;
+          var oldValue = editableDiv.innerText || editableDiv.innerHTML;
           var newValue = editableInput.value;
           if (newValue !== '') {
             if (fieldMeta.unique) {
@@ -940,15 +951,15 @@ define([
           }
           var name = fieldMeta.name;
           rowData[name] = null;
-          var td = query('.' + name, tr)[0];
+          var td = query('.simple-table-cell.' + name, tr)[0];
           if (td) {
             if (type === 'text') {
               if (fieldMeta.editable) {
                 var editableDiv = query('div', td)[0];
-                rowData[name] = editableDiv.innerHTML;
+                rowData[name] = editableDiv.innerText || editableDiv.innerHTML;
               } else {
                 var normalTextDiv = query('div', td)[0];
-                rowData[name] = normalTextDiv.innerHTML;
+                rowData[name] = normalTextDiv.innerText || normalTextDiv.innerHTML;
               }
             } else if (type === 'radio') {
               var radio = query('input', td)[0];
@@ -991,6 +1002,12 @@ define([
         return result;
       },
 
+      moveToTop: function(tr){
+        if(tr && tr.parentNode === this.tbody){
+          html.place(tr, this.tbody, 'first');
+        }
+      },
+
       _onClickRow: function(tr){
         this.emit('row-click', tr);
       },
@@ -1011,8 +1028,8 @@ define([
         this.emit('row-edit', tr);
       },
 
-      _onDeleteRow: function(tr){
-        this.emit('row-delete', tr);
+      _onDeleteRow: function(tr, rowData){
+        this.emit('row-delete', tr, rowData);
       },
 
       _onEnterRow: function(tr){

@@ -37,12 +37,13 @@ define([
     'esri/request',
     'esri/graphicsUtils',
     './Preview',
+    'jimu/LayerInfos/LayerInfos',
     'jimu/dijit/Popup',
     'jimu/dijit/LoadingShelter'
   ],
   function(declare, lang, query, html, array, fx, on, Deferred, _WidgetsInTemplateMixin,
     BaseWidget, Message, DrawBox, jimuUtils, FilterUtils, EsriQuery, QueryTask, GraphicsLayer,
-    SimpleRenderer, symbolJsonUtils, esriRequest, graphicsUtils, Preview, Popup) {
+    SimpleRenderer, symbolJsonUtils, esriRequest, graphicsUtils, Preview, LayerInfos, Popup) {
 
     return declare([BaseWidget, _WidgetsInTemplateMixin], {
       name: 'Chart',
@@ -52,6 +53,7 @@ define([
       tempResultLayer: null,
       previewArgs: null,
       previewPopup: null,
+      layerInfosObj: null,
 
       //test:
       //http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer
@@ -76,6 +78,7 @@ define([
         this.nls.colorful = this.nls.colorful || "Colorful";
         this.nls.monochromatic = this.nls.monochromatic || "Monochromatic";
         this.nls.clearResults = window.jimuNls.drawBox.clear;
+        this.layerInfosObj = LayerInfos.getInstanceSync();
         if(this.config){
           this._updateConfig();
         }
@@ -182,7 +185,7 @@ define([
           nls: this.nls,
           map: this.map,
           folderUrl: this.folderUrl,
-          fontColor: this.appConfig.theme.name === "DartTheme" ? "#ffffff" : "#333333",
+          fontColor: "#333333",
           style: "width:100%;height:100%;",
           isBigPreview: true
         });
@@ -528,6 +531,10 @@ define([
         }
 
         this.shelter.show();
+        var baseExpr = this._getBaseExpression(this.currentAttrs.config.webMapLayerId);
+        if(baseExpr){
+          where = "(" + baseExpr + ") AND " + "(" + where + ")";
+        }
         this._query(where, outFields, geometry).then(lang.hitch(this, function(featureSet){
           if(!this.domNode){
             return;
@@ -566,6 +573,23 @@ define([
         }));
       },
 
+      _getBaseExpression: function(webMapLayerId){
+        var baseExpr = "";
+        //var webMapLayerId = this.currentAttrs.config.webMapLayerId;
+        if(webMapLayerId){
+          var info = null;
+          if(this.currentAttrs.layerInfo.type === 'Table'){
+            info = this.layerInfosObj.getTableInfoById(webMapLayerId);
+          }else{
+            info = this.layerInfosObj.getLayerInfoById(webMapLayerId);
+          }
+          if(info){
+            baseExpr = info.getFilter();
+          }
+        }
+        return baseExpr;
+      },
+
       _updatePreviewHeight: function() {
         var box = html.getContentBox(this.domNode);
         var h = Math.max(box.h - 120, 150);
@@ -588,6 +612,9 @@ define([
       _query: function(where, outFields, /*optional*/ geometry){
         var def = new Deferred();
         var queryParams = new EsriQuery();
+        if(!where){
+          where = "1=1";
+        }
         queryParams.where = where;
         if(geometry){
           queryParams.geometry = geometry;

@@ -27,34 +27,33 @@ define([
   'dijit/_WidgetBase',
   'dijit/_TemplatedMixin',
   'dijit/_WidgetsInTemplateMixin',
-  'dijit/Tooltip',
-  'dijit/form/Select',
   'dojo/text!./SingleChartSetting.html',
-  'dijit/form/ValidationTextBox',
   'dijit/TooltipDialog',
   'dijit/popup',
   'jimu/utils',
   'jimu/dijit/TabContainer3',
   'jimu/dijit/Filter',
-  'jimu/dijit/LoadingShelter',
   'jimu/dijit/_FeaturelayerSourcePopup',
-  'jimu/dijit/SymbolPicker',
   'jimu/dijit/Message',
-  'jimu/dijit/SimpleTable',
   './DataFields',
   '../Preview',
   '../common/Parameters',
   'esri/request',
   'esri/tasks/query',
   'esri/tasks/QueryTask',
-  'esri/symbols/jsonUtils'
+  'esri/symbols/jsonUtils',
+  'dijit/Tooltip',
+  'dijit/form/Select',
+  'dijit/form/ValidationTextBox',
+  'jimu/dijit/SymbolPicker',
+  'jimu/dijit/SimpleTable',
+  'jimu/dijit/LoadingShelter'
 ],
-function(declare, lang, array, html, query, Color, on, Evented, Deferred, _WidgetBase,
-  _TemplatedMixin, _WidgetsInTemplateMixin, Tooltip, Select, template,
-  ValidationTextBox, TooltipDialog, dojoPopup, jimuUtils, TabContainer3, Filter,
-  LoadingShelter, _FeaturelayerSourcePopup, SymbolPicker, Message, SimpleTable,
-  DataFields, Preview, Parameters, esriRequest, EsriQuery, QueryTask, esriSymbolJsonUtils) {
-  /*jshint unused: false*/
+function(declare, lang, array, html, query, Color, on, Evented, Deferred, _WidgetBase, _TemplatedMixin,
+  _WidgetsInTemplateMixin, template, TooltipDialog, dojoPopup, jimuUtils, TabContainer3, Filter,
+  _FeaturelayerSourcePopup, Message, DataFields, Preview, Parameters, esriRequest, EsriQuery,
+  QueryTask, esriSymbolJsonUtils) {
+
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
     baseClass: 'jimu-widget-singlechart-setting',
     templateString: template,
@@ -67,6 +66,7 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
     tr: null,
     folderUrl: '',
     appConfig: null,
+    _webMapLayerId: null,//the layerId in web map, maybe null
 
     //public methods:
     //setConfig
@@ -231,7 +231,8 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
         description: '',
         mode:'',
         symbol: '',
-        highLightColor: ''
+        highLightColor: '',
+        webMapLayerId: this._webMapLayerId
         //column
         //pie
         //bar
@@ -536,7 +537,7 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
         this._hideTooltipDialog(this.filterTooltipDialog);
       })));
 
-      this.own(on(this.filterIcon, 'click', lang.hitch(this, function(event){
+      this.own(on(this.filterIcon, 'click', lang.hitch(this, function(){
         var isOpendNow = !!this.filterTooltipDialog.isOpendNow;
         if(isOpendNow){
           this._hideTooltipDialog(this.filterTooltipDialog);
@@ -836,6 +837,7 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
     },
 
     _createParametersDialog: function(cbx, editDiv, parametersDijit){
+      /*jshint unused: false*/
       var ttdContent = html.create('div');
       parametersDijit.placeAt(ttdContent);
       var tooltipDialog = new TooltipDialog({
@@ -961,18 +963,19 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
 
       var featurePopup = new _FeaturelayerSourcePopup(args);
       this.own(on(featurePopup, 'ok', lang.hitch(this, function(item){
-        var radioType = featurePopup.getSelectedRadioType();
+        //{name, url, definition}
+        var layerSourceType = featurePopup.getSelectedRadioType();
         featurePopup.close();
         featurePopup = null;
-        var queryName = null;
+        var chartName = null;
         var expr = null;
-        if(radioType === 'map'){
-          var layerObject = item.layerInfo && item.layerInfo.layerObject;
-          if(layerObject && typeof layerObject.getDefinitionExpression === 'function'){
-            expr = layerObject.getDefinitionExpression();
-          }
-        }
-        this.setNewLayerDefinition(item.name, item.url, item.definition, queryName, expr);
+        // if(layerSourceType === 'map'){
+        //   var layerObject = item.layerInfo && item.layerInfo.layerObject;
+        //   if(layerObject && typeof layerObject.getDefinitionExpression === 'function'){
+        //     expr = layerObject.getDefinitionExpression();
+        //   }
+        // }
+        this.setNewLayerDefinition(item, layerSourceType, chartName, expr);
       })));
       this.own(on(featurePopup, 'cancel', lang.hitch(this, function(){
         featurePopup.close();
@@ -993,25 +996,35 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
       return result;
     },
 
-    setNewLayerDefinition: function(name, url, definition,/*optional*/ chartName,/*optional*/ expr){
-      definition.name = name;
-      definition.url = url;
+    setNewLayerDefinition: function(layerSourceItem, sourceType, /*optional*/ chartName, /*optional*/ expr){
+      //layerSourceItem: {name,url,definition,...}
+      layerSourceItem.definition.name = layerSourceItem.name;
+      layerSourceItem.definition.url = layerSourceItem.url;
       var oldUrl = this._layerDefinition && this._layerDefinition.url;
-      if (url !== oldUrl) {
-        this._resetByNewLayerDefinition(definition, chartName, expr);
+      if (layerSourceItem.url !== oldUrl) {
+        this._resetByNewLayerDefinition(layerSourceItem, sourceType, chartName, expr);
       }
     },
 
-    _resetByNewLayerDefinition: function(layerInfo,/*optional*/ chartName,/*optional*/ defaultExpr){
-      this._addAliasForLayerInfo(layerInfo);
+    _resetByNewLayerDefinition: function(sourceItem, sourceType, /*optional*/ chartName,/*optional*/ defaultExpr){
+      var definition = sourceItem.definition;
+      this._addAliasForLayerInfo(definition);
       this._clear();
-      if(!layerInfo){
+      if(!definition){
         return;
       }
 
+      var webMapLayerId = null;
+      if(sourceType === 'map'){
+        if(sourceItem.layerInfo){
+          webMapLayerId = sourceItem.layerInfo.id;
+        }
+      }
+
       //general
-      this._layerDefinition = layerInfo;
-      var url = layerInfo.url;
+      this._layerDefinition = definition;
+      this._webMapLayerId = webMapLayerId;
+      var url = definition.url;
       this.urlTextBox.set('value', url);
 
       //reset filter
@@ -1021,7 +1034,7 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
         this.filter.buildByExpr(url, expr, this._layerDefinition);
       }
 
-      this.chartNameTextBox.set('value', chartName || layerInfo.name);
+      this.chartNameTextBox.set('value', chartName || definition.name);
 
       //details
       //reset categoryFieldSelect, featureAxisLabelSelect, valueFields
@@ -1030,7 +1043,7 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
       // this.columnCbx.checked = true;
 
       //reset symbol
-      var geoType = jimuUtils.getTypeByGeometryType(layerInfo.geometryType);
+      var geoType = jimuUtils.getTypeByGeometryType(definition.geometryType);
       var symType = '';
       if(geoType === 'point'){
         symType = 'marker';
@@ -1167,6 +1180,7 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
 
       //general
       this._layerDefinition = layerInfo;
+      this._webMapLayerId = config.webMapLayerId;
       this.urlTextBox.set('value', config.url);
       var filter = config.filter;
       // this.whereClause.innerHTML = filter.expr;

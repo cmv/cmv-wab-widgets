@@ -1,59 +1,91 @@
-﻿define(
-   ({
-
-    chartSettingLabel: "차트 설정",  //shown as a label in config UI dialog box.
-    addNewLabel: "새로 추가", //shown as a button text to add layers.
-    generalSettingLabel: "일반 설정", //shown as a button text to general settings button.
-
-    layerChooser: {
-      title: "차트를 만들 레이어 선택", //shown as title on layer chooser popup.
-      selectPolygonLayerLabel: "레이어 선택", //shown as a label in config UI dialog box for layer chooser.
-      selectPolygonLayerHintText: "힌트: 여러 차트를 구성하는 경우에는 레이어의 지오메트리 유형이 같아야 함", // shown as a hint text in config UI dialog box for selecting layer from map.
-      selectRelatedTableLayerLabel: "레이어와 관련된 테이블 선택", //shown as a label in config UI dialog box for layer chooser.
-      selectRelatedTableLayerHintText: "힌트: 숫자 필드가 있는 테이블만 보임", // shown as a hint text in config UI dialog box for selecting table related to layer.
-      errorInSelectingPolygonLayer: "릴레이트 포인트 레이어가 있는 레이어를 선택하세요.", // shown as an error label in alert box for selecting layer from map.
-      errorInSelectingRelatedLayer: "올바른 릴레이트 테이블/레이어를 선택하세요.", // shown as an error in alert box if error in selecting related table layer.
-      polygonLayerNotHavingRelationships: "선택한 레이어에는 릴레이트 테이블/레이어가 없습니다.", // shown as an error in alert box if Selected layer don't have any related table/layer.
-      okButton: "확인", //shown as a button text.
-      cancelButton: "취소" //shown as a button text.
-    },
-    ChartSetting: {
-      sectionTitle: "섹션 제목", // shown as a label in config UI dialog box.
-      sectionTitleHintText: "힌트: 섹션 헤더 제목에 보임", // shown as a hint text in config UI dialog box for section title.
-      chartTitle: "차트 제목", // shown as a label in config UI dialog box.
-      chartTitleHintText: "힌트: 차트 맨 위 중앙에 보임", // shown as a hint text in config UI dialog box for section title.
-      chartDescription: "설명", // shown as a label in cofig UI.
-      chartDescriptionHintText: "힌트: 차트 아래에 보임", // shown as a hint text in config UI dialog box.
-      chartType: "차트 유형", // shown as a label which shows type of chart.
-      barChart: "막대형 차트", // shown as a label for bar chart radio button.
-      pieChart: "원형 차트", // shown as a label for pie chart radio button.
-      dataSeriesField: "데이터 시리즈 필드", // shown as a label for selecting data series set.
-      labelField: "레이블 필드", // shown as a label for selecting label field set.
-      chartColor: "차트 색상", // shown as a label which shows color for chart.
-      singleColor: "단일 색상", // shown as a label for single color radio button.
-      colorByTheme: "테마별 색상", // shown as a label for color by theme radio button.
-      colorByFieldValue: "필드 값별 색상", // shown as a label for color by field value radio button.
-      xAxisTitle: "X축 제목", // shown as a label to enter title in bottom left corner.
-      xAxisHintText: "힌트: X축 제목", // shown as a hint text which shows position of label in config UI dialog box.
-      yAxisTitle: "Y축 제목", // shown as a label to enter title in bottom left corner.
-      yAxisHintText: "힌트: Y축 제목", // shown as a hint text which shows position of label in config UI dialog box.
-      fieldColorLabel: "레이블", // shown as a header in table.
-      fieldColorColor: "색상", // shown as a header in table.
-      defaultFieldSelectLabel: "선택", // shown as a label in config UI dialog box.
-      errMsgFieldValuesNotFound: "선택한 필드의 값을 찾을 수 없음", // shown as an error in alert box.
-      errMsgSectionTitle: "섹션 제목을 입력하세요.", // shown as an error in alert box if section title is empty.
-      errMsgFieldByValue: "필드 값을 선택하세요.", // shown as an error in alert box if color by field value is empty.
-      settingTabTitle: "설정", // shown as a label of tab in config UI
-      layoutTabTitle: "레이아웃" // shown as a label of tab in config UI
-    },
-    GeneralSetting: {
-      legendGeneralSettingText: "일반 설정", // shown as a label of general setting legend.
-      locationSymbolLabel: "그래픽 위치 심볼", // shown as a label for selecting graphic location symbol.
-      locationSymbolHintText: "힌트: 주소와 클릭 위치의 심볼을 나타내는 데 사용됨", // shown as a hint text for selecting graphic location symbol.
-      refreshIntervalLabel: "새로 고침 간격", // shown as a label of refresh interval.
-      refreshIntervalHintText: "힌트: 차트를 새로 고침하는 간격으로 사용됩니다. 1~1440분 사이의 값을 지정하세요.", // shown as an error for refresh interval.
-      errMsgRefreshInterval: "1~1440분 사이의 새로 고침 간격을 지정하세요.",  // shown as an error message.
-      symbolPickerPreviewText: "미리 보기:"
+define({
+  "chartSettingLabel": "차트 설정",
+  "addNewLabel": "새로 추가",
+  "generalSettingLabel": "일반 설정",
+  "layerChooser": {
+    "title": "차트를 만들 레이어 선택",
+    "selectPolygonLayerLabel": "레이어 선택",
+    "selectPolygonLayerHintText": "힌트: 여러 차트를 구성하는 경우에는 레이어의 지오메트리 유형이 같아야 함",
+    "selectRelatedTableLayerLabel": "레이어와 관련된 테이블 선택",
+    "selectRelatedTableLayerHintText": "힌트: 숫자 필드가 있는 테이블만 보임",
+    "errorInSelectingPolygonLayer": "릴레이트 포인트 레이어가 있는 레이어를 선택하세요.",
+    "errorInSelectingRelatedLayer": "올바른 릴레이트 테이블/레이어를 선택하세요.",
+    "polygonLayerNotHavingRelationships": "선택한 레이어에는 릴레이트 테이블/레이어가 없습니다."
+  },
+  "ChartSetting": {
+    "sectionTitle": "섹션 제목",
+    "sectionTitleHintText": "힌트: 섹션 헤더 제목에 보임",
+    "chartTitle": "차트 제목",
+    "chartTitleHintText": "힌트: 차트 상단 가운데 표시됨",
+    "chartDescription": "설명",
+    "chartDescriptionHintText": "힌트: 차트 아래 표시됨",
+    "chartType": "차트 유형",
+    "barChart": "막대형 차트",
+    "pieChart": "원형 차트",
+    "polarChart": "극좌표형 차트",
+    "dataSeriesField": "데이터 시리즈 필드",
+    "labelField": "레이블 필드",
+    "chartColor": "차트 색상",
+    "singleColor": "단일 색상",
+    "colorByTheme": "테마별 색상",
+    "colorByFieldValue": "필드 값별 색상",
+    "xAxisTitle": "X축 제목",
+    "xAxisHintText": "힌트: X축 제목",
+    "yAxisTitle": "Y축 제목",
+    "yAxisHintText": "힌트: Y축 제목",
+    "fieldColorLabel": "레이블",
+    "fieldColorColor": "색상",
+    "defaultFieldSelectLabel": "선택",
+    "errMsgFieldValuesNotFound": "선택한 필드의 값을 찾을 수 없음",
+    "errMsgSectionTitle": "섹션 제목을 입력하세요.",
+    "errMsgFieldByValue": "필드 값을 선택하세요.",
+    "settingTabTitle": "설정",
+    "layoutTabTitle": "레이아웃",
+    "polarChartSelectFieldsHintText": "힌트: 극좌표형 차트를 생성할 필드 선택",
+    "visibilityText": "가시성",
+    "fieldNameText": "필드 이름",
+    "aliasNameText": "별칭",
+    "errMsgPolarFieldsRequired": "극좌표형 차트를 생성하려면 3개 이상의 필드를 선택하세요.",
+    "polarChartPolygonFillLabel": "폴리곤 채우기",
+    "polarChartPolygonFillHintText": "힌트: 극좌표형 그래프에 폴리곤 채우기를 표시하려면 체크 박스 선택",
+    "ThemeSelector": {
+      "themeAdobebricks": "Adobebricks",
+      "themeAlgae": "Algae",
+      "themeBahamation": "Bahamation",
+      "themeBlueDusk": "BlueDusk",
+      "themeCubanShirts": "CubanShirts",
+      "themeDesert": "Desert",
+      "themeDistinctive": "Distinctive",
+      "themeDollar": "Dollar",
+      "themeGrasshopper": "Grasshopper",
+      "themeGrasslands": "Grasslands",
+      "themeGreySkies": "GreySkies",
+      "themeHarmony": "Harmony",
+      "themeIndigoNation": "IndigoNation",
+      "themeIreland": "Ireland",
+      "themeMiamiNice": "MiamiNice",
+      "themeMinty": "Minty",
+      "themePurpleRain": "PurpleRain",
+      "themeRoyalPurples": "RoyalPurples",
+      "themeSageToLime": "SageToLime",
+      "themeTufte": "Tufte",
+      "themeWatersEdge": "WatersEdge",
+      "themeWetlandText": "Wetland",
+      "themePlotKitblue": "PlotKit.blue",
+      "themePlotKitcyan": "PlotKit.cyan",
+      "themePlotKitgreen": "PlotKit.green",
+      "themePlotKitorange": "PlotKit.orange",
+      "themePlotKitpurple": "PlotKit.purple",
+      "themePlotKitred": "PlotKit.red"
     }
-  })
-);
+  },
+  "GeneralSetting": {
+    "legendGeneralSettingText": "일반 설정",
+    "locationSymbolLabel": "그래픽 위치 심볼",
+    "locationSymbolHintText": "힌트: 주소와 클릭 위치의 심볼을 나타내는 데 사용됨",
+    "refreshIntervalLabel": "새로 고침 간격",
+    "refreshIntervalHintText": "힌트: 차트를 새로 고침하는 간격으로 사용됩니다. 1~1440분 사이의 값을 지정하세요.",
+    "errMsgRefreshInterval": "1~1440분 사이의 새로 고침 간격을 지정하세요.",
+    "symbolPickerPreviewText": "미리 보기:"
+  }
+});

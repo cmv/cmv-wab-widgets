@@ -3,6 +3,7 @@
   "dijit/_WidgetBase",
   "dojo/dom-construct",
   "dojo/query",
+  "dojo/_base/array",
   "dojo/_base/lang",
   "dijit/layout/ContentPane",
   "dojo/dom-attr",
@@ -31,12 +32,15 @@
   "esri/symbols/SimpleMarkerSymbol",
   "esri/tasks/query",
   "esri/units",
-  "dojo/_base/fx"
+  "dojo/_base/fx",
+  "dojo/number",
+  "dijit/registry"
 ], function (
   declare,
   _WidgetBase,
   domConstruct,
   query,
+  array,
   lang,
   ContentPane,
   domAttr,
@@ -65,7 +69,9 @@
   SimpleMarkerSymbol,
   Query,
   units,
-  fx
+  fx,
+  number,
+  registry
 ) {
   // to create a widget, derive it from BaseWidget.
   return declare([_WidgetBase, Evented], {
@@ -169,20 +175,31 @@
           "class": "esriCTTabContainer"
         }, this._panels.infoPanel));
         this._tabContainer.startup();
-        on(this._tabContainer, "tabChanged", lang.hitch(this, function (selectedTab) {
+        this._tabContainer.on("tabChanged", lang.hitch(this, function (selectedTab) {
           this.emit("tab-change", selectedTab);
           if (selectedTab === this.nls.directionTabTitle && !this._routeCalculated) {
             //get directions
             this._initializeDirectionWidget();
           }
-          dijit.byId(this.parentDiv.id).resize();
+          if (this.parentDivId && registry.byId(this.parentDivId) &&
+           registry.byId(this.parentDivId).resize) {
+            registry.byId(this.parentDivId).resize();
+          }
         }));
       } else {
         //if routing is not enabled on webmap then, panel to display feature info will be created
         this._panels.infoPanel.appendChild(this._featureInfoPanel.domNode);
         domClass.add(this._featureInfoPanel.domNode, "esriCTFeatureInfo");
+        var jimuTabNode =
+        query(".esriCTItemListMainContainer .esriCTDirectionInfoPanel .esriCTPanelHeader");
+        if(jimuTabNode){
+          domClass.add(jimuTabNode[0], "esriCTBorderBottom");
+        }
       }
-      dijit.byId(this.parentDiv.id).resize();
+      if (this.parentDivId && registry.byId(this.parentDivId) &&
+      registry.byId(this.parentDivId).resize) {
+        registry.byId(this.parentDivId).resize();
+      }
     },
 
     /**
@@ -191,30 +208,38 @@
     * @memberOf widgets/NearMe/item-list
     **/
     _attachEventOnBackButton: function (panel) {
-      var divBackButton;
+      var divItemTitle, divBackButton;
+      divItemTitle = query(".esriCTItemlList", panel)[0];
       divBackButton = query(".esriCTBackButton", panel)[0];
-      if (divBackButton) {
-        on(divBackButton, "click", lang.hitch(this, function (event) {
+      if (divItemTitle && divBackButton) {
+        this.own(on(divItemTitle, "click", lang.hitch(this, function (event) {
           event.stopPropagation();
-          if (this._isSlide) {
-            this._isSlide = false;
-            this._selectedItem = null;
-            this._clearGrahics();
-            //check if back button is clicked to navigate to feature list panel or layer list panel
-            if (!this._isFeatureList) {
-              this.loading.hide();
-              this._clearContent(this._featureListContent);
-              this._selectedLayer = null;
-              this._isFeatureList = false;
-              this._showPanel("layerListPanel", true);
-            } else {
-              this._isFeatureList = false;
-              //clear directions if navigate to feature list
-              this._clearDirections();
-              this._showPanel("featureListPanel", true);
+          if (domStyle.get(divBackButton, "display") !== "none") {
+            if (this._isSlide) {
+              this._isSlide = false;
+              this._selectedItem = null;
+              this._clearGrahics();
+              //check if back button is clicked to navigate to feature list panel or layer list panel
+              if (!this._isFeatureList) {
+                this.loading.hide();
+                this._clearContent(this._featureListContent);
+                if (this.config.selectedSearchLayerOnly) {
+                  //show all layers
+                  this.showAllLayers();
+                }
+                this._resetFilter(this._selectedLayer.layerIndex);
+                this._selectedLayer = null;
+                this._isFeatureList = false;
+                this._showPanel("layerListPanel", true);
+              } else {
+                this._isFeatureList = false;
+                //clear directions if navigate to feature list
+                this._clearDirections();
+                this._showPanel("featureListPanel", true);
+              }
             }
           }
-        }));
+        })));
       }
     },
 
@@ -232,15 +257,22 @@
           featureLayer = new FeatureLayer(this.config.searchLayers[i].url, {
             infoTemplate: new PopupTemplate(this.config.searchLayers[i].popupInfo)
           });
+          //check whether id is available
+          if (this.config.searchLayers[i].id) {
+            featureLayer.id = this.config.searchLayers[i].id;
+          }
           featureLayer.title = this.config.searchLayers[i].title;
           //set definition expression configured in webmap
           if (this.config.searchLayers[i].definitionExpression) {
             featureLayer.setDefinitionExpression(this.config.searchLayers[i].definitionExpression);
           }
-          //set renderer configurd in webmap
+          //set renderer configured in webmap
           if (this.config.searchLayers[i].renderer) {
             featureLayer.setRenderer(this.config.searchLayers[i].renderer);
           }
+          featureLayer.index = i;
+          featureLayer.layerIndex = this._operationalLayers.length;
+          featureLayer.isMapServer = this.config.searchLayers[i].isMapServer;
           //set attachment visibility in layer as configured in webmap
           featureLayer.showAttachments = this.config.searchLayers[i].popupInfo.showAttachments;
           this._operationalLayers.push(featureLayer);
@@ -284,6 +316,10 @@
       this._isNoFeature = true;
       this._isSlide = true;
       this.clearResultPanel();
+      if (this.config.selectedSearchLayerOnly) {
+        //show all layers
+        this.showAllLayers();
+      }
       this._setSeachedLocation(searchedLocation);
       this._setServiceArea(serviceArea);
       //clear failed layer list
@@ -295,9 +331,11 @@
         domStyle.set(this._currentPanel, 'left', '0px');
         //create layers list
         for (i = 0; i < this._operationalLayers.length; i++) {
+          this._resetFilter(this._operationalLayers[i].layerIndex);
           this._createItemTemplate(this._operationalLayers[i], featureDeferArr);
         }
       } else {
+        this._resetFilter(this._operationalLayers[0].layerIndex);
         this._onSingleLayerFound(featureDeferArr);
       }
       All(featureDeferArr).then(lang.hitch(this, function () {
@@ -366,7 +404,7 @@
     * @memberOf widgets/NearMe/item-list
     **/
     _attachClickEvent: function (templateDiv, item) {
-      on(templateDiv, "click", lang.hitch(this, function (event) {
+      this.own(on(templateDiv, "click", lang.hitch(this, function (event) {
         if (!domClass.contains(templateDiv, "esriCTDisabled") && this._isSlide) {
           event.stopPropagation();
           this._isSlide = false;
@@ -374,7 +412,7 @@
           this._showPanel("featureListPanel");
           this._displayFeatureList(item, null);
         }
-      }));
+      })));
     },
 
     /**
@@ -386,6 +424,30 @@
     _displayFeatureList: function (item, defer) {
       this._clearContent(this._featureListContent);
       this._selectedLayer = item;
+      //check if routing is enabled in webmap
+      if (this.map.webMapResponse.itemInfo.itemData.applicationProperties &&
+        this.map.webMapResponse.itemInfo.itemData.applicationProperties
+        .viewing.routing.enabled) {
+        var jimuTab = query(".jimu-tab", this._panels.infoPanel);
+        var tabNode = query(".jimu-tab .control", this._panels.infoPanel);
+        var jimuTabNode =
+        query(".esriCTItemListMainContainer .esriCTDirectionInfoPanel .esriCTPanelHeader");
+        // layer geometry type is polygon && Only return polygons that intersect
+        // the search location flag is enabled
+        if (tabNode && tabNode[0] && item.geometryType === "esriGeometryPolygon" &&
+        this.config.intersectSearchedLocation) {
+          domClass.add(jimuTab[0], "esriCTOverrideHeight");
+          domClass.add(tabNode[0], "esriCTHidden");
+          domClass.add(jimuTabNode[0], "esriCTBorderBottom");
+        } else {
+          // jimu tab container created
+          if (tabNode && tabNode[0]) {
+            domClass.remove(jimuTab[0], "esriCTOverrideHeight");
+            domClass.remove(tabNode[0], "esriCTHidden");
+            domClass.remove(jimuTabNode[0], "esriCTBorderBottom");
+          }
+        }
+      }
       this._setItemName(this._panels.featureListPanel, this._selectedLayer.title);
       this._queryForFeatureList(defer);
     },
@@ -412,6 +474,11 @@
     _queryForCountOnly: function (templateDiv, opLayer, featureDeferArr) {
       var defer, queryParams;
       queryParams = this._getQueryParams();
+      // if intersectSearchedLocation option is set to true in widget configuration and layer is polygon layer then, query for feature
+      // which are intersecting searched location instead of buffer area
+      if (this.config.intersectSearchedLocation && opLayer.geometryType === "esriGeometryPolygon") {
+        queryParams.geometry = this._selectedPoint.geometry;
+      }
       defer = new Deferred();
       opLayer.queryCount(queryParams, lang.hitch(this, function (count) {
         this._setItemCount(templateDiv, count, true, false);
@@ -446,7 +513,10 @@
         this._showMessage(unableToFetchResultsMsg);
       }
       this.loading.hide();
-      dijit.byId(this.parentDiv.id).resize();
+      if (this.parentDivId && registry.byId(this.parentDivId) &&
+      registry.byId(this.parentDivId).resize) {
+        registry.byId(this.parentDivId).resize();
+      }
     },
 
     /**
@@ -456,6 +526,13 @@
     _queryForFeatureList: function (defer) {
       this.loading.show();
       var queryParams = this._getQueryParams();
+      // if intersectSearchedLocation option is set to true in widget configuration and layer is polygon layer then, query for feature
+      // which are intersecting searched location instead of buffer area
+      if (this.config.intersectSearchedLocation && this._selectedLayer.geometryType ===
+   "esriGeometryPolygon") {
+        queryParams.geometry = this._selectedPoint.geometry;
+      }
+      this._hideAllLayers();
       this._selectedLayer.queryFeatures(queryParams, lang.hitch(this, function (featureSet) {
         //check if any feature is found
         if (featureSet.features.length > 0) {
@@ -495,7 +572,7 @@
           //check whether feature count or distance from selected location has to be displayed in count field
           if (isFeatureCount) {
             //show feature count in selected buffer are
-            domAttr.set(divFeatureCount, "innerHTML", "(" + value + ")");
+            domAttr.set(divFeatureCount, "innerHTML", "(" + number.format(value) + ")");
             if (value) {
               this._isNoFeature = false;
               //do not enable node if respective layer has no feature
@@ -503,7 +580,7 @@
             }
           } else {
             //show distance from selected location to the feature
-            domAttr.set(divFeatureCount, "innerHTML", (value.toFixed(2) + " " +
+            domAttr.set(divFeatureCount, "innerHTML", (number.format(value.toFixed(2)) + " " +
            this.config.bufferDistanceUnit.acronym));
           }
         }
@@ -516,19 +593,109 @@
     * @memberOf widgets/NearMe/item-list
     **/
     _creatFeatureList: function (features) {
-      var i, featureDiv;
+      var i, featureDiv, featureIds = '', divFeatureCount;
       features = this._getSortedFeatureList(features);
       //create template for each feature
       for (i = 0; i < features.length; i++) {
+        if (featureIds) {
+          featureIds += ',';
+        }
+        featureIds += features[i].attributes[this._selectedLayer.objectIdField];
         featureDiv = domConstruct.toDom(this._itemListTemplate).childNodes[0];
         domClass.add(featureDiv, "esriCTFeatureListItem");
         this._featureListContent.appendChild(featureDiv);
         this._setItemName(featureDiv, features[i].getTitle());
-        this._setItemCount(featureDiv, features[i].distanceToLocation, false, false);
+        // if geometry type is polygon & Only return polygons that intersect the search location
+        // flag is enabled then hide distance to location text else show
+        if (features[i].geometry.type === "polygon" && this.config.intersectSearchedLocation) {
+          divFeatureCount = query(".esriCTItemCount", featureDiv)[0];
+          // if distance to location domNode created and then hide loading icon
+          if (divFeatureCount) {
+            domClass.remove(divFeatureCount, "esriCTLoadingIcon");
+          }
+        } else {
+          this._setItemCount(featureDiv, features[i].distanceToLocation, false, false);
+        }
         this._attachEventOnFeatureDiv(featureDiv, features[i]);
       }
-      dijit.byId(this.parentDiv.id).resize();
+      if (this.parentDivId && registry.byId(this.parentDivId) &&
+      registry.byId(this.parentDivId).resize) {
+        registry.byId(this.parentDivId).resize();
+      }
+      this._displayFilteredFeatures(featureIds);
       this.loading.hide();
+    },
+
+    /**
+    * Display searched features only if 'selectedSearchlayerOnly' is set to true
+    * @param{string} featureIds: object ids for searched features
+    * @memberOf widgets/NearMe/item-list
+    **/
+    _displayFilteredFeatures: function (featureIds) {
+      if (this.config.selectedSearchLayerOnly) {
+        var filter;
+        //display selected layer only
+        this._showHideOperationalLayer(this._selectedLayer.url, this._selectedLayer
+          .id, true);
+        filter = this._selectedLayer.objectIdField + ' in (' + featureIds + ')';
+        //set filter on query layer
+        this._selectedLayer.setDefinitionExpression(filter);
+        //set filter on map layer
+        this._setFilterOnMapLayer(filter, this._selectedLayer.id, this._selectedLayer
+          .url, this._selectedLayer.isMapServer);
+      }
+    },
+
+    /**
+    * apply filter on map layer
+    * @param{object} filter to be applied on map layer
+    * @param{string} id:layer id on map
+    * @param{string} layerURL
+    * @memberOf widgets/NearMe/item-list
+    **/
+    _setFilterOnMapLayer: function (filter, id, layerURL, isMapServer) {
+      var seletedMapLayer, layerDef = [], layerId, layerIdOnMap;
+      //check whether id is available
+      if (id) {
+        if (!isMapServer) {
+          seletedMapLayer = this.map.getLayer(id);
+          if (seletedMapLayer) {
+            seletedMapLayer.setDefinitionExpression(filter);
+          }
+        } else {
+          //fetch id of map server layer
+          layerIdOnMap = id.substring(0, id.lastIndexOf('_'));
+          seletedMapLayer = this.map.getLayer(layerIdOnMap);
+          if (seletedMapLayer) {
+            layerDef = [];
+            layerId = layerURL[layerURL.length - 1];
+            layerDef[layerId] = filter;
+            //set layer definition for map service layer
+            seletedMapLayer.setLayerDefinitions(layerDef);
+          }
+        }
+      }
+    },
+
+    /**
+    * reset applied filter on layers and display webmap configured filter only
+    * @param{object} featureLayer
+    * @param{int} index
+    * @memberOf widgets/NearMe/item-list
+    **/
+    _resetFilter: function (layerIndex) {
+      if (this.config.selectedSearchLayerOnly) {
+        var layerConfigInfo;
+        layerConfigInfo = this.config.searchLayers[this._operationalLayers[
+          layerIndex].index];
+        //set definition expression configured in webmap
+        this._operationalLayers[layerIndex].setDefinitionExpression(
+          layerConfigInfo.definitionExpression);
+        //reset filter on map layer by applying webmap configured filter
+        this._setFilterOnMapLayer(layerConfigInfo.definitionExpression, this._operationalLayers[
+          layerIndex].id, this._operationalLayers[layerIndex].url, this._operationalLayers[
+          layerIndex].isMapServer);
+      }
     },
 
     /**
@@ -555,7 +722,7 @@
     * @memberOf widgets/NearMe/item-list
     **/
     _attachEventOnFeatureDiv: function (featureDiv, selectedFeature) {
-      on(featureDiv, "click", lang.hitch(this, function () {
+      this.own(on(featureDiv, "click", lang.hitch(this, function () {
         //display layer title as header text
         this._setItemName(this._panels.infoPanel, this._selectedLayer.title);
         this._showPanel("infoPanel");
@@ -570,8 +737,11 @@
         this._highlightFeatureOnMap();
         //display popup info for selected feature
         this._displayFeatureInfo(selectedFeature);
-        dijit.byId(this.parentDiv.id).resize();
-      }));
+        if (this.parentDivId && registry.byId(this.parentDivId) &&
+        registry.byId(this.parentDivId).resize) {
+          registry.byId(this.parentDivId).resize();
+        }
+      })));
     },
 
     /**
@@ -580,12 +750,30 @@
     * @memberOf widgets/NearMe/item-list
     **/
     _displayFeatureInfo: function (selectedFeature) {
+      var selectedFeaturePoint, selectedPoint, polyline, polylineJson;
       if (this._loadAttachmentTimer) {
         clearTimeout(this._loadAttachmentTimer);
       }
       if (this._featureInfoPanel) {
         this._featureInfoPanel.set("content", selectedFeature.getContent());
         this._checkAttachments();
+      }
+      //check if 'zoomTofeature' is set to true in config
+      if (this.config.zoomToFeature) {
+        //zoom to the selected feature
+        if (selectedFeature.geometry.type === "point") {
+          selectedFeaturePoint = selectedFeature.geometry;
+          selectedPoint = this._selectedPoint.geometry;
+          polylineJson = {
+            "paths": [[[selectedFeaturePoint.x, selectedFeaturePoint.y],
+          [selectedPoint.x, selectedPoint.y]]],
+            "spatialReference": this.map.spatialReference
+          };
+          polyline = new Polyline(polylineJson);
+          this.map.setExtent(polyline.getExtent().expand(1.5));
+        } else {
+          this.map.setExtent(selectedFeature.geometry.getExtent().expand(1.5));
+        }
       }
     },
 
@@ -649,7 +837,10 @@
           }
         }
         All(imgLoaderDefer).then(lang.hitch(this, this._onAllAttachmentLoad));
-        dijit.byId(this.parentDiv.id).resize();
+        if (this.parentDivId && registry.byId(this.parentDivId) &&
+        registry.byId(this.parentDivId).resize) {
+          registry.byId(this.parentDivId).resize();
+        }
       }));
     },
 
@@ -660,17 +851,17 @@
     * @memberOf widgets/NearMe/item-list
     **/
     _attachEventOnImage: function (imageDiv, defer) {      // Hide loader Image after image loaded
-      on(imageDiv, "load", lang.hitch(this, function (evt) {
+      this.own(on(imageDiv, "load", lang.hitch(this, function (evt) {
         this._onImageLoad(evt);
         defer.resolve();
-      }));
+      })));
       // Show image in new tab on click of the image thumbnail
-      on(imageDiv, "click", lang.hitch(this, this._displayImageAttachments));
+      this.own(on(imageDiv, "click", lang.hitch(this, this._displayImageAttachments)));
       //hide loader if image fails to load
-      on(imageDiv, "error", lang.hitch(this, function (evt) {
+      this.own(on(imageDiv, "error", lang.hitch(this, function (evt) {
         this._onError(evt);
         defer.resolve();
-      }));
+      })));
     },
 
     /**
@@ -811,7 +1002,10 @@
       }
       this._currentPanelName = name;
       this._currentPanel = this._panels[name];
-      dijit.byId(this.parentDiv.id).resize();
+      if (this.parentDivId && registry.byId(this.parentDivId) &&
+      registry.byId(this.parentDivId).resize) {
+        registry.byId(this.parentDivId).resize();
+      }
     },
 
     /**
@@ -866,8 +1060,8 @@
       var directionParams;
       //create direction widget instance if not created
       if (!this._directionsWidget) {
-        if (dijit.byId("directionDijit")) {
-          dijit.byId("directionDijit").destroy();
+        if (registry.byId("directionDijit")) {
+          registry.byId("directionDijit").destroy();
         }
         //configure direction parameters
         directionParams = {
@@ -879,16 +1073,16 @@
           routeTaskUrl: this.config.routeService,
           routeSymbol: new SimpleLineSymbol(this.config.symbols.routeSymbol)
         };
-        if (this.config.travelModeService && this.config.travelModeService !== "") {
-          directionParams.travelModesServiceUrl = this.config.travelModeService;
-        }
         this._directionsWidget = new Directions(directionParams, domConstruct.create(
           "div", {}, null));
         this._directionsWidget.startup();
         //on completing directions resize widget panel and zoom to the generated route
-        on(this._directionsWidget, "directions-finish", lang.hitch(this, function () {
+        this._directionsWidget.on("directions-finish", lang.hitch(this, function () {
           this._directionsWidget.zoomToFullRoute();
-          dijit.byId(this.parentDiv.id).resize();
+          if (this.parentDivId && registry.byId(this.parentDivId) &&
+          registry.byId(this.parentDivId).resize) {
+            registry.byId(this.parentDivId).resize();
+          }
           this.loading.hide();
         }));
         //place direction node into direction tab container
@@ -920,7 +1114,16 @@
         //display loading indicator until direction gets calculated
         this.loading.show();
         selectedLocations.push(this._selectedPoint);
-        selectedLocations.push(this._selectedFeature);
+        //if selected feature geometry is point directly use point
+        //else if geometry is polygon get its centroid
+        //else if geometry is polyline get its first point
+        if (this._selectedFeature.geometry.type === "point") {
+          selectedLocations.push(this._selectedFeature);
+        } else if (this._selectedFeature.geometry.type === "polygon") {
+          selectedLocations.push(this._selectedFeature.geometry.getCentroid());
+        } else {
+          selectedLocations.push(this._selectedFeature.geometry.getPoint(0, 0));
+        }
         // Calling update stops function for showing points on map and calculating direction.
         this._directionsWidget.updateStops(selectedLocations).then(lang.hitch(this, function () {
           this._directionsWidget.getDirections();
@@ -1122,6 +1325,84 @@
       }
       graphics = new Graphic(polygon, symbol, graphic.attributes);
       return graphics;
+    },
+
+    /**
+    * Hide all layers from map
+    * @memberOf widgets/NearMe/item-list
+    **/
+    _hideAllLayers: function () {
+      if (this.config.selectedSearchLayerOnly) {
+        var i;
+        for (i = 0; i < this.config.searchLayers.length; i++) {
+          this._showHideOperationalLayer(this.config.searchLayers[i].url, this.config
+            .searchLayers[i].id, false);
+        }
+      }
+    },
+
+    /**
+    * Show all layers on map
+    * @memberOf widgets/NearMe/item-list
+    **/
+    showAllLayers: function () {
+      var i;
+      for (i = 0; i < this.config.searchLayers.length; i++) {
+        this._showHideOperationalLayer(this.config.searchLayers[i].url, this.config
+          .searchLayers[i].id, true);
+      }
+    },
+
+    /**
+    * Show/hide selected layer on map
+    * @params{string} layerUrl
+    * @params{string} id
+    * @params{boolean} visibility
+    * @memberOf widgets/NearMe/item-list
+    **/
+    _showHideOperationalLayer: function (layerUrl, id, visibility) {
+      var layer, lastChar, mapLayerUrl, layerUrlIndex, visibleLayers, visibleLayerIndex;
+      layerUrlIndex = layerUrl.split('/');
+      layerUrlIndex = layerUrlIndex[layerUrlIndex.length - 1];
+      for (layer in this.map._layers) {
+        if (this.map._layers.hasOwnProperty(layer)) {
+          //check if layer is visible on map
+          if (id && this.map._layers[layer].url === layerUrl && this.map._layers[layer].id === id) {
+            //show or hide selected layer on map
+            this.map._layers[layer].setVisibility(visibility);
+          } else if (this.map._layers[layer].visibleLayers) {
+            //fetch id of map server layer to match with map layer
+            if (id && this.map._layers[layer].id === id.substring(0, id.lastIndexOf('_'))) {
+              //check for map server layer
+              lastChar = this.map._layers[layer].url[this.map._layers[layer].url.length - 1];
+              //create url for map server layer
+              if (lastChar === "/") {
+                mapLayerUrl = this.map._layers[layer].url + layerUrlIndex;
+              } else {
+                mapLayerUrl = this.map._layers[layer].url + "/" + layerUrlIndex;
+              }
+              //match layer urls
+              if (mapLayerUrl === layerUrl) {
+                //check whether layer is available in mp server's visible layer array
+                visibleLayers = this.map._layers[layer].visibleLayers;
+                visibleLayerIndex = array.indexOf(visibleLayers, parseInt(layerUrlIndex, 10));
+                if (visibility) {
+                  //show layer on map if it is not visible
+                  if (visibleLayerIndex === -1) {
+                    visibleLayers.push(parseInt(layerUrlIndex, 10));
+                  }
+                } else {
+                  //hide layer on map if it is visible
+                  if (visibleLayerIndex !== -1) {
+                    visibleLayers.splice(visibleLayerIndex, 1);
+                  }
+                }
+                this.map._layers[layer].setVisibleLayers(visibleLayers);
+              }
+            }
+          }
+        }
+      }
     }
   });
 });

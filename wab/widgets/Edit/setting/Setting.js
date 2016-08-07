@@ -25,7 +25,8 @@ define([
     'dojo/on',
     'dojo/_base/array',
     "./EditFields",
-    "../utils"
+    "../utils",
+    'dijit/form/NumberSpinner'
   ],
   function(
     declare,
@@ -73,7 +74,22 @@ define([
         this.mergeVisible.set('checked', this.config.editor.toolbarOptions.mergeVisible);
         this.cutVisible.set('checked', this.config.editor.toolbarOptions.cutVisible);
         this.reshapeVisible.set('checked', this.config.editor.toolbarOptions.reshapeVisible);
+        this.autoApplyEditWhenGeometryIsMoved.set('checked',
+            this.config.editor.autoApplyEditWhenGeometryIsMoved);
         this._onToolbarSelected();
+        // default value is 15 pixels, compatible with old version app.
+        this.snappingTolerance.set('value', this.config.editor.snappingTolerance === undefined ?
+                                            15 :
+                                            this.config.editor.snappingTolerance);
+        // default value is 5 pixels, compatible with old version app.
+        this.popupTolerance.set('value', this.config.editor.popupTolerance === undefined ?
+                                            5 :
+                                            this.config.editor.popupTolerance);
+
+        // default value is 0 pixels, compatible with old version app.
+        this.stickyMoveTolerance.set('value', this.config.editor.stickyMoveTolerance === undefined ?
+                                            0 :
+                                            this.config.editor.stickyMoveTolerance);
       },
 
       _initLayersTable: function() {
@@ -209,14 +225,14 @@ define([
         for (var i = 0; i < layerObject.fields.length; i++) {
           if(layerObject.fields[i].editable ||
             layerObject.fields[i].name.toLowerCase() === "globalid" ||
-            layerObject.fields[i].name.toLowerCase() === "objectid" ||
-            layerObject.fields[i].name.toLowerCase() === "fid") {
+            //layerObject.fields[i].name.toLowerCase() === "objectid" ||
+            layerObject.fields[i].name === layerObject.objectIdField) {
             fieldInfos.push({
               fieldName: layerObject.fields[i].name,
               label: layerObject.fields[i].alias || layerObject.fields[i].name,
               isEditable: (layerObject.fields[i].name.toLowerCase() === "globalid" ||
-                          layerObject.fields[i].name.toLowerCase() === "objectid" ||
-                          layerObject.fields[i].name.toLowerCase() === "fid") &&
+                          //layerObject.fields[i].name.toLowerCase() === "objectid" ||
+                          layerObject.fields[i].name === layerObject.objectIdField) &&
                           !layerObject.fields[i].editable ?
                           null :
                           true,
@@ -236,14 +252,14 @@ define([
             if(webmapFieldInfo.isEditableOnLayer !== undefined &&
               (webmapFieldInfo.isEditableOnLayer ||
               webmapFieldInfo.fieldName.toLowerCase() === "globalid" ||
-              webmapFieldInfo.fieldName.toLowerCase() === "objectid" ||
-              webmapFieldInfo.fieldName.toLowerCase() === "fid")) {
+              //webmapFieldInfo.fieldName.toLowerCase() === "objectid" ||
+              webmapFieldInfo.fieldName === layerObject.objectIdField)) {
               webmapSimpleFieldInfos.push({
                 fieldName: webmapFieldInfo.fieldName,
                 label: webmapFieldInfo.label,
                 isEditable: (webmapFieldInfo.fieldName.toLowerCase() === "globalid" ||
-                            webmapFieldInfo.fieldName.toLowerCase() === "objectid" ||
-                            webmapFieldInfo.fieldName.toLowerCase() === "fid") &&
+                            //webmapFieldInfo.fieldName.toLowerCase() === "objectid" ||
+                            webmapFieldInfo.fieldName === layerObject.objectIdField) &&
                             !webmapFieldInfo.isEditable ?
                             null :
                             webmapFieldInfo.isEditable,
@@ -324,14 +340,16 @@ define([
       },
 
       _onToolbarSelected: function() {
-        if (!this.toolbarVisible.checked) {
-          //html.setStyle(this.toolbarOptionsTr, 'display', 'none');
-          html.setStyle(this.toolbarOptionsLabel, 'display', 'none');
-          html.setStyle(this.toolbarOptionsTd, 'display', 'none');
+        if (this.toolbarVisible.checked) {
+          //html.setStyle(this.toolbarOptionsLabel, 'display', 'table-cell');
+          //html.setStyle(this.toolbarOptionsTd, 'display', 'table-cell');
+          html.removeClass(this.toolbarOptionsTr, 'disable');
+          html.setStyle(this.toolbarOptionsCoverage, 'display', 'none');
         } else {
-          //html.setStyle(this.toolbarOptionsTr, 'display', 'table-row');
-          html.setStyle(this.toolbarOptionsLabel, 'display', 'table-cell');
-          html.setStyle(this.toolbarOptionsTd, 'display', 'table-cell');
+          //html.setStyle(this.toolbarOptionsLabel, 'display', 'none');
+          //html.setStyle(this.toolbarOptionsTd, 'display', 'none');
+          html.addClass(this.toolbarOptionsTr, 'disable');
+          html.setStyle(this.toolbarOptionsCoverage, 'display', 'block');
         }
       },
 
@@ -342,6 +360,11 @@ define([
         this.config.editor.toolbarOptions.mergeVisible = this.mergeVisible.checked;
         this.config.editor.toolbarOptions.cutVisible = this.cutVisible.checked;
         this.config.editor.toolbarOptions.reshapeVisible = this.reshapeVisible.checked;
+        this.config.editor.autoApplyEditWhenGeometryIsMoved =
+          this.autoApplyEditWhenGeometryIsMoved.checked;
+        this.config.editor.snappingTolerance = this.snappingTolerance.value;
+        this.config.editor.popupTolerance = this.popupTolerance.value;
+        this.config.editor.stickyMoveTolerance = this.stickyMoveTolerance.value;
       },
 
       getConfig: function() {

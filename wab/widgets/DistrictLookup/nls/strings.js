@@ -1,9 +1,9 @@
 /*global define*/
 define({
   root: ({
-    _widgetLabel: "DistrictLookup", // widget label shown on the choose widget dialog and widget panel title
+    _widgetLabel: "District Lookup", // widget label shown on the choose widget dialog and widget panel title
     searchHeaderText: "Search an address or locate on map", // Shown as a label in widget panel for search an address.
-    mouseOverTooltip: "Click to add point", // Tooltip for location address button
+    mouseOverTooltip: "Set location", // Tooltip for location address button
     informationTabTitle: "Information", // Shown as label on information tab
     directionTabTitle: "Directions", // Shown as label on direction tab
     invalidPolygonLayerMsg: "Polygon layer is not configured properly", // Shown as a message when the configured polygon layer is invalid or no layer is configured
@@ -12,8 +12,9 @@ define({
     noPollingPlaceFoundMsg: "Could not find the point associated with the polygon", // Shown as a message when polling place not found for the selected/searched location
     attachmentHeader: "Attachments", //Shown as label on attachments header
     failedToGenerateRouteMsg: "Failed to generate route.", //Shown as a message when fail to generate route
-    allPopupsDisabledMsg: "Popups are not configured, results cannot be displayed." //Shown as a message when popups for all the layers are disabled
-
+    allPopupsDisabledMsg: "Pop-ups are not configured, results cannot be displayed.", //Shown as a message when pop-ups for all the layers are disabled
+    worldGeocoderName: "Address", //Esri World Geocoder title
+    searchLocationTitle: "Searched Location" //Shown as a label on popup
   }),
   "ar": 1,
   "cs": 1,
@@ -25,6 +26,7 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
+  "hr": 1,
   "it": 1,
   "ja": 1,
   "ko": 1,
@@ -37,6 +39,7 @@ define({
   "pt-pt": 1,
   "ro": 1,
   "ru": 1,
+  "sr": 1,
   "sv": 1,
   "th": 1,
   "tr": 1,

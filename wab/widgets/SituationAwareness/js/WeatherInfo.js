@@ -126,11 +126,9 @@ define([
       domClass.remove(this.container, "loading");
 
       var tpc = domConstruct.create("div", {
-        id: "tpc",
         style: "width:" + ((weather.length + 3) * 165) + "px;"
       }, this.container);
       domClass.add(tpc, "SAT_tabPanelContent");
-
 
       var cur, code, temp, w, info;
       if (current.length > 0) {
@@ -192,10 +190,10 @@ define([
       }
 
       // credits
-      var txt = '<br/><br/><br/><span style="font-size:11px;color:#6e6e6e">Powered by<br/>' +
+      var txt = '<br/><br/><br/><span style="font-size:11px;color:#6e6e6e">' + this.parent.nls.poweredBy + '<br/>' +
       '<a style="color:#6e6e6e;text-decoration:none" ' +
       'href="http://www.worldweatheronline.com/" title="Free Weather API" target="_blank">' +
-      'World Weather Online</a></span>';
+      'World Weather Online' + '</a></span>';
       var divCredit  = domConstruct.create("div", {
         innerHTML: txt
       }, tpc);

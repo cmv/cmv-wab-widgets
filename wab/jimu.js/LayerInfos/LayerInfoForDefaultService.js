@@ -20,17 +20,15 @@ define([
   'dojo/_base/lang',
   'dojo/Deferred',
   'dojo/dom-construct',
-  'dojo/promise/all',
   './LayerInfoForDefault',
-  './LayerInfos',
   'esri/layers/FeatureLayer',
   'esri/layers/RasterLayer'
-], function(declare, array, lang, Deferred, domConstruct, all,
-LayerInfoForDefault, LayerInfos, FeatureLayer, RasterLayer) {
+], function(declare, array, lang, Deferred, domConstruct,
+LayerInfoForDefault, FeatureLayer, RasterLayer) {
   return declare(LayerInfoForDefault, {
     _legendsNode: null,
 
-    _resetLayerObjectVisiblityBeforeInit: function() {
+    _resetLayerObjectVisiblity: function() {
       // do not do anything.
     },
 
@@ -166,7 +164,8 @@ LayerInfoForDefault, LayerInfos, FeatureLayer, RasterLayer) {
             this.layerObject = new RasterLayer(this.layerObject.url);
           } else  {
             // default as FeatureLayer
-            this.layerObject = new FeatureLayer(this.layerObject.url);
+            this.layerObject = new FeatureLayer(this.layerObject.url,
+                                                this._getLayerOptionsForCreateLayerObject());
           }
           this.layerObject.on('load', lang.hitch(this, function() {
             this.layerObject.id = this.id;
@@ -230,6 +229,48 @@ LayerInfoForDefault, LayerInfos, FeatureLayer, RasterLayer) {
         }
       }
       return filter;
+    },
+
+    getFilter: function() {
+      // summary:
+      //   get filter from layerObject.
+      // description:
+      //   return null if does not have or cannot get it.
+      var filter;
+      var mapService = this.originOperLayer.mapService;
+      if(mapService.layerInfo.layerObject &&
+         mapService.layerInfo.layerObject.layerDefinitions) {
+        filter = mapService.layerInfo.layerObject.layerDefinitions[mapService.subId];
+      } else {
+        filter = null;
+      }
+      return filter;
+    },
+
+    setFilter: function(layerDefinitionExpression) {
+      // summary:
+      //   set layer definition expression to layerObject.
+      // paramtter
+      //   layerDefinitionExpression: layer definition expression
+      //   set 'null' to delete layer definition express
+      // description:
+      //   operation will skip if layer not support filter.
+      var layerDefinitions;
+      var mapService = this.originOperLayer.mapService;
+      if(mapService.layerInfo.layerObject &&
+         mapService.layerInfo.layerObject.setLayerDefinitions) {
+        if(mapService.layerInfo.layerObject.layerDefinitions) {
+          layerDefinitions = array.map(mapService.layerInfo.layerObject.layerDefinitions,
+                                       function(layerDefinition) {
+            return layerDefinition;
+          });
+        } else {
+          layerDefinitions = [];
+        }
+
+        layerDefinitions[mapService.subId] = layerDefinitionExpression;
+        mapService.layerInfo.layerObject.setLayerDefinitions(layerDefinitions);
+      }
     },
 
     getLayerType: function() {
@@ -314,15 +355,21 @@ LayerInfoForDefault, LayerInfos, FeatureLayer, RasterLayer) {
       var mapServiceLayerInfo = this.originOperLayer.mapService.layerInfo;
       var subId = this.originOperLayer.mapService.subId;
       if(mapServiceLayerInfo.controlPopupInfo.infoTemplates &&
-        mapServiceLayerInfo.controlPopupInfo.infoTemplates[subId]) {
-        def.resolve(mapServiceLayerInfo.controlPopupInfo.infoTemplates[subId]);
+        mapServiceLayerInfo.controlPopupInfo.infoTemplates[subId] &&
+        mapServiceLayerInfo.controlPopupInfo.infoTemplates[subId].infoTemplate) {
+        def.resolve(mapServiceLayerInfo.controlPopupInfo.infoTemplates[subId].infoTemplate);
       } else {
         if(!mapServiceLayerInfo.controlPopupInfo.infoTemplates){
           mapServiceLayerInfo.controlPopupInfo.infoTemplates = {};
         }
+        /*
         mapServiceLayerInfo._getSublayerDefinition(subId)
         .then(lang.hitch(this, function(layerDefinition) {
           var popupTemplate = this._getDefaultPopupTemplate(layerDefinition);
+        */
+        this.getLayerObject()
+        .then(lang.hitch(this, function(layerObject) {
+          var popupTemplate = this._getDefaultPopupTemplate(layerObject);
           mapServiceLayerInfo.controlPopupInfo.infoTemplates[subId] = {
             infoTemplate: popupTemplate,
             layerUrl: null
@@ -347,35 +394,26 @@ LayerInfoForDefault, LayerInfos, FeatureLayer, RasterLayer) {
       }
     },
 
-    getRelatedTableInfoArray: function() {
-      var relatedTableInfoArray = [];
-      var def = new Deferred();
+    getScaleRange: function() {
+      var scaleRange;
+      var mapService = this.originOperLayer.mapService;
+      var jsapiLayerInfo = mapService.layerInfo._getJsapiLayerInfoById(mapService.subId);
 
-      var layerObjectDef = this.getLayerObject();
-      var layerInfosDef  = LayerInfos.getInstance(this.map, this.map.itemInfo);
+      if(jsapiLayerInfo &&
+         (jsapiLayerInfo.minScale >= 0) &&
+         (jsapiLayerInfo.maxScale >= 0)) {
+        scaleRange = {
+          minScale: jsapiLayerInfo.minScale,
+          maxScale: jsapiLayerInfo.maxScale
+        };
+      } else {
+        scaleRange = {
+          minScale: 0,
+          maxScale: 0
+        };
+      }
 
-      all({
-        layerObject: layerObjectDef,
-        layerInfos: layerInfosDef
-      }).then(lang.hitch(this, function(result) {
-        if(result.layerObject && result.layerObject.relationships) {
-          var InfoArray;
-          var tableInfoArray;
-          var layerInfoArray = [];
-          this.originOperLayer.mapService.layerInfo.traversal(function(layerInfo) {
-            layerInfoArray.push(layerInfo);
-          });
-          tableInfoArray = result.layerInfos.getTableInfoArray();
-          InfoArray = tableInfoArray.concat(layerInfoArray);
-          relatedTableInfoArray = this._getRelatedTableInfoArray(result.layerObject, InfoArray);
-          def.resolve(relatedTableInfoArray);
-        } else {
-          def.resolve(relatedTableInfoArray);
-        }
-      }));
-
-
-      return def;
+      return scaleRange;
     },
 
     /****************

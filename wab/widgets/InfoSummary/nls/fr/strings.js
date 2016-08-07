@@ -1,11 +1,5 @@
-﻿define(
-   ({
-    title: "Widget Résumé infos",
-    helpText: "A FAIRE : texte d’aide Résumé infos",
-    labels: {
-      status: "Statut",
-      result: "Résultat"
-    },
-    _widgetLabel: "Résumé infos (Bêta)"
-  })
-);
+define({
+  "_widgetLabel": "Résumé infos",
+  "title": "Widget Résumé infos",
+  "helpText": "Texte d'aide Résumé infos"
+});

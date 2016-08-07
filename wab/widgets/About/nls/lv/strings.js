@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Par"
-  })
-);
+define({
+  "_widgetLabel": "Par"
+});

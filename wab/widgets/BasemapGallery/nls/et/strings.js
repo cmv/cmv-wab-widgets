@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Aluskaardi galerii"
-  })
-);
+define({
+  "_widgetLabel": "Aluskaardi galerii"
+});

@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Atvaizdo matavimas"
-  })
-);
+define({
+  "_widgetLabel": "Atvaizdo matavimas"
+});

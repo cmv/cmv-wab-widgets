@@ -49,19 +49,25 @@ define([
       var url;
       var label;
       var itemLayerId = this._layerInfo._isItemLayer && this._layerInfo._isItemLayer();
+      var layerUrl = this._layerInfo.getUrl();
 
       if (itemLayerId) {
         url = portalUrlUtils.getItemDetailsPageUrl(
                 portalUrlUtils.getStandardPortalUrl(this.layerListWidget.appConfig.portalUrl),
                 itemLayerId);
         label = this.nls.itemShowItemDetails;
-      } else if (this._layerInfo.layerObject &&
-        this._layerInfo.layerObject.url &&
+      } else if (layerUrl &&
         (this._layerType === "CSVLayer" || this._layerType === "KMLLayer")) {
-        url = this._layerInfo.layerObject.url;
+        url = layerUrl;
         label = this.nls.itemDownload;
-      } else if (this._layerInfo.layerObject && this._layerInfo.layerObject.url) {
-        url = this._layerInfo.layerObject.url;
+      } else if (layerUrl && this._layerType === "WMSLayer") {
+        url = layerUrl + (layerUrl.indexOf("?") > -1 ? "&" : "?") + "SERVICE=WMS&REQUEST=GetCapabilities";
+        label = this.nls.itemDesc;
+      } else if (layerUrl && this._layerType === "WFSLayer") {
+        url = layerUrl + (layerUrl.indexOf("?") > -1 ? "&" : "?") + "SERVICE=WFS&REQUEST=GetCapabilities";
+        label = this.nls.itemDesc;
+      } else if (layerUrl) {
+        url = layerUrl;
         label = this.nls.itemDesc;
       } else {
         url = '';
@@ -134,20 +140,20 @@ define([
       var defRet = new Deferred();
       var dynamicDeniedItems = [];
 
-      if (this._layerInfo.isFirst) {
+      if (this.layerListWidget.layerListView.isFirstDisplayedLayerInfo(this._layerInfo)) {
         dynamicDeniedItems.push({
           'key': 'moveup',
           'denyType': 'disable'
         });
       }
-      if (this._layerInfo.isLast) {
+      if (this.layerListWidget.layerListView.isLastDisplayedLayerInfo(this._layerInfo)) {
         dynamicDeniedItems.push({
           'key': 'movedown',
           'denyType': 'disable'
         });
       }
 
-      if (!this._layerInfo.layerObject || !this._layerInfo.layerObject.url) {
+      if (!this._layerInfo.getUrl()) {
         dynamicDeniedItems.push({
           'key': 'url',
           'denyType': 'disable'
@@ -294,13 +300,13 @@ define([
 
     _onMoveUpItemClick: function(evt) {
       if (!this._layerInfo.isFirst) {
-        evt.layerListView.moveUpLayer(this._layerInfo.id);
+        evt.layerListView.moveUpLayer(this._layerInfo);
       }
     },
 
     _onMoveDownItemClick: function(evt) {
       if (!this._layerInfo.isLast) {
-        evt.layerListView.moveDownLayer(this._layerInfo.id);
+        evt.layerListView.moveDownLayer(this._layerInfo);
       }
     },
 

@@ -30,11 +30,10 @@ define([
     'dojo/_base/config',
     'dojo/Deferred',
     'dojo/promise/all',
-    'jimu/portalUtils',
-    "dojo/dom-construct"
+    'jimu/portalUtils'
   ],
   function(declare, BaseWidget, Directions, Locator, RouteParameters, esriRequest, graphicsUtils,
-    ArcGISDynamicMapServiceLayer, on, lang, html, array, dojoConfig, Deferred, all, portalUtils, domConstruct) {
+    ArcGISDynamicMapServiceLayer, on, lang, html, array, dojoConfig, Deferred, all, portalUtils) {
 
     return declare([BaseWidget], {
       name: 'Directions',
@@ -42,7 +41,7 @@ define([
       _dijitDirections:null,
       _routeTaskUrl: "//route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World",
       _locatorUrl: "//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
-      _active: true,//save last active state
+      _active: false,//save last active state
       _dijitDef: null,
       _trafficLayer: null,
 
@@ -69,6 +68,26 @@ define([
       onDeActive: function(){
         this._deactivateDirections();
         this._enableWebMapPopup();
+      },
+
+      setStartStop: function(stop){
+        this.getDirectionsDijit().then(lang.hitch(this, function(directionsDijit){
+          directionsDijit.reset().then(lang.hitch(this, function(){
+            directionsDijit.addStop(stop);
+          }), lang.hitch(this, function(err){
+            console.error(err);
+          }));
+        }), lang.hitch(this, function(err){
+          console.error(err);
+        }));
+      },
+
+      addStop: function(stop){
+        this.getDirectionsDijit().then(lang.hitch(this, function(directionsDijit) {
+          directionsDijit.addStop(stop);
+        }), lang.hitch(this, function(err) {
+          console.error(err);
+        }));
       },
 
       getDirectionsDijit: function(){
@@ -162,29 +181,45 @@ define([
             options.doNotFetchTravelModesFromOwningSystem = true;
           }
 
-          domConstruct.empty(this.directionController);
+          html.empty(this.directionController);
           var directionContainer = html.create('div', {}, this.directionController);
-          this._dijitDirections = new Directions(options, directionContainer);
-          //html.place(this._dijitDirections.domNode, this.directionController);
-          this._dijitDirections.startup();
+          //Only init Directions dijit when we can access the route task url.
+          esriRequest({
+            url: options.routeTaskUrl,
+            content: {
+              f: 'json'
+            },
+            handleAs: 'json',
+            callbackParamName: 'callback'
+          }).then(lang.hitch(this, function(){
+            this._dijitDirections = new Directions(options, directionContainer);
+            //html.place(this._dijitDirections.domNode, this.directionController);
+            this._dijitDirections.startup();
 
-          this.own(on(this._dijitDirections,
-                     'directions-finish',
-                     lang.hitch(this, this._onDirectionsFinish)));
+            this.own(on(this._dijitDirections,
+                       'directions-finish',
+                       lang.hitch(this, this._onDirectionsFinish)));
 
-          this.own(on(this._dijitDirections,
-                      'map-click-active',
-                      lang.hitch(this, this._handlePopup)));
+            this.own(on(this._dijitDirections,
+                        'map-click-active',
+                        lang.hitch(this, this._handlePopup)));
 
-          this._activateDirections();
-          this._storeLastActiveState();
+            this._activateDirections();
+            this._storeLastActiveState();
 
-          if(this._dijitDef && this._dijitDef.isFulfilled()){
-            this._dijitDef.resolve(this._dijitDirections);
-          }
+            if(this._dijitDef && !this._dijitDef.isFulfilled()){
+              this._dijitDef.resolve(this._dijitDirections);
+            }
+          }), lang.hitch(this, function(err){
+            console.log("Can't access " + options.routeTaskUrl, err);
+          }));
         }), lang.hitch(this, function(err){
           console.error(err);
         }));
+      },
+
+      onAppConfigChanged: function(appConfig){
+        this.appConfig = appConfig;
       },
 
       _onDirectionsFinish: function(evt){
@@ -238,7 +273,7 @@ define([
 
         this.config.searchOptions = {
           enableSuggestions: this.config.geocoderOptions.autoComplete,
-          maxResults: this.config.geocoderOptions.maxLocations,
+          maxSuggestions: this.config.geocoderOptions.maxLocations,
           minCharacters: this.config.geocoderOptions.minCharacters,
           suggestionDelay: this.config.geocoderOptions.searchDelay,
           sources: [{
@@ -254,6 +289,9 @@ define([
         all([this._getRouteTaskUrl(), this._getLocatorUrl(), this._getTravelModesUrl()]).then(
           lang.hitch(this, function(results){
           this.config.routeTaskUrl = results[0];
+
+          this.config.routeTaskUrl = this._replaceRouteTaskUrlWithAppProxy(this.config.routeTaskUrl);
+
           var locatorUrl = results[1];
           this.config.travelModesUrl = results[2];
           esriRequest({
@@ -278,6 +316,21 @@ define([
           def.reject();
         }));
         return def;
+      },
+
+      _replaceRouteTaskUrlWithAppProxy: function(routeTaskUrl){
+        // Use proxies to replace the routeTaskUrl
+        var ret = routeTaskUrl;
+        if(!window.isBuilder && !this.appConfig.mode &&
+            this.appConfig.appProxies && this.appConfig.appProxies.length > 0) {
+          array.some(this.appConfig.appProxies, function(proxyItem) {
+            if(routeTaskUrl === proxyItem.sourceUrl) {
+              ret = proxyItem.proxyUrl;
+              return true;
+            }
+          });
+        }
+        return ret;
       },
 
       _getRouteTaskUrl: function(){
@@ -393,6 +446,7 @@ define([
           if (typeof this._dijitDirections.mapClickActive !== "undefined") {
             this._dijitDirections.set("mapClickActive", true);
           }
+          this._disableWebMapPopup();
         }
       },
 
@@ -404,6 +458,7 @@ define([
           if (typeof this._dijitDirections.mapClickActive !== "undefined") {
             this._dijitDirections.set("mapClickActive", false);
           }
+          this._enableWebMapPopup();
         }
       }
 

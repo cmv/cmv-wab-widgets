@@ -1,11 +1,5 @@
-﻿define(
-   ({
-    title: "InfoSummary valdiklis",
-    helpText: "UŽDUOTIS InfoSummary pagalbos tekstas",
-    labels: {
-      status: "Būsena",
-      result: "Rezultatas"
-    },
-    _widgetLabel: "Informacijos suvestinė (beta)"
-  })
-);
+define({
+  "_widgetLabel": "Info Summary",
+  "title": "InfoSummary valdiklis",
+  "helpText": "InfoSummary pagalbos tekstas"
+});

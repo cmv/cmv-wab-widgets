@@ -37,93 +37,10 @@ define([
       //objet to maintain the selected theme
       selectedTheme: null,
       //predefined themes to be shown in the dropdown
-      themes: [ {
-        "themeName": "Adobebricks",
-        "className": "dojox/charting/themes/Adobebricks"
-      }, {
-        "themeName": "Algae",
-        "className": "dojox/charting/themes/Algae"
-      }, {
-        "themeName": "Bahamation",
-        "className": "dojox/charting/themes/Bahamation"
-      }, {
-        "themeName": "BlueDusk",
-        "className": "dojox/charting/themes/BlueDusk"
-      }, {
-        "themeName": "CubanShirts",
-        "className": "dojox/charting/themes/CubanShirts"
-      }, {
-        "themeName": "Desert",
-        "className": "dojox/charting/themes/Desert"
-      }, {
-        "themeName": "Distinctive",
-        "className": "dojox/charting/themes/Distinctive"
-      }, {
-        "themeName": "Dollar",
-        "className": "dojox/charting/themes/Dollar"
-      }, {
-        "themeName": "Grasshopper",
-        "className": "dojox/charting/themes/Grasshopper"
-      }, {
-        "themeName": "Grasslands",
-        "className": "dojox/charting/themes/Grasslands"
-      }, {
-        "themeName": "GreySkies",
-        "className": "dojox/charting/themes/GreySkies"
-      }, {
-        "themeName": "Harmony",
-        "className": "dojox/charting/themes/Harmony"
-      }, {
-        "themeName": "IndigoNation",
-        "className": "dojox/charting/themes/IndigoNation"
-      }, {
-        "themeName": "Ireland",
-        "className": "dojox/charting/themes/Ireland"
-      }, {
-        "themeName": "MiamiNice",
-        "className": "dojox/charting/themes/MiamiNice"
-      }, {
-        "themeName": "Minty",
-        "className": "dojox/charting/themes/Minty"
-      }, {
-        "themeName": "PurpleRain",
-        "className": "dojox/charting/themes/PurpleRain"
-      }, {
-        "themeName": "RoyalPurples",
-        "className": "dojox/charting/themes/RoyalPurples"
-      }, {
-        "themeName": "SageToLime",
-        "className": "dojox/charting/themes/SageToLime"
-      }, {
-        "themeName": "Tufte",
-        "className": "dojox/charting/themes/Tufte"
-      }, {
-        "themeName": "WatersEdge",
-        "className": "dojox/charting/themes/WatersEdge"
-      }, {
-        "themeName": "Wetland",
-        "className": "dojox/charting/themes/Wetland"
-      }, {
-        "themeName": "PlotKit.blue",
-        "className": "dojox/charting/themes/PlotKit/blue"
-      }, {
-        "themeName": "PlotKit.cyan",
-        "className": "dojox/charting/themes/PlotKit/cyan"
-      }, {
-        "themeName": "PlotKit.green",
-        "className": "dojox/charting/themes/PlotKit/green"
-      }, {
-        "themeName": "PlotKit.orange",
-        "className": "dojox/charting/themes/PlotKit/orange"
-      }, {
-        "themeName": "PlotKit.purple",
-        "className": "dojox/charting/themes/PlotKit/purple"
-      }, {
-        "themeName": "PlotKit.red",
-        "className": "dojox/charting/themes/PlotKit/red"
-      }],
+      themes: [],
 
       postCreate: function () {
+        this._setThemes();
         //chaeck if thems array is defined and have atleast one theme
         if (this.themes && this.themes.length > 0) {
           //by default show first theme from the theme array
@@ -135,6 +52,124 @@ define([
 
       destroy: function () {
         this.inherited(arguments);
+      },
+
+      _setThemes: function () {
+        this.themes = [
+        {
+          "themeDisplayName": this.nls.ThemeSelector.themeAdobebricks,
+          "className": "dojox/charting/themes/Adobebricks",
+          "themeName": "Adobebricks"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeAlgae,
+          "className": "dojox/charting/themes/Algae",
+          "themeName": "Algae"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeBahamation,
+          "className": "dojox/charting/themes/Bahamation",
+          "themeName": "Bahamation"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeBlueDusk,
+          "className": "dojox/charting/themes/BlueDusk",
+          "themeName": "BlueDusk"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeCubanShirts,
+          "className": "dojox/charting/themes/CubanShirts",
+          "themeName": "CubanShirts"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeDesert,
+          "className": "dojox/charting/themes/Desert",
+          "themeName": "Desert"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeDistinctive,
+          "className": "dojox/charting/themes/Distinctive",
+          "themeName": "Distinctive"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeDollar,
+          "className": "dojox/charting/themes/Dollar",
+          "themeName": "Dollar"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeGrasshopper,
+          "className": "dojox/charting/themes/Grasshopper",
+          "themeName": "Grasshopper"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeGrasslands,
+          "className": "dojox/charting/themes/Grasslands",
+          "themeName": "Grasslands"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeGreySkies,
+          "className": "dojox/charting/themes/GreySkies",
+          "themeName": "GreySkies"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeHarmony,
+          "className": "dojox/charting/themes/Harmony",
+          "themeName": "Harmony"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeIndigoNation,
+          "className": "dojox/charting/themes/IndigoNation",
+          "themeName": "IndigoNation"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeIreland,
+          "className": "dojox/charting/themes/Ireland",
+          "themeName": "Ireland"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeMiamiNice,
+          "className": "dojox/charting/themes/MiamiNice",
+          "themeName": "MiamiNice"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeMinty,
+          "className": "dojox/charting/themes/Minty",
+          "themeName": "Minty"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themePurpleRain,
+          "className": "dojox/charting/themes/PurpleRain",
+          "themeName": "PurpleRain"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeRoyalPurples,
+          "className": "dojox/charting/themes/RoyalPurples",
+          "themeName": "RoyalPurples"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeSageToLime,
+          "className": "dojox/charting/themes/SageToLime",
+          "themeName": "SageToLime"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeTufte,
+          "className": "dojox/charting/themes/Tufte",
+          "themeName": "Tufte"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeWatersEdge,
+          "className": "dojox/charting/themes/WatersEdge",
+          "themeName": "WatersEdge"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themeWetlandText,
+          "className": "dojox/charting/themes/Wetland",
+          "themeName": "Wetland"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themePlotKitblue,
+          "className": "dojox/charting/themes/PlotKit/blue",
+          "themeName": "PlotKit.blue"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themePlotKitcyan,
+          "className": "dojox/charting/themes/PlotKit/cyan",
+          "themeName": "PlotKit.cyan"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themePlotKitgreen,
+          "className": "dojox/charting/themes/PlotKit/green",
+          "themeName": "PlotKit.green"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themePlotKitorange,
+          "className": "dojox/charting/themes/PlotKit/orange",
+          "themeName": "PlotKit.orange"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themePlotKitpurple,
+          "className": "dojox/charting/themes/PlotKit/purple",
+          "themeName": "PlotKit.purple"
+        }, {
+          "themeDisplayName": this.nls.ThemeSelector.themePlotKitred,
+          "className": "dojox/charting/themes/PlotKit/red",
+          "themeName": "PlotKit.red"
+        }
+        ];
       },
 
       /**
@@ -179,22 +214,22 @@ define([
         //load all the themes
         require(requireTheme, lang.hitch(this, function () {
           array.forEach(this.themes, lang.hitch(this, function (
-            theme) {
+            themeObj) {
             var row, rowChart, rowLabel, chart;
             row = domConstruct.create("div", {
               "class": "esriCTThemeItem",
-              "title": theme.themeName
+              "title": themeObj.themeDisplayName
             }, this.themeList);
             //set the attributes for each row, which will be used to set the selected theme object
-            domAttr.set(row, "ThemeName", theme.themeName);
-            domAttr.set(row, "ThemeClass", theme.className);
+            domAttr.set(row, "themeDisplayName", themeObj.themeDisplayName);
+            domAttr.set(row, "themeClass", themeObj.className);
+            domAttr.set(row, "themeName", themeObj.themeName);
             //handle row click event and show the selected theme
             on(row, "click", lang.hitch(this, function () {
               var selectedTheme = {
-                "themeName": domAttr.get(row,
-                  "ThemeName"),
-                "className": domAttr.get(row,
-                  "ThemeClass")
+                "themeDisplayName": domAttr.get(row, "themeDisplayName"),
+                "className": domAttr.get(row, "themeClass"),
+                "themeName": domAttr.get(row, "themeName")
               };
               this.selectTheme(selectedTheme);
             }));
@@ -209,9 +244,9 @@ define([
               rowChart);
             domConstruct.create("div", {
               className: "title",
-              innerHTML: theme.themeName
+              innerHTML: themeObj.themeDisplayName
             }, rowLabel);
-            this._createChart(theme.themeName, chart);
+            this._createChart(themeObj.themeName, chart);
           }));
           //by default show first theme from the theme array as selected
           this.selectTheme(this.selectedTheme);
@@ -247,17 +282,20 @@ define([
       * Function to show the selected theme and generate the event
       * @memberOf widgets/RelatedTableCharts/settings/ChartThemeSelector.js
       **/
-      selectTheme: function (theme) {
+      selectTheme: function (themeObj) {
         //empty selectedThemeContainer
-        domConstruct.empty(this.selectedThemeChart);
+        if (this.selectedThemeChart) {
+          domConstruct.empty(this.selectedThemeChart);
+        }
         //set newly selected theme
         this.selectedTheme = {
-          "themeName": theme.themeName,
-          "className": theme.className
+          "themeDisplayName": themeObj.themeDisplayName || themeObj.themeName,
+          "className": themeObj.className,
+          "themeName": themeObj.themeName
         };
         //show selected theme in selectedThemeContainer
-        this._createChart(theme.themeName, this.selectedThemeChart);
-        domAttr.set(this.selectedThemeName, "innerHTML", theme.themeName);
+        this._createChart(themeObj.themeName, this.selectedThemeChart);
+        domAttr.set(this.selectedThemeName, "innerHTML", this.selectedTheme.themeDisplayName);
         //call this method to close drop list
         this.hideChooseNode();
         //generate event

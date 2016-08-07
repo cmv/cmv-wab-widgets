@@ -521,14 +521,23 @@ define([
         wkid = parseInt(wkid, 10);
 
         if (selected) {
-          label = "<b>" + label + name + "</b>&nbsp;(" + wkid + ")&lrm;&nbsp;";
+          label = "<b>" + label + name + "</b>&nbsp;" + this._rtlTheBrackets(wkid) + "&nbsp;";
         } else {
-          label = label + name + "&nbsp;&nbsp;(" + wkid + ")&lrm;&nbsp;";
+          label = label + name + "&nbsp;&nbsp;" + this._rtlTheBrackets(wkid) + "&nbsp;";
         }
         if (wkid === mapWkid) {
           label += this.nls.defaultLabel;
         }
         return label;
+      },
+
+      _rtlTheBrackets: function(str) {
+        var rlmFlag = "&rlm;";
+        if (window.isRTL) {
+          return rlmFlag + "(" + str + ")";
+        } else {
+          return "(" + str + ")";
+        }
       },
 
       addMenuItem: function(name, wkid, outputUnit, tfWkid, forward, _options) {
@@ -564,6 +573,10 @@ define([
 
         num = num.toFixed(fix) + patchStr;
         return this.separator(num, decimalPlaces);*/
+        if(isNaN(num)){
+          return "";
+        }
+
         return utils.localizeNumberByFieldInfo(num, {
           format: {
             places: this.config.decimalPlaces,
@@ -826,7 +839,11 @@ define([
           this.coordinateInfo.innerHTML = usng.LLtoUSNG(y, x, 5);
         }
 
-        this.coordinateInfo.innerHTML += " " + this._unitToNls(outUnit);
+        if (isNaN(y) && isNaN(x)) {
+          this.coordinateInfo.innerHTML = "";
+        } else {
+          this.coordinateInfo.innerHTML += " " + this._unitToNls(outUnit);
+        }
       },
 
       _displayDegOrDms: function(outUnit, y, x) {
@@ -845,7 +862,11 @@ define([
           this.coordinateInfo.innerHTML = this._toFormat(y) +
             "  " + this._toFormat(x);
 
-          this.coordinateInfo.innerHTML += " " + this._unitToNls(outUnit);
+          if (isNaN(y) && isNaN(x)) {
+            this.coordinateInfo.innerHTML = "";
+          } else {
+            this.coordinateInfo.innerHTML += " " + this._unitToNls(outUnit);
+          }
         }
       },
 
@@ -857,7 +878,11 @@ define([
         this.coordinateInfo.innerHTML = this._toFormat(x) +
           "  " + this._toFormat(y);
 
-        this.coordinateInfo.innerHTML += " " + this._unitToNls(outUnit);
+        if (isNaN(y) && isNaN(x)) {
+          this.coordinateInfo.innerHTML = "";
+        } else {
+          this.coordinateInfo.innerHTML += " " + this._unitToNls(outUnit);
+        }
       },
 
       onFoldContainerClick: function() {

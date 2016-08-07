@@ -1,14 +1,72 @@
 .jimu-widget-SAT {
   color: #ffffff !important;
   background-color: #4c4c4c;
-  left: 0px !important;
-  right: 0px !important;
+  left: 0px;
+  right: 0px;
   bottom: 0px;
-  height: 140px !important;
+  height: 150px !important;
   display: block;
   z-index: 100 !important;
 }
+
 /* Classes */
+
+.action2 {
+  padding-left: 10px;
+}
+
+.jimu-widget-SAT .innerBL {
+  display: none;
+  width: 10px; 
+  height: 20px; 
+  background-image: url('images/nav_left.png');
+  background-repeat: no-repeat;
+  background-size:cover;
+  position: fixed;           
+  bottom: 45px;
+  left: 0px;
+  z-index: 2;
+  background-size:cover;
+  opacity: .6;
+}
+
+.jimu-rtl .jimu-widget-SAT .innerBL {
+  right: 0px;
+}
+
+.jimu-widget-SAT .innerBL:hover {
+  width: 20px; 
+  height: 35px; 
+  opacity: 1;
+  cursor: pointer;
+  bottom: 40px;
+}
+
+.jimu-widget-SAT .innerBR {
+  display: none;
+  width: 10px; 
+  height: 20px; 
+  background-image: url('images/nav_right.png');
+  background-repeat: no-repeat;
+  background-size:cover;
+  position: fixed;
+  bottom: 45px;
+  right: 0px;
+  z-index: 2;
+  opacity: .6;
+}
+
+.jimu-rtl .jimu-widget-SAT .innerBR {
+  left: 0px;
+}
+
+.jimu-widget-SAT .innerBR:hover { 
+  width: 20px; 
+  height: 35px; 
+  opacity: 1;
+  cursor: pointer;
+  bottom: 40px;
+}
 
 .jimu-widget-SAT .rounded {
   -moz-border-radius: 5px 5px 5px 5px;
@@ -29,10 +87,28 @@
 }
 /* Start ST */
 
+.jimu-widget-SAT .reverseGeocodingDIV {
+  visibility: hidden;
+}
+
+.jimu-widget-SAT .reversedAddressDIV {
+  width:100%;
+}
+
+.jimu-widget-SAT .sliderValue {
+  width: 60px;
+  align: left;
+}
+
+.jimu-widget-SAT .sliderValueDIV {
+  text-align: center; 
+  margin-top: -4px;
+}
+
 .jimu-widget-SAT .panelBottom {
   position: absolute;
   width: 100%;
-  height: 140px;
+  height: 150px;
   left: 0px;
   top: 0px;
   text-align: center;
@@ -40,7 +116,7 @@
   padding: 0px;
 }
 
-.jimu-widget-SAT #SA_panelMessage {
+.jimu-widget-SAT .SA_panelMessage {
   position: absolute;
   top: 0px;
   text-align: center;
@@ -50,37 +126,37 @@
   display: none;
 }
 
-.jimu-widget-SAT #SA_panelFooter {
+.jimu-widget-SAT .SA_panelFooter {
   position: absolute;
-  bottom: 0px;
+  top: 0px;
   left: 0px;
   right: 0px;
   height: 40px;
   line-height: 40px;
   overflow: hidden;
-  background-color: #393939;
-  background-color: rgba(0, 0, 0, 0.25);
+  /*background-color: #393939;
+  background-color: rgba(0, 0, 0, 0.25);*/
   border-bottom: 1px solid #353535;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-.jimu-widget-SAT #SA_panelFooterContent {
+.jimu-widget-SAT .SA_panelFooterContent {
   position: absolute;
   left: 0px;
   right: 24px;
-  height: 90px;
-  overflow-x: auto;
+  height: 40px;
+  overflow-x: hidden;
   overflow-y: hidden;
   display: block;
 }
 
-.jimu-rtl .jimu-widget-SAT #SA_panelFooterContent {
+.jimu-rtl .jimu-widget-SAT .SA_panelFooterContent {
   position: absolute;
   left: 24px;
   right: 0px;
 }
 
-.jimu-widget-SAT #SA_panelClose {
+.jimu-widget-SAT .SA_panelClose {
   position: absolute;
   left: auto;
   right: 0px;
@@ -93,10 +169,52 @@
   background-image: url('images/x.png');
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: 18px;
+  background-size: 12px;
 }
 
-.jimu-rtl .jimu-widget-SAT #SA_panelClose {
+.jimu-widget-SAT .SA_panelRight {
+  display: none;
+  position: absolute;
+  left: auto;
+  right: 24px;
+  width: 34px;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  background-image: url('images/nav_right.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 10px;
+  opacity: .4;
+}
+
+.jimu-widget-SAT .SA_panelRight:hover {
+  opacity: 1;
+  background-size: 16px;
+}
+
+.jimu-widget-SAT .SA_panelLeft {
+  display: none;
+  position: absolute;
+  left: 0px;
+  right: auto;
+  /*width: 18px;*/
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  background-image: url('images/nav_left.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 10px;
+  opacity: .4;
+}
+
+.jimu-widget-SAT .SA_panelLeft:hover {
+  opacity: 1;
+  background-size: 16px;
+}
+
+.jimu-rtl .jimu-widget-SAT .SA_panelClose {
   position: absolute;
   left: 0px;
   right: auto;
@@ -104,8 +222,9 @@
 
 .jimu-widget-SAT .panelContainer {
   position: absolute;
+  top: 40px;
   width: 100%;
-  height: 100px;
+  height: 110px;
   overflow: hidden;
   display: block;
 }
@@ -115,9 +234,9 @@
   top: 10px;
   left: 0px;
   right: 0px;
-  height: 90px;
+  height: 100px;
   display: none;
-  overflow-x: auto !important;
+  overflow-x: auto;
   overflow-y: hidden !important;
 }
 
@@ -125,15 +244,19 @@
   position: absolute;
   top: 0px;
   width: auto;
-  height: 80px;
+  height: 90px;
   white-space: nowrap;
   display: block;
-  overflow-x: visible;
-  overflow-y: hidden;
+  overflow: hidden;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
 }
 /* TABS */
 
-.jimu-widget-SAT #SA_SAT_tabs {
+.jimu-widget-SAT .SA_SAT_tabs {
   position: absolute;
   white-space: nowrap;
   height: 40px;
@@ -151,11 +274,17 @@
   float: left;
   line-height: 40px;
   font-size: 13px;
-  padding: 0 35px 0 10px;
+  padding: 0 10px 0 35px;
   background-image: url('images/tab.png');
   background-repeat: no-repeat;
-  background-position: right center;
+  background-position: left center;
   cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  opacity: .85;
 }
 
 .jimu-rtl .jimu-widget-SAT .SATTab {
@@ -167,26 +296,46 @@
   background-color: #353535;
   background-color: rgba(0, 0, 0, 0.3);
   background-image: url('images/tabon.png');
-  background-position: right center;
+  background-position: left center;
   background-repeat: no-repeat;
+  opacity: 1;
+}
+
+.jimu-widget-SAT .activeBlack {
+  color: #ffffff;
+  background-color: #353535;
+  background-image: url('images/tabon.png');
+  background-position: left center;
+  background-repeat: no-repeat;
+  opacity: 1;
 }
 /* INCIDENTS */
 
 .jimu-widget-SAT .SATcol {
   float: left;
-  height: 80px;
+  height: 90px;
   width: 220px;
   border-left: none;
   border-right: 1px solid #ffffff;
   border-right: 1px solid rgba(255, 255, 255, 0.5);
   margin-left: 0;
   padding: 0 20px;
-  overflow: hidden;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+}
+
+.jimu-widget-SAT .SATcolWrap {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  word-wrap: break-word;
 }
 
 .jimu-widget-SAT .SATcolSave {
   float: left;
-  height: 80px;
+  height: 90px;
   width: 220px;
   border-left: none;
   border-right: 1px solid #ffffff;
@@ -212,7 +361,7 @@
 
 .jimu-widget-SAT .SATcolSmall {
   float: left;
-  height: 80px;
+  height: 90px;
   width: 165px;
   border-left: none;
   border-right: 1px solid #ffffff;
@@ -411,16 +560,19 @@
 /* SUMMARY */
 
 .jimu-widget-SAT .colSummary {
-  height: 36px;
-  line-height: 36px;
   font-size: 28px;
-  padding-top: 25px;
+  padding-top: 10px;
+}
+
+.jimu-widget-SAT .colGroupedSummary {
+  font-size: 28px;
+  padding-top: 3px;
 }
 /* REC */
 
 .jimu-widget-SAT .SATcolRec {
   float: left;
-  height: 80px;
+  height: 90px;
   width: 220px;
   border-left: none;
   border-right: 1px solid #ffffff;
@@ -430,6 +582,11 @@
   overflow: hidden;
   text-align: left;
   text-overflow: ellipsis;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
 }
 
 .jimu-rtl .jimu-widget-SAT .SATcolRec {
@@ -632,27 +789,9 @@
   border: 0 none;
 }
 
-.SAT_tabPanel::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-  background-color: rgba(0, 0, 0, 0.1);
+.claro .dijitButtonText{
+  padding-left: 3px;
 }
-
-.SAT_tabPanel::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.SAT_tabPanel {
-  scrollbar-base-color: #4c4c4c;
-  scrollbar-3dlight-color: #4c4c4c;
-  scrollbar-highlight-color: #4c4c4c;
-  scrollbar-track-color: #444444;
-  scrollbar-arrow-color: #2e2e2e;
-  scrollbar-shadow-color: #4c4c4c;
-  scrollbar-dark-shadow-color: #4c4c4c;
-  scrollbar-face-color: #2e2e2e;
-}
-
 
 /*********about attributeInspector**********/
 
@@ -671,7 +810,8 @@
 }
 
 .esriAttributeInspector .atiButton {
-     padding:2px;
+     padding-top:2px;
+     margin-right: 10px;
      display: inline-table;
 }
 

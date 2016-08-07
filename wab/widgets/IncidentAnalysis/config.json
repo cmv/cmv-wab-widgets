@@ -25,6 +25,7 @@
   },
   "maxDistance": "80",
   "defaultZoomLevel": 13,
+  "disableLayerManagement": false,
   "tabs": [{
     "label": "Weather",
     "type": "weather",

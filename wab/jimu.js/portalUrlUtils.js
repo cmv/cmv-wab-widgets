@@ -34,6 +34,8 @@ define([
     mo.getPortalSignInUrlFromLocation = function(){
       var portalUrl = mo.getPortalUrlFromLocation();
       var url = portalUrl + 'home/signin.html';
+      //make sure the signin url begins with https
+      url = mo.setHttpsProtocol(url);
       return url;
     };
 

@@ -63,6 +63,7 @@ function(declare, array, rendererUtils, RendererChooser, BaseEditor, simpleEdito
     _getSymbolType: function(){
       switch(this.param.defaultValue.geometryType){
       case 'esriGeometryPoint':
+      case 'esriGeometryMultipoint':
         return 'marker';
       case 'esriGeometryPolyline':
         return 'line';

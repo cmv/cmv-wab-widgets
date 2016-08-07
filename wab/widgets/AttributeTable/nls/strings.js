@@ -1,6 +1,8 @@
 define({
   root: ({
     _widgetLabel: "Attribute Table",
+    _featureAction_ShowRelatedRecords: "Show Related Records",
+    _featureAction_ViewInTable: "View in Attribute Table",
     ok: "OK",
     cancel: "Cancel",
     unsupportQueryWarning: "The layer needs to support query operation to display in Attribute Table widget. Make sure the query capability in the service is turned on.",
@@ -24,6 +26,7 @@ define({
     noRelatedRecords: "No related records found",
     refresh: "Refresh",
     features: "features",
+    records: "records",
     selected: "selected",
     transparent: "Transparent Mode",
     indicate: "Locate Selection",
@@ -32,7 +35,10 @@ define({
     closeMessage: "Hide Table (expand it again from the bottom)",
     dataNotAvailable: "Data not available!<br>Click [Refresh] button to try again.",
     openTableTip: "Open Attribute Table",
-    closeTableTip: "Hide Attribute Table"
+    closeTableTip: "Hide Attribute Table",
+    sortAsc: "Sort Ascending",
+    sortDes: "Sort Descending",
+    statistics: "Statistics"
   }),
   "ar": 1,
   "cs": 1,
@@ -44,6 +50,7 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
+  "hr": 1,
   "it": 1,
   "ja": 1,
   "ko": 1,
@@ -56,6 +63,7 @@ define({
   "pt-pt": 1,
   "ro": 1,
   "ru": 1,
+  "sr": 1,
   "sv": 1,
   "th": 1,
   "tr": 1,

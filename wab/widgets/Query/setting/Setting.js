@@ -15,31 +15,45 @@
 ///////////////////////////////////////////////////////////////////////////
 
 define([
+  'dojo/on',
+  'dojo/sniff',
+  'dojo/query',
   'dojo/_base/declare',
   'dojo/_base/lang',
+  'dojo/_base/html',
   'dojo/_base/array',
-  'dojo/on',
   'dijit/_WidgetsInTemplateMixin',
   'jimu/BaseWidgetSetting',
   'jimu/dijit/_QueryableLayerSourcePopup',
   'jimu/utils',
   'jimu/filterUtils',
+  '../utils',
   './SingleQuerySetting',
-  'jimu/dijit/SimpleTable',
   'jimu/dijit/TabContainer'
 ],
-function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
-  _QueryableLayerSourcePopup, jimuUtils,  FilterUtils, SingleQuerySetting) {
+function(on, sniff, query, declare, lang, html, array, _WidgetsInTemplateMixin, BaseWidgetSetting,
+  _QueryableLayerSourcePopup, jimuUtils, FilterUtils, queryUtils, SingleSetting) {
 
   return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
     baseClass: 'jimu-widget-query-setting',
-    currentSQS: null,
+    singleSetting: null,
+    noQueryNls: '',
 
     postMixInProperties: function(){
       this.inherited(arguments);
       if(this.config){
+        this.config = queryUtils.getConfigWithValidDataSource(this.config);
         this._updateConfig();
       }
+      this.noQueryNls = this.nls.noTasksTip;
+      var placeHolders = ['"${newQuery}""', '"${newQuery}"', '„${newQuery}”', '„${newQuery}“', '${newQuery}'];
+      array.some(placeHolders, lang.hitch(this, function(placeHolder){
+        if(this.noQueryNls.indexOf(placeHolder) > 0){
+          this.noQueryNls = this.noQueryNls.replace(placeHolder, "<span>" + this.nls.newQuery + "</span>");
+          return true;
+        }
+        return false;
+      }));
     },
 
     _updateConfig: function() {
@@ -65,93 +79,24 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
 
     postCreate:function(){
       this.inherited(arguments);
-
+      this.noQueryTip.innerHTML = this.noQueryNls;
       if(this.config){
         this.setConfig(this.config);
       }
-    },
-
-    setConfig:function(config){
-      if(this.currentSQS){
-        this.currentSQS.destroy();
-      }
-      this.currentSQS = null;
-      this.queryList.clear();
-
-      this.config = config;
-      var queries = this.config && this.config.queries;
-      var validConfig = queries && queries.length >= 0;
-      if(validConfig){
-        array.forEach(queries, lang.hitch(this, function(singleConfig, index){
-          var addResult = this.queryList.addRow({name: singleConfig.name || ''});
-          var tr = addResult.tr;
-          tr.singleConfig = lang.clone(singleConfig);
-          if(index === 0){
-            this.queryList.selectRow(tr);
-          }
-        }));
+      if(sniff('mac')){
+        html.addClass(this.domNode, 'mac');
+      }else{
+        html.addClass(this.domNode, 'not-mac');
       }
     },
 
-    getConfig: function () {
-      if(this.currentSQS){
-        var currentSingleConfig = this.currentSQS.getConfig();
-        if(currentSingleConfig){
-          this.currentSQS.tr.singleConfig = lang.clone(currentSingleConfig);
-        }
-        else{
-          return false;
-        }
-      }
-      var config = {
-        queries:[]
-      };
-      var trs = this.queryList.getRows();
-      for(var i = 0; i < trs.length; i++){
-        var tr = trs[i];
-        config.queries.push(lang.clone(tr.singleConfig));
-      }
-      this.config = lang.clone(config);
-      return config;
-    },
-
-    _createSingleQuerySetting:function(tr){
-      var args = {
-        map: this.map,
-        nls: this.nls,
-        config: tr.singleConfig,
-        tr: tr,
-        _layerDefinition: tr._layerDefinition,
-        appConfig: this.appConfig
-      };
-      this.currentSQS = new SingleQuerySetting(args);
-      this.currentSQS.placeAt(this.singleQueryContainer);
-
-      this.own(on(this.currentSQS, 'name-change', lang.hitch(this, function(queryName){
-        this.queryList.editRow(tr, {name: queryName});
-      })));
-
-      this.own(on(this.currentSQS, 'show-shelter', lang.hitch(this, function(){
-        this.shelter.show();
-      })));
-
-      this.own(on(this.currentSQS, 'hide-shelter', lang.hitch(this, function(){
-        this.shelter.hide();
-      })));
-
-      //first bind event, then setConfig, don't startup here
-      this.currentSQS.setConfig(this.currentSQS.config);
-
-      return this.currentSQS;
-    },
-
-    _onAddNewClicked:function(){
-      if(this.currentSQS){
-        var singleConfig = this.currentSQS.getConfig();
+    _onBtnAddItemClicked: function(){
+      if(this.singleSetting){
+        var singleConfig = this.singleSetting.getConfig();
         if(singleConfig){
-          this.currentSQS.tr.singleConfig = singleConfig;
-        }
-        else{
+          this.singleSetting.destroy();
+          this.singleSetting = null;
+        }else{
           return;
         }
       }
@@ -172,33 +117,31 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
       var sourcePopup = new _QueryableLayerSourcePopup(args);
       this.own(on(sourcePopup, 'ok', lang.hitch(this, function(item){
         //{name, url, definition}
-        var radioType = sourcePopup.getSelectedRadioType();
+        var layerSourceType = sourcePopup.getSelectedRadioType();
         sourcePopup.close();
         sourcePopup = null;
 
-        if(this.currentSQS){
-          this.currentSQS.destroy();
-          this.currentSQS = null;
+        if(this.singleSetting){
+          this.singleSetting.destroy();
+          this.singleSetting = null;
         }
 
-        //var queryName = this._getSuitableQueryName(item.name);
+        var target = this._createTarget();
+        this._createSingleSetting(target, null);
+
         var queryName = item.name || "";
-        var addResult = this.queryList.addRow({name: queryName});
-        if (addResult.success) {
-          var tr = addResult.tr;
-          this.queryList.selectRow(tr);
-          if(this.currentSQS){
-            var expr = null;
-            if(radioType === 'map'){
-              var layerObject = item.layerInfo && item.layerInfo.layerObject;
-              if(layerObject && typeof layerObject.getDefinitionExpression === 'function'){
-                expr = layerObject.getDefinitionExpression();
-              }
-            }
-            this.currentSQS.setNewLayerDefinition(item.name, item.url, item.definition,
-                                                  queryName, expr);
-          }
-        }
+
+        // var expr = null;
+        // if (layerSourceType === 'map') {
+        //   if (item.layerInfo) {
+        //     var layerObject = item.layerInfo.layerObject;
+        //     if (layerObject && typeof layerObject.getDefinitionExpression === 'function') {
+        //       expr = layerObject.getDefinitionExpression();
+        //     }
+        //   }
+        // }
+        //we don't save current layer's definition expression, we just read it at runtime
+        this.singleSetting.setNewLayerDefinition(item, layerSourceType, queryName);
       })));
 
       this.own(on(sourcePopup, 'cancel', lang.hitch(this, function(){
@@ -209,49 +152,145 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
       sourcePopup.startup();
     },
 
-    _getSuitableQueryName: function(name){
-      var finalName = name;
-      var data = this.queryList.getData();
-      var allNames = array.map(data, lang.hitch(this, function(rowData){
-        return rowData.name;
+    _createSingleSetting: function(target){
+      query('.item', this.listContent).removeClass('selected');
+      if(this.singleSetting){
+        this.singleSetting.destroy();
+      }
+      this.singleSetting = null;
+      this.singleSetting = new SingleSetting({
+        map: this.map,
+        nls: this.nls,
+        target: target,
+        _layerDefinition: target._layerDefinition,
+        appConfig: this.appConfig,
+        folderUrl: this.folderUrl
+      });
+      this.singleSetting.placeAt(this.singleSettingContent);
+      this.own(on(this.singleSetting, 'loading', lang.hitch(this, function(){
+        this.shelter.show();
+      })));
+      this.own(on(this.singleSetting, 'unloading', lang.hitch(this, function(){
+        this.shelter.hide();
+      })));
+      this.own(on(this.singleSetting, 'before-destroy', lang.hitch(this, function(){
+        html.addClass(this.separator, 'not-visible');
+      })));
+      html.addClass(target, 'selected');
+      if(target.singleConfig){
+        this.singleSetting.setConfig(target.singleConfig);
+      }
+      html.removeClass(this.separator, 'not-visible');
+      html.addClass(this.noQueryTip, 'not-visible');
+    },
+
+    _createTarget: function(name){
+      name = name || "";
+      var target = html.create("div", {
+        "class": "item",
+        "innerHTML": '<div class="label jimu-ellipsis" title="' + name + '">' + name + '</div>' +
+                     '<div class="actions jimu-float-trailing">' +
+                        '<div class="delete action jimu-float-trailing"></div>' +
+                        '<div class="down action jimu-float-trailing"></div>' +
+                        '<div class="up action jimu-float-trailing"></div>' +
+                     '</div>'
+      }, this.listContent);
+      return target;
+    },
+
+    _onListContentClicked: function(event){
+      var target = event.target || event.srcElement;
+      var itemDom = jimuUtils.getAncestorDom(target, function(dom){
+        return html.hasClass(dom, 'item');
+      }, 3);
+      if(!itemDom){
+        return;
+      }
+      if(html.hasClass(target, 'action')){
+        if(html.hasClass(target, 'up')){
+          if(itemDom.previousElementSibling){
+            html.place(itemDom, itemDom.previousElementSibling, 'before');
+          }
+        }else if(html.hasClass(target, 'down')){
+          if(itemDom.nextElementSibling){
+            html.place(itemDom, itemDom.nextElementSibling, 'after');
+          }
+        }else if(html.hasClass(target, 'delete')){
+          if(this.singleSetting && this.singleSetting.target === itemDom){
+            this.singleSetting.destroy();
+            this.singleSetting = null;
+          }
+          html.destroy(itemDom);
+          var itemDoms = query('.item', this.listContent);
+          if(itemDoms.length > 0){
+            this._createSingleSetting(itemDoms[0]);
+          }
+          this._updateNoQueryTip();
+        }
+        return;
+      }
+
+      if (this.singleSetting) {
+        if (this.singleSetting.target !== itemDom) {
+          var singleConfig = this.singleSetting.getConfig();
+          if (singleConfig) {
+            this.singleSetting.destroy();
+            this.singleSetting = null;
+            this._createSingleSetting(itemDom);
+          }
+        }
+      } else {
+        this._createSingleSetting(itemDom);
+      }
+    },
+
+    _updateNoQueryTip: function(){
+      var itemDoms = query('.item', this.listContent);
+      if (itemDoms.length > 0) {
+        html.addClass(this.noQueryTip, 'not-visible');
+      } else {
+        html.removeClass(this.noQueryTip, 'not-visible');
+      }
+    },
+
+    setConfig: function(config){
+      var firstTarget = null;
+      array.forEach(config.queries, lang.hitch(this, function(singleConfig, index){
+        var target = this._createTarget(singleConfig.name);
+        target.singleConfig = singleConfig;
+        if(index === 0){
+          firstTarget = target;
+        }
       }));
-
-      var flag = 2;
-      while(array.indexOf(allNames, finalName) >= 0){
-        name += ' ' + flag;
-        flag++;
+      if(firstTarget){
+        this._createSingleSetting(firstTarget);
       }
-
-      return name;
+      this._updateNoQueryTip();
     },
 
-    _onQueryItemRemoved:function(tr){
-      if(this.currentSQS){
-        if(this.currentSQS.tr === tr){
-          this.currentSQS.destroy();
-          this.currentSQS = null;
+    getConfig: function(){
+      if(this.singleSetting){
+        var singleConfig = this.singleSetting.getConfig();
+        if(!singleConfig){
+          return false;
         }
       }
+      var targets = query('.item', this.listContent);
+      var config = {
+        queries: []
+      };
+      config.queries = array.map(targets, lang.hitch(this, function(target){
+        return target.singleConfig;
+      }));
+      return config;
     },
 
-    _onQueryItemSelected:function(tr){
-      if(this.currentSQS){
-        if(this.currentSQS.tr !== tr){
-          var singleConfig = this.currentSQS.getConfig();
-          if(singleConfig){
-            this.currentSQS.tr.singleConfig = singleConfig;
-            this.currentSQS.destroy();
-            this.currentSQS = null;
-            this._createSingleQuerySetting(tr);
-          }
-          else{
-            this.queryList.selectRow(this.currentSQS.tr);
-          }
-        }
+    destroy: function(){
+      if(this.singleSetting){
+        this.singleSetting.destroy();
       }
-      else{
-        this._createSingleQuerySetting(tr);
-      }
+      this.singleSetting = null;
+      this.inherited(arguments);
     }
 
   });

@@ -497,7 +497,7 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
 
     _showErrorOptions:function(strError){
       console.error(strError);
-      html.setStyle(this.contentSection, 'display', 'none');
+      // html.setStyle(this.contentSection, 'display', 'none');
       html.setStyle(this.errorSection, 'display', 'none');//block
       this.errorTip.innerHTML = strError;
       this.loading.hide();

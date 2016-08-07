@@ -175,26 +175,39 @@ define(['dojo/_base/declare',
           message:this.nls.noFileSelected
         });
       }else{
-        var fileName = domAttr.get(this.fileInput, 'value');
-        fileName = fileName.replace(/\\/g, '/');
-        fileName = fileName.substr(fileName.lastIndexOf('/') + 1);
-
-        esriRequest({
-          url: this.config.serverInfo.url + 'uploads/upload',
-          form: this.fileForm.domNode,
-          handleAs: 'json'
-        }).then(lang.hitch(this, function(data){
-          if(data.success){
-            this.itemIDInput = data.item.itemID;
-            domAttr.set(this.fileInput, 'value', '');
-            domAttr.set(this.uploadFileName, 'innerHTML', fileName);
+        this._doUpload().then(lang.hitch(this, function(success) {
+          if(success){
             new Message({message:this.nls.uploadSuccess});
           }
-        }), lang.hitch(this, function(error){
+        }), function(error) {
           var message = error.message || error;
-          new Message({message:message});
-        }));
+          new Message({message: message});
+        });
       }
+    },
+
+    _doUpload: function() {
+      var def = new Deferred();
+      var fileName = domAttr.get(this.fileInput, 'value');
+      fileName = fileName.replace(/\\/g, '/');
+      fileName = fileName.substr(fileName.lastIndexOf('/') + 1);
+
+      esriRequest({
+        url: this.config.serverInfo.url + 'uploads/upload',
+        form: this.fileForm.domNode,
+        handleAs: 'json'
+      }).then(lang.hitch(this, function(data) {
+        if (data.success) {
+          this.itemIDInput = data.item.itemID;
+          domAttr.set(this.fileInput, 'value', '');
+          domAttr.set(this.uploadFileName, 'innerHTML', fileName);
+        }
+        def.resolve(data.success);
+      }), function(error) {
+        def.reject(error);
+      });
+
+      return def;
     }
   });
 });

@@ -112,13 +112,9 @@
     margin: 0px;
 }
 
-.jimu-widget-districtlookup-setting .routing-disabled-msg{
-    margin-top: 20px;
-}
-
 .jimu-widget-districtlookup-setting .esriCTLayerField
 {
-    width: 74%;
+    width: 73%;
     float: left;
 }
 
@@ -322,11 +318,27 @@
     min-width: 80px;
 }
 
+.jimu-widget-districtlookup-setting .esriCTColorChooserNode
+{
+    text-align: center;
+    cursor: pointer;
+    min-width: 80px;
+}
+
+.jimu-widget-districtlookup-setting .esriCTColorChooserNode .jimu-color-picker
+{
+    display:inline-block;
+}
+
 .jimu-widget-districtlookup-setting .esriCTSymbolPreviewText
 {
     padding-right: 5px;
     color: #596679;
     font-size: 14px;
+    max-width: 130px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space:nowrap;
 }
 
 .jimu-widget-districtlookup-setting .esriCTPreviewField
@@ -359,9 +371,10 @@ table
 
 .jimu-widget-districtlookup-setting .esriCTSymbolPreviewHintField
 {
-    width: 60%;
+    width: 50%;
     line-height: 20px;
     margin-left: 5px;
+    float: right;
 }
 
 .jimu-widget-districtlookup-setting .esriCTSymbolChooserContainer
@@ -494,6 +507,13 @@ table
 .esriRtl .jimu-widget-districtlookup-setting .esriCTLayerChooserContainer
 {
     float: none;
+}
+
+.esriRtl .jimu-widget-districtlookup-setting .esriCTSymbolPreviewHintField
+{
+    margin-right: 5px;
+    float: left;
+    margin-left: 0px;
 }
 
 /*end CSS override for RTL*/

@@ -1,0 +1,42 @@
+.jimu-widget-select-setting {
+  margin: 20px 0;
+
+  .config-section {
+    width: 100%;
+    margin-bottom: 20px;
+
+    label {
+      font: {
+        family: "Avenir-Medium";
+        size: 12px;
+        color: #353535;
+      }
+    }
+
+    .jimu-color-picker {
+      width: 30px;
+      height: 30px;
+      margin: 0 20px;
+    }
+
+    .option {
+      margin: 15px;
+
+      input {
+        margin: 0 10px;
+      }
+    }
+  }
+
+  .inline > div {
+    display: inline-block;
+  }
+
+  .label {
+    font: {
+      family: "Avenir-Medium";
+      size: 14px;
+      color: #353535;
+    }
+  }
+}

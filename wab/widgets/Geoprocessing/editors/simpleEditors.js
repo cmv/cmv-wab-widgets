@@ -29,19 +29,13 @@ define(['dojo/_base/declare',
   'dijit/form/TimeTextBox',
   'jimu/dijit/CheckBox',
   'jimu/dijit/URLInput',
-  'jimu/dijit/DrawBox',
   'jimu/utils',
   'esri/tasks/LinearUnit',
-  'esri/tasks/FeatureSet',
-  'esri/geometry/Polygon',
-  'esri/graphic',
-  'esri/graphicsUtils',
-  '../BaseEditor',
-  '../LayerOrderUtil'
+  '../BaseEditor'
 ],
 function(declare, lang, array, html, on, Deferred, all, json, NumberTextBox, Select,
-  Textarea, DateTextBox, TimeTextBox, CheckBox, URLInput, DrawBox, utils,
-  LinearUnit, FeatureSet, Polygon, Graphic, graphicsUtils, BaseEditor, LayerOrderUtil) {
+  Textarea, DateTextBox, TimeTextBox, CheckBox, URLInput, utils,
+  LinearUnit, BaseEditor) {
   var mo = {};
 
   mo.UnsupportEditor = declare(BaseEditor, {
@@ -96,7 +90,7 @@ function(declare, lang, array, html, on, Deferred, all, json, NumberTextBox, Sel
 
     postCreate: function(){
       this.inherited(arguments);
-      this.value = this.param.defaultValue === undefined ? NaN : this.param.defaultValue;
+      this.value = this.param.defaultValue ? this.param.defaultValue : NaN;
 
       this.editor = new NumberTextBox({
         value: this.value,
@@ -123,7 +117,7 @@ function(declare, lang, array, html, on, Deferred, all, json, NumberTextBox, Sel
 
     postCreate: function(){
       this.inherited(arguments);
-      this.value = this.param.defaultValue === undefined ? NaN : this.param.defaultValue;
+      this.value = this.param.defaultValue ? this.param.defaultValue : NaN;
 
       this.editor = new NumberTextBox({
         value: this.value
@@ -296,25 +290,19 @@ function(declare, lang, array, html, on, Deferred, all, json, NumberTextBox, Sel
 
     postCreate: function(){
       this.inherited(arguments);
-      this.distance = this.param.defaultValue === undefined? '': this.param.defaultValue.distance;
-      this.units = this.param.defaultValue === undefined? '': this.param.defaultValue.units;
+      this.distance = this.param.defaultValue ? this.param.defaultValue.distance : 0;
+      this.units = this.param.defaultValue ? this.param.defaultValue.units : 'esriMeters';
 
-      if(this.distance === undefined){
-        this.distance = 0;
-      }
-      if(this.units === undefined){
-        this.units = 'esriMeters';
-      }
       this.inputDijit = new NumberTextBox({value: this.distance});
       this.selectDijit = new Select({
         value: this.units,
         options: [
-          {label: this.nls.Meter, value: 'esriMeters'},
-          {label: this.nls.Kilometers, value: 'esriKilometers'},
-          {label: this.nls.Feet, value: 'esriFeet'},
-          {label: this.nls.Miles, value: 'esriMiles'},
-          {label: this.nls.NauticalMiles, value: 'esriNauticalMiles'},
-          {label: this.nls.Yards, value: 'esriYards'}
+          {label: this.nls.meters, value: 'esriMeters'},
+          {label: this.nls.kilometers, value: 'esriKilometers'},
+          {label: this.nls.feet, value: 'esriFeet'},
+          {label: this.nls.miles, value: 'esriMiles'},
+          {label: this.nls.nauticalMiles, value: 'esriNauticalMiles'},
+          {label: this.nls.yards, value: 'esriYards'}
         ]
       });
       html.addClass(this.selectDijit.domNode, 'restrict-select-width');
@@ -387,62 +375,6 @@ function(declare, lang, array, html, on, Deferred, all, json, NumberTextBox, Sel
       }else{
         return null;
       }
-    }
-  });
-
-  mo.SelectFeatureSetFromDraw = declare([BaseEditor, DrawBox], {
-    editorName: 'SelectFeatureSetFromDraw',
-
-    constructor: function(options){
-      this.inherited(arguments);
-      this.paramName = options.param.name;
-      this.drawLayerId = options.widgetUID + options.param.name;
-    },
-
-    postCreate: function(){
-      this.inherited(arguments);
-      html.addClass(this.domNode, 'jimu-gp-editor-draw');
-      html.addClass(this.domNode, 'jimu-gp-editor-base');
-
-      try{
-        var layerOrderUtil = new LayerOrderUtil(this.config, this.map);
-        layerOrderUtil.calculateLayerIndex(this.paramName, this.widgetUID).then(
-            lang.hitch(this, function(layerIndex){
-          if(layerIndex !== -1){
-            this.map.reorderLayer(this.drawLayer, layerIndex);
-          }
-        }));
-      }catch(err){
-        console.error(err.message);
-      }
-
-      this.startup();
-    },
-
-    getValue: function(){
-      if(this.drawLayer && this.drawLayer.graphics.length > 0){
-        return this._createFeatureSet(this.drawLayer.graphics);
-      }else{
-        return null;
-      }
-    },
-
-    _createFeatureSet: function(graphics){
-      var featureset = new FeatureSet();
-      var features = [];
-      var geometries = graphicsUtils.getGeometries(graphics);
-
-      array.forEach(geometries, function(geom){
-        var graphic;
-        if(geom.type === 'extent'){
-          graphic = new Graphic(Polygon.fromExtent(geom));
-        }else{
-          graphic = new Graphic(geom);
-        }
-        features.push(graphic);
-      });
-      featureset.features = features;
-      return featureset;
     }
   });
 

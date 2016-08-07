@@ -22,16 +22,22 @@ define([
     'jimu/BaseWidgetSetting',
     "jimu/portalUtils",
     'esri/units',
-    "dijit/form/Select"
+    'dojo/on',
+    "dijit/Tooltip",
+    "dojo/mouse",
+    "dijit/form/Select",
+    'jimu/dijit/CheckBox'
   ],
-  function(
-    declare,
-    lang,
-    Deferred,
-    _WidgetsInTemplateMixin,
-    BaseWidgetSetting,
-    PortalUtils,
-    esriUnits) {
+  function(declare,
+           lang,
+           Deferred,
+           _WidgetsInTemplateMixin,
+           BaseWidgetSetting,
+           PortalUtils,
+           esriUnits,
+           on,
+           Tooltip,
+           mouse) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
       //these two properties is defined in the BaseWidget
       baseClass: 'jimu-widget-measurement-setting',
@@ -41,6 +47,13 @@ define([
         if (!this.config.measurement) {
           this.config.measurement = {};
         }
+
+        this._showToolsItems = [];
+        Tooltip.position = "below";
+        this._initShowToolItem(this.showArea);
+        this._initShowToolItem(this.showDistance);
+        this._initShowToolItem(this.showLocation);
+
         this.setConfig(this.config);
       },
 
@@ -64,16 +77,26 @@ define([
       setConfig: function(config) {
         this.config = config;
 
-        this._processConfig(config.measurement).then(lang.hitch(this, function(measurement) {
-          if (measurement.defaultAreaUnit) {
-            this.selectAreaUnit.set('value', measurement.defaultAreaUnit);
+        this._processConfig(config).then(lang.hitch(this, function(configJson) {
+          if (configJson.measurement.defaultAreaUnit) {
+            this.selectAreaUnit.set('value', configJson.measurement.defaultAreaUnit);
           } else {
             this.selectAreaUnit.set('value', "esriAcres");
           }
-          if (measurement.defaultLengthUnit) {
-            this.selectLengthUnit.set('value', measurement.defaultLengthUnit);
+          if (configJson.measurement.defaultLengthUnit) {
+            this.selectLengthUnit.set('value', configJson.measurement.defaultLengthUnit);
           } else {
             this.selectLengthUnit.set('value', "esriMiles");
+          }
+
+          if ("undefined" !== typeof configJson.showArea && false === configJson.showArea) {
+            this.showArea.setValue(false);
+          }
+          if ("undefined" !== typeof configJson.showDistance && false === configJson.showDistance) {
+            this.showDistance.setValue(false);
+          }
+          if ("undefined" !== typeof configJson.showLocation && false === configJson.showLocation) {
+            this.showLocation.setValue(false);
           }
         }));
       },
@@ -81,8 +104,44 @@ define([
       getConfig: function() {
         this.config.measurement.defaultAreaUnit = this.selectAreaUnit.value;
         this.config.measurement.defaultLengthUnit = this.selectLengthUnit.value;
-        return this.config;
-      }
 
+        this.config.showArea = this.showArea.checked;
+        this.config.showDistance = this.showDistance.checked;
+        this.config.showLocation = this.showLocation.checked;
+
+        return this.config;
+      },
+
+      _initShowToolItem: function(item) {
+        if (item) {
+          item.setValue(true);
+          this._showToolsItems.push(item);
+          this.own(on(item, 'change', lang.hitch(this, this._onShowToolItemsChange, item)));
+        }
+      },
+      _onShowToolItemsChange: function(obj) {
+        if (obj) {
+          if (false === obj.checked && this._isItemsAllHide()) {
+            obj.check();
+            Tooltip.hide();
+            Tooltip.show(this.nls.allHidedTips, obj.domNode);
+            this.own(on.once(obj.domNode, mouse.leave,
+              lang.hitch(this, function() {
+                Tooltip.hide(obj.domNode);
+              }))
+            );
+          }
+        }
+      },
+
+      _isItemsAllHide: function() {
+        for (var i = 0, len = this._showToolsItems.length; i < len; i++) {
+          var item = this._showToolsItems[i];
+          if (true === item.checked) {
+            return false;
+          }
+        }
+        return true;
+      }
     });
   });

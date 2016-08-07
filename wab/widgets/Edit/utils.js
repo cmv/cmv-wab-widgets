@@ -17,8 +17,9 @@ email: contracts@esri.com
 */
 
 define([
-  'dojo/_base/lang'
-], function(lang) {
+  'dojo/_base/lang',
+  'dojo/_base/array'
+], function(lang, array) {
 
   var mo = {};
 
@@ -35,6 +36,19 @@ define([
         fieldInfos = lang.clone(popupInfo.fieldInfos);
       }
     }
+
+    if(fieldInfos) {
+      array.forEach(fieldInfos, function(fieldInfo) {
+        if(fieldInfo.format &&
+          fieldInfo.format.dateFormat &&
+          fieldInfo.format.dateFormat.toLowerCase() &&
+          fieldInfo.format.dateFormat.toLowerCase().indexOf('time') >= 0
+          ) {
+          fieldInfo.format.time = true;
+        }
+      });
+    }
+
     return fieldInfos;
   };
 

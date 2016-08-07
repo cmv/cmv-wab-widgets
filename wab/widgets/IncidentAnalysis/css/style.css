@@ -221,6 +221,9 @@
 .jimu-widget-IMT .IMTcolSmall .label {
   font-size: 13px;
   padding: 2px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
 .jimu-widget-IMT .IMTcol .colBar {
@@ -423,6 +426,7 @@
   width: 100%;
   display: block;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 /* Slider */
 

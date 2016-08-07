@@ -93,6 +93,10 @@ define([
 
         this.buffer_max.set("value", this.config.bufferRange.maximum);
         this.buffer_min.set("value", this.config.bufferRange.minimum);
+
+        if (this.config.disableLayerManagement) {
+          this.chk_disable.set('value', true);
+        }
       },
 
       getConfig: function() {
@@ -143,6 +147,12 @@ define([
         this.config.bufferRange.maximum = this.buffer_max.value;
         this.config.bufferRange.minimum = this.buffer_min.value;
 
+        if (this.chk_disable.checked) {
+          this.config.disableLayerManagement = true;
+        } else {
+          this.config.disableLayerManagement = false;
+        }
+
         return this.config;
       },
 
@@ -164,10 +174,12 @@ define([
           if (OpLyr.newSubLayers.length > 0) {
             this._recurseOpLayers(OpLyr.newSubLayers, options);
           } else {
-            options.push({
-              label: OpLyr.title,
-              value: OpLyr.title
-            });
+            if (this._validateLayer(OpLyr)) {
+              options.push({
+                label: OpLyr.title,
+                value: OpLyr.title
+              });
+            }
           }
         }));
 
@@ -188,12 +200,25 @@ define([
           if (Node.newSubLayers.length > 0) {
             this._recurseOpLayers(Node.newSubLayers, pOptions);
           } else {
-            pOptions.push({
-              label: Node.title,
-              value: Node.title
-            });
+            if (this._validateLayer(Node)) {
+              pOptions.push({
+                label: Node.title,
+                value: Node.title
+              });
+            }
           }
         }));
+      },
+
+      _validateLayer: function(lyr) {
+        var validUrl = null;
+        if (lyr.layerObject && lyr.layerObject.url) {
+          var url = lyr.layerObject.url;
+          if (url.indexOf('MapServer') > -1 || url.indexOf('FeatureServer') > -1) {
+            validUrl = url;
+          }
+        }
+        return validUrl;
       },
 
       _setTypes: function() {

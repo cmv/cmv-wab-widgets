@@ -428,6 +428,9 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
       if (!def) {
         this._requestPointSymJson(fileName);
       }
+      var option = this.pointSymClassSelect.getOptions(fileName);
+      var label = option ? option.label : "";
+      this.pointSymClassSelect.domNode.title = label;
     },
 
     _showSelectedPointSymIconTable:function(){

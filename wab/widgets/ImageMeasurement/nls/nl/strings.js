@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Beeldmeting"
-  })
-);
+define({
+  "_widgetLabel": "Beeldmeting"
+});

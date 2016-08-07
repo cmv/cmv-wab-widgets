@@ -1,4 +1,4 @@
-﻿/*global define*/
+/*global define*/
 ///////////////////////////////////////////////////////////////////////////
 // Copyright © 2015 Esri. All Rights Reserved.
 //
@@ -14,83 +14,84 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////
-define(
-   ({
-    units: { // label shown in config UI dialog box(options for dropdown) and also shown as label for slider text(slider unit) and acronym in feature list
-      miles: {
-        displayText: "Jūdzes",
-        acronym: "jūdzes"
-      },
-      kilometers: {
-        displayText: "Kilometri",
-        acronym: "km"
-      },
-      feet: {
-        displayText: "Pēdas",
-        acronym: "pēdas"
-      },
-      meters: {
-        displayText: "Metri",
-        acronym: "m"
-      }
+define({
+  "units": {
+    "miles": {
+      "displayText": "Jūdzes",
+      "acronym": "jūdzes"
     },
-    searchSetting: {
-      searchSettingTabTitle: "Meklēšanas iestatījumi", // shown as a label in config UI dialog box for search setting
-      defaultBufferDistanceLabel: "Iestatīt noklusējuma buferzonas attāluma vērtību", // shown as a label in config UI dialog box for selecting default buffer distance
-      maxBufferDistanceLabel: "Iestatīt maksimālo buferzonas attāluma vērtību elementu meklēšanai", // shown as a label in config UI dialog box for selecting maximum buffer distance value
-      bufferDistanceUnitLabel: "Buferzonas attāluma vienības", // shown as a label(options) of select(dropdown) in config UI dialog box
-      defaultBufferHintLabel: "Padoms. Izmantojiet, lai iestatītu buferzonas noklusējuma vērtību", // shown as a label in config UI dialog box to set default value for a buffer
-      maxBufferHintLabel: "Padoms. Izmantojiet, lai iestatītu buferzonas maksimālo vērtību", // shown as a label in config UI dialog box to set maximum value for a buffer
-      bufferUnitLabel: "Padoms. Definējiet vienību buferzonas izveidei", // shown as a label in config UI dialog box to set unit of buffer
-      selectGraphicLocationSymbol: "Adreses vai izvietojuma simbols", // shown as label in config UI dialog box for graphic symbol in search setting
-      graphicLocationSymbolHintText: "Padoms. Meklētas adreses vai noklikšķināta izvietojuma simbols", // shown as hint label in config UI dialog box for selecting graphic symbol
-      fontColorLabel: "Izvēlēties meklēšanas rezultātu fonta krāsu", //Show as label in config UI to set the font color in widget panel.
-      fontColorHintText: "Padoms. Meklēšanas rezultātu fonta krāsa" //Show as label in config UI to set the font color in widget panel.
+    "kilometers": {
+      "displayText": "Kilometri",
+      "acronym": "km"
     },
-    layerSelector: {
-      selectLayerLabel: "Atlasīt meklēšanas slāni(ņus)", // shown as a label in config UI dialog box for selecting layer on map
-      layerSelectionHint: "Padoms. Lai izvēlētos slāni(ņus), izmantojiet iestatīšanas pogu", // shown as a label in config UI dialog box to select multiple layers
-      addLayerButton: "Kopa", //Shown as a button text to add the layer for search
-      okButton: "Labi", // shown as a button text for layer selector popup
-      cancelButton: "Atcelt" // shown as a button text for layer selector popup
+    "feet": {
+      "displayText": "Pēdas",
+      "acronym": "pēdas"
     },
-    routeSetting: {
-      routeSettingTabTitle: "Virziena iestatījumi", // shown as a label in config UI dialog box for route setting
-      routeServiceUrl: "Maršruta pakalpojums", // shown as a label in config UI dialog box for setting the route url
-      travelModeServiceUrl: "Ceļošanas režīma pakalpojums", // shown as a label in config UI dialog box for setting the travelmode url
-      buttonSet: "Kopa", // shown as a button text for route setting to set route url in config UI dialog box
-      routeServiceUrlHintText: "Padoms. Lai pārlūkotu un izvēlētos maršruta pakalpojumu, noklikšķiniet uz Iestatīt", // shown as a hint label in config UI dialog box to select a route url
-      directionLengthUnit: "Virziena garuma vienības", // shown as a label(options) of select(dropdown) in config UI dialog box in routing section
-      unitsForRouteHintText: "Padoms. Izmanto maršruta vienību rādīšanai", // shown as hint label in config UI dialog box to display routing unit
-      selectRouteSymbol: "Izvēlēties maršruta rādīšanas simbolu", // shown as label in config UI dialog box for selecting symbol for routing
-      routeSymbolHintText: "Padoms. Izmanto, lai parādītu maršruta līnijas simbolu", //shown as hint to select route symbol
-      travelModeServiceUrlHintText: "Padoms. Lai pārlūkotu un izvēlētos ceļojuma režīma pakalpojumu, noklikšķiniet uz Iestatīt", // shown as a hint label in config UI dialog box to select a travelMode service url
-      invalidTravelmodeServiceUrl: "Norādiet derīgu ceļošanas režīma pakalpojumu ", // shown as an error label in alert box when invalid travel mode service url is configured
-      routingDisabledMsg: "Lai aktivizētu virzienus, ArcGIS Online elementā ir jābūt aktivizētai maršrutēšanai." // shown as message in routeSettings tab when routing is disabled in webmap
-    },
-    networkServiceChooser: {
-      arcgislabel: "Pievienot no ArcGIS Online", // shown as a label in route service configuration panel to select route url from portal
-      serviceURLabel: "Pievienot pakalpojuma vietrādi URL", // shown as a label in route service configuration panel to add service url
-      routeURL: "Maršruta URL", // shown as a label in route service configuration panel
-      validateRouteURL: "Validēt", // shown as a button text in route service configuration panel to validate url
-      exampleText: "Piemērs", // shown as a label in route service configuration panel to consider example of route services
-      hintRouteURL1: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/", // shown as a label hint in route service configuration panel
-      hintRouteURL2: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World", // shown as a label hint in route service configuration panel
-      okButton: "Labi", // shown as a button text for route service configuration panel
-      cancelButton: "Atcelt", // shown as a button text for route service configuration panel
-      nextButton: "Tālāk", // shown as a button text for route service configuration panel
-      backButton: "Atpakaļ", // shown as a button text for route service configuration panel
-      invalidRouteServiceURL: "Norādiet derīgu maršruta pakalpojumu." // Shown as an error in alert box invalid route service url is configured.
-    },
-    errorStrings: {
-      bufferErrorString: "Ievadiet skaitlisku vērtību.", // shown as an error label in text box for buffer
-      selectLayerErrorString: "Izvēlieties slāni(ņus), kur meklēt.", // shown as an error label in alert box for selecting layer from map to search
-      invalidDefaultValue: "Noklusējuma buferzonas attālums nedrīkst būt tukšs. Norādiet buferzonas attālumu", // shown as an error label in alert box for blank or empty text box
-      invalidMaximumValue: "Maksimālais buferzonas attālums nedrīkst būt tukšs. Norādiet buferzonas attālumu", // shown as an error label in alert box for blank or empty text box
-      defaultValueLessThanMax: "Norādiet noklusējuma buferzonas attālumu, nepārsniedzot maksimālo ierobežojumu", // shown as an error label in alert box when default value is greater than maximum value of slider
-      defaultBufferValueGreaterThanZero: "Norādiet noklusējuma buferzonas attālumu, kas ir lielāks par 0", // shown as an error label in alert box when we configure default value of slider is zero
-      maximumBufferValueGreaterThanZero: "Norādiet maksimālo buferzonas attālumu, kas ir lielāks par 0" // shown as an error label in alert box when we configure maximum value of slider is zero
-    },
-    symbolPickerPreviewText: "Priekšskatījums:"
-  })
-);
+    "meters": {
+      "displayText": "Metri",
+      "acronym": "m"
+    }
+  },
+  "searchSetting": {
+    "searchSettingTabTitle": "Meklēšanas iestatījumi",
+    "defaultBufferDistanceLabel": "Iestatīt noklusējuma buferzonas attālumu",
+    "maxBufferDistanceLabel": "Iestatīt maksimālo buferzonas attālumu",
+    "bufferDistanceUnitLabel": "Buferzonas attāluma vienības",
+    "defaultBufferHintLabel": "Padoms. Iestatiet buferzonas slīdņa noklusējuma vērtību",
+    "maxBufferHintLabel": "Padoms. Iestatiet buferzonas slīdņa maksimālo vērtību",
+    "bufferUnitLabel": "Padoms. Definējiet vienību buferzonas izveidei",
+    "selectGraphicLocationSymbol": "Adreses vai izvietojuma simbols",
+    "graphicLocationSymbolHintText": "Padoms. Meklētas adreses vai noklikšķināta izvietojuma simbols",
+    "fontColorLabel": "Izvēlēties meklēšanas rezultātu fonta krāsu",
+    "fontColorHintText": "Padoms. Meklēšanas rezultātu fonta krāsa",
+    "zoomToSelectedFeature": "Mērogmainīt līdz atlasītajam elementam",
+    "zoomToSelectedFeatureHintText": "Padoms. Buferzonas vietā mērogmainiet līdz atlasītajam elementam",
+    "intersectSearchLocation": "Atgriezt šķērsojošo(-s) laukumu(-s)",
+    "intersectSearchLocationHintText": "Padoms. Atgrieziet laukumu(-s), kuros ietverts meklētais izvietojums, nevis laukumus ar buferzonu",
+    "bufferVisibilityLabel": "Iestatīt buferzonas redzamību",
+    "bufferVisibilityHintText": "Padoms. Buferzona tiks parādīta kartē",
+    "bufferColorLabel": "Iestatīt buferzonas simbolu",
+    "bufferColorHintText": "Padoms. Atlasiet krāsu un buferzonas caurspīdīgumu",
+    "searchLayerResultLabel": "Zīmēt tikai atlasītā slāņa rezultātus",
+    "searchLayerResultHint": "Padoms. Kartē tiks zīmēts tikai atlasītais slānis meklēšanas rezultātos"
+  },
+  "layerSelector": {
+    "selectLayerLabel": "Atlasīt meklēšanas slāni(ņus)",
+    "layerSelectionHint": "Padoms. Lai izvēlētos slāni(ņus), izmantojiet iestatīšanas pogu",
+    "addLayerButton": "Kopa"
+  },
+  "routeSetting": {
+    "routeSettingTabTitle": "Virzienu iestatījumi",
+    "routeServiceUrl": "Maršruta pakalpojums",
+    "buttonSet": "Kopa",
+    "routeServiceUrlHintText": "Padoms. Noklikšķiniet uz â€˜Iestatītâ€™, lai pārlūkotu un atlasītu maršrutēšanas pakalpojumu",
+    "directionLengthUnit": "Virziena garuma vienības",
+    "unitsForRouteHintText": "Padoms. Izmanto maršruta vienību rādīšanai",
+    "selectRouteSymbol": "Izvēlēties maršruta rādīšanas simbolu",
+    "routeSymbolHintText": "Padoms. Izmanto, lai parādītu maršruta līnijas simbolu",
+    "routingDisabledMsg": "Lai aktivizētu virzienus, ArcGIS Online elementā ir jābūt aktivizētai maršrutēšanai."
+  },
+  "networkServiceChooser": {
+    "arcgislabel": "Pievienot no ArcGIS Online",
+    "serviceURLabel": "Pievienot pakalpojuma vietrādi URL",
+    "routeURL": "Maršruta URL",
+    "validateRouteURL": "Validēt",
+    "exampleText": "Piemērs",
+    "hintRouteURL1": "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/",
+    "hintRouteURL2": "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World",
+    "invalidRouteServiceURL": "Norādiet derīgu maršruta pakalpojumu.",
+    "rateLimitExceeded": "Pārsniegts ātruma ierobežojums. Lūduz, vēlāk mēģiniet vēlreiz.",
+    "errorInvokingService": "Nepareizs lietotājvārds vai parole."
+  },
+  "errorStrings": {
+    "bufferErrorString": "Ievadiet skaitlisku vērtību.",
+    "selectLayerErrorString": "Izvēlieties slāni(ņus), kur meklēt.",
+    "invalidDefaultValue": "Noklusējuma buferzonas attālums nedrīkst būt tukšs. Norādiet buferzonas attālumu",
+    "invalidMaximumValue": "Maksimālais buferzonas attālums nedrīkst būt tukšs. Norādiet buferzonas attālumu",
+    "defaultValueLessThanMax": "Norādiet noklusējuma buferzonas attālumu, nepārsniedzot maksimālo ierobežojumu",
+    "defaultBufferValueGreaterThanZero": "Norādiet noklusējuma buferzonas attālumu, kas ir lielāks par 0",
+    "maximumBufferValueGreaterThanZero": "Norādiet maksimālo buferzonas attālumu, kas ir lielāks par 0"
+  },
+  "symbolPickerPreviewText": "Priekšskatījums:"
+});

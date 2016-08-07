@@ -68,6 +68,9 @@ define([
       this.container = container;
       this.parent = parent;
       this.config = parent.config;
+      this.summaryLayer = null;
+      this.incident = null;
+      this.buffer = null;
     },
 
     /* jshint unused: true */
@@ -75,28 +78,55 @@ define([
     updateForIncident: function(incident, buffer) {
       this.container.innerHTML = "";
       domClass.add(this.container, "loading");
+      this.incident = incident;
+      this.buffer = buffer;
       this.summaryIds = [];
       this.summaryFeatures = [];
-      if (this.tab.tabLayers.length > 0) {
-        if (typeof(this.tab.tabLayers[0].infoTemplate) !== 'undefined') {
-          this.summaryLayer = this.tab.tabLayers[0];
-          this.summaryFields = this._getFields(this.summaryLayer);
-          lang.hitch(this, this._queryFeatures(buffer.geometry));
-        } else {
-          var tempFL = new FeatureLayer(this.tab.tabLayers[0].url);
-          on(tempFL, "load", lang.hitch(this, function() {
+      if (this.summaryLayer) {
+        this._queryFeatures(buffer.geometry);
+      } else {
+        var tempFL = new FeatureLayer(this.tab.tabLayers[0].url);
+        on(tempFL, "load", lang.hitch(this, function() {
+          if (tempFL.capabilities && tempFL.capabilities.indexOf("Query") > -1) {
             this.summaryLayer = tempFL;
             this.summaryFields = this._getFields(this.summaryLayer);
-            lang.hitch(this, this._queryFeatures(buffer.geometry));
-          }));
-        }
+            this._queryFeatures(buffer.geometry);
+          } else {
+            this._processError();
+          }
+        }));
+        on(this.parent.opLayers, "layerInfosFilterChanged",
+            lang.hitch(this, this._layerFilterChanged));
       }
+    },
+
+    // layer filter changed
+    _layerFilterChanged: function(changedLayerInfoArray) {
+      if (this.summaryLayer === null || this.incident === null || this.buffer === null) {
+        return;
+      }
+      var id = this.tab.tabLayers[0].id;
+      array.forEach(changedLayerInfoArray, lang.hitch(this, function(layerInfo) {
+        if(id === layerInfo.id) {
+          this.updateForIncident(this.incident, this.buffer);
+        }
+      }));
     },
 
     // query features
     _queryFeatures: function(geom) {
+      // layer filter
+      var id = this.tab.tabLayers[0].id;
+      var expr = "";
+      this.parent.opLayers.traversal(function(layerInfo){
+        if(id === layerInfo.id && layerInfo.getFilter()) {
+          expr = layerInfo.getFilter();
+          return true;
+        }
+      });
       var query = new Query();
       query.geometry = geom;
+      query.where = expr;
       this.summaryLayer.queryIds(query, lang.hitch(this, function(objectIds) {
         if (objectIds) {
           this.summaryIds = objectIds;
@@ -243,6 +273,13 @@ define([
         value += geometryEngine.geodesicLength(gra.geometry, unitCode);
       });
       return value;
+    },
+
+    // process error
+    _processError: function() {
+      this.container.innerHTML = "";
+      domClass.remove(this.container, "loading");
+      this.container.innerHTML = this.parent.nls.noFeaturesFound;
     },
 
     // process results

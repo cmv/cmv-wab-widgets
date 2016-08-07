@@ -1,5 +1,6 @@
 define(["dojo/_base/declare",
     "jimu/BaseWidget",
+    "jimu/LayerInfos/LayerInfos",
     "jimu/utils",
     "dojo/dom",
     "dojo/dom-style",
@@ -23,7 +24,7 @@ define(["dojo/_base/declare",
     "dojo/on",
     "widgets/Summary/c"
   ],
-  function(declare, BaseWidget, utils,
+  function(declare, BaseWidget, LayerInfos, utils,
     dom, domStyle, domClass, domConstruct, domGeometry, dojoEvent, html,
     lang, array, xhr, query,
     geometryEngine, Graphic, FeatureLayer, Query, number, StatisticDefinition,
@@ -84,6 +85,8 @@ define(["dojo/_base/declare",
         this.labelNode.innerHTML = utils.sanitizeHTML(this.label ? this.label : '');
         this._getStyleColor(null);
 
+        this._watchLayerFilters();
+
         // Process operational layers
         this.opLayers = this.map.itemInfo.itemData.operationalLayers;
         this._processOperationalLayers();
@@ -94,7 +97,7 @@ define(["dojo/_base/declare",
       destroy: function() {
         if (this.clusterLayer) {
           this.map.removeLayer(this.clusterLayer);
-          domConstruct.destroy(this.clusterLayer);
+          //domConstruct.destroy(this.clusterLayer);
         }
         this.inherited(arguments);
       },
@@ -102,8 +105,6 @@ define(["dojo/_base/declare",
       onOpen: function() {
         this.inherited(arguments);
         this._updateLayerVisibility();
-        //Disable because of count error
-        //this._summarizeFeatures();
         this._summarize();
       },
 
@@ -238,6 +239,27 @@ define(["dojo/_base/declare",
         this.counter3.value = 0;
       },
 
+      // watch layer filters
+      _watchLayerFilters: function() {
+        if (this.map.itemId) {
+          LayerInfos.getInstance(this.map, this.map.itemInfo)
+            .then(lang.hitch(this, function(layerInfosObj) {
+              this.layerInfosObj = layerInfosObj;
+              on(this.layerInfosObj, "layerInfosFilterChanged",
+                lang.hitch(this, this._layerFilterChanged));
+            }));
+        }
+      },
+
+      // layer filter changed
+      _layerFilterChanged: function(changedLayerInfoArray) {
+        array.forEach(changedLayerInfoArray, lang.hitch(this, function(layerInfo) {
+          if(this.config.summaryLayer.id === layerInfo.id) {
+            this._summarize();
+          }
+        }));
+      },
+
       _processOperationalLayers: function() {
         if (!this.opLayers) {
           this._showMessage(this.nls.missingLayerInWebMap);
@@ -279,6 +301,7 @@ define(["dojo/_base/declare",
         }
       },
 
+
       // set layer
       _setLayer: function() {
         if (this.map.infoWindow.isShowing) {
@@ -287,7 +310,6 @@ define(["dojo/_base/declare",
         this._closeMessage();
         this.targetLayerVisibility = (this.targetLayer.visible) ? true : false;
 
-        //this.own(on(this.map, "extent-change", lang.hitch(this, this._summarizeFeatures)));
         this.own(on(this.map, "extent-change", lang.hitch(this, this._summarize)));
 
         this._configureFields();
@@ -300,8 +322,7 @@ define(["dojo/_base/declare",
             this.clusterLayer.setVisibility(true);
           }
         }
-        //setTimeout(lang.hitch(this, this._summarizeFeatures), 600);
-        lang.hitch(this, this._summarize);
+        //lang.hitch(this, this._summarize);
       },
 
       // configure fields
@@ -379,17 +400,23 @@ define(["dojo/_base/declare",
             this._populateOptions(arrayF);
             // feature layers
           } else {
+            // var query = new Query();
+            // var statDef = new StatisticDefinition();
+            // statDef.statisticType = "count";
+            // statDef.onStatisticField = fieldName;
+            // statDef.outStatisticFieldName = "STAT_COUNT";
+            // query.returnGeometry = false;
+            // query.where = "1=1";
+            // query.orderByFields = [fieldName];
+            // query.groupByFieldsForStatistics = [fieldName];
+            // query.outStatistics = [statDef];
+            //console.log("OP LAYER", this.opLayer, this.opLayer.supportsAdvancedQueries);
             var query = new Query();
-            var statDef = new StatisticDefinition();
-            statDef.statisticType = "count";
-            statDef.onStatisticField = fieldName;
-            statDef.outStatisticFieldName = "STAT_COUNT";
             query.returnGeometry = false;
+            query.returnDistinctValues = true;
             query.where = "1=1";
+            query.outFields = [fieldName];
             query.orderByFields = [fieldName];
-            query.groupByFieldsForStatistics = [fieldName];
-            query.outStatistics = [statDef];
-
             this.opLayer.queryFeatures(query, lang.hitch(this, function(featureSet) {
               for (var i = 0; i < featureSet.features.length; i++) {
                 var feature = featureSet.features[i];
@@ -496,14 +523,14 @@ define(["dojo/_base/declare",
           clearTimeout(this.sumTimer);
           this.sumTimer = null;
         }
-        this.sumTimer = setTimeout(lang.hitch(this, this._summarizeFeatures), 600);
+        this.sumTimer = setTimeout(lang.hitch(this, this._summarizeFeatures), 300);
       },
 
       // summarize features
       _summarizeFeatures: function() {
-        if (this.summaryIds.length > 0) {
-          return;
-        }
+        // if (this.summaryIds.length > 0) {
+        //   return;
+        // }
         this.summaryIds = [];
         this.summaryFeatures = [];
         if (this.opLayer) {
@@ -564,6 +591,18 @@ define(["dojo/_base/declare",
         this.summaryFeatures = [];
         var query = new Query();
         query.geometry = ext;
+
+        // layer filter
+        var id = this.config.summaryLayer.id;
+        var expr = "";
+        this.layerInfosObj.traversal(function(layerInfo){
+          if(id === layerInfo.id && layerInfo.getFilter()) {
+            expr = layerInfo.getFilter();
+            return true;
+          }
+        });
+        query.where = expr;
+
         if (this.defQuery) {
           this.defQuery.cancel("new");
           this.defQuery = null;
@@ -603,7 +642,7 @@ define(["dojo/_base/declare",
           this._updateCounters();
           if (this.summaryIds.length > 0) {
             //this._queryFeaturesByIds();
-            setTimeout(lang.hitch(this, this._queryFeaturesByIds), 900);
+            setTimeout(lang.hitch(this, this._queryFeaturesByIds), 500);
           }
         }));
       },

@@ -87,6 +87,9 @@ define([
           lang.mixin(style, this.position);
           domStyle.set(this.domNode, utils.getPositionStyle(style));
           setTimeout(lang.hitch(this, function() {
+            if (!this.domNode) {
+              return;
+            }
             domStyle.set(this.domNode, utils.getPositionStyle(style));
           }), 1000);
         }), lang.hitch(this, function(err) {

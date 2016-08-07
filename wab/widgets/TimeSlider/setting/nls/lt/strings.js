@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    showLayerLabels: "Rodyti laiku papildytų sluoksnių pavadinimus valdiklyje."
-  })
-);
+define({
+  "showLayerLabels": "Rodyti laiku papildytų sluoksnių pavadinimus valdiklyje."
+});

@@ -1,19 +1,22 @@
-﻿define(
-   ({
-    defaultAreaUnit: "Standardenhet för yta",
-    defaultLengthUnit: "Standardenhet för längd",
-    acres: "Tunnland",
-    sqMiles: "Engelska kvadratmil",
-    sqKilometers: "Kvadratkilometer",
-    hectares: "Hektar",
-    sqYards: "Kvadratyard",
-    sqFeet: "Kvadratfot",
-    sqMeters: "Kvadratmeter",
-    miles: "Engelska mil",
-    kilometers: "Kilometer",
-    feet: "Fot",
-    meters: "Meter",
-    yards: "Yard",
-    nauticalMiles: "Nautiska mil"
-  })
-);
+define({
+  "defaultAreaUnit": "Standardenhet för yta",
+  "defaultLengthUnit": "Standardenhet för längd",
+  "acres": "Tunnland",
+  "sqMiles": "Engelska kvadratmil",
+  "sqKilometers": "Kvadratkilometer",
+  "hectares": "Hektar",
+  "sqYards": "Kvadratyard",
+  "sqFeet": "Kvadratfot",
+  "sqMeters": "Kvadratmeter",
+  "miles": "Engelska mil",
+  "kilometers": "Kilometer",
+  "feet": "Fot",
+  "meters": "Meter",
+  "yards": "Yard",
+  "nauticalMiles": "Nautiska mil",
+  "showArea": "Yta",
+  "showDistance": "Avstånd",
+  "showLocation": "Plats",
+  "showtools": "Visa mätverktyg:",
+  "allHidedTips": "Minst ett verktyg måste väljas."
+});

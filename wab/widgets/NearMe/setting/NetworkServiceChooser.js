@@ -206,9 +206,17 @@ define([
               .invalidRouteServiceURL);
           this.loading.hide();
         }
-      }), lang.hitch(this, function () {
-        this._resetRouteSearch(routeTreeNode, this.nls.networkServiceChooser
+      }), lang.hitch(this, function (err) {
+        if (err && err.message === "Rate limit exceeded. Please try again later.") {
+          this._resetRouteSearch(routeTreeNode, this.nls.networkServiceChooser
+          .rateLimitExceeded);
+        } else if (err && err.message === "Error invoking service") {
+          this._resetRouteSearch(routeTreeNode, this.nls.networkServiceChooser
+          .errorInvokingService);
+        } else {
+          this._resetRouteSearch(routeTreeNode, this.nls.networkServiceChooser
           .invalidRouteServiceURL);
+        }
         this.loading.hide();
       }));
     },

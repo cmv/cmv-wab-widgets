@@ -32,6 +32,12 @@ function(declare, lang, html, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
   return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
     baseClass: 'jimu-widget-setting-gp',
 
+    postMixInProperties: function(){
+      this.inherited(arguments);
+      lang.mixin(this.nls, window.jimuNls.common);
+      lang.mixin(this.nls, window.jimuNls.units);
+    },
+
     startup: function(){
       this.inherited(arguments);
 
@@ -47,7 +53,12 @@ function(declare, lang, html, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
       }, this.stackNode);
       this.viewStack.startup();
       this.setConfig(this.config);
-      setTimeout(lang.hitch(this, this.resize), 100);
+      setTimeout(lang.hitch(this, function() {
+        this.resize();
+        if(!this.config.taskUrl){
+          this._onChooseTaskClicked();
+        }
+      }), 100);
     },
 
     _onChooseTaskClicked: function(){

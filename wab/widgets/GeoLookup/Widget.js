@@ -38,7 +38,7 @@ define(['dojo/_base/declare',
         'esri/symbols/jsonUtils',
         'esri/renderers/UniqueValueRenderer',
         'jimu/dijit/Message',
-        'jimu/CSVUtils',
+        'jimu/exportUtils',
         'jimu/utils',
         './layerQueryDetails'],
 function(declare,
@@ -66,7 +66,7 @@ function(declare,
         symbolJsonUtils,
         UniqueValueRenderer,
         Message,
-        CSVUtils,
+        exportUtils,
         utils,
         layerQueryDetails) {
 
@@ -260,7 +260,7 @@ function(declare,
       if(data.length > 2) {
         var newLineIndex = data.indexOf('\n');
         var firstLine = lang.trim(data.substr(0, newLineIndex));
-        var remainder = data.replace(firstLine,'');
+        var remainder = data.replace(firstLine, '');
         if (firstLine !== '' && remainder.length > 2) { //2 to handle CSV with no record. just header.
           console.log(newLineIndex);
           var separator = this._getSeparator(firstLine);
@@ -268,7 +268,7 @@ function(declare,
             data : data,
             separator : separator
           });
-    
+
           this.csvStore.fetch({
             onComplete : lang.hitch(this, this._csvReadComplete),
             onError : lang.hitch(this, function(error) {
@@ -287,7 +287,7 @@ function(declare,
             message : this.nls.error.CSVNoRecords
           });
           domClass.remove(this.showFileDialogBtn, 'jimu-state-disabled');
-          this.clearCSVResults();  
+          this.clearCSVResults();
         }
       } else {
         new Message({
@@ -295,7 +295,7 @@ function(declare,
         });
         domClass.remove(this.showFileDialogBtn, 'jimu-state-disabled');
         this.clearCSVResults();
-      } 
+      }
     },
     _csvReadComplete : function(items) {
       if (items.length <= parseInt(this.config.maxRowCount, 10)) {
@@ -310,14 +310,12 @@ function(declare,
         var featureCollection = this._generateFeatureCollectionTemplateCSV(this.csvStore, items);
         var popupInfo = this._generateDefaultPopupInfo(featureCollection);
         var infoTemplate = new InfoTemplate(this._buildInfoTemplate(popupInfo));
-
         var mapProj = "latlon";
         array.forEach(this.inputForm.rdProjection, lang.hitch(this, function(radio){
           if(radio.checked) {
             mapProj = radio.value;
           }
         }));
-
         this.latField = null;
         this.longField = null;
         array.some(this.csvFields, function(fieldName) {
@@ -358,7 +356,8 @@ function(declare,
           attributes.__OBJECTID = objectId;
           attributes[this.config.intersectField] = this.config.valueOut;
           objectId++;
-
+          var latitude = 0;
+          var longitude = 0;
           if (isNaN(attributes[this.latField]) || isNaN(attributes[this.longField])) {
             errorFlag = true;
             errorCnt = errorCnt + 1;
@@ -368,15 +367,16 @@ function(declare,
               0 : errorCnt
             });
           } else {
-            var latitude = parseFloat(attributes[this.latField]);
-            var longitude = parseFloat(attributes[this.longField]);
+            latitude = parseFloat(attributes[this.latField]);
+            longitude = parseFloat(attributes[this.longField]);
           }
 
           if (!errorFlag) {
+            var geometry;
             if(mapProj === 'latlon') {
-              var geometry = new Point(webMercatorUtils.lngLatToXY(longitude, latitude), this.srWebMerc);
+              geometry = new Point(webMercatorUtils.lngLatToXY(longitude, latitude), this.srWebMerc);
             } else {
-              var geometry = new Point(longitude, latitude, this.srWebMerc);
+              geometry = new Point(longitude, latitude, this.srWebMerc);
             }
 
             var feature = {
@@ -621,8 +621,17 @@ function(declare,
 
     },
     downloadCSVResults: function() {
+      console.log(this.featureLayer);
+      //CSVUtils.exportCSVFromFeatureLayer(this.nls.savingCSV, this.featureLayer, {fromClient:true});
+      var ds = exportUtils.createDataSource({
+        type: exportUtils.TYPE_FEATURESET,
+        filename: this.nls.savingCSV,
+        data: utils.toFeatureSet(this.featureLayer.graphics)
+      });
 
-      CSVUtils.exportCSVFromFeatureLayer(this.nls.savingCSV, this.featureLayer, {fromClient:true});
+      ds.setFormat(exportUtils.FORMAT_CSV);
+      ds.download();
+
     },
     clearCSVResults : function() {
       if (this.layerLoaded) {

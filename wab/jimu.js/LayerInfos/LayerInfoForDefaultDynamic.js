@@ -115,11 +115,6 @@ define([
       }
     }
 
-    // isShowInMap: function() {
-    //   return this.isVisbleOrInvisilbe();
-    // }
-
-
   });
   return clazz;
 });

@@ -117,16 +117,6 @@ define([
         this._initLayers();
         this._verifyRouting();
 
-        if (this.config.enableRouting) {
-          this.config.enableRouting = false;
-          var widgets = this.appConfig.widgetPool.widgets;
-          array.forEach(widgets, lang.hitch(this, function(w) {
-            if (w.name === "Directions") {
-              this.config.enableRouting = true;
-            }
-          }));
-        }
-
         this.SLIDER_MAX_VALUE = this.config.bufferRange.maximum;
 
         // set operational layers
@@ -140,7 +130,6 @@ define([
       onOpen: function() {
         this.inherited(arguments);
         this._getTabLayersVisibility();
-        this._addActionLink();
         this._clickTab(0);
       },
 
@@ -148,7 +137,6 @@ define([
         this._clear();
         this._toggleTabLayersOld();
         this._setTabLayersVisibility();
-        this._removeActionLink();
         this.inherited(arguments);
       },
 
@@ -188,34 +176,6 @@ define([
           case 'widgetPoolChange':
             this._verifyRouting();
             break;
-        }
-      },
-
-      // add action link
-      _addActionLink: function() {
-        var actionLabel = this.nls.actionLabel;
-        var actionLink;
-        var aDom = query(".actionList", this.map.infoWindow.domNode);
-        if (aDom.length > 0) {
-          var aLinks = query("#actionLink", aDom[0]);
-          if (aLinks.length > 0) {
-            actionLink = aLinks[0];
-          } else {
-            actionLink = domConstruct.create("a", {
-              "class": "action",
-              "id": "actionLink",
-              "innerHTML": actionLabel,
-              "href": "javascript: void(0);"
-            }, aDom[0]);
-          }
-          this.own(on(actionLink, "click", lang.hitch(this, this._setEventLocation)));
-        }
-      },
-
-      // remove action link
-      _removeActionLink: function() {
-        if (dom.byId("actionLink")) {
-          domConstruct.destroy(dom.byId("actionLink"));
         }
       },
 
@@ -291,11 +251,10 @@ define([
         }
       },
 
-      _setEventLocation: function() {
-        var feature = this.map.infoWindow.getSelectedFeature();
+      _setEventLocation: function(features) {
         var pData = {
           "eventType": "IncidentLocation",
-          "dataValue": feature
+          "dataValue": features
         };
         this.onReceiveData("", "", pData);
       },
@@ -356,6 +315,7 @@ define([
         var lbl = utils.sanitizeHTML(this.config.bufferLabel ? this.config.bufferLabel : '');
         lbl += " (" + this.nls[units] + ")";
         this.buffer_lbl.innerHTML = lbl;
+        this.buffer_lbl.title = lbl;
 
         var sliderNode = dom.byId("horizontalSliderDiv");
         var rulesNode = document.createElement('div');
@@ -635,6 +595,9 @@ define([
 
       // get tab layers visibility
       _getTabLayersVisibility: function() {
+        if (this.config.disableLayerManagement) {
+          return;
+        }
         array.forEach(this.config.tabs, lang.hitch(this, function(tab) {
           array.forEach(tab.tabLayers, lang.hitch(this, function(layer) {
             if (typeof(layer.visible) !== 'undefined') {
@@ -647,6 +610,9 @@ define([
 
       // set tab layers visibility
       _setTabLayersVisibility: function() {
+        if (this.config.disableLayerManagement) {
+          return;
+        }
         array.forEach(this.config.tabs, lang.hitch(this, function(tab) {
           array.forEach(tab.tabLayers, lang.hitch(this, function(layer) {
             if (layer.id in this.tabLayersVisibility) {
@@ -672,6 +638,9 @@ define([
         }
         this.lyrClosest.setVisibility(false);
         this.lyrProximity.setVisibility(false);
+        if (this.config.disableLayerManagement) {
+          return;
+        }
         if (oldTab.tabLayers) {
           array.forEach(oldTab.tabLayers, function(layer) {
             if (typeof(layer.visible) !== 'undefined') {
@@ -688,35 +657,18 @@ define([
           case "incidents":
             break;
           case "summary":
-            if (tab.tabLayers) {
-              array.forEach(tab.tabLayers, function(layer) {
-                layer.setVisibility(true);
-              });
-            }
             if (this.incident && tab.updateFlag === true) {
               tab.summaryInfo.updateForIncident(this.incident, this.buffer);
               tab.updateFlag = false;
             }
             break;
           case "weather":
-            if (tab.tabLayers) {
-              array.forEach(tab.tabLayers, function(layer) {
-                layer.setVisibility(true);
-              });
-            }
             if (this.incident && tab.updateFlag === true) {
               tab.weatherInfo.updateForIncident(this.incident);
               tab.updateFlag = false;
             }
             break;
           case "closest":
-            if (tab.tabLayers) {
-              array.forEach(tab.tabLayers, function(layer) {
-                if (typeof(layer.visible) !== 'undefined') {
-                  layer.setVisibility(true);
-                }
-              });
-            }
             this.lyrClosest.setVisibility(true);
             //if (this.incident && tab.updateFlag === true) {
             if (this.incident) {
@@ -726,15 +678,7 @@ define([
             }
             break;
           case "proximity":
-            if (tab.tabLayers) {
-              array.forEach(tab.tabLayers, function(layer) {
-                if (typeof(layer.visible) !== 'undefined') {
-                  layer.setVisibility(true);
-                }
-              });
-            }
             this.lyrProximity.setVisibility(true);
-            //if (this.incident && tab.updateFlag === true) {
             if (this.incident) {
               tab.proximityInfo.updateForIncident(this.incident, this.buffer, this.lyrProximity);
               tab.updateFlag = false;
@@ -742,6 +686,16 @@ define([
             break;
         }
         tab.updateFlag = false;
+        if (this.config.disableLayerManagement) {
+          return;
+        }
+        if (tab.tabLayers) {
+          array.forEach(tab.tabLayers, function(layer) {
+            if (typeof(layer.visible) !== 'undefined') {
+              layer.setVisibility(true);
+            }
+          });
+        }
       },
 
       // draw incidents
@@ -861,7 +815,8 @@ define([
       _verifyRouting: function() {
         if (this.config.enableRouting) {
           this.config.enableRouting = false;
-          var widgets = this.appConfig.widgetPool.widgets;
+          //var widgets = this.appConfig.widgetPool.widgets;
+          var widgets = this.appConfig.getConfigElementsByName("Directions");
           array.forEach(widgets, lang.hitch(this, function(w) {
             if (w.name === "Directions") {
               this.dirConfig = w;
@@ -886,74 +841,27 @@ define([
         this.stops = [loc, pt];
         // TO DO: send data to directions widget
         var id = this.dirConfig.id;
-        var name = this.appConfig.theme.name;
-        var controllerWidget = this.widgetManager.getControllerWidgets()[0];
-        switch (name) {
-          case "BoxTheme":
-          case "DartTheme":
-            controllerWidget.setOpenedIds([id]);
-            break;
-          case "FoldableTheme":
-          case "JewelryBoxTheme":
-            var node = controllerWidget._getIconNodeById(id);
-            if (node) {
-              controllerWidget._onIconClick(node);
-            }
-            break;
-          case "TabTheme":
-            controllerWidget._hideOffPanelWidgets();
-            var tabs = controllerWidget.tabs;
-            var idx = 0;
-            for (var i = 0; i < tabs.length; i++) {
-              if (tabs[i].flag !== "more") {
-                if (tabs[i].config.id === id) {
-                  idx = i;
-                  break;
-                }
-              } else {
-                idx = i;
-                var groups = tabs[i].config.groups;
-                for (var j = 0; j < groups.length; j++) {
-                  if (groups[j].id === id) {
-                    controllerWidget._addGroupToMoreTab(groups[j]);
-                  }
-                }
-              }
-            }
-            controllerWidget.selectTab(idx);
-            setTimeout(lang.hitch(controllerWidget, controllerWidget._resizeToMax), 500);
-            break;
-          case "LaunchpadTheme":
-            controllerWidget.setOpenedIds([id]);
-            break;
-          default:
-            this.openWidgetById(id);
-            break;
-        }
-        setTimeout(lang.hitch(this, this._addStops), 2000);
-      },
 
-      _addStops: function() {
-        var w = this.widgetManager.getWidgetById(this.dirConfig.id);
-        if (w && w.state !== "closed") {
-          var d = w._dijitDirections;
-          if (d) {
-            d.reset();
-            d.addStops(this.stops);
-          }
-        }
+        this.widgetManager.triggerWidgetOpen(id).then(lang.hitch(this, function(w){
+          w.addStop(this.stops[0]);
+          w.addStop(this.stops[1]);
+        }));
       },
 
       // get tab layers
       _getTabLayers: function(names) {
         var lyrs = [];
         array.forEach(this.opLayers._layerInfos, lang.hitch(this, function(layer) {
-          if (layer.newSubLayers.length > 0) {
+          var layerType = layer.originOperLayer.layerType;
+          if (layerType === "ArcGISMapServiceLayer" && layer.newSubLayers.length > 0) {
             this._recurseOpLayers(layer.newSubLayers, lyrs, names);
           } else {
             if (names.indexOf(layer.title) > -1) {
-              //layer.layerObject.setVisibility(false);
-              lyrs.push(layer.layerObject);
+              if (layerType === "ArcGISFeatureLayer" && layer.originOperLayer.featureCollection) {
+                lyrs.push(layer.originOperLayer);
+              } else {
+                lyrs.push(layer.layerObject);
+              }
             }
           }
         }));
@@ -963,11 +871,16 @@ define([
       _recurseOpLayers: function(pNode, pLyrs, pNames) {
         var nodeGrp = pNode;
         array.forEach(nodeGrp, lang.hitch(this, function(Node) {
-          if (Node.newSubLayers.length > 0) {
+          var layerType = Node.originOperLayer.layerType;
+          if (layerType === "ArcGISMapServiceLayer" && Node.newSubLayers.length > 0) {
             this._recurseOpLayers(Node.newSubLayers, pLyrs, pNames);
           } else {
             if (pNames.indexOf(Node.title) > -1) {
-              pLyrs.push(Node.layerObject);
+              if (layerType === "ArcGISFeatureLayer" && Node.originOperLayer.featureCollection) {
+                pLyrs.push(Node.originOperLayer);
+              } else {
+                pLyrs.push(Node.layerObject);
+              }
             }
           }
         }));

@@ -21,16 +21,12 @@ define([
     'dojo/_base/html',
     'dojo/on',
     'dojo/_base/lang',
+    'jimu/utils',
     'jimu/dijit/Message',
     'dojo/touch'
   ],
   function(
-    declare,
-    BaseWidget,
-    LocateButton,
-    html,
-    on,
-    lang) {
+    declare, BaseWidget, LocateButton, html, on, lang, jimuUtils) {
     var clazz = declare([BaseWidget], {
 
       name: 'MyLocation',
@@ -39,10 +35,17 @@ define([
       startup: function() {
         this.inherited(arguments);
         this.placehoder = html.create('div', {
-          'class': 'place-holder'
+          'class': 'place-holder',
+          title: this.label
         }, this.domNode);
 
-        if (window.navigator.geolocation) {
+        this.isNeedHttpsButNot = jimuUtils.isNeedHttpsButNot();
+
+        if (true === this.isNeedHttpsButNot) {
+          console.log('LocateButton::navigator.geolocation requires a secure origin.');
+          html.addClass(this.placehoder, "nohttps");
+          html.setAttr(this.placehoder, 'title', this.nls.httpNotSupportError);
+        } else if (window.navigator.geolocation) {
           this.own(on(this.placehoder, 'click', lang.hitch(this, this.onLocationClick)));
         } else {
           html.setAttr(this.placehoder, 'title', this.nls.browserError);

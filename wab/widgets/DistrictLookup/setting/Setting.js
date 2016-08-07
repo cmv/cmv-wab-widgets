@@ -30,13 +30,13 @@ define([
   "jimu/dijit/Popup",
   "./NetworkServiceChooser",
   "./LayerChooser",
-  "jimu/dijit/GpSource",
-  "esri/request",
   "jimu/portalUtils",
   "dojo/dom-style",
   "dojo/_base/array",
   "jimu/dijit/TabContainer3",
   'jimu/symbolUtils',
+  "jimu/dijit/ColorPicker",
+  "dojo/_base/Color",
   "dojo/domReady!"
 ], function (
   declare,
@@ -55,13 +55,13 @@ define([
   Popup,
   NetworkServiceChooser,
   LayerChooser,
-  GpSource,
-  esriRequest,
   portalUtils,
   domStyle,
   array,
   TabContainer3,
-  symbolUtils
+  symbolUtils,
+  ColorPicker,
+  Color
 ) {
   return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
     baseClass: 'jimu-widget-districtlookup-setting',
@@ -69,6 +69,11 @@ define([
     _symbolParams: {},
     startup: function () {
       this.inherited(arguments);
+    },
+
+    postMixInProperties: function(){
+      //mixin default nls with widget nls
+      this.nls = lang.mixin(this.nls, window.jimuNls.common);
     },
 
     postCreate: function () {
@@ -109,8 +114,7 @@ define([
         this._showLayerChooser)));
       this.own(on(this.onSetBtnClickNode, 'click', lang.hitch(this,
         this._showRouteChooser)));
-      this.own(on(this.travelModeSetBtnNode, 'click', lang.hitch(this,
-        this._showGPServiceChooser)));
+      this._createColorPicker();
       //set previous/default config
       this.setConfig();
     },
@@ -151,10 +155,10 @@ define([
         return false;
       }
       this.config = {
+        "highlightColor": this._highlightColorPicker.color.toHex(),
         "precinctLayerInfo": this.precinctLayerInfo,
         "pollingPlaceLayerInfo": this.pollingPlaceLayerInfo,
         "routeService": this.routeServiceURLNode.value,
-        "travelModeService": this.travelModeServiceURLNode.value,
         "directionLengthUnit": this.UnitsDetails[this.directionLengthUnitNode
           .value],
         "symbols": this._symbolParams
@@ -171,6 +175,10 @@ define([
       var helperServices = portalUtils.getPortal(this.appConfig.portalUrl)
         .helperServices;
       if (this.config) {
+        //set configured color selected in color picker node
+        if (this.config.highlightColor) {
+          this._highlightColorPicker.setColor(new Color(this.config.highlightColor));
+        }
         if (this.config.precinctLayerInfo && this.config.pollingPlaceLayerInfo) {
           //Update the layerDetails from the current webmap
           this._updateConfig();
@@ -194,17 +202,6 @@ define([
           this.routeServiceURLNode.set("value", window.location.protocol +
             "//route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World"
           );
-        }
-        //set the travel mode service url if previously configured
-        //else if set it to organizations routing service
-        //else set it to empty as it is optional
-        if (this.config.travelModeService) {
-          this.travelModeServiceURLNode.set("value", this.config.travelModeService);
-        } else if (helperServices && helperServices.routingUtilities &&
-          helperServices.routingUtilities.url) {
-          this.travelModeServiceURLNode.set("value", helperServices.routingUtilities.url);
-        } else {
-          this.travelModeServiceURLNode.set("value", "");
         }
       }
     },
@@ -253,7 +250,8 @@ define([
         params = {
           symbolChooserTitle: symbolChooserTitle,
           symbolParams: objSymbol,
-          symbolType: symbolType
+          symbolType: symbolType,
+          nls: this.nls
         };
         //display configured symbol in symbol chooser node
         this._showSelectedSymbol(symbolChooserNode, objSymbol.symbol, symbolType);
@@ -343,6 +341,31 @@ define([
     },
 
     /**
+    * This function creates color picker instance to select font color
+    * @memberOf widgets/DistrictLookup/setting/setting
+    **/
+    _createColorPicker: function () {
+      var tablePreviwText, trPreviewText, tdPreviewText, tdSymbolNode,
+        divPreviewText, colorPickerDivNode;
+      tablePreviwText = domConstruct.create("table", { "cellspacing": "0",
+        "cellpadding": "0"
+      }, this.colorPickerNode);
+      trPreviewText = domConstruct.create("tr", { "style": "height:30px" }, tablePreviwText);
+      tdPreviewText = domConstruct.create("td", {}, trPreviewText);
+      divPreviewText = domConstruct.create("div", {
+        "innerHTML": this.nls.symbolPickerPreviewText,
+        "class": "esriCTSymbolPreviewText"
+      }, tdPreviewText);
+      tdSymbolNode = domConstruct.create("td", {}, trPreviewText);
+      //create content div for color picker node
+      colorPickerDivNode = domConstruct.create("div", {
+        "class": "esriCTColorChooserNode"
+      }, tdSymbolNode);
+      this._highlightColorPicker = new ColorPicker(null, domConstruct.create("div", {},
+      colorPickerDivNode));
+    },
+
+    /**
     * This function create error alert.
     * @param {string} err
     * @memberOf widgets/DistrictLookup/setting/Setting
@@ -354,75 +377,6 @@ define([
       errorMessage.message = err;
     },
 
-    /**
-    * Creates and show popup to choose travel mode service URL.
-    * @memberOf widgets/DistrictLookup/setting/Setting
-    */
-    _showGPServiceChooser: function () {
-      var args = {
-        portalUrl: this.appConfig.portalUrl
-      },
-        gpSource = new GpSource(args),
-        popup = new Popup({
-          titleLabel: this.nls.routeSetting.travelModeServiceUrl,
-          width: 830,
-          height: 560,
-          content: gpSource
-        });
-
-      this.own(on(gpSource, 'ok', lang.hitch(this, function (tasks) {
-        if (tasks.length === 0) {
-          this._errorMessage(this.nls.routeSetting.invalidTravelmodeServiceUrl);
-          return;
-        }
-        this._validateGPServiceURL(tasks[0].url, popup);
-      })));
-      this.own(on(gpSource, 'cancel', lang.hitch(this, function () {
-        popup.close();
-      })));
-    },
-
-    /**
-    * This function used for querying TravelModes form the configured service url
-    * @memberOf widgets/DistrictLookup/settings/Setting
-    */
-    _validateGPServiceURL: function (gpServiceURL, popup) {
-      var args, travelmodeServiceUrl;
-      travelmodeServiceUrl = gpServiceURL + "/execute";
-      args = {
-        url: travelmodeServiceUrl,
-        content: {
-          f: "json"
-        },
-        handleAs: "json",
-        callbackParamName: "callback"
-      };
-      esriRequest(args).then(lang.hitch(this, function (response) {
-        var i = 0, isValid = false;
-        // if response returned from the queried request
-        if (response.hasOwnProperty("results")) {
-          if (response.results.length > 0) {
-            for (i = 0; i < response.results.length; i++) {
-              if (response.results[i].hasOwnProperty("paramName")) {
-                if (response.results[i].paramName === "supportedTravelModes") {
-                  isValid = true;
-                  break;
-                }
-              }
-            }
-          }
-        }
-        //if URL is valid travel mode service URL then set in the textBox else show error
-        if (isValid) {
-          this.travelModeServiceURLNode.set("value", gpServiceURL);
-          popup.close();
-        } else {
-          this._errorMessage(this.nls.routeSetting.invalidTravelmodeServiceUrl);
-        }
-      }), lang.hitch(this, function () {
-        this._errorMessage(this.nls.routeSetting.invalidTravelmodeServiceUrl);
-      }));
-    },
     /**
     * Creates and show popup to choose route URL.
     * @memberOf widgets/DistrictLookup/setting/Setting

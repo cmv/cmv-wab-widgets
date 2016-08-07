@@ -58,11 +58,11 @@ function(array, Deferred, esriRequest) {
 
     return esriRequest(args).then(function(taskInfo){
       ret = taskInfo;
-      return getGPServerDescription(gpTaskUrl).then(function(serverInfo){
+      return mo.getGPServerDescription(gpTaskUrl).then(function(serverInfo){
         ret.serverInfo = serverInfo;
         ret.useResultMapServer = serverInfo.hasResultMapServer;
 
-        return uploadSupported(serverInfo).then(function(uploadsInfo){
+        return mo.uploadSupported(serverInfo).then(function(uploadsInfo){
           ret.serverInfo.supportsUpload = uploadsInfo.supportsUpload;
           if("maxUploadFileSize" in uploadsInfo){
             ret.serverInfo.maxUploadFileSize = uploadsInfo.maxUploadFileSize;
@@ -73,9 +73,9 @@ function(array, Deferred, esriRequest) {
     });
   };
 
-  function getGPServerDescription(gpTaskUrl){
+  mo.getGPServerDescription = function(gpTaskUrl) {
     var args = {
-      url: getGPServerUrl(gpTaskUrl),
+      url: mo.getGPServerUrl(gpTaskUrl),
       content: {f: "json"},
       handleAs:"json",
       callbackParamName: 'callback'
@@ -92,14 +92,17 @@ function(array, Deferred, esriRequest) {
           serverDescription.resultMapServerName !== '';
       return serverInfo;
     });
-  }
+  };
 
-  function getGPServerUrl(gpTaskUrl){
+  mo.getGPServerUrl = function(gpTaskUrl) {
+    if (!(/\/GPServer\/.+$/.test(gpTaskUrl))) {
+      return '';
+    }
     var lastPathIndex = gpTaskUrl.search(/[\w]+[^\/]*$/g);
     return gpTaskUrl.substr(0, lastPathIndex);
-  }
+  };
 
-  function uploadSupported(serverInfo){
+  mo.uploadSupported = function(serverInfo) {
     if(serverInfo.currentVersion >= 10.1){
       //get upload info
       var args = {
@@ -122,7 +125,7 @@ function(array, Deferred, esriRequest) {
       retDef.resolve({supportsUpload:false});
       return retDef;
     }
-  }
+  };
 
   return mo;
 });

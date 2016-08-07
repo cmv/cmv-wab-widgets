@@ -40,6 +40,17 @@
                             ${nls.layerSetting.graphicLocationSymbolHintText}</div>
                     </div>
                 </div>
+                 <div class="esriCTLayerContainer row">
+                    <div class="esriCTlabel" title="${nls.layerSetting.selectColorForPoint}">
+                        ${nls.layerSetting.selectColorForPoint}
+                    </div>
+                    <div class="esriCTLayerField">
+                        <div class="esriCTPreviewField" data-dojo-attach-point="colorPickerNode">
+                        </div>
+                        <div class="esriCTHint esriCTPreviewHintField">
+                            ${nls.layerSetting.selectColorForPointHintText}</div>
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Direction Settings tab -->
@@ -58,22 +69,6 @@
                             ${nls.routeSetting.buttonSet}</div>
                         <div class="esriCTHint">
                             ${nls.routeSetting.routeServiceUrlHintText}
-                        </div>
-                    </div>
-                </div>
-                <div class="esriCTLayerContainer row">
-                    <div class="esriCTlabel esriCTLabelContainer" data-dojo-attach-point="travelModeServiceLabelNode"
-                        title="${nls.routeSetting.travelModeServiceUrl}">
-                        ${nls.routeSetting.travelModeServiceUrl}
-                    </div>
-                    <div class="esriCTLayerField">
-                        <div class="esriCTSetRouteURL" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="travelModeServiceURLNode"
-                            trim="true" disabled>
-                        </div>
-                        <div class="jimu-btn jimu-float-trailing esriCTURLSetButton" data-dojo-attach-point="travelModeSetBtnNode" title="${nls.routeSetting.buttonSet}">
-                            ${nls.routeSetting.buttonSet}</div>
-                        <div class="esriCTHint">
-                            ${nls.routeSetting.travelModeServiceUrlHintText}
                         </div>
                     </div>
                 </div>
@@ -105,7 +100,7 @@
                     </div>
                 </div>
             </div>
-            <div class="esriCTHidden esriCTLayerContainer row routing-disabled-msg" data-dojo-attach-point="routingDisabledMsg">
+            <div class="esriCTHidden esriCTLayerContainer row" data-dojo-attach-point="routingDisabledMsg">
                 ${nls.routeSetting.routingDisabledMsg}</div>
         </div>
     </div>

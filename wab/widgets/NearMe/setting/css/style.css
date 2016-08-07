@@ -14,8 +14,8 @@
     margin-top: 5px;
     margin-bottom: 5px;
     float: left;
-    overflow: hidden; 
-    text-overflow: ellipsis;     
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
     min-width: 250px;
     font-size: 14px;
@@ -102,6 +102,15 @@
     background-repeat: no-repeat;
     margin: 6px 2px 0px 10px;
     float: left;
+}
+
+.jimu-widget-nearme-setting .esriCTCheckBox
+{
+    float: left;
+    height: 20px;
+    width: 20px;
+    margin-top: 10px;
+    margin-right: 10px;
 }
 
 /**------------------End of styles for Layer selector---------------------**/
@@ -271,6 +280,11 @@
 {
     font-size: 14px;
     color: #596679;
+    padding-right: 5px;
+    max-width: 130px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .jimu-widget-nearme-setting .esriCTPreviewField
@@ -288,9 +302,10 @@
 
 .jimu-widget-nearme-setting .esriCTSymbolPreviewHintField
 {
-    width: 60%;
+    width: 50%;
     line-height: 20px;
     margin-left: 5px;
+    float: right;
 }
 
 .jimu-widget-nearme-setting .esriCTSymbolPreviewField
@@ -386,11 +401,12 @@
 
 .esriRtl .jimu-widget-nearme-setting .esriCTHint
 {
-    margin: 5px 0px 10px 5px;
+    margin: 5px 5px 10px 0px;
     float: right;
 }
 
-.esriRtl .jimu-widget-nearme-setting .esriCTLayerField {
+.esriRtl .jimu-widget-nearme-setting .esriCTLayerField
+{
     float: right;
 }
 
@@ -458,4 +474,33 @@
 {
     float: right;
 }
-/*end CSS override for RTL*/
+
+.esriRtl .jimu-widget-nearme-setting .esriCTSymbolPreviewHintField
+{
+    float: left;
+    margin-right: 5px;
+    margin-left: 0px;
+}
+
+.esriRtl .jimu-widget-nearme-setting .esriCTCheckBox
+{
+    float: right;
+    margin-left: 10px;
+    margin-right: 0px;
+}
+
+.esriRtl .jimu-widget-nearme-setting .jimu-float-leading
+{
+    margin-left: 10px;
+    margin-right: 0px;
+}
+
+/*Start CSS Override for browser applied styles*/
+
+/*Hide clear button from textboxes which is shown only in IE*/
+input[type=text]::-ms-clear
+{
+    display: none;
+}
+
+/*end CSS Override for browser applied styles*/

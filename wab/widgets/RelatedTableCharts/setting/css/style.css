@@ -9,6 +9,11 @@
     font-style: oblique;
 }
 
+.jimu-widget-RelatedTableCharts-setting .esriCTHintInline
+{
+    line-height: 24px;
+}
+
 .esriCTHidden
 {
     display: none;
@@ -134,18 +139,6 @@
     margin-left: 10px;
 }
 
-.jimu-widget-RelatedTableCharts-setting .esriCTTextAreaFont
-{
-    font-family: 'Open Sans' , Helvetica, Arial;
-}
-
-.jimu-widget-RelatedTableCharts-setting .esriCTTextAreaHeight
-{
-    max-height: 150px;
-    min-height: 60px;
-    resize: none;
-}
-
 .jimu-widget-RelatedTableCharts-setting .esriCTCursorPointer
 {
     cursor: pointer;
@@ -242,12 +235,59 @@
     max-height: 230px;
 }
 
+.jimu-widget-RelatedTableCharts-setting .esriCTPolarChartSection .jimu-simple-table
+{
+    max-height: 230px;
+    width: 95%;
+}
+
 .jimu-widget-RelatedTableCharts-setting .esriCTMarginRight
 {
     float: left;
     margin-right: 40px;
     line-height: 24px;
 }
+
+.jimu-widget-RelatedTableCharts-setting .esriCTCheckBox
+{
+    float: left;
+    height: 20px;
+    width: 20px;
+    margin-top: 7px;
+    margin-right: 10px;
+}
+/* Start for the RTF */
+.jimu-widget-RelatedTableCharts-setting .dijitInline
+{
+    margin-top: 2px;
+}
+
+.jimu-widget-RelatedTableCharts-setting .editorDescriptionContainer
+{
+    width: 95%;
+}
+
+.jimu-widget-RelatedTableCharts-setting .editor-container .dijitFontNameCombo
+{
+    margin-left: 19px;
+}
+
+.jimu-widget-RelatedTableCharts-setting .editor-container
+{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.jimu-widget-RelatedTableCharts-setting .jimu-image-chooser
+{
+    right: inherit !important;
+}
+.jimu-widget-RelatedTableCharts-setting .editor-container .uploaderInsideNode embed
+{
+    display: none;
+}
+/* End for the RTF */
 
 /*Start Field Selector*/
 
@@ -637,17 +677,34 @@ div.chart
 {
     float: none;
 }
-.esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTLocationSymbolLabelMainDiv,.esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTRefreshIntervalLabelMainDiv
+
+.esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTLocationSymbolLabelMainDiv, .esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTRefreshIntervalLabelMainDiv
 {
     float: right;
     margin: 25px 10px 10px 0px;
 }
-.esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTGraphicLocationSymbolMainDiv,.esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTRefreshIntervalMainDiv
+
+.esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTGraphicLocationSymbolMainDiv, .esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTRefreshIntervalMainDiv
 {
     float: right;
 }
+
 .esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTLocationSymbolIcon
 {
     float: right;
+}
+
+.esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTCheckBox
+{
+    float: right;
+    margin-left: 10px;
+    margin-right: 0px;
+}
+
+.esriRtl .jimu-widget-RelatedTableCharts-setting .esriCTChartTypeDiv
+{
+    float: right;
+    margin-right: 25%;
+    margin-left: 0px;
 }
 /* End CSS override for RTL*/

@@ -81,6 +81,7 @@ define([
       pieScale: 1.1,
       showZoomIcon: false,
       isBigPreview: false,
+      fontColor: "#333333",
       floatNumberFieldDecimalPlace: null,//{fieldName: decimal place,...}
       popupFieldInfosObj: null,//{fieldName:{fieldName,label,isEditable,tooltip,visible,format...}}
 

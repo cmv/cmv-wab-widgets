@@ -18,6 +18,8 @@ define([
     'dojo/query',
     'dojo/dom-construct',
     'dojo/_base/declare',
+    'dojo/_base/xhr',
+    'dojo/_base/Color',
     'dijit/_WidgetsInTemplateMixin',
     'jimu/BaseWidgetSetting',
     'jimu/LayerInfos/LayerInfos',
@@ -27,23 +29,23 @@ define([
     'jimu/dijit/Popup',
     'jimu/dijit/SimpleTable',
     'jimu/utils',
+    'jimu/dijit/Message',
     'esri/request',
-    'esri/symbols/jsonUtils',
     'dijit/popup',
     'dojo/_base/lang',
     'dojo/DeferredList',
     'dojo/on',
-    'dojox/gfx',
     'dojo/dom-style',
     'dojo/_base/html',
     'dojo/_base/array',
-    './MySymbolPicker',
-    'jimu/dijit/Message'
+    './MySymbolPicker'
 ],
   function (
     query,
     domConstruct,
     declare,
+    xhr,
+    dojoColor,
     _WidgetsInTemplateMixin,
     BaseWidgetSetting,
     LayerInfos,
@@ -53,18 +55,16 @@ define([
     Popup,
     Table,
     utils,
+    Message,
     esriRequest,
-    jsonUtils,
     dijitPopup,
     lang,
     DeferredList,
     on,
-    gfx,
     domStyle,
     html,
     array,
-    SymbolPicker,
-    Message
+    SymbolPicker
     ) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
       baseClass: 'jimu-widget-InfoSummary-setting',
@@ -73,13 +73,28 @@ define([
       layer_options: [],
       refreshLayers: [],
       displayPanelIcon: false,
+      used_layers: [],
 
       postCreate: function () {
         this.inherited(arguments);
+
+        var opLayers = this.map.itemInfo.itemData.operationalLayers;
+        if (opLayers.length === 0) {
+          domStyle.set(this.btnAddLayer, "display", "none");
+          domStyle.set(this.optionsContainer, "display", "none");
+          this._disableOk();
+          new Message({
+            message: this.nls.missingLayerInWebMap
+          });
+          return;
+        }
         this.setupLayerTable();
         this.setupRefreshInterval();
         this._getAllLayers();
         this.own(on(this.btnAddLayer, 'click', lang.hitch(this, this._addLayerRow)));
+        this.own(on(this.panelCountOptions, 'change', lang.hitch(this, function (v) {
+          this.countEnabled = v;
+        })));
         this.own(on(this.panelIconOptions, 'change', lang.hitch(this, function () {
           var previewContainer;
           if (this.panelIconOptions.checked) {
@@ -112,39 +127,33 @@ define([
           title: this.nls.layerName,
           "class": "label",
           type: "empty",
-          width: "100px"
+          width: "328px"
         }, {
           name: "label",
-          title: this.nls.layerLabel,
           "class": "label",
+          title: this.nls.layerLabel,
+          type: "empty",
+          width: "263px"
+        }, {
+          name: "image",
+          "class": "label",
+          title: this.nls.iconColumnText + " " + this.nls.optionsText,
+          width: "110px",
+          actions: ["edit"],
+          type: "actions"
+        }, {
+          name: "refresh",
+          "class": "label",
+          title: this.nls.layerRefresh,
           type: "empty",
           width: "80px"
         }, {
-          name: "upload",
-          title: this.nls.iconColumnText,
-          "class": "actions",
-          type: "actions",
-          actions: ["edit"],
-          width: "20px"
-        }, {
-          name: "image",
-          title: "",
-          width: "20px",
-          type: "empty",
-          hidden: false,
-          "class": "imageTest"
-        }, {
-          name: "refresh",
-          title: this.nls.layerRefresh,
-          type: "empty",
-          width: "40px"
-        }, {
           name: "actions",
+          "class": "label",
           title: this.nls.actions,
-          "class": "actions actions2",
           type: "actions",
           actions: ["up", "down", "delete"],
-          width: "45px"
+          width: "77px"
         }];
 
         this.displayLayerTable = new Table({
@@ -156,6 +165,7 @@ define([
         this.displayLayerTable.placeAt(this.layerTable);
         this.displayLayerTable.startup();
         this.own(on(this.displayLayerTable, 'actions-edit', lang.hitch(this, this._pickSymbol)));
+        this.own(on(this.displayLayerTable, 'row-delete', lang.hitch(this, this._rowDeleted)));
       },
 
       _getAllLayers: function () {
@@ -200,6 +210,8 @@ define([
       },
 
       _setLayers: function () {
+        var supportedLayerTypes = ["ArcGISFeatureLayer", "ArcGISMapServiceLayer", "CSV",
+                                   "KML", "GeoRSS", "ArcGISStreamLayer", "Feature Layer"];
         var options = [];
         for (var i = 0; i < this.opLayers._layerInfos.length; i++) {
           var supportsDL = true;
@@ -208,39 +220,54 @@ define([
 
           if (OpLyr.originOperLayer) {
             originOpLayer = OpLyr.originOperLayer;
+            var lyrType = originOpLayer.layerType;
+            if (typeof (lyrType) === 'undefined') {
+              if (OpLyr.layerObject) {
+                lyrType = OpLyr.layerObject.type;
+              }
+            }
+            if (supportedLayerTypes.indexOf(lyrType) === -1) {
+              continue;
+            }
           }
 
           if (OpLyr.newSubLayers.length > 0) {
             var hasNested = this.checkNestedGroups(OpLyr.newSubLayers);
             if (!hasNested) {
-              this._recurseOpLayers(OpLyr.newSubLayers, options);
+              var subLayers = OpLyr.newSubLayers;
+              var parentID;
+              if (originOpLayer.type === "KML") {
+                subLayers = originOpLayer.layerObject.getLayers();
+                parentID = originOpLayer.id;
+              }
+              this._recurseOpLayers(subLayers, options, parentID);
             } else {
-              new Message({
-                message: this.nls.layer_type_not_supported + OpLyr.title
-              });
+              continue;
             }
           } else if (OpLyr.featureCollection) {
             if (OpLyr.layers.length > 1) {
-              this._recurseOpLayers(OpLyr.layers, options);
+              this._recurseOpLayers(OpLyr.layers, options, undefined);
             }
           } else if (originOpLayer) {
             if (originOpLayer.featureCollection) {
               if (originOpLayer.featureCollection.layers.length > 1) {
-                this._recurseOpLayers(originOpLayer.featureCollection.layers, options);
+                this._recurseOpLayers(originOpLayer.featureCollection.layers, options, undefined);
               } else {
                 options.unshift({
                   label: OpLyr.title,
-                  value: OpLyr.title,
+                  value: OpLyr.id,
                   url: undefined,
                   imageData: OpLyr.imageData,
                   id: OpLyr.id,
                   geometryType: originOpLayer.featureCollection.layers[0].layerObject.geometryType,
+                  fields: originOpLayer.featureCollection.layers[0].layerObject.fields,
                   type: OpLyr.type,
                   renderer: originOpLayer.featureCollection.layers[0].layerObject.renderer,
                   itemId: originOpLayer.itemId,
                   infoTemplate: originOpLayer ? this._getInfoTemplate(originOpLayer) : undefined,
                   lyrType: "Feature Collection",
-                  panelImageData: OpLyr.panelImageData
+                  panelImageData: OpLyr.panelImageData,
+                  supportsDynamic: supportsDL
                 });
               }
             } else {
@@ -254,13 +281,14 @@ define([
 
               options.unshift({
                 label: OpLyr.title,
-                value: OpLyr.title,
+                value: OpLyr.id,
                 url: OpLyr.layerObject.url,
                 imageData: OpLyr.imageData,
                 id: OpLyr.id,
                 type: OpLyr.type,
                 renderer: OpLyr.layerObject.renderer,
                 geometryType: OpLyr.layerObject.geometryType,
+                fields: OpLyr.layerObject.fields,
                 infoTemplate: originOpLayer ? this._getInfoTemplate(originOpLayer) : undefined,
                 lyrType: "Map Service Layer",
                 panelImageData: OpLyr.panelImageData,
@@ -278,13 +306,14 @@ define([
 
             options.unshift({
               label: OpLyr.title,
-              value: OpLyr.title,
+              value: OpLyr.id,
               url: OpLyr.layerObject.url,
               imageData: OpLyr.imageData,
               id: OpLyr.id,
               type: OpLyr.type,
               renderer: OpLyr.layerObject.renderer,
               geometryType: OpLyr.layerObject.geometryType,
+              fields: OpLyr.layerObject.fields,
               lyrType: "",
               infoTemplate: originOpLayer ? this._getInfoTemplate(originOpLayer) : undefined,
               panelImageData: OpLyr.panelImageData,
@@ -307,82 +336,235 @@ define([
       setConfig: function (config) {
         this.config = config;
 
-        if (this.config.mainPanelText) {
-          this.mainPanelText.set('value', this.config.mainPanelText);
-        }
-        if (this.config.mainPanelIcon) {
-          this.panelMainIcon.innerHTML = this.config.mainPanelIcon;
-        }
+        if (!this.config.mapID || (this.config.mapID && this.config.mapID === this.map.itemId)) {
+          this.oldConfig = !this.config.mapID;
 
-        if (this.config.refreshInterval) {
-          this.refreshInterval.set('value', this.config.refreshInterval);
-        }
+          if (this.config.mainPanelText) {
+            this.mainPanelText.set('value', this.config.mainPanelText);
+          }
+          if (this.config.mainPanelIcon) {
+            this.panelMainIcon.innerHTML = this.config.mainPanelIcon;
+          }
 
-        if (this.config.loadStaticData) {
-          this.chkStatic.set('value', this.config.loadStaticData);
-        }
+          if (this.config.refreshInterval) {
+            this.refreshInterval.set('value', this.config.refreshInterval);
+          }
 
-        if (this.config.displayPanelIcon) {
-          this.panelIconOptions.set('checked', this.config.displayPanelIcon);
-        }
+          if (this.config.loadStaticData) {
+            this.chkStatic.set('value', this.config.loadStaticData);
+          }
 
-        this.displayLayerTable.clear();
-        this.isInitalLoad = true;
-        this.layerLoadCount = 0;
-        for (var i = 0; i < this.config.layerInfos.length; i++) {
-          var lyrInfo = this.config.layerInfos[i];
-          this._populateLayerRow(lyrInfo);
-          this.layerLoadCount += 1;
+          if (this.config.countEnabled) {
+            this.panelCountOptions.set('checked', this.config.countEnabled);
+          }
+
+          if (this.config.displayPanelIcon) {
+            this.panelIconOptions.set('checked', this.config.displayPanelIcon);
+          }
+
+          this.displayLayerTable.clear();
+          this.isInitalLoad = true;
+          this.layerLoadCount = 0;
+          for (var i = 0; i < this.config.layerInfos.length; i++) {
+            var lyrInfo = this.config.layerInfos[i];
+            this._populateLayerRow(lyrInfo, i);
+            this.layerLoadCount += 1;
+          }
+          this._updateLayerLists();
+          var rows = this.displayLayerTable.getRows();
+          for (var r = 0; r < rows.length; r++) {
+            this._updateLayerListRows(true, rows[r]);
+          }
+          if (this.displayLayerTable.getRows().length < this.layer_options.length) {
+            html.removeClass(this.btnAddLayer, "btn-add-section-disabled");
+            html.addClass(this.btnAddLayer, "btn-add-section enable");
+          } else {
+            html.addClass(this.btnAddLayer, "btn-add-section-disabled");
+            html.removeClass(this.btnAddLayer, "btn-add-section enable");
+          }
+        }
+      },
+
+      _updateStyleColor: function (changedData) {
+        var tName = this.appConfig.theme.name;
+        var sName = changedData;
+        var appId = this.appConfig.appId;
+        if (appId === "") {
+          appId = window.location.href.split('id=')[1];
+        }
+        var url = "./apps/" + appId + "/themes/" + tName + "/manifest.json";
+        xhr.get({
+          url: url,
+          sync: true,
+          handleAs: "json",
+          load: lang.hitch(this, function (data) {
+            var styles = data.styles;
+            for (var i = 0; i < styles.length; i++) {
+              var st = styles[i];
+              if (st.name === sName) {
+                this._styleColor = st.styleColor;
+                this._styleColorName = st.name;
+                break;
+              }
+            }
+          })
+        });
+      },
+
+      updateThemeClusterSymbol: function (lyrInfo, i) {
+        var sd = lyrInfo.symbolData;
+        if (this.appConfig.theme.styles && this.appConfig.theme.styles[0]) {
+          if (typeof (this._styleColor) === 'undefined') {
+            this._updateStyleColor(this.appConfig.theme.styles[0]);
+          }
+        }
+        if (this._styleColor) {
+          var _rgb = dojoColor.fromHex(this._styleColor);
+          var x = i + 1;
+          var xx = x > 0 ? x * 30 : 30;
+          var evenOdd = x % 2 === 0;
+          var r = _rgb.r;
+          var g = _rgb.g;
+          var b = _rgb.b;
+
+          var rr = r - xx;
+          if (evenOdd) {
+            if (rr > 255) {
+              rr = rr - 255;
+            }
+            else if (rr < 0) {
+              rr = rr + 255;
+            }
+          }
+
+          var bb = b - xx;
+          if (x % 3 === 0) {
+            if (evenOdd) {
+              if (bb > 255) {
+                bb = bb - 255;
+              }
+              else if (bb < 0) {
+                bb = bb + 255;
+              }
+            }
+          }
+
+          var gg = g - xx;
+          if (x % 5 === 0) {
+            if (evenOdd) {
+              if (gg > 255) {
+                gg = gg - 255;
+              }
+              else if (gg < 0) {
+                gg = gg + 255;
+              }
+            }
+          }
+          sd.clusterType = 'CustomCluster';
+          sd.clusterSymbol = {
+            color: [rr, gg, bb, 128],
+            outline: {
+              color: [0, 0, 0, 255],
+              width: 0,
+              type: "esriSLS",
+              style: "esriSLSSolid"
+            },
+            type: "esriSFS",
+            style: "esriSFSSolid"
+          };
+
+          lyrInfo.symbolData = sd;
+        }
+        return lyrInfo;
+      },
+
+      _rowDeleted: function(){
+        this._updateLayerLists();
+        this._updateLayerListRows(true);
+
+        if (this.displayLayerTable.getRows().length < this.layer_options.length) {
+          html.removeClass(this.btnAddLayer, "btn-add-section-disabled");
+          html.addClass(this.btnAddLayer, "btn-add-section enable");
         }
       },
 
       _addLayerRow: function () {
         this.isInitalLoad = false;
+        if (this.displayLayerTable.getRows().length >= this.layer_options.length) {
+          html.removeClass(this.btnAddLayer, "btn-add-section enable");
+          html.addClass(this.btnAddLayer, "btn-add-section-disabled");
+          return;
+        }
         var result = this.displayLayerTable.addRow({});
         if (result.success && result.tr) {
           var tr = result.tr;
+          html.addClass(tr.cells[2], "displayOptions");
           this._addLayersOption(tr);
           this._addLabelOption(tr);
           this._addRefreshOption(tr);
           this._addDefaultSymbol(tr);
         }
+        this._updateLayerLists();
+        this._updateLayerListRows(false);
       },
 
-      _populateLayerRow: function (lyrInfo) {
+      _populateLayerRow: function (lyrInfo, i) {
         var result = this.displayLayerTable.addRow({});
         if (result.success && result.tr) {
           var tr = result.tr;
+          html.addClass(tr.cells[2], "displayOptions");
           this._addLayersOption(tr);
           this._addLabelOption(tr);
           this._addRefreshOption(tr);
-          tr.selectLayers.set("value", lyrInfo.layer);
+          //tr.selectLayers.set("value", this.oldConfig === true ? lyrInfo.id : lyrInfo.label);
+          tr.selectLayers.set("value", lyrInfo.id);
           tr.labelText.set("value", lyrInfo.label);
           tr.refreshBox.set("checked", lyrInfo.refresh);
           tr.imageData = lyrInfo.panelImageData;
 
           domConstruct.create("div", {
-            'class': "imageDataGFX",
+            'class': "imageDataGFX margin2",
             innerHTML: [lyrInfo.imageData],
             title: this.nls.iconColumnText
-          }, tr.cells[3]);
+          }, tr.cells[2]);
 
-          var cLo = this._getLayerOptionByValue(lyrInfo.layer);
+          if (lyrInfo.symbolData.clusterType === 'ThemeCluster') {
+            lyrInfo = this.updateThemeClusterSymbol(lyrInfo, i);
+          }
+
+          var cLo = this._getLayerOptionByValue(lyrInfo.id);
           cLo.filter = lyrInfo.filter;
           cLo.imageData = lyrInfo.imageData;
           cLo.symbolData = lyrInfo.symbolData;
+          tr.symbolData = lyrInfo.symbolData;
+          this._updateLayerLists();
         }
       },
 
       _addLayersOption: function (tr) {
-        var lyrOptions = lang.clone(this.layer_options);
+        var lyrOptions;
+        if (this.used_layers.length > 0) {
+          var temp_options = [];
+          for (var i = 0; i < this.layer_options.length; i++) {
+            var lo = this.layer_options[i];
+            if (this.used_layers.indexOf(lo.value) === -1) {
+              temp_options.push(lo);
+            }
+          }
+          lyrOptions = lang.clone(temp_options);
+        } else {
+          lyrOptions = lang.clone(this.layer_options);
+        }
         var td = query('.simple-table-cell', tr)[0];
         if (td) {
           html.setStyle(td, "verticalAlign", "middle");
+          html.setStyle(td, "line-height", "inherit");
           var tabLayers = new Select({
             style: {
               width: "100%",
               height: "28px"
             },
+            "class": "longSelect",
             options: lyrOptions
           });
           tabLayers.placeAt(td);
@@ -390,22 +572,86 @@ define([
           tr.selectLayers = tabLayers;
           this.own(on(tabLayers, 'change', lang.hitch(this, function () {
             this._updateRefresh(tr);
-
+            this._updateLayerLists();
+            this._updateLayerListRows(true, tr);
             if (!this.isInitalLoad) {
               this._addDefaultSymbol(tr);
+              tr.labelText.set('value', "");
             }
-
             this.layerLoadCount -= 1;
-            if (this.layerLoadCount === 1) {
+            if (this.layerLoadCount === 0) {
               this.isInitalLoad = false;
             }
           })));
         }
       },
 
+      _updateLayerListRows: function (rowDeleted, tr) {
+        var s;
+        if (typeof (tr) !== 'undefined') {
+          s = lang.clone(tr.selectLayers.value);
+        }
+        var addOptions = [];
+        if (rowDeleted) {
+          var lyrOptions = lang.clone(this.layer_options);
+          for (var j = 0; j < lyrOptions.length; j++) {
+            var lo = lyrOptions[j];
+            if (this.used_layers.indexOf(lo.value) === -1) {
+              addOptions.push(lo);
+            }
+          }
+        }
+
+        var rows = this.displayLayerTable.getRows();
+        rows_loop:
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          var value = row.selectLayers.value;
+          for (var ii = 0; ii < this.used_layers.length; ii++) {
+            var usedValue = this.used_layers[ii];
+            if (usedValue !== value) {
+              row.selectLayers.removeOption(usedValue);
+            }
+          }
+          if (addOptions.length > 0) {
+            option_loop:
+            for (var k = 0; k < addOptions.length; k++) {
+              var curOption = addOptions[k];
+              var add = true;
+              cur_option_loop:
+              for (var m = 0; m < row.selectLayers.options.length; m++) {
+                var option = row.selectLayers.options[m];
+                if (curOption.value === option.value) {
+                  add = false;
+                  break cur_option_loop;
+                }
+              }
+              if (add) {
+                row.selectLayers.addOption(addOptions[k]);
+              }
+            }
+          }
+        }
+
+        if (typeof (tr) !== 'undefined') {
+          tr.selectLayers.set("value", s);
+        }
+      },
+
+      _updateLayerLists: function () {
+        this.used_layers = [];
+        var rows = this.displayLayerTable.getRows();
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          var value = row.selectLayers.value;
+          this.used_layers.push(value);
+        }
+      },
+
       _addLabelOption: function (tr) {
         var td = query('.simple-table-cell', tr)[1];
         html.setStyle(td, "verticalAlign", "middle");
+        html.setStyle(td, "line-height", "inherit");
         var labelTextBox = new ValidationTextBox({
           style: {
             width: "100%",
@@ -418,16 +664,16 @@ define([
       },
 
       _addRefreshOption: function (tr) {
-        var td = query('.simple-table-cell', tr)[4];
+        var td = query('.simple-table-cell', tr)[3];
         html.setStyle(td, "verticalAlign", "middle");
+        html.setStyle(td, "line-height", "inherit");
         this.currentTR = tr;
         var refreshCheckBox = new CheckBox({
+          "class": "checkBox",
           onChange: lang.hitch(this, function (v) {
             var value = this.currentTR.selectLayers.value;
-
             var rO;
             if (v) {
-              //var lyrInfo = this._getLayerOptionByValue(value);
               this.refreshLayers.push(value);
               rO = query('.refreshOff', this.refreshOptions.domNode)[0];
               if (rO) {
@@ -505,7 +751,9 @@ define([
         var td = query('.simple-table-cell', tr)[0];
         this.curRow = tr;
         if (td) {
-          var lo = this._getLayerOptionByValue(td.children[0].textContent);
+          html.setStyle(td, "line-height", "inherit");
+          html.setStyle(td, "margin-left", "0px");
+          var lo = this._getLayerOptionByValue(tr.selectLayers.value);
           var selectLayersValue = tr.selectLayers.value;
 
           var hasSymbolData = false;
@@ -514,6 +762,8 @@ define([
             sd = this.curRow.symbolData;
             hasSymbolData = sd.userDefinedSymbol && (sd.layerId === selectLayersValue);
           }
+          var a;
+          var s;
           if (!hasSymbolData || typeof (lo.symbolData) === 'undefined') {
             var options = {
               nls: this.nls,
@@ -526,22 +776,29 @@ define([
             };
             var sourceDijit = new SymbolPicker(options);
             sourceDijit._setSymbol();
-
-            this.curRow.cells[3].innerHTML = "<div></div>";
+            s = query(".imageDataGFX", this.curRow.cells[2])[0];
+            if (s) {
+              this.curRow.cells[2].removeChild(s);
+            }
             this.curRow.symbolData = sourceDijit.symbolInfo;
-
-            this._createImageDataDiv(this.curRow.symbolData.icon, 28, 28, true);
-            this.curRow.imageData = this._createImageDataDiv(this.curRow.symbolData.icon, 45, 45, false).innerHTML;
-
+            a = domConstruct.create("div", { 'class': "imageDataGFX margin2" }, this.curRow.cells[2]);
+            if (this.curRow.symbolData.svg !== null &&
+              typeof (this.curRow.symbolData.svg) !== 'undefined') {
+              a.appendChild(this.curRow.symbolData.svg);
+            }
+            this.curRow.imageData = this.curRow.symbolData.panelHTML;
             this.curRow = null;
             sourceDijit.destroy();
             sourceDijit = null;
           } else {
-            this.curRow.cells[3].innerHTML = "<div></div>";
+            s = query(".imageDataGFX", this.curRow.cells[2])[0];
+            if (s) {
+              this.curRow.cells[2].removeChild(s);
+            }
             this.curRow.symbolData = lo.symbolData;
-
-            this._createImageDataDiv(this.curRow.symbolData.icon, 28, 28, true);
-            this.curRow.imageData = this._createImageDataDiv(this.curRow.symbolData.icon, 45, 45, false).innerHTML;
+            a = domConstruct.create("div", { 'class': "imageDataGFX margin2" }, this.curRow.cells[2]);
+            a.appendChild(this.curRow.symbolData.svg);
+            this.curRow.imageData = this.curRow.symbolData.panelHTML;
           }
         }
       },
@@ -549,21 +806,24 @@ define([
       _getLayerOptionByValue: function (value) {
         for (var i = 0; i < this.layer_options.length; i++) {
           var lo = this.layer_options[i];
-          if (lo.value === value) {
+          if (lo.id === value) {
             return lo;
           }
         }
       },
 
-      _recurseOpLayers: function (pNode, pOptions) {
+      _recurseOpLayers: function (pNode, pOptions, parentID) {
         var nodeGrp = pNode;
         array.forEach(nodeGrp, lang.hitch(this, function (Node) {
           var infoTemplate;
-          if (Node.newSubLayers.length > 0) {
-            this._recurseOpLayers(Node.newSubLayers, pOptions);
+          if (Node.getImages) {
+            return;
+          }
+          if (Node.newSubLayers && Node.newSubLayers.length > 0) {
+            this._recurseOpLayers(Node.newSubLayers, pOptions, undefined);
           } else if (Node.featureCollection) {
             if (Node.layers.length > 1) {
-              this._recurseOpLayers(Node.layers, pOptions);
+              this._recurseOpLayers(Node.layers, pOptions, undefined);
             }
           } else {
             if (typeof (Node.layerObject) !== 'undefined') {
@@ -598,16 +858,17 @@ define([
             }
 
             pOptions.push({
-              label: Node.title,
-              value: Node.title,
+              label: Node.title ? Node.title : Node.id,
+              value: Node.id,
               url: u,
               imageData: Node.imageData,
               id: Node.id,
-              parentLayerID: OpLyr2 ? OpLyr2.id : undefined,
+              parentLayerID: OpLyr2 ? OpLyr2.id : parentID,
               type: Node.type,
               itemId: OpLyr2 ? OpLyr2.itemId : undefined,
-              renderer: Node.layerObject.renderer,
-              geometryType: Node.layerObject.geometryType,
+              renderer: Node.layerObject ? Node.layerObject.renderer : Node.renderer,
+              geometryType: Node.layerObject ? Node.layerObject.geometryType : Node.geometryType,
+              fields: Node.layerObject ? Node.layerObject.fields : Node.fields,
               subLayerId: subLayerId,
               infoTemplate: infoTemplate,
               lyrType: OpLyr2 ? OpLyr2.type : undefined,
@@ -634,19 +895,21 @@ define([
         var sourceDijit = new SymbolPicker(options);
 
         var popup = new Popup({
-          width: 330,
+          width: 420,
           autoHeight: true,
           content: sourceDijit,
           titleLabel: this.nls.sympolPopupTitle
         });
 
         this.own(on(sourceDijit, 'ok', lang.hitch(this, function (data) {
-          this.curRow.cells[3].innerHTML = "<div></div>";
+          var s = query(".imageDataGFX", this.curRow.cells[2])[0];
+          if (s) {
+            this.curRow.cells[2].removeChild(s);
+          }
           this.curRow.symbolData = data;
-
-          this._createImageDataDiv(data.icon, 28, 28, true);
-          this.curRow.imageData = this._createImageDataDiv(data.icon, 45, 45, false).innerHTML;
-
+          var a = domConstruct.create("div", { 'class': "imageDataGFX margin2" }, this.curRow.cells[2]);
+          a.appendChild(data.svg);
+          this.curRow.imageData = data.panelHTML;
           this.curRow = null;
           sourceDijit.destroy();
           sourceDijit = null;
@@ -661,71 +924,10 @@ define([
         })));
       },
 
-      _createImageDataDiv: function (sym, w, h, add) {
-        var a;
-        if (typeof (sym) === "string") {
-          if (add) {
-            a = domConstruct.create("div", { 'class': "imageDataGFX", 'innerHTML': sym }, this.curRow.cells[3]);
-          } else {
-            a = domConstruct.create("div", { 'class': "imageDataGFX", 'innerHTML': sym });
-          }
-        } else {
-          var symbol = jsonUtils.fromJson(sym);
-          if (!symbol) {
-            symbol = sym;
-          }
-
-          if (symbol) {
-            var height = w;
-            var width = h;
-            if (symbol.height && symbol.width) {
-              var ar;
-              if (symbol.height > symbol.width) {
-                ar = symbol.width / symbol.height;
-                width = w * ar;
-              } else if (symbol.width === symbol.height || symbol.width > symbol.height) {
-                width = w - 10;
-                ar = symbol.width / symbol.height;
-                height = (ar > 0) ? h - 10 * ar : h - 10;
-              }
-            }
-            if (typeof (symbol.setWidth) !== 'undefined') {
-              if (typeof (symbol.setHeight) !== 'undefined') {
-                symbol.setWidth(width);
-                symbol.setHeight(height);
-              } else {
-                symbol.setWidth(2);
-              }
-            } else if (typeof (symbol.size) !== 'undefined') {
-              if (symbol.size > 20) {
-                symbol.setSize(20);
-              }
-            }
-
-            if (add) {
-              a = domConstruct.create("div", { 'class': "imageDataGFX" }, this.curRow.cells[3]);
-            } else {
-              a = domConstruct.create("div", { 'class': "imageDataGFX" });
-            }
-            var mySurface = gfx.createSurface(a, width, height);
-            var descriptors = jsonUtils.getShapeDescriptors(symbol);
-            var shape = mySurface.createShape(descriptors.defaultShape)
-                          .setFill(descriptors.fill)
-                          .setStroke(descriptors.stroke);
-            shape.applyTransform({ dx: width / 2, dy: height / 2 });
-          } else if (typeof (sym.url) !== 'undefined') {
-            a = domConstruct.create("div", { 'class': "imageDataGFX" }, this.curRow.cells[3]);
-            domStyle.set(a, "background-image", "url(" + sym.url + ")");
-            domStyle.set(a, "background-repeat", "no-repeat");
-          }
-        }
-        return a;
-      },
-
       setGeometryType: function (OpLayer) {
         var queries = [];
         if (typeof (OpLayer.url) !== 'undefined') {
-          if (OpLayer.url.indexOf("MapServer")) {
+          if (OpLayer.url.indexOf("MapServer") > -1) {
             queries.push(esriRequest({ "url": OpLayer.url + "?f=json" }));
           }
         }
@@ -738,28 +940,30 @@ define([
                 var resultInfo = queryResults[0][1];
                 var lIdx;
                 for (var i = 0; i < this.layer_options.length; i++) {
-                  if (this.layer_options[i].value === resultInfo.name) {
+                  if (this.layer_options[i].label === resultInfo.name) {
                     lIdx = i;
                     break;
                   }
                 }
 
-                this.layer_options[lIdx].geometryType = resultInfo.geometryType;
-                if (typeof (resultInfo.drawingInfo) !== 'undefined') {
-                  this.layer_options[lIdx].renderer = resultInfo.drawingInfo.renderer;
-                  this.layer_options[lIdx].drawingInfo = resultInfo.drawingInfo;
+                if (typeof (lIdx) !== 'undefined') {
+                  this.layer_options[lIdx].geometryType = resultInfo.geometryType;
+                  if (typeof (resultInfo.drawingInfo) !== 'undefined') {
+                    this.layer_options[lIdx].renderer = resultInfo.drawingInfo.renderer;
+                    this.layer_options[lIdx].drawingInfo = resultInfo.drawingInfo;
 
-                  //Also need the OID field and fields
-                  this.layer_options[lIdx].fields = resultInfo.fields;
+                    //Also need the OID field and fields
+                    this.layer_options[lIdx].fields = resultInfo.fields;
 
-                  var f;
-                  for (var ii = 0; ii < resultInfo.fields.length; ii++) {
-                    f = resultInfo.fields[ii];
-                    if (f.type === "esriFieldTypeOID") {
-                      break;
+                    var f;
+                    for (var ii = 0; ii < resultInfo.fields.length; ii++) {
+                      f = resultInfo.fields[ii];
+                      if (f.type === "esriFieldTypeOID") {
+                        break;
+                      }
                     }
+                    this.layer_options[lIdx].oidFieldName = f;
                   }
-                  this.layer_options[lIdx].oidFieldName = f;
                 }
               }
             }
@@ -773,8 +977,9 @@ define([
           this.panelMainIcon.innerHTML = "<div></div>";
           this.mpi = reader.result;
           domConstruct.create("div", {
-            innerHTML: ['<img class="innerMainPanelIcon" src="', reader.result,
-                        '" title="', this.nls.mainPanelIcon, '"/>'].join('')
+            "class" : "innerMainPanelIcon",
+            style: 'background-image: url(' + reader.result + ');',
+            title: this.nls.mainPanelIcon
           }, this.panelMainIcon);
         });
 
@@ -795,14 +1000,14 @@ define([
         array.forEach(rows, lang.hitch(this, function (tr) {
           var selectLayersValue = tr.selectLayers.value;
 
-          var labelTextValue = utils.sanitizeHTML(tr.labelText.value);
+          var labelTextValue = utils.stripHTML(tr.labelText.value);
           var refreshBox = tr.refreshBox;
           var lo = this._getLayerOptionByValue(selectLayersValue);
           var symbolData = tr.symbolData ? tr.symbolData : lo.symbolData;
 
           lInfo = {
             layer: selectLayersValue,
-            label: labelTextValue !== "" ? labelTextValue : selectLayersValue,
+            label: labelTextValue !== "" ? labelTextValue : lo.label,
             refresh: refreshBox.checked,
             url: lo.url,
             type: lo.type,
@@ -828,11 +1033,14 @@ define([
           table.push(lInfo);
         }));
 
+        this.config.mapID = this.map.itemId;
+
         this.config.layerInfos = table;
-        this.config.mainPanelText = utils.sanitizeHTML(this.mainPanelText.value);
+        this.config.mainPanelText = utils.stripHTML(this.mainPanelText.value);
         this.config.mainPanelIcon = this.panelMainIcon.innerHTML;
-        this.config.refreshInterval = utils.sanitizeHTML(this.refreshInterval.value);
+        this.config.refreshInterval = utils.stripHTML(this.refreshInterval.value);
         this.config.refreshEnabled = this.refreshLayers.length > 0 ? true : false;
+        this.config.countEnabled = this.countEnabled;
         this.config.displayPanelIcon = this.displayPanelIcon;
 
         return this.config;

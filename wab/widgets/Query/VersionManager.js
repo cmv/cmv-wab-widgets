@@ -50,6 +50,71 @@ function(BaseVersionManager) {
       upgrader: function(oldConfig){
         return oldConfig;
       }
+    }, {
+      version: '2.0Beta',
+      upgrader: function(oldConfig){
+        return oldConfig;
+      }
+    }, {
+      version: '2.0',
+      upgrader: function(oldConfig){
+        return oldConfig;
+      }
+    }, {
+      version: '2.0.1',
+      upgrader: function(oldConfig){
+        return oldConfig;
+      }
+    }, {
+      version: '2.1',
+      upgrader: function(oldConfig){
+        var newConfig = oldConfig;
+        var query = null;
+        for(var i = 0; i < newConfig.queries.length; i++){
+          query = newConfig.queries[i];
+          delete query.objectIdField;
+          query.icon = "";
+          query.showSQL = true;
+          query.useLayerSymbol = false;
+          query.keepResultsOnMapAfterCloseWidget = false;
+          query.enableExport = false;
+          query.singleResultLayer = true;
+          query.webMapLayerId = "";
+
+          if(query.resultsSymbol){
+            //FeatureLayer or ImageServiceLayer
+            query.spatialFilter = {
+              currentMapExtent: {
+                "default": false
+              },
+              drawing: {
+                "default": false,
+                "geometryTypes": [
+                  "POINT",
+                  "LINE",
+                  "POLYLINE",
+                  "FREEHAND_POLYLINE",
+                  "TRIANGLE",
+                  "EXTENT",
+                  "CIRCLE",
+                  "ELLIPSE",
+                  "POLYGON",
+                  "FREEHAND_POLYGON"
+                ],
+                "buffer": null
+              },
+              useFeatures: null,
+              fullLayerExtent: {
+                "default": true
+              }
+            };
+          }else{
+            //Table
+            query.spatialFilter = null;
+          }
+        }
+        return newConfig;
+      }
     }];
   }
 

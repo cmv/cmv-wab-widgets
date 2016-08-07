@@ -15,6 +15,9 @@
 ///////////////////////////////////////////////////////////////////////////
 
 define([
+  'dojo/on',
+  'dojo/Evented',
+  'dojo/Deferred',
   'dojo/_base/declare',
   'dijit/_WidgetBase',
   'dijit/_TemplatedMixin',
@@ -30,9 +33,10 @@ define([
   'dijit/form/DateTextBox',
   'dijit/form/NumberTextBox'
 ],
-  function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template,
+  function(on, Evented, Deferred, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template,
     lang, html, array, Memory, jimuUtils) {
-    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+
+    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
       baseClass: 'jimu-single-filter-parameter',
       templateString: template,
       fieldInfo:null,
@@ -46,7 +50,10 @@ define([
       //public methods:
       //getValueObj
 
-      postCreate:function(){
+      //events:
+      //change
+
+      postCreate: function(){
         this.inherited(arguments);
 
         var strStore = new Memory({idProperty:'id', data:[]});
@@ -56,22 +63,44 @@ define([
         this.numberUniqueValuesSelect.set('store', numberStore);
 
         if(this.fieldInfo && this.part){
-          this.build(this.fieldInfo, this.part);
+          this.build(this.fieldInfo, this.part).then(lang.hitch(this, function(){
+            setTimeout(lang.hitch(this, function(){
+              this.emit('build-done');
+            }), 10);
+          }), lang.hitch(this, function(){
+            setTimeout(lang.hitch(this, function(){
+              this.emit('build-error');
+            }), 10);
+          }));
+        }
+
+        //bind change event
+        var classNames = ["dijit.form.FilteringSelect", "dijit.form.ValidationTextBox",
+                          "dijit.form.DateTextBox", "dijit.form.NumberTextBox"];
+        if(this._attachPoints && this._attachPoints.length > 0){
+          array.forEach(this._attachPoints, lang.hitch(this, function(attachPointName){
+            var attachPoint = this[attachPointName];
+            if(attachPoint && attachPoint.domNode){
+              if(classNames.indexOf(attachPoint.declaredClass) >= 0){
+                this.own(on(attachPoint, 'change', lang.hitch(this, this._onDijitChanged)));
+              }
+            }
+          }));
         }
       },
 
-      getValueObj:function(){
+      getValueObj: function(showErrorTip){
         var newValueObj = null;
         var shortType = this.part.fieldObj.shortType;
 
         if(shortType === 'string'){
-          newValueObj = this._getStirngValueObj();
+          newValueObj = this._getStirngValueObj(showErrorTip);
         }
         else if(shortType === 'number'){
-          newValueObj = this._getNumberValueObj();
+          newValueObj = this._getNumberValueObj(showErrorTip);
         }
         else if(shortType === 'date'){
-          newValueObj = this._getDateValueObj();
+          newValueObj = this._getDateValueObj(showErrorTip);
         }
 
         if(newValueObj){
@@ -82,11 +111,13 @@ define([
         return newValueObj;
       },
 
-      _getStirngValueObj:function(){
+      _getStirngValueObj: function(showErrorTip){
         var valueObj = null;
         if(this._type === 1){
           if(!this.stringTextBox.validate()){
-            this._showValidationErrorTip(this.stringTextBox);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.stringTextBox);
+            }
             return null;
           }
           valueObj = {};
@@ -94,7 +125,9 @@ define([
         }
         else if(this._type === 2){
           if (!this.stringCodedValuesFS.validate()) {
-            this._showValidationErrorTip(this.stringCodedValuesFS);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.stringCodedValuesFS);
+            }
             return null;
           }
           valueObj = {};
@@ -103,7 +136,9 @@ define([
         }
         else if(this._type === 3){
           if(!this.stringUniqueValuesSelect.validate()){
-            this._showValidationErrorTip(this.stringUniqueValuesSelect);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.stringUniqueValuesSelect);
+            }
             return null;
           }
           valueObj = {};
@@ -113,11 +148,13 @@ define([
         return valueObj;
       },
 
-      _getNumberValueObj:function(){
+      _getNumberValueObj:function(showErrorTip){
         var valueObj = null;
         if(this._type === 1){
           if(!this.numberTextBox.validate()){
-            this._showValidationErrorTip(this.numberTextBox);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.numberTextBox);
+            }
             return null;
           }
           valueObj = {};
@@ -125,7 +162,9 @@ define([
         }
         else if(this._type === 2){
           if (!this.numberCodedValuesFS.validate()) {
-            this._showValidationErrorTip(this.numberCodedValuesFS);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.numberCodedValuesFS);
+            }
             return null;
           }
           valueObj = {};
@@ -134,11 +173,15 @@ define([
         }
         else if(this._type === 3){
           if(!this.numberTextBox1.validate()){
-            this._showValidationErrorTip(this.numberTextBox1);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.numberTextBox1);
+            }
             return null;
           }
           if(!this.numberTextBox2.validate()){
-            this._showValidationErrorTip(this.numberTextBox2);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.numberTextBox2);
+            }
             return null;
           }
           valueObj = {};
@@ -147,7 +190,9 @@ define([
         }
         else if(this._type === 4){
           if(!this.numberUniqueValuesSelect.validate()){
-            this._showValidationErrorTip(this.numberUniqueValuesSelect);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.numberUniqueValuesSelect);
+            }
             return null;
           }
           valueObj = {};
@@ -157,11 +202,13 @@ define([
         return valueObj;
       },
 
-      _getDateValueObj:function(){
+      _getDateValueObj: function(showErrorTip){
         var valueObj = null;
         if(this._type === 1){
           if (!this.dateTextBox.validate()) {
-            this._showValidationErrorTip(this.dateTextBox);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.dateTextBox);
+            }
             return null;
           }
           valueObj = {};
@@ -169,11 +216,15 @@ define([
         }
         else if(this._type === 2){
           if (!this.dateTextBox1.validate()) {
-            this._showValidationErrorTip(this.dateTextBox1);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.dateTextBox1);
+            }
             return null;
           }
           if (!this.dateTextBox2.validate()) {
-            this._showValidationErrorTip(this.dateTextBox2);
+            if(showErrorTip){
+              this._showValidationErrorTip(this.dateTextBox2);
+            }
             return null;
           }
           valueObj = {};
@@ -184,6 +235,7 @@ define([
       },
 
       build:function(fieldInfo, part){
+        var def = null;
         this.fieldInfo = fieldInfo;
         this.part = part;
         var interactiveObj = part.interactiveObj;
@@ -196,14 +248,15 @@ define([
         var shortType = this.part.fieldObj.shortType;
 
         if(shortType === 'string'){
-          this._buildString(fieldInfo, this.part);
+          def = this._buildString(fieldInfo, this.part);
         }
         else if(shortType === 'number'){
-          this._buildNumber(fieldInfo, this.part);
+          def = this._buildNumber(fieldInfo, this.part);
         }
         else if(shortType === 'date'){
-          this._buildDate(fieldInfo, this.part);
+          def = this._buildDate(fieldInfo, this.part);
         }
+        return def;
       },
 
       _getCodedValues:function(fieldInfo){
@@ -219,6 +272,7 @@ define([
 
       _buildString: function(fieldInfo, part) {
         /*jshint unused: false*/
+        var def = new Deferred();
         html.setStyle(this.stringTextBoxContainer, 'display', 'block');
         html.setStyle(this.numberTextBoxContainer, 'display', 'none');
         html.setStyle(this.dateTextBoxContainer, 'display', 'none');
@@ -256,6 +310,7 @@ define([
               this.stringCodedValuesFS.set('value', stringCodedData[0].id);
             }
           }
+          def.resolve();
         } else {
           if(radioType === 'unique'){
             this._type = 3;
@@ -296,16 +351,20 @@ define([
                   this.stringUniqueValuesSelect.set('item', selectedItem);
                 }
               }
+              def.resolve();
             }), lang.hitch(this, function(err){
               console.error(err);
+              def.reject(err);
             }));
           }
           else{
             this._type = 1;
             this._showDijit(this.stringTextBox);
             this.stringTextBox.set('value', valueObj.value || '');
+            def.resolve();
           }
         }
+        return def;
       },
 
       _tryLocaleNumber: function(value) {
@@ -318,6 +377,7 @@ define([
 
       _buildNumber: function(fieldInfo, part){
         /*jshint unused: false*/
+        var def = new Deferred();
         html.setStyle(this.stringTextBoxContainer, 'display', 'none');
         html.setStyle(this.numberTextBoxContainer, 'display', 'block');
         html.setStyle(this.dateTextBoxContainer, 'display', 'none');
@@ -344,6 +404,7 @@ define([
           if(jimuUtils.isValidNumber(valueObj.value2)){
             this.numberTextBox2.set('value', valueObj.value2);
           }
+          def.resolve();
         }
         else{
           html.setStyle(this.numberRangeTable, 'display', 'none');
@@ -375,6 +436,7 @@ define([
             else{
               this.numberCodedValuesFS.set('value', numberCodedData[0].id);
             }
+            def.resolve();
           }
           else{
             if(radioType === 'unique'){
@@ -418,8 +480,10 @@ define([
                     this.numberUniqueValuesSelect.set('item', selectedItem);
                   }
                 }
+                def.resolve();
               }), lang.hitch(this, function(err){
                 console.error(err);
+                def.reject(err);
               }));
             }
             else{
@@ -428,13 +492,16 @@ define([
               if(valueObj && jimuUtils.isValidNumber(valueObj.value)){
                 this.numberTextBox.set('value', valueObj.value);
               }
+              def.resolve();
             }
           }
         }
+        return def;
       },
 
       _buildDate: function(fieldInfo, part){
         /*jshint unused: false*/
+        var def = new Deferred();
         html.setStyle(this.stringTextBoxContainer, 'display', 'none');
         html.setStyle(this.numberTextBoxContainer, 'display', 'none');
         html.setStyle(this.dateTextBoxContainer, 'display', 'block');
@@ -458,6 +525,8 @@ define([
           this._showDijit(this.dateTextBox);
           this.dateTextBox.set('value', new Date(valueObj.value));
         }
+        def.resolve();
+        return def;
       },
 
       _getSelectedFilteringItem:function(_select){
@@ -519,6 +588,10 @@ define([
             this.dateTextBox2.set('value', date1);
           }
         }
+      },
+
+      _onDijitChanged: function(){
+        this.emit('change');
       }
 
     });

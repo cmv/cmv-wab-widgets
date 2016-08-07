@@ -43,33 +43,4 @@
 .jimu-gp-editor-sffl{
   height: 30px;
   position: relative;
-  z-index: 1;
-}
-.jimu-gp-editor-sffl .layer-name{
-  height: 30px;
-  line-height: 30px;
-  width: 100%;
-  border: solid 1px rgba(0,0,0,0.1);
-  cursor: pointer;
-}
-.jimu-gp-editor-sffl .drop-select{
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 30px;
-  height: 30px;
-  background: center center no-repeat url(images/v01.png);
-  cursor: pointer;
-}
-.jimu-gp-editor-sffl .drop-select:hover{
-  background: center center no-repeat url(images/v02.png);
-}
-.jimu-gp-editor-sffl .layer-chooser{
-  position: absolute;
-  width: 100%;
-  top: 30px;
-  left: 0;
-  height: 200px;
-  z-index: 1000;
-  overflow: auto;
 }

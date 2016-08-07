@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Đo lường Hình ảnh"
-  })
-);
+define({
+  "_widgetLabel": "Đo lường Hình ảnh"
+});

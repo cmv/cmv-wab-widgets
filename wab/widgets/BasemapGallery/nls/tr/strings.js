@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Altlık Haritası Galerisi"
-  })
-);
+define({
+  "_widgetLabel": "Altlık Haritası Galerisi"
+});

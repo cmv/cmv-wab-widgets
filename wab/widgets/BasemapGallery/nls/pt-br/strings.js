@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Galeria de Mapa Base"
-  })
-);
+define({
+  "_widgetLabel": "Galeria de Mapa Base"
+});

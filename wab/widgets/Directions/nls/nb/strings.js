@@ -1,6 +1,6 @@
-﻿define(
-   ({
-    _widgetLabel: "Rutebeskrivelser",
-    searchPlaceholder: "Finn adresse eller sted"
-  })
-);
+define({
+  "_widgetLabel": "Rutebeskrivelser",
+  "_featureAction_DirectionFrom": "Veibeskrivelser fra her",
+  "_featureAction_DirectionTo": "Veibeskrivelser til hit",
+  "searchPlaceholder": "Finn adresse eller sted"
+});

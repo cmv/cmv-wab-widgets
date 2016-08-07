@@ -157,7 +157,7 @@ function(declare, lang, html, array, on, query, template, _WidgetBase, _Template
 
         /////set the default input type
         if(param.dataType === 'GPFeatureRecordSetLayer'){
-          param.featureSetMode = 'draw';
+          param.featureSetMode = 'layers';
         }
       }, this);
 

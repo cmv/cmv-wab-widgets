@@ -235,11 +235,8 @@ function(declare, lang, array, locale, esriLang, ItemFileWriteStore, jimuUtils) 
     /****  stringify                               ****/
     /**************************************************/
     //builtCompleteFilter
-    //1. If return null, it means partsObj is not invalid because some part is null.
-    //2. If return Object but the expr property is empty, it means 'Ask for values' option
-    //is checked and some values are missing, so it can't build a filter string.
-    //3. If return Object and the expr property is not null,
-    //   it means it builds a valid filter string.
+    //1. If return null or empty string, it means we can't get a valid sql expresion
+    //2. If return a non-empty string, it means we can get a valid sql expression
     getExprByFilterObj: function(partsObj) {
       //check part if valid or not, if part is null, it is invalid
       var isValidParts = array.every(partsObj.parts, function(part){
@@ -857,7 +854,15 @@ function(declare, lang, array, locale, esriLang, ItemFileWriteStore, jimuUtils) 
 
       if (savedStrings.length) {
         // put the strings back in
-        var replace = function(part, savedStrings){
+        var replace = function (part, savedStrings) {
+          if (part.valueObj === undefined ||
+            part.valueObj === null) {
+            return false;
+          }
+          if (part.valueObj.value === undefined ||
+            part.valueObj.value === null) {
+            return false;
+          }
           if (part.fieldObj.shortType !== "string") {
             return false;
           }

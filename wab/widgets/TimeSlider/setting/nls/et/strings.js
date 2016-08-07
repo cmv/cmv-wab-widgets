@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    showLayerLabels: "Kuva vidinas ajateadlike kihtide nimed."
-  })
-);
+define({
+  "showLayerLabels": "Kuva vidinas ajateadlike kihtide nimed."
+});

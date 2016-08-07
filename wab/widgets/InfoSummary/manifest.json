@@ -3,12 +3,12 @@
   "2D": true,
   "3D": false,
   "platform": "HTML",
-  "version": "2.0.1",
-  "wabVersion": "2.0.1",
-  "author": "ArcGIS for State Government",
-  "description": "Displays feature count based on map extent.",
-  "copyright": "",
-  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "version": "2.1",
+  "wabVersion": "2.1",
+  "author": "Esri Inc",
+  "description": "Displays a list of features based on map extent.",
+  "copyright": "Copyright 2015 Esri Inc.",
+  "license": "http://links.esri.com/solutions/license",
   "properties": {
 		"inPanel":false,
 		"hasLocale": true,
@@ -18,6 +18,7 @@
 		"hasSettingUIFile":true,
 		"hasSettingLocale":true,
 		"IsController":false,
-		"keepConfigAfterMapSwitched": false
+		"keepConfigAfterMapSwitched": false,
+		"hasVersionManager": true
   }
 }

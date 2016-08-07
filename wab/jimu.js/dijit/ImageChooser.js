@@ -307,7 +307,7 @@ define(['dojo/_base/declare',
           hidden: true
         });
         var cropPopup = new Popup({
-          titleLabel: 'Crop Image',
+          titleLabel: this.nls.cropImage,
           content: cropImage,
           // autoHeight: true,
           width: 500,

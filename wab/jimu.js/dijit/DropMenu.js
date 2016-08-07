@@ -42,7 +42,7 @@ function(declare, _WidgetBase, lang, array, html, on, Evented, utils) {
     },
     postCreate: function(){
       this.btnNode = html.create('div', {
-        'class': 'jimu-icon-btn'
+        'class': 'popup-menu-button'//'jimu-icon-btn'
       }, this.domNode);
 
       this.own(on(this.btnNode, 'click', lang.hitch(this, this._onBtnClick)));

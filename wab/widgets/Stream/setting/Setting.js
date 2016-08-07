@@ -40,6 +40,11 @@ define([
       baseClass: 'jimu-widget-stream-setting',
       templateString: template,
 
+      postMixInProperties: function(){
+        this.inherited(arguments);
+        lang.mixin(this.nls, window.jimuNls.common);
+      },
+
       postCreate: function() {
         this.inherited(arguments);
 

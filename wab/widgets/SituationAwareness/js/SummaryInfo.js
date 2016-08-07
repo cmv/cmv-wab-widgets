@@ -1,5 +1,6 @@
 define([
   'dojo/_base/declare',
+  'dojo/Evented',
   'dojo/_base/array',
   'dojo/_base/lang',
   'dojo/_base/Color',
@@ -28,6 +29,7 @@ define([
   'esri/tasks/query'
 ], function (
   declare,
+  Evented,
   array,
   lang,
   Color,
@@ -56,13 +58,14 @@ define([
   Query
 ) {
 
-  var summaryInfo = declare('SummaryInfo', null, {
+  var summaryInfo = declare('SummaryInfo', [Evented], {
 
     summaryLayer: null,
     summaryFields: [],
     summaryIds: [],
     summaryFeatures: [],
     summaryGeom: null,
+    tabNum: null,
 
     symbolField: null,
     graphicsLayer: null,
@@ -78,7 +81,8 @@ define([
 
     /* jshint unused: true */
     // update for incident
-    updateForIncident: function (incident, buffer, graphicsLayer) {
+    updateForIncident: function (incident, buffer, graphicsLayer, num) {
+      this.tabNum = num;
       this.container.innerHTML = "";
       domClass.add(this.container, "loading");
       this.summaryIds = [];
@@ -189,16 +193,18 @@ define([
       }
       query.objectIds = ids;
       this.summaryLayer.queryFeatures(query, lang.hitch(this, function (featureSet) {
-        this.summaryFeatures = this.summaryFeatures.concat(featureSet.features);
+        if (featureSet.features) {
+          this.summaryFeatures = this.summaryFeatures.concat(featureSet.features);
+        }
         this._processResults();
         if (this.summaryIds.length > 0) {
-          if (dom.byId('SA_SAT_download')) {
-            domClass.replace(dom.byId('SA_SAT_download'), "processing", "download");
+          if (this.SA_SAT_download) {
+            domClass.replace(this.SA_SAT_download, "processing", "download");
           }
           this._queryFeaturesByIds();
         } else {
-          if (dom.byId('SA_SAT_download')) {
-            domClass.replace(dom.byId('SA_SAT_download'), "download", "processing");
+          if (this.SA_SAT_download) {
+            domClass.replace(this.SA_SAT_download, "download", "processing");
           }
         }
       }));
@@ -313,20 +319,24 @@ define([
       this._prepResults();
       this.container.innerHTML = "";
       domClass.remove(this.container, "loading");
+      if (this.summaryFeatures.length === 0) {
+        this.container.innerHTML = this.parent.nls.noFeaturesFound;
+        return;
+      }
       var results = this.summaryFields;
       var numberOfDivs = results.length + 1;
       var total = 0;
       var tpc = domConstruct.create("div", {
-        id: "SA_tpc",
         style: "width:" + (numberOfDivs * 220) + "px;"
       }, this.container);
+
       domClass.add(tpc, "SAT_tabPanelContent");
 
       var div_results_extra = domConstruct.create("div", {}, tpc);
       domClass.add(div_results_extra, "SATcol");
 
       var div_exp = domConstruct.create("div", {
-        id: 'SA_SAT_download',
+        'data-dojo-attach-point': 'SA_SAT_download',
         innerHTML: this.parent.nls.downloadCSV
       }, div_results_extra);
       domClass.add(div_exp, ['btnExport', 'download']);
@@ -345,15 +355,24 @@ define([
         if (isNaN(total)) {
           total = 0;
         }
-        info += "<div class='colSummary'>" + number.format(total) + "</div><br/>";
-        var div = domConstruct.create("div", {
-          id: "SA_Demographics_" + i,
+
+        var div = domConstruct.create("div", { 'class': 'SATcol' }, tpc);
+        var topDiv = domConstruct.create("div", {
+          style: 'max-height: 60px;'
+        }, div);
+        domConstruct.create("div", {
+          'class': ' SATcolWrap',
+          style: 'max-height: 30px; overflow: hidden;',
           innerHTML: info
-        }, tpc);
-        domClass.add(div, "SATcol");
+        }, topDiv);
+        domConstruct.create("div", {
+          'class': ' colSummary',
+          innerHTML: number.format(total)
+        }, div);
       }
 
       if (this.graphicsLayer !== null) {
+        //this.graphicsLayer.suspend();
         this.graphicsLayer.clear();
         this.tab.tabLayers[1].clear();
         if (this.summaryFeatures) {
@@ -373,6 +392,16 @@ define([
           }
         }
         this.graphicsLayer.setVisibility(true);
+        //this.graphicsLayer.visible = true;
+        this.parent._toggleTabLayersNew(this.tabNum);
+
+        if (this.tab.restore) {
+          this.emit("summary-complete", {
+            bubbles: true,
+            cancelable: true,
+            tab: this.tabNum
+          });
+        }
       }
     },
 
@@ -380,7 +409,12 @@ define([
       if (this.summaryFeatures.length === 0) {
         return false;
       }
-      var name = this.tab.tabLayers[0].id;
+      var name;
+      if (this.tab.label) {
+        name = this.tab.label;
+      } else {
+        name = this.tab.layers;
+      }
       var data = [];
       var cols = [];
       array.forEach(this.summaryFeatures, function (gra) {
@@ -482,7 +516,5 @@ define([
       return fields;
     }
   });
-
   return summaryInfo;
-
 });

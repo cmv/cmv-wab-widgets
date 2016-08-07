@@ -28,15 +28,15 @@ define(['dojo/_base/declare',
   'esri/tasks/QueryTask',
   'esri/symbols/jsonUtils',
   'esri/renderers/SimpleRenderer',
-  '../BaseEditor',
+  './BaseFeatureSetEditor',
   'dojo/text!./SelectFeatureSetFromUrl.html',
   'jimu/dijit/URLInput'
 ],
 function(declare, lang, array, _TemplatedMixin, _WidgetsInTemplateMixin, CheckBox,
   LoadingIndicator, Message, Query, GraphicsLayer, SpatialReference, QueryTask,
-  symbolUtils, SimpleRenderer, BaseEditor, template) {
+  symbolUtils, SimpleRenderer, BaseFeatureSetEditor, template) {
   //from url
-  var clazz = declare([BaseEditor, _TemplatedMixin, _WidgetsInTemplateMixin], {
+  var clazz = declare([BaseFeatureSetEditor, _TemplatedMixin, _WidgetsInTemplateMixin], {
     baseClass: 'jimu-gp-editor-base jimu-gp-editor-url',
     templateString: template,
     editorName: 'SelectFeatureSetFromUrl',
@@ -124,18 +124,26 @@ function(declare, lang, array, _TemplatedMixin, _WidgetsInTemplateMixin, CheckBo
     },
 
     getValue: function(){
-      return this.featureSetUrl.get('value');
+      if(this.activeViewIndex === 0) {
+        return this.featureSetUrl.get('value');
+      } else {
+        return this.getFeatureSet();
+      }
     },
 
     getGPValue: function(){
-      var query = new Query();
-      query.where = '1=1';
-      query.returnGeometry = true;
-      query.outFields = ['*'];
-      query.outSpatialReference = new SpatialReference(this.querySetting.spatialReference.wkid);
+      if(this.activeViewIndex === 0) {
+        var query = new Query();
+        query.where = '1=1';
+        query.returnGeometry = true;
+        query.outFields = ['*'];
+        query.outSpatialReference = new SpatialReference(this.querySetting.spatialReference.wkid);
 
-      this.queryTask = new QueryTask(this.getValue());
-      return this.queryTask.execute(query);
+        this.queryTask = new QueryTask(this.getValue());
+        return this.queryTask.execute(query);
+      } else {
+        return this.wrapValueToDeferred(this.getFeatureSet());
+      }
     }
   });
 

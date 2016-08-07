@@ -35,6 +35,11 @@ define([
       templateString: template,
       baseClass: 'imt-featurelayer-source',
 
+      postMixInProperties: function(){
+        this.inherited(arguments);
+        this.nls.common = window.jimuNls.common;
+      },
+
       postCreate: function() {
         this.inherited(arguments);
         this._initUI();
@@ -79,15 +84,17 @@ define([
           this.weatherLayersSelect.set("value", setWeatherLayers);
         }
 
+
+        this.btnOk.innerText = this.nls.common.ok;
         this.own(on(this.btnOk, 'click', lang.hitch(this, function() {
           var items = this._getSelectedLayers();
           this.emit('ok', items);
         })));
 
+        this.btnCancel.innerText = this.nls.common.cancel;
         this.own(on(this.btnCancel, 'click', lang.hitch(this, function() {
           this.emit('cancel');
         })));
-
       },
 
       _getSelectedLayers: function() {
@@ -102,6 +109,5 @@ define([
         }));
         return weatherLayers;
       }
-
     });
   });

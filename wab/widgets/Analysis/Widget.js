@@ -23,6 +23,7 @@ define(['dojo/_base/declare',
   'dojo/dom-class',
   'dojo/Deferred',
   'dojo/on',
+  'dojo/Evented',
   'dojo/query',
   'dojo/promise/all',
   'dojo/dom-construct',
@@ -52,9 +53,10 @@ define(['dojo/_base/declare',
   './PrivilegeUtil',
   './toolSettings',
   'dojo/i18n!./setting/nls/strings',
-  'dijit/form/Button'
+  'dijit/form/Button',
+  'jimu/dijit/LoadingShelter'
 ],
-function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
+function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on, Evented,
   query, all, domConstruct, jsapiBundle, JSON, _WidgetsInTemplateMixin,
   esriRequest, JobInfo, FeatureSet, EsriQuery, QueryTask, FeatureLayer, PopupTemplate,
   AnalysisUtils, Extent, BaseWidget, ViewStack, Message, jimuUtils, portalUtils,
@@ -62,7 +64,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
   toolSettings, settingBundle) {
   var TOOLLIST_VIEW = 0, ANALYSIS_VIEW = 1, MESSAGE_VIEW = 2;
 
-  return declare([BaseWidget, _WidgetsInTemplateMixin], {
+  return declare([BaseWidget, _WidgetsInTemplateMixin, Evented], {
     baseClass: 'jimu-widget-analysis esriAnalysis',
 
     _hasContent: null,
@@ -73,13 +75,14 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
     postMixInProperties: function() {
       this.inherited(arguments);
       lang.mixin(this.nls, jsapiBundle.analysisTools);
+      lang.mixin(this.nls, window.jimuNls.common);
       this.nls.toolNotAvailable = settingBundle.toolNotAvailable;
     },
 
     postCreate: function() {
       this.inherited(arguments);
 
-      this.privilegeUtil = new PrivilegeUtil();
+      this.privilegeUtil = PrivilegeUtil.getInstance();
 
       this.viewStack = new ViewStack({
         viewType: 'dom',
@@ -104,14 +107,30 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
       this._closeHelpDialog();
       this._deactiveDrawTool();
       this._setDrawingLayersVisibility(false);
+      this._unbindAnalysisEvent();
     },
 
     onOpen: function() {
       this._setDrawingLayersVisibility(true);
+
+      if(this.currentStack === ANALYSIS_VIEW) {
+        this._refreshAnalysisTool();
+      }
     },
 
     onDeActive: function(){
       this._deactiveDrawTool();
+    },
+
+    _refreshAnalysisTool: function() {
+      this.shelter.show();
+      layerUtil.getLayerObjects(this.map).then(lang.hitch(this, function(layerObjects) {
+        // Validate the tool again because the map may has been changed.
+        toolValidate.isValid(layerObjects, this.currentToolSetting, this.privilegeUtil);
+        this.shelter.hide();
+        this._setIconAndLink(this.currentToolSetting);
+        this._switchToAnalysisTool();
+      }));
     },
 
     _checkValidation: function() {
@@ -131,15 +150,9 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
             domStyle.set(this.toolsSection, 'display', 'block');
             domStyle.set(this.noQueryTipSection, 'display', 'none');
 
-            if (this.config.analysisTools.length === 1) {
-              this._initSingleTool().then(lang.hitch(this, function() {
-                this.shelter.hide();
-              }));
-            } else {
-              this._initToolList().then(lang.hitch(this, function() {
-                this.shelter.hide();
-              }));
-            }
+            this._initToolList().then(lang.hitch(this, function() {
+              this.shelter.hide();
+            }));
           }
         }), lang.hitch(this, function() {
           //load privileges error
@@ -154,7 +167,9 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
 
       //remove dijit if exists
       if (this.currentAnalysisDijit) {
-        // this.currentAnalysisDijit.destroy();
+        if(typeof this.currentAnalysisDijit.clear === 'function') {
+          this.currentAnalysisDijit.clear();
+        }
         this.currentAnalysisDijit = null;
         domConstruct.empty(this.toolCtr);
       }
@@ -168,42 +183,11 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
       domStyle.set(this.noQueryTipSection, 'display', 'block');
     },
 
-    _initSingleTool: function() {
-      domStyle.set(this.homeBtn, 'display', 'none');
-      this.currentToolSetting = toolSettings.findToolSetting(
-        this.config.analysisTools[0].name);
-
-      if (this.currentToolSetting === null) {
-        this._noPrivilegeHandler(this.nls.noToolTip);
-        return;
-      }
-
-      //mix in custom tool setting
-      this.currentToolSetting = lang.mixin(this.currentToolSetting, this.config.analysisTools[0]);
-      if(!this.currentToolSetting.toolLabel){//If upgrade from 1.2, toolLabel is undefined.
-        this.currentToolSetting.toolLabel = this.nls[this.currentToolSetting.title];
-      }
-
-      //check extra privileges
-      var hasPrivileges = this.privilegeUtil.hasPrivileges(
-        this.currentToolSetting.privileges);
-      if (!hasPrivileges) {
-        this._noPrivilegeHandler(this.nls.privilegeError);
-        return;
-      }
-      return layerUtil.getLayerObjects(this.map).then(lang.hitch(this, function() {
-        this._setIconAndLink(this.currentToolSetting);
-        this.toolCountInList = 1;
-
-        this._switchToAnalysisTool();
-      }));
-    },
-
     _initToolList: function() {
       domStyle.set(this.homeBtn, 'display', '');
       this.toolCountInList = 0;
       var lastToolConfig = null;
-      return layerUtil.getLayerObjects(this.map).then(lang.hitch(this, function(res) {
+      return layerUtil.getLayerObjects(this.map).then(lang.hitch(this, function(layerObjects) {
         array.forEach(this.config.analysisTools, lang.hitch(this, function(item, idx) {
           var toolSetting = toolSettings.findToolSetting(item.name);
           if (toolSetting !== null) {
@@ -218,7 +202,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
             if (hasPrivileges) {
               //validate tool, check whether there are feature layer(s)
               //required to run this tool
-              var isValid = toolValidate.isValid(res, toolSetting, this.privilegeUtil);
+              var isValid = toolValidate.isValid(layerObjects, toolSetting, this.privilegeUtil);
               this._addTool(toolSetting, idx, isValid);
               this.toolCountInList += 1;
               lastToolConfig = toolSetting;
@@ -228,6 +212,8 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
         if (this.toolCountInList === 0) {
           this._noPrivilegeHandler(this.nls.privilegeError);
         } else if (this.toolCountInList === 1) {
+          domStyle.set(this.homeBtn, 'display', 'none');
+          this.currentToolSetting = lastToolConfig;
           this._setIconAndLink(lastToolConfig);
           this._switchToAnalysisTool();
         }
@@ -243,7 +229,8 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
 
     _addTool: function(rowData, idx, isValid) {
       var tr = domConstruct.create("tr", {
-        'class': 'tools-table-tr'
+        'class': 'tools-table-tr',
+        'data-toolname': rowData.name
       }, this.toolsTbody);
       if (idx % 2 === 0) {
         domClass.add(tr, 'even');
@@ -288,10 +275,14 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
         var index = rowData.dijitID.lastIndexOf('\/');
         var helpFileName = rowData.dijitID.substring(index + 1);
         var isPortal = !portalUrlUtils.isOnline(this._getPortalUrl());
-        AnalysisUtils.initHelpLinks(tr, true, {
-          helpFileName: helpFileName,
-          isSingleTenant: isPortal
-        });
+        try {
+          AnalysisUtils.initHelpLinks(tr, true, {
+            helpFileName: helpFileName,
+            isSingleTenant: isPortal
+          });
+        }catch (err) {
+          console.log(err);
+        }
       }
 
       if (isValid === true) {
@@ -333,9 +324,13 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
           src: this.folderUrl + 'images/helpIcon.png'
         }, this.helpLink);
 
-        AnalysisUtils.initHelpLinks(this.inputHeader, true, {
-          helpFileName: helpFileName
-        });
+        try{
+          AnalysisUtils.initHelpLinks(this.inputHeader, true, {
+            helpFileName: helpFileName
+          });
+        }catch(error){
+          console.log(error);
+        }
       }
     },
 
@@ -382,7 +377,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
         if('returnFeatureCollection' in this.currentToolSetting){
           args.showSelectFolder = !this.currentToolSetting.returnFeatureCollection;
         }
-        this._getLayerObjects().then(lang.hitch(this, function(layerObjects){
+        layerUtil.getLayerObjects(this.map).then(lang.hitch(this, function(layerObjects){
           //set analysis param
           if (this.currentToolSetting.analysisLayer) {
             // args[this.currentToolSetting.analysisLayer.name] = this.inputLayer;
@@ -437,16 +432,15 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
                 jimuUtils.stripHTML(err.message || err));
             domStyle.set(this.toolLoadErrorNode, 'display', '');
           }
-
+          this._switchView(ANALYSIS_VIEW);
           this.shelter.hide();
         }));
       }), lang.hitch(this, function(err) {
+        this._switchView(ANALYSIS_VIEW);
         domAttr.set(this.toolLoadErrorNode, 'innerHTML', jimuUtils.stripHTML(err));
         domStyle.set(this.toolLoadErrorNode, 'display', '');
         this.shelter.hide();
       }));
-
-      this._switchView(ANALYSIS_VIEW);
     },
 
     _prepareLayerParams: function(layerObjects) {
@@ -497,48 +491,6 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
       }, this);
 
       return matchedLayers;
-    },
-
-    _getLayerObjects: function() {
-      var retDef = new Deferred();
-
-      LayerInfos.getInstance(this.map, this.map.itemInfo).then(lang.hitch(this, function(
-        layerInfosObject) {
-        var layerInfos = [];
-        layerInfosObject.traversal(function(layerInfo) {
-          layerInfos.push(layerInfo);
-        });
-
-        var defs = array.map(layerInfos, function(layerInfo) {
-          // if layerInfo.getLayerType() is "GeoRSSLayer", assgin name to layerObject if it is undefined
-          return layerInfo.getLayerType().then(function(type){
-            if(type === 'GeoRSSLayer') {
-              if(!layerInfo.isLeaf()) {
-                array.forEach(layerInfo.getSubLayers(), function(subLayerInfo) {
-                  if(!subLayerInfo.layerObject.name) {
-                    subLayerInfo.layerObject.name = subLayerInfo.title;
-                  }
-                });
-              }
-            }
-            return layerInfo.getLayerObject();
-          });
-        });
-        all(defs).then(lang.hitch(this, function(layerObjects) {
-          var resultArray = [];
-          array.forEach(layerObjects, function(layerObject) {
-            if (layerObject) {
-              resultArray.push(layerObject);
-            }
-          });
-          retDef.resolve(resultArray);
-        }), function(err) {
-          /*jshint unused: false*/
-          retDef.resolve([]);
-        });
-      }));
-
-      return retDef;
     },
 
     _deactivateGenerator: function(toggleButtons) {
@@ -604,35 +556,77 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
       }
     },
 
+    _unbindAnalysisEvent: function() {
+      if (this.startListener) {
+        this.startListener.remove();
+        this.startListener = null;
+      }
+      if (this.submitListener) {
+        this.submitListener.remove();
+        this.submitListener = null;
+      }
+      if (this.cancelListener) {
+        this.cancelListener.remove();
+        this.cancelListener = null;
+      }
+      if (this.failedListener) {
+        this.failedListener.remove();
+        this.failedListener = null;
+      }
+      if (this.succeedListener) {
+        this.succeedListener.remove();
+        this.succeedListener = null;
+      }
+      if (this.statusListener) {
+        this.statusListener.remove();
+        this.statusListener = null;
+      }
+      if (this.resultListener) {
+        this.resultListener.remove();
+        this.resultListener = null;
+      }
+      if (this.activeDrawListener) {
+        this.activeDrawListener.remove();
+        this.activeDrawListener = null;
+      }
+      if (this.deactiveDrawListener) {
+        this.deactiveDrawListener.remove();
+        this.deactiveDrawListener = null;
+      }
+    },
+
     _bindAnalysisEvents: function(analysisDijit) {
-      this.own(on(analysisDijit, 'start',
-        lang.hitch(this, this._onJobStart)));
-      this.own(on(analysisDijit, 'job-submit',
-        lang.hitch(this, this._onJobSubmitted)));
-      this.own(on(analysisDijit, 'job-cancel',
-        lang.hitch(this, this._onJobCancelled)));
-      this.own(on(analysisDijit, 'job-fail',
-        lang.hitch(this, this._onJobFailed)));
-      this.own(on(analysisDijit, 'job-success',
-        lang.hitch(this, this._onJobSucceed)));
-      this.own(on(analysisDijit, 'job-status',
-        lang.hitch(this, this._onJobStatusChange)));
-      this.own(on(analysisDijit, 'job-result',
-        lang.hitch(this, this._onJobResultData)));
-      this.own(on(analysisDijit, 'drawtool-activate',
-        lang.hitch(this, function(){
-        this.map.setInfoWindowOnClick(false);
-      })));
-      this.own(on(analysisDijit, 'drawtool-deactivate',
-        lang.hitch(this, function(){
-        this.map.setInfoWindowOnClick(true);
-      })));
+      this._unbindAnalysisEvent();
+
+      this.startListener = on(analysisDijit, 'start',
+        lang.hitch(this, this._onJobStart));
+      this.submitListener = on(analysisDijit, 'job-submit',
+        lang.hitch(this, this._onJobSubmitted));
+      this.cancelListener = on(analysisDijit, 'job-cancel',
+        lang.hitch(this, this._onJobCancelled));
+      this.failedListener = on(analysisDijit, 'job-fail',
+        lang.hitch(this, this._onJobFailed));
+      this.succeedListener = on(analysisDijit, 'job-success',
+        lang.hitch(this, this._onJobSucceed));
+      this.statusListener = on(analysisDijit, 'job-status',
+        lang.hitch(this, this._onJobStatusChange));
+      this.resultListener = on(analysisDijit, 'job-result',
+        lang.hitch(this, this._onJobResultData));
+      this.activeDrawListener = on(analysisDijit, 'drawtool-activate',
+        lang.hitch(this, function() {
+          this.map.setInfoWindowOnClick(false);
+        }));
+      this.deactiveDrawListener = on(analysisDijit, 'drawtool-deactivate',
+        lang.hitch(this, function() {
+          this.map.setInfoWindowOnClick(true);
+        }));
     },
 
     _onJobStart: function() {
       this._clearMessageLogs();
       this.shelter.show();
       this._switchView(MESSAGE_VIEW);
+      this.emit('start');
     },
 
     _onJobSubmitted: function(res) {
@@ -655,6 +649,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
         'class': 'job-running-icon',
         src: this.folderUrl + 'images/loading.gif'
       }, node);
+      this.emit('job-submit', res);
     },
 
     _onJobCancelled: function(res) {
@@ -674,6 +669,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
       this._onJobDone();
       //show button area
       domStyle.set(this.buttonSection, 'display', '');
+      this.emit('job-cancel', res);
     },
 
     _onJobFailed: function(res) {
@@ -701,6 +697,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
         new Message({
           message: res.message
         });
+        this.emit('job-fail', res);
         return;
       }
 
@@ -713,6 +710,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
       this._onJobDone();
       //show button area
       domStyle.set(this.buttonSection, 'display', '');
+      this.emit('job-fail', res);
     },
 
     _onJobSucceed: function(res) {
@@ -736,6 +734,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
       }
       domStyle.set(this.buttonSection, 'display', '');
       domStyle.set(this.resultLoading, 'display', '');
+      this.emit('job-success', res);
     },
 
     _onJobDone: function() {
@@ -778,13 +777,15 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
             break;
           case JobInfo.STATUS_SUCCEEDED:
             if (typeof res.message === 'string') {
-              this._appendMessage(res.message);
+              this._appendMessage(res.message, 'success');
             }
             this._onJobDone();
             domStyle.set(this.buttonSection, 'display', '');
+            domStyle.set(this.resultLoading, 'display', '');
             break;
         }
       }
+      this.emit('job-status', res);
     },
 
     _onJobResultData: function(res) {
@@ -832,6 +833,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
             infoTemplate: popupTemplate
           });
           featureLayer.title = outputLayerName ? outputLayerName : 'output';
+          featureLayer.name = outputLayerName ? outputLayerName : 'output';
           this.map.addLayer(featureLayer);
 
           if(this.currentToolSetting.allowToExport){
@@ -842,6 +844,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
           domStyle.set(this.resultLoading, 'display', 'none');
         }
       }
+      this.emit('job-result', res);
     },
 
     _fetchResultByItemId: function(outputLayerName, itemId, popupInfo) {
@@ -958,6 +961,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
       domConstruct.empty(this.outputSection);
       domStyle.set(this.resultSection, 'display', 'none');
       domStyle.set(this.buttonSection, 'display', 'none');
+      domStyle.set(this.resultLoading, 'display', 'none');
     },
 
     _appendMessage: function(msg, type) {
@@ -1005,9 +1009,40 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
       }
     },
 
+    _getLayerNameSuffix: function(layerName, label) {
+      if (layerName === label) {
+        return 1;
+      } else if (/_\d+$/.test(layerName) && layerName.indexOf(label) === 0) {
+        var names = layerName.split('_');
+        return Number(names[names.length - 1]) + 1;
+      }
+      return 0;
+    },
+
     _appendResultMessage: function(res) {
       if (res.paramName) {
-        var label = res.paramName;
+        var label = res.paramName, count = 0, suffix = 0, layer;
+
+        // check layer with duplicated name
+        array.forEach(this.map.graphicsLayerIds, lang.hitch(this, function(layerId) {
+          layer = this.map.getLayer(layerId);
+          suffix = this._getLayerNameSuffix(layer.title, label);
+          if(count < suffix) {
+            count = suffix;
+          }
+        }));
+
+        array.forEach(this.map.layerIds, lang.hitch(this, function(layerId) {
+          var layer = this.map.getLayer(layerId);
+          suffix = this._getLayerNameSuffix(layer.title, label);
+          if(count < suffix) {
+            count = suffix;
+          }
+        }));
+
+        if(count > 0) {
+          label = label + '_' + count;
+        }
 
         var node = domConstruct.create('div', {
           'class': 'output-item'
@@ -1029,7 +1064,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on,
             innerHTML: jimuUtils.stripHTML(label)
           }, node);
         } else {
-          domAttr.set(node, 'innerHTML', res.paramName);
+          domAttr.set(node, 'innerHTML', label);
         }
         return label;
       } else {

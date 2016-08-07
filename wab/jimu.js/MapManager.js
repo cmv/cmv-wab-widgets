@@ -14,7 +14,8 @@
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////
 
-define(['dojo/_base/declare',
+define([
+  'dojo/_base/declare',
   'dojo/_base/lang',
   'dojo/_base/array',
   'dojo/_base/html',
@@ -35,11 +36,12 @@ define(['dojo/_base/declare',
   'jimu/dijit/AppStatePopup',
   './MapUrlParamsHandler',
   './AppStateManager',
-  './PopupManager'
+  './PopupManager',
+  './FilterManager'
 ], function(declare, lang, array, html, topic, on, aspect, keys, InfoWindow,
   PopupMobile, InfoTemplate, esriRequest, Extent, Point, require,
   jimuUtils, LoadingShelter, LayerInfos, AppStatePopup, MapUrlParamsHandler,
-  AppStateManager, PopupManager) {
+  AppStateManager, PopupManager, FilterManager) {
   var instance = null,
     clazz = declare(null, {
       appConfig: null,
@@ -58,6 +60,7 @@ define(['dojo/_base/declare',
         this.id = mapDivId;
         this.appStateManager = AppStateManager.getInstance(this.urlParams);
         this.popupManager = PopupManager.getInstance(this);
+        this.filterManager = FilterManager.getInstance();
         this.nls = window.jimuNls;
         topic.subscribe("appConfigChanged", lang.hitch(this, this.onAppConfigChanged));
         topic.subscribe("changeMapPosition", lang.hitch(this, this.onChangeMapPosition));
@@ -262,6 +265,25 @@ define(['dojo/_base/declare',
           usePopupManager: true
         };
 
+        if(!window.isBuilder && !appConfig.mode && appConfig.map.appProxy &&
+            appConfig.map.appProxy.mapItemId === appConfig.map.itemId) {
+          var layerMixins = [];
+          array.forEach(appConfig.map.appProxy.proxyItems, function(proxyItem){
+            if (proxyItem.useProxy && proxyItem.proxyUrl) {
+              layerMixins.push({
+                url: proxyItem.sourceUrl,
+                mixin: {
+                  url: proxyItem.proxyUrl
+                }
+              });
+            }
+          });
+
+          if(layerMixins.length > 0) {
+            webMapOptions.layerMixins = layerMixins;
+          }
+        }
+
         var mapDeferred = jimuUtils.createWebMap(webMapPortalUrl, webMapItemId,
           this.mapDivId, webMapOptions);
 
@@ -286,12 +308,14 @@ define(['dojo/_base/declare',
           html.setStyle(map.root, 'zIndex', 0);
 
           map._initialExtent = map.extent;
-          this._publishMapEvent(map);
-          setTimeout(lang.hitch(this, this._checkAppState), 500);
 
-          this.loading.hide();
-
-          this._addDataLoadingOnMapUpdate(map);
+          LayerInfos.getInstance(map, map.itemInfo).then(lang.hitch(this, function(layerInfosObj) {
+            this.layerInfosObj = layerInfosObj;
+            this._publishMapEvent(map);
+            setTimeout(lang.hitch(this, this._checkAppState), 500);
+            this.loading.hide();
+            this._addDataLoadingOnMapUpdate(map);
+          }));
         }), lang.hitch(this, function() {
           this._destroyLoadingShelter();
           topic.publish('mapCreatedFailed');
@@ -339,24 +363,20 @@ define(['dojo/_base/declare',
 
         if(useAppState){
           this.appStateManager.getWabAppState().then(lang.hitch(this, function(stateData) {
-            LayerInfos.getInstance(this.map, this.map.itemInfo)
-            .then(lang.hitch(this, function(layerInfosObj) {
-              this.layerInfosObj = layerInfosObj;
-              if(stateData.extent || stateData.layers) {
-                var appStatePopup = new AppStatePopup({
-                  nls: {
-                    title: this.nls.appState.title,
-                    restoreMap: this.nls.appState.restoreMap
-                  }
-                });
-                appStatePopup.placeAt('main-page');
-                on(appStatePopup, 'applyAppState', lang.hitch(this, function(){
-                  this._applyAppState(stateData, this.map);
-                }));
-                appStatePopup.startup();
-                appStatePopup.show();
-              }
-            }));
+            if (stateData.extent || stateData.layers) {
+              var appStatePopup = new AppStatePopup({
+                nls: {
+                  title: this.nls.appState.title,
+                  restoreMap: this.nls.appState.restoreMap
+                }
+              });
+              appStatePopup.placeAt('main-page');
+              on(appStatePopup, 'applyAppState', lang.hitch(this, function() {
+                this._applyAppState(stateData, this.map);
+              }));
+              appStatePopup.startup();
+              appStatePopup.show();
+            }
           }));
         }
       },

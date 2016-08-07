@@ -1,3 +1,51 @@
+.jimu-widget-SAT-setting .main-section {
+  width: 100%;
+  height: 100%;
+}
+
+.jimu-widget-SAT-setting .tabs-section-Label {
+  font-weight: bold;
+}
+
+.jimu-widget-SAT-setting .general-setting-Label {
+  padding-top: 15px;
+  font-weight: bold;
+}
+
+.jimu-widget-SAT-setting .currentlySelectedLayer {
+  padding-top: 15px; 
+  padding-left:15px;
+}
+
+.jimu-widget-SAT-setting .pad-row15 {
+  padding-top: 15px;
+}
+
+.jimu-widget-SAT-setting .pad-row0 {
+  padding-top: 0px;
+}
+
+.jimu-widget-SAT-setting .selectUnits {
+  margin-left: 10px;
+}
+
+.jimu-widget-SAT-setting .tpd {
+  margin-right: 15px;
+}
+
+.jimu-widget-SAT-setting .chk_display {
+  padding-top: 15px; 
+  padding-bottom: 15px;
+}
+
+.jimu-widget-SAT-setting .display-checkbox {
+  padding-bottom: 15px;
+}
+
+.jimu-widget-SAT-setting .maximum-distance-lbl {
+  width: 60px;
+}
+
 .jimu-widget-SAT-setting .btn-add-section {
   display: inline-block;
   overflow: hidden;
@@ -29,16 +77,26 @@
   vertical-align: top;
 }
 
-.claro .dojoxCheckedMultiSelect .dojoxCheckedMultiSelectWrapper {
+.jimu-widget-SAT-setting .settingAlign{
+  padding-top: 4px; 
+  margin-left: 80px;
+}
+
+.jimu-rtl .jimu-widget-SAT-setting .settingAlign{
+  padding-top: 4px; 
+  margin-right: 80px;
+}
+
+.jimu-widget-SAT-setting .claro .dojoxCheckedMultiSelect .dojoxCheckedMultiSelectWrapper {
   border: none !important;
   background-color: transparent !important;
 }
 
-.footer {
+.jimu-widget-SAT-setting .footer {
   text-align: right;
 }
 
-.removeButtonWithIcon {
+.jimu-widget-SAT-setting .removeButtonWithIcon {
   background-image: url("../images/filterdialog_icons.png");
   background-repeat: no-repeat;
   background-position: -30px 0;
@@ -48,7 +106,7 @@
   display: block;
 }
 
-.upButton {
+.jimu-widget-SAT-setting .upButton {
   background-image: url("../../../../jimu.js/css/images/up_enabled.png");
   background-repeat: no-repeat;
   width: 15px;
@@ -57,7 +115,7 @@
   display: block;
 }
 
-.downButton {
+.jimu-widget-SAT-setting .downButton {
   background-image: url("../../../../jimu.js/css/images/down_enabled.png");
   background-repeat: no-repeat;
   width: 15px;
@@ -66,7 +124,7 @@
   display: block;
 }
 
-.colorButton {
+.jimu-widget-SAT-setting .colorButton {
   width: 15px;
   height: 15px;
   margin: 0px 0px;
@@ -74,26 +132,52 @@
   background-color: #00ff00;
 }
 
-.footer {
+.jimu-widget-SAT-setting .footer {
   padding-top: 5px;
   width: 100%;
   height: 30px;
 }
 
-.dojoxCheckedMultiSelect .dojoxCheckedMultiSelectWrapper {
+.jimu-widget-SAT-setting .jimu-simple-table .simple-table-cell{
+  line-height: 26px;
+}
+
+.jimu-widget-SAT-setting .dojoxCheckedMultiSelect .dojoxCheckedMultiSelectWrapper {
   height: 400px;
 }
 
-.dojoxMultiSelectItem {
+.jimu-widget-SAT-setting .dojoxMultiSelectItem {
   padding-bottom: 5px;
   padding-top: 5px;
 }
 
-.dijitSelectLabel {
-    text-align:left;
+.jimu-widget-SAT-setting .longSelect .dijitSelectLabel {
+    text-align: left;
     text-overflow: ellipsis;
     overflow: hidden;
-    max-width:300px;
+    max-width: 390px;
+}
+
+.jimu-widget-SAT-setting .medSelect .dijitSelectLabel {
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 340px;
+}
+
+.jimu-widget-SAT-setting .shortSelect .dijitSelectLabel {
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 190px;
+}
+
+.jimu-widget-SAT-setting .shortTypeSelect .dijitSelectLabel {
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 165px;
+    min-width: 165px;
 }
 
 .jimu-widget-SAT-setting .display-options{
@@ -102,17 +186,27 @@
   vertical-align: middle;
 }
 
-.template-picker-on{
-    display: block;
+.jimu-widget-SAT-setting .template-picker-on{
+  display: block;
 }
 
-.template-picker-of{
-    display: none;
+.jimu-widget-SAT-setting .template-picker-of{
+  display: none;
 }
 
-.visDivLength
-{
-    position: absolute;
-    visibility: hidden;
-    width: auto;
+.jimu-widget-SAT-setting .visDivLength {
+  position: absolute;
+  visibility: hidden;
+  width: auto;
 }
+
+.jimu-widget-SAT-setting .field-picker-main {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.jimu-widget-SAT-setting .pad-top20 {
+  padding-top: 20px;
+}
+

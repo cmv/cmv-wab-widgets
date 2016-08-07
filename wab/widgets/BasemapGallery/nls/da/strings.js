@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Galleri over baggrundskort"
-  })
-);
+define({
+  "_widgetLabel": "Galleri over baggrundskort"
+});

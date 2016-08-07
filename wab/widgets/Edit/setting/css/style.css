@@ -14,6 +14,8 @@
 .jimu-widget-edit-setting .update{
   width: 200px;
 }
+
+
 .jimu-widget-edit-setting .setting-table > thead > tr > th,
 .jimu-widget-edit-setting .setting-table > tbody > tr > td{
   height:40px;
@@ -49,3 +51,24 @@
   height: 30px;
   width: 100%;
 }
+
+.jimu-widget-edit-setting .toolbar-options-tr {
+  position: relative;
+}
+
+.jimu-widget-edit-setting .toolbar-options-tr.disable {
+  opacity: 0.4;
+}
+
+.jimu-widget-edit-setting .toolbar-options-coverage{
+  position: absolute;
+  width: 390px;
+  height: 40px;
+  z-index: 1;
+}
+
+.jimu-widget-edit-setting .dijitTextBoxFocused{
+  border-color: #406b9b !important;
+  box-shadow: 0 0 0;
+}
+

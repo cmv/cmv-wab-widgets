@@ -21,33 +21,49 @@ define([
   'dijit/_WidgetsInTemplateMixin',
   'dojo/text!./SingleQuerySetting.html',
   'dojo/_base/lang',
-  'dojo/_base/array',
   'dojo/_base/html',
   'dojo/on',
+  'dojo/query',
   'dojo/Evented',
+  'dojo/Deferred',
   'jimu/utils',
+  'jimu/dijit/Popup',
+  'jimu/dijit/CheckBox',
   'jimu/dijit/TabContainer3',
   'jimu/dijit/Message',
   'jimu/dijit/_QueryableLayerSourcePopup',
+  '../utils',
   './PopupConfig',
+  './SpatialFilterConfig',
   'esri/request',
   'esri/symbols/jsonUtils',
   'jimu/dijit/Filter',
   'jimu/dijit/SymbolPicker',
   'jimu/dijit/LoadingShelter',
+  'jimu/dijit/ImageChooser',
   'dijit/form/ValidationTextBox'
 ],
 function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, lang,
-  array, html, on, Evented, jimuUtils, TabContainer3, Message, _QueryableLayerSourcePopup,
-  PopupConfig, esriRequest, esriSymbolJsonUtils, Filter) {
+  html, on, query, Evented, Deferred, jimuUtils, Popup, CheckBox, TabContainer3, Message,
+  _QueryableLayerSourcePopup, queryUtils, PopupConfig, SpatialFilterConfig, esriRequest, esriSymbolJsonUtils,
+  Filter) {
+
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
     baseClass: 'jimu-widget-single-query-setting',
     templateString: template,
+    popupConfig: null,
+    spatialFilterConfig: null,
+    jimuNls: null,
+    _webMapLayerId: null,//the layerId in web map, maybe null
+    _defaultTaskIcon: null,
+
+    //options
     map: null,
     nls: null,
+    target: null,
     tr: null,
     appConfig: null,
-
+    folderUrl: null,
     _layerDefinition: null,//include url
 
     //public methods:
@@ -55,16 +71,28 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
     //setConfig
     //getConfig
 
+    //events:
+    //loading
+    //unloading
+
+    postMixInProperties:function(){
+      this.inherited(arguments);
+      this._defaultTaskIcon = this.folderUrl + "css/images/default_task_icon.png";
+      this.jimuNls = window.jimuNls;
+    },
+
     postCreate: function(){
       this.inherited(arguments);
       this._initSelf();
     },
 
     destroy: function(){
-      this.tr = null;
-      delete this.tr;
+      this.target = null;
+      this.emit('before-destroy');
       this.inherited(arguments);
     },
+
+    /*----------------------------------public methods-------------------------------------------*/
 
     setConfig: function(config){
       this.config = config;
@@ -77,13 +105,17 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
         return;
       }
 
+      this.showBigShelter();
+      this.tab.showShelter();
+
       if(this._layerDefinition && this._layerDefinition.url === url){
-        this.tab.hideShelter();
-        this._resetByConfig(this.config, this._layerDefinition);
-      }
-      else{
+        this._resetByConfig(this.config, this._layerDefinition)
+        .promise.always(lang.hitch(this, function(){
+          this.hideBigShelter();
+          this.tab.hideShelter();
+        }));
+      }else{
         this._layerDefinition = null;
-        this.showBigShelter();
         var def = esriRequest({
           url: url,
           handAs: 'json',
@@ -94,11 +126,13 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
           if(!this.domNode){
             return;
           }
-          this.hideBigShelter();
-          this.tab.hideShelter();
           this._layerDefinition = response;
           this._layerDefinition.url = url;
-          this._resetByConfig(this.config, this._layerDefinition);
+          this._resetByConfig(this.config, this._layerDefinition)
+          .promise.always(lang.hitch(this, function(){
+            this.hideBigShelter();
+            this.tab.hideShelter();
+          }));
         }), lang.hitch(this, function(err){
           console.error(err);
           if(!this.domNode){
@@ -111,18 +145,23 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
 
     getConfig: function () {
       var config = {
-        name:'',
         url:'',
-        filter:{
-          useFilter:'',
-          filterInfo:''
-        },
-        popup: '',
+        name:'',
+        icon: '',
+        filter: null,
+        showSQL: false,
+        spatialFilter: null,
+        popupInfo: '',
+        orderByFields: [],
+        useLayerSymbol: true,
         resultsSymbol:'',
-        objectIdField:'',
-        orderByFields: []
+        keepResultsOnMapAfterCloseWidget: true,
+        enableExport: false,
+        singleResultLayer: true,
+        webMapLayerId: this._webMapLayerId
       };
 
+      //url
       if(!this._layerDefinition){
         this.scrollToDom(this.generalTable);
         new Message({message: this.nls.setSourceTip});
@@ -130,13 +169,21 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
       }
       config.url = this._layerDefinition.url;
 
-      var queryName = jimuUtils.stripHTML(this.queryNameTextBox.get('value'));
-      if(!queryName){
-        this.showValidationErrorTip(this.queryNameTextBox);
+      //name
+      if(!this.queryNameTextBox.validate()){
+        jimuUtils.showValidationErrorTipForFormDijit(this.queryNameTextBox);
         return null;
       }
-      config.name = queryName;
+      config.name = this.queryNameTextBox.get('value');
 
+      //icon
+      var icon = this.imageChooser.getImageData();
+      if(icon === this._defaultTaskIcon){
+        icon = '';
+      }
+      config.icon = icon;
+
+      //attribute filter
       var filterObj = this.filter.toJson();
       if (!filterObj) {
         new Message({
@@ -145,43 +192,65 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
         return null;
       }
       config.filter = filterObj;
+      config.showSQL = this.cbxShowSQL.getValue();
 
-      var popup = this.popupConfig.getConfig();
-      if(!popup){
-        return null;
-      }
-      config.orderByFields = popup.orderByFields;
-      delete popup.orderByFields;
-      config.popup = popup;
-
-      if(this._isTable(this._layerDefinition)){
-        //if it is table, we don't save the symbol info
-        config.resultsSymbol = null;
+      //spatial filter
+      if(queryUtils.isTable(this._layerDefinition)){
+        config.spatialFilter = null;
       }else{
-        var sym1 = this.layerSymbolPicker.getSymbol();
-        if(sym1){
-          config.resultsSymbol = sym1.toJson();
-        }
-        else{
+        var spatialFilter = this.spatialFilterConfig.getConfig();
+        if(!spatialFilter){
           return null;
         }
+        config.spatialFilter = spatialFilter;
       }
 
-      if(this._layerDefinition.objectIdField){
-        config.objectIdField = this._layerDefinition.objectIdField;
+      //{popupInfo,orderByFields}
+      var popupConfig = this.popupConfig.getConfig();
+      if(!popupConfig){
+        return null;
       }
-      else{
-        var fields = this._layerDefinition.fields;
-        var oidFieldInfos = array.filter(fields, lang.hitch(this, function(fieldInfo){
-          return fieldInfo.type === 'esriFieldTypeOID';
-        }));
-        if(oidFieldInfos.length > 0){
-          var oidFieldInfo = oidFieldInfos[0];
-          config.objectIdField = oidFieldInfo.name;
+      config.orderByFields = popupConfig.orderByFields;
+      //delete popupConfig.orderByFields;
+      config.popupInfo = popupConfig.popupInfo;
+
+      //symbol
+      var sym = null;
+      if(queryUtils.isTable(this._layerDefinition)){
+        config.useLayerSymbol = false;
+        config.resultsSymbol = null;
+      }else if(queryUtils.isImageServiceLayer(this._layerDefinition)){
+        config.useLayerSymbol = false;
+        sym = this.layerSymbolPicker.getSymbol();
+        if(sym){
+          config.resultsSymbol = sym.toJson();
+        }else{
+          console.error("Can't get symbol from SymbolPicker");
+          return null;
+        }
+      }else{
+        if(this.radioCustomSymbol.checked){
+          config.useLayerSymbol = false;
+          sym = this.layerSymbolPicker.getSymbol();
+          if(sym){
+            config.resultsSymbol = sym.toJson();
+          }else{
+            console.error("Can't get symbol from SymbolPicker");
+            return null;
+          }
+        }else{
+          config.useLayerSymbol = true;
+          config.resultsSymbol = null;
         }
       }
 
-      this.tr._layerDefinition = this._layerDefinition;
+      //options
+      config.keepResultsOnMapAfterCloseWidget = this.cbxKeepResults.getValue();
+      config.singleResultLayer = this.radioOneLayerPerTask.checked;
+      config.enableExport = this.cbxExport.getValue();
+
+      this.target._layerDefinition = this._layerDefinition;
+      this.target.singleConfig = config;
 
       return config;
     },
@@ -193,25 +262,12 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
       this.domNode.parentNode.scrollTop = value;
     },
 
-    showValidationErrorTip: function(_dijit){
-      if (!_dijit.validate() && _dijit.domNode) {
-        if (_dijit.focusNode) {
-          _dijit.focusNode.focus();
-          setTimeout(lang.hitch(this, function() {
-            _dijit.focusNode.blur();
-          }), 100);
-        }
-      }
-    },
-
     showBigShelter: function(){
-      // this.shelter.show();
-      this.emit("show-shelter");
+      this.emit("loading");
     },
 
     hideBigShelter: function(){
-      // this.shelter.hide();
-      this.emit("hide-shelter");
+      this.emit("unloading");
     },
 
     showQueryDefinition: function(){
@@ -219,42 +275,162 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
     },
 
     showResultsSetting: function(){
-      this.tab.selectTab(this.nls.resultsSetting);
+      this.tab.selectTab(this.nls.results);
     },
 
     _initSelf: function(){
-      this._initFilter();
-      this._initPopupConfig();
       this._initTabs();
-    },
-
-    _initFilter: function(){
-      this.filter = new Filter({
-        enableAskForValues: true,
-        noFilterTip: this.nls.noFilterTip,
-        style: "width:100%;margin-top:22px;"
-      });
-      this.filter.placeAt(this.filterDiv);
+      this._initInfoTab();
+      this._initFilterTab();
+      this._initResultSettingTab();
+      this._initOptionsTab();
     },
 
     _initTabs: function(){
+      var tabInfo = {
+        title: this.nls.infoText,
+        content: this.infoTabNode
+      };
+
       var tabDefinition = {
-        title: this.nls.queryDefinition,
+        title: this.nls.filters,
         content: this.definitionTabNode
       };
 
       var tabResults = {
-        title: this.nls.resultsSetting,
+        title: this.nls.results,
         content: this.resultsTabNode
       };
 
-      var tabs = [tabDefinition, tabResults];
+      var tabOptions = {
+        title: this.nls.optionsText,
+        content: this.optionsTabNode
+      };
+
+      var tabs = [tabInfo, tabDefinition, tabResults, tabOptions];
       var args = {
         tabs: tabs
       };
       this.tab = new TabContainer3(args);
       this.tab.placeAt(this.detailSection);
       this.tab.showShelter();
+
+      this.own(on(this.tab, 'tabChanged', lang.hitch(this, function(title){
+        if(title === this.nls.filters){
+          this._updateSqlDivByFilter();
+        }
+      })));
+    },
+
+    /*---------------------------------info tab-----------------------------------------*/
+    _initInfoTab: function(){
+      this._setDefaultTaskIcon();
+    },
+
+    _onImageChooserDivClicked: function(evt){
+      if(!this.imageChooser.mask){
+        return;
+      }
+
+      var target = evt.target || evt.srcElement;
+      if(target !== this.imageChooser.mask && target !== this.imageChooser.fileInput){
+        jimuUtils.simulateClickEvent(this.imageChooser.mask);
+      }
+    },
+
+    /*---------------------------------filters tab-----------------------------------------*/
+    _initFilterTab: function(){
+      //init attribute filter
+      this.filter = new Filter({
+        enableAskForValues: true,
+        noFilterTip: this.nls.noFilterTip,
+        style: "width:100%;"
+      });
+      this.filter.placeAt(this.filterDiv);
+      this.cbxShowSQL = new CheckBox({label: this.nls.displaySQLTip});
+      if(this.cbxShowSQL.labelNode){
+        html.addClass(this.cbxShowSQL.labelNode, 'light-stress');
+      }
+      this.cbxShowSQL.check();
+      this.cbxShowSQL.placeAt(this.showSQLSection);
+
+      //init spatial filter config
+      this._initSpatialFilterConfig();
+    },
+
+    _resetAttributeFilter: function(){
+      this.filter.reset();
+      this._updateSqlDivByFilter();
+    },
+
+    _updateSqlDivByFilter: function(){
+      var tip = "";
+      var partsObj = this.filter.toJson();
+      if(partsObj){
+        if(partsObj.expr){
+          if(partsObj.expr === "1=1"){
+            tip = this.nls.noExpressionDefinedTip;
+          }else{
+            tip = partsObj.expr;
+          }
+        }else{
+          tip = this.nls.specifyFilterAtRuntimeTip;
+        }
+      }else{
+        console.log("can't get partsObj from filter");
+      }
+
+      if(tip){
+        this.sqlDiv.innerHTML = tip;
+      }
+    },
+
+    _onBtnFilterClicked: function(){
+      var popup = new Popup({
+        width: 680,
+        height: 485,
+        content: this.filter,
+        buttons: [{
+          label: this.nls.ok,
+          onClick: lang.hitch(this, function(){
+            var partsObj = this.filter.toJson();
+            if(!partsObj){
+              return;
+            }
+            popup.content = null;
+            html.place(this.filter.domNode, this.filterDiv);
+            this._updateSqlDivByFilter();
+            popup.close();
+          })
+        }, {
+          label: this.nls.cancel,
+          onClick: lang.hitch(this, function(){
+            popup.content = null;
+            html.place(this.filter.domNode, this.filterDiv);
+            popup.close();
+          })
+        }]
+      });
+    },
+
+    _initSpatialFilterConfig: function(){
+      var args = {
+        nls: this.nls
+      };
+      this.spatialFilterConfig = new SpatialFilterConfig(args);
+      this.spatialFilterConfig.placeAt(this.spatialFilterDiv);
+    },
+
+    /*-------------------------------result setting tab-----------------------------------------*/
+
+    _initResultSettingTab: function(){
+      //init popup
+      this._initPopupConfig();
+
+      //init symbol section
+      jimuUtils.combineRadioCheckBoxWithLabel(this.radioServiceSymbol, this.labelServiceSymbol);
+      jimuUtils.combineRadioCheckBoxWithLabel(this.radioCustomSymbol, this.labelCustomSymbol);
+      jimuUtils.groupRadios([this.radioServiceSymbol, this.radioCustomSymbol]);
     },
 
     _initPopupConfig: function(){
@@ -266,29 +442,71 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
       this.popupConfig.placeAt(this.popupContainer);
     },
 
-    _getRandomString: function(){
-      var str = Math.random().toString();
-      str = str.slice(2, str.length);
-      return str;
+    _showSymbolSection: function(){
+      html.removeClass(this.symbolSection, 'not-visible');
     },
+
+    _hideSymbolSection: function(){
+      html.addClass(this.symbolSection, 'not-visible');
+    },
+
+    /*----------------------------------options tab-------------------------------------------*/
+
+    _initOptionsTab: function(){
+      //init checkboxes
+      this.cbxKeepResults = new CheckBox({
+        label: this.nls.keepResultsTip
+      });
+      this.cbxKeepResults.placeAt(this.cbxKeepResultsDiv);
+
+      this.cbxExport = new CheckBox({label: this.nls.exportTip});
+      this.cbxExport.placeAt(this.exportSection);
+
+      //init raidos
+      jimuUtils.combineRadioCheckBoxWithLabel(this.radioOneLayerPerTask,
+                                              this.labelOneLayerPerTask);
+      jimuUtils.combineRadioCheckBoxWithLabel(this.radioMultipleLayerPerTask,
+                                              this.labelMultipleLayerPerTask);
+      jimuUtils.groupRadios([this.radioOneLayerPerTask, this.radioMultipleLayerPerTask]);
+    },
+
+    /*----------------------------update UI by config or new layer source------------------------*/
 
     _onQueryNameChanged: function(){
-      this.emit('name-change', this.queryNameTextBox.get('value'));
-    },
-
-    _onQueryNameBlurred: function(){
-      var value = jimuUtils.stripHTML(this.queryNameTextBox.get('value'));
-      this.queryNameTextBox.set('value', value);
+      // this.emit('name-change', this.queryNameTextBox.get('value'));
+      var labelNode = query('.label', this.target)[0];
+      var name = this.queryNameTextBox.get('value');
+      labelNode.innerHTML = name;
+      labelNode.title = name;
     },
 
     _clear: function(){
       this.urlTextBox.set('value', '');
       this._layerDefinition = null;
+
+      //reset info tab
       this.queryNameTextBox.set('value', '');
-      this.filter.reset();
+      this._setDefaultTaskIcon();
+
+      //_reset filter tab
+      this._resetAttributeFilter();
+      html.removeClass(this.spatialFilterDiv, 'not-visible');
+      this.spatialFilterConfig.reset();
+      this.cbxShowSQL.check();
+
       this.tab.showShelter();
-      this.popupConfig.clear();
+
+      //reset result tab
+      //this.popupConfig.clear();
+      this.popupConfig.onLayerChange(true);
+      this.radioServiceSymbol.disabled = false;
+      this.radioCustomSymbol.checked = true;
       this.layerSymbolPicker.reset();
+
+      //reset options tab
+      this.cbxKeepResults.uncheck();
+      this.radioOneLayerPerTask.checked = true;
+      this.cbxExport.uncheck();
     },
 
     _onBtnSetSourceClicked: function(){
@@ -307,19 +525,22 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
 
       var sourcePopup = new _QueryableLayerSourcePopup(args);
       this.own(on(sourcePopup, 'ok', lang.hitch(this, function(item){
-        //{name, url, definition}
-        var radioType = sourcePopup.getSelectedRadioType();
+        //item: {name, url, definition}
+        var layerSourceType = sourcePopup.getSelectedRadioType();
         sourcePopup.close();
         sourcePopup = null;
         var queryName = null;
-        var expr = null;
-        if(radioType === 'map'){
-          var layerObject = item.layerInfo && item.layerInfo.layerObject;
-          if(layerObject && typeof layerObject.getDefinitionExpression === 'function'){
-            expr = layerObject.getDefinitionExpression();
-          }
-        }
-        this.setNewLayerDefinition(item.name, item.url, item.definition, queryName, expr);
+        // var expr = null;
+        // if(layerSourceType === 'map'){
+        //   if(item.layerInfo){
+        //     var layerObject = item.layerInfo.layerObject;
+        //     if(layerObject && typeof layerObject.getDefinitionExpression === 'function'){
+        //       expr = layerObject.getDefinitionExpression();
+        //     }
+        //   }
+        // }
+        //we don't save current layer's definition expression, we just read it at runtime
+        this.setNewLayerDefinition(item, layerSourceType, queryName);
       })));
       this.own(on(sourcePopup, 'cancel', lang.hitch(this, function(){
         sourcePopup.close();
@@ -329,71 +550,81 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
       sourcePopup.startup();
     },
 
-    setNewLayerDefinition: function(name, url, definition,/*optional*/ queryName,/*optional*/ expr){
-      definition.name = name;
-      definition.url = url;
+    setNewLayerDefinition: function(layerSourceItem, layerSourceType, /*optional*/ queryName){
+      //layerSourceItem: {name,url,definition,...}
+      layerSourceItem.definition.name = layerSourceItem.name;
+      layerSourceItem.definition.url = layerSourceItem.url;
       var oldUrl = this._layerDefinition && this._layerDefinition.url;
-      if (url !== oldUrl) {
-        this._resetByNewLayerDefinition(definition, queryName, expr);
+      if (layerSourceItem.url !== oldUrl) {
+        this._resetByNewLayerDefinition(layerSourceItem, layerSourceType, queryName);
       }
     },
 
-    _isImageServiceLayer: function(layerInfo) {
-      return (layerInfo.url.indexOf('/ImageServer') > -1);
-    },
+    _resetByNewLayerDefinition: function(sourceItem, sourceType, /*optional*/ queryName){
+      var definition = sourceItem.definition;
 
-    _isTable: function(layerInfo){
-      return layerInfo.type === 'Table';
-    },
-
-    _showSymbolSection: function(){
-      html.setStyle(this.symbolSection, 'display', 'block');
-    },
-
-    _hideSymbolSection: function(){
-      html.setStyle(this.symbolSection, 'display', 'none');
-    },
-
-    _resetByNewLayerDefinition: function(layerInfo,/*optional*/ queryName,/*optional*/ defaultExpr){
       this._clear();
-      if(!layerInfo){
+      if(!definition){
         return;
       }
-      this._layerDefinition = layerInfo;
-      var url = layerInfo.url;
+      var webMapLayerId = null;
+      if(sourceType === 'map'){
+        if(sourceItem.layerInfo){
+          webMapLayerId = sourceItem.layerInfo.id;
+        }
+      }
+      this._layerDefinition = definition;
+      this._webMapLayerId = webMapLayerId;
+      var url = definition.url;
       this.urlTextBox.set('value', url);
-      this.queryNameTextBox.set('value', queryName || layerInfo.name);
+      this.queryNameTextBox.set('value', queryName || definition.name);
       this.tab.hideShelter();
 
-      //reset filter
-      this.filter.reset();
+      //reset attribute filter
+      this._resetAttributeFilter();
       if(this._layerDefinition){
-        var expr = defaultExpr || '1=1';
-        this.filter.buildByExpr(url, expr, this._layerDefinition);
+        this.filter.buildByExpr(url, '1=1', this._layerDefinition).promise.always(
+          lang.hitch(this, function(){
+          this._updateSqlDivByFilter();
+        }));
+      }
+
+      //reset spatial filter
+      if(queryUtils.isTable(this._layerDefinition)){
+        html.addClass(this.spatialFilterDiv, 'not-visible');
+      }else{
+        html.removeClass(this.spatialFilterDiv, 'not-visible');
       }
 
       //reset popupConfig
-      var popupTitle = '';
-
-      if(layerInfo.displayField){
-        popupTitle = '${' + layerInfo.displayField + '}';
+      this.popupConfig.onLayerChange(!!this._webMapLayerId);
+      if(this._webMapLayerId){
+        this.popupConfig.setConfig({
+          popupInfo: {
+            readFromWebMap: true
+          },
+          orderByFields: []
+        });
       }
 
-      this.popupConfig.setConfig({
-        title: popupTitle,
-        fields: [],
-        orderByFields: []
-      });
-
-      this.popupConfig.updateSortingIcon(this._layerDefinition);
-
       //reset symbol
+      this._handleSymbolSection(definition);
+    },
+
+    _handleSymbolSection: function(layerInfo, /*optional*/ symbol){
       var symType = '';
-      if(this._isImageServiceLayer(layerInfo)){
+      this._showSymbolSection();
+
+      if(queryUtils.isTable(layerInfo)){
+        this.radioServiceSymbol.disabled = true;
+        this._hideSymbolSection();
+        this.layerSymbolPicker.reset();
+      }else if(queryUtils.isImageServiceLayer(layerInfo)){
+        this.radioServiceSymbol.disabled = true;
+        this.radioCustomSymbol.checked = true;
         symType = 'fill';
-      } else if(this._isTable(layerInfo)){
-        symType = '';
-      } else{
+      }else{
+        this.radioServiceSymbol.disabled = false;
         if(layerInfo.geometryType){
           var geoType = jimuUtils.getTypeByGeometryType(layerInfo.geometryType);
 
@@ -408,77 +639,101 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
           }
         }
       }
-
       if(symType){
-        //if the layer is feature layer or image service layer, we should let user to configure
-        //result symbol
-        this._showSymbolSection();
+        //if the layer is feature layer or image service layer, we should let user to configure result symbol
         this.layerSymbolPicker.showByType(symType);
-      }else{
-        //if the layer is a table, symType will be empty
-        this._hideSymbolSection();
-        this.layerSymbolPicker.reset();
-      }
-    },
-
-    _resetByConfig:function(cfg, layerInfo){
-      var config = lang.clone(cfg);
-      this.urlTextBox.set('value', config.url);
-      this.queryNameTextBox.set('value', config.name || '');
-
-      //reset filter
-      var filterInfo = config.filter;
-      if(!this._isObject(filterInfo)){
-        return;
-      }
-      this.filter.reset();
-
-      if(this._isObject(filterInfo)){
-        this.filter.buildByFilterObj(layerInfo.url, filterInfo, layerInfo);
-      }
-      else{
-        this.filter.buildByExpr(layerInfo.url, '1=1', layerInfo);
-      }
-
-      //reset popupConfig
-      this.popupConfig.clear();
-      if(!this._isObject(config.popup)){
-        config.popup = {
-          title:'',
-          fields:[]
-        };
-      }
-      if(!(config.popup.fields && config.popup.fields.length >= 0)){
-        config.popup.fields = [];
-      }
-      if(!config.popup.title){
-        config.popup.title = '';
-      }
-
-      this.popupConfig.setConfig({
-        title: config.popup.title,
-        fields: config.popup.fields,
-        orderByFields: config.orderByFields
-      });
-
-      this.popupConfig.updateSortingIcon(layerInfo);
-
-      //reset symbol
-      if(this._isTable(layerInfo)){
-        //if it is a table, we should not allow user configure result symbol
-        this._hideSymbolSection();
-        this.layerSymbolPicker.reset();
-      }else{
-        //it is a feature layer or an image service layer
-        this._showSymbolSection();
-        if(config.resultsSymbol){
-          var sym1 = esriSymbolJsonUtils.fromJson(config.resultsSymbol);
-          this.layerSymbolPicker.showBySymbol(sym1);
+        if(symbol){
+          this.layerSymbolPicker.showBySymbol(symbol);
         }
       }
     },
 
-    _isObject:function(o){
+    _setDefaultTaskIcon: function(){
+      this.imageChooser.setDefaultSelfSrc(this._defaultTaskIcon);
+    },
+
+    _resetByConfig: function(cfg, layerInfo){
+      var def = new Deferred();
+      var config = lang.clone(cfg);
+      this._upgradeConfigForLowerVersion(layerInfo, config);
+      this._webMapLayerId = config.webMapLayerId;
+      this.urlTextBox.set('value', config.url);
+      this.queryNameTextBox.set('value', config.name || '');
+      if(config.icon){
+        this.imageChooser.setDefaultSelfSrc(config.icon);
+      }else{
+        this._setDefaultTaskIcon();
+      }
+
+      //reset attribute filter
+      var filterInfo = config.filter;
+      this._resetAttributeFilter();
+
+      var defFilter = null;
+      if(this._isObject(filterInfo)){
+        defFilter = this.filter.buildByFilterObj(layerInfo.url, filterInfo, layerInfo);
+      }else{
+        defFilter = this.filter.buildByExpr(layerInfo.url, '1=1', layerInfo);
+      }
+      defFilter.promise.always(lang.hitch(this, function(){
+        this._updateSqlDivByFilter();
+        def.resolve();
+      }));
+
+      this.cbxShowSQL.setValue(config.showSQL);
+
+      //reset spatial filter
+      this.spatialFilterConfig.reset();
+      if(queryUtils.isTable(this._layerDefinition)){
+        html.addClass(this.spatialFilterDiv, 'not-visible');
+      }else{
+        html.removeClass(this.spatialFilterDiv, 'not-visible');
+        if(config.spatialFilter){
+          this.spatialFilterConfig.setConfig(config.spatialFilter);
+        }
+      }
+
+      //reset popupConfig
+      this.popupConfig.onLayerChange(!!this._webMapLayerId);
+      this.popupConfig.setConfig({
+        popupInfo: config.popupInfo,
+        orderByFields: config.orderByFields
+      });
+
+      //reset symbol
+      var symbol = null;
+      if(config.resultsSymbol){
+        try{
+          symbol = esriSymbolJsonUtils.fromJson(config.resultsSymbol);
+        }catch(e){
+          console.error(e);
+        }
+      }
+      this._handleSymbolSection(layerInfo, symbol);
+      if(config.useLayerSymbol){
+        this.radioServiceSymbol.checked = true;
+      }
+
+      //reset options
+      this.cbxKeepResults.setValue(config.keepResultsOnMapAfterCloseWidget);
+      if(config.singleResultLayer){
+        this.radioOneLayerPerTask.checked = true;
+      }else{
+        this.radioMultipleLayerPerTask.checked = true;
+      }
+      this.cbxExport.setValue(config.enableExport);
+
+      return def;
+    },
+
+    _upgradeConfigForLowerVersion: function(layerDefinition, config){
+      if(config.popup && !config.popupInfo){
+        //the config's version < 2.1
+        config.popupInfo = queryUtils.upgradePopupToPopupInfo(layerDefinition, config.popup);
+      }
+    },
+
+    _isObject: function(o){
       return o && typeof o === 'object';
     }
 

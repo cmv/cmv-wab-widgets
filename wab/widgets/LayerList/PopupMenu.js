@@ -73,8 +73,8 @@ define([
 
     _getDropMenuPosition: function() {
       return {
-        top: "28px",
-        right: "4px",
+        top: "40px",
+        right: "0px",
         zIndex: 1
       };
     },
@@ -84,7 +84,7 @@ define([
         top: "28px",
         //left: "-107px"
         //left: -1 * html.getStyle(this.transparencyDiv, 'width') + 'px'
-        right: "4px"
+        right: "2px"
       };
     },
 
@@ -141,6 +141,7 @@ define([
       if (displayItemNodes.length === 0) {
         html.addClass(this.dropMenuNode, "no-border");
       } else {
+        html.removeClass(this.dropMenuNode, "no-border");
         if (html.hasClass(displayItemNodes[displayItemNodes.length - 1], 'menu-item-line')) {
           html.addClass(displayItemNodes[displayItemNodes.length - 1], "menu-item-hidden");
         }

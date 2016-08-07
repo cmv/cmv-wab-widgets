@@ -23,8 +23,8 @@ define([
 ],
 function(declare, _BasicServiceBrowser, lang, array, serviceBrowserRuleUtils) {
   return declare([_BasicServiceBrowser], {
+    declaredClass: 'jimu.dijit.QueryableServiceBrowser',
     baseClass: 'jimu-queryable-service-browser',
-    declaredClass: 'jimu-service-chooser-from-portal jimu.dijit.QueryableServiceBrowser',
 
     //This dijit will filter MapService,FeatureService and ImageService
 

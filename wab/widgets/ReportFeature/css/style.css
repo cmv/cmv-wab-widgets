@@ -6,6 +6,9 @@
 .drs-widget-report-feature>.jimu-tab>.control{
   margin:-14px -14px 0px -14px;
 }
+.BoxTheme .drs-widget-report-feature>.jimu-tab>.control{
+  margin:0px -14px 0px -14px;
+}
 .drs-widget-report-feature .drs-loading-features {
   background: url('../images/loading.gif') no-repeat left center;
   padding-left: 20px;

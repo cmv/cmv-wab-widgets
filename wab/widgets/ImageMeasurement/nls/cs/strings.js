@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Měření obrázku"
-  })
-);
+define({
+  "_widgetLabel": "Měření obrázku"
+});

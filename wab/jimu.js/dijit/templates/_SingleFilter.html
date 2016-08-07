@@ -6,7 +6,7 @@
 					<div data-dojo-attach-point="fieldsSelect" data-dojo-type="dijit/form/FilteringSelect" data-dojo-attach-event="change:_onFieldsSelectChange"  data-dojo-props='searchAttr:"displayName",required:true,intermediateChanges:true' class="dijit-form-FilteringSelect" style="width:100%;"></div>
 				</td>
 				<td class="operators-td" nowrap>
-					<select data-dojo-attach-point="operatorsSelect" data-dojo-type="dijit/form/Select" data-dojo-attach-event="change:_onOperatorsSelectChange" style="width:100%;" class="dijit-form-Select">
+					<select data-dojo-attach-point="operatorsSelect" data-dojo-type="dijit/form/Select" data-dojo-attach-event="change:_onOperatorsSelectChange" style="width:100%;" class="dijit-form-Select restrict-select-width">
 						<option value="none">${nls.none}</option>
 					</select>
 				</td>
@@ -70,7 +70,7 @@
 						</div>
 
 						<div class="radio-table-container">
-							<table class="radio-table" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+							<table class="radio-table" cellpadding="0" cellspacing="0">
 								<tbody>
 									<tr>
 										<td>

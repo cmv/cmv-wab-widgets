@@ -3,14 +3,12 @@ define([
   'dojo/_base/lang',
   'dojo/_base/Color',
   'dojo/_base/array',
-  'dojo/DeferredList',
   'dojo/dom-class',
   'dojo/dom-construct',
   'dojo/dom-style',
   'dojo/on',
   'esri/geometry/geometryEngine',
   'esri/geometry/webMercatorUtils',
-  'esri/geometry/Polyline',
   'esri/graphic',
   'esri/layers/FeatureLayer',
   'esri/symbols/SimpleMarkerSymbol',
@@ -23,14 +21,12 @@ define([
   lang,
   Color,
   array,
-  DeferredList,
   domClass,
   domConstruct,
   domStyle,
   on,
   geometryEngine,
   webMercatorUtils,
-  Polyline,
   Graphic,
   FeatureLayer,
   SimpleMarkerSymbol,
@@ -46,22 +42,45 @@ define([
       this.tab = tab;
       this.container = container;
       this.parent = parent;
+      this.featureLayer = null;
       this.incident = null;
+      this.distance = null;
       this.graphicsLayer = null;
       this.map = parent.map;
       this.specialFields = {};
     },
 
     updateForIncident: function(incident, distance, graphicsLayer) {
-      array.forEach(this.tab.tabLayers, lang.hitch(this, function(tab) {
-        if(typeof(tab.empty) !== 'undefined') {
-          var tempFL = new FeatureLayer(tab.url);
+      if (this.featureLayer) {
+        this.processIncident(incident, distance, graphicsLayer);
+      } else {
+        if (this.tab.tabLayers.length > 0) {
+          var lyr = this.tab.tabLayers[0];
+          var tempFL = new FeatureLayer(lyr.url);
           on(tempFL, "load", lang.hitch(this, function() {
-            this.tab.tabLayers = [tempFL];
-            this.processIncident(incident, distance, graphicsLayer);
+            if (tempFL.capabilities && tempFL.capabilities.indexOf("Query") > -1) {
+              this.featureLayer = tempFL;
+              this.processIncident(incident, distance, graphicsLayer);
+            } else {
+              this._processError();
+            }
           }));
-        } else {
-          this.processIncident(incident, distance, graphicsLayer);
+          on(this.parent.opLayers, "layerInfosFilterChanged",
+            lang.hitch(this, this._layerFilterChanged));
+        }
+      }
+    },
+
+    // layer filter changed
+    _layerFilterChanged: function(changedLayerInfoArray) {
+      if (this.featureLayer === null || this.incident === null ||
+        this.distance === null || this.graphicsLayer === null) {
+        return;
+      }
+      var id = this.tab.tabLayers[0].id;
+      array.forEach(changedLayerInfoArray, lang.hitch(this, function(layerInfo) {
+        if(id === layerInfo.id) {
+          this.processIncident(this.incident, this.distance, this.graphicsLayer);
         }
       }));
     },
@@ -72,49 +91,57 @@ define([
       domClass.add(this.container, "loading");
       var results = [];
       this.incident = incident;
+      this.distance = distance;
       var unit = this.parent.config.distanceUnits;
       var unitCode = this.parent.config.distanceSettings[unit];
       var bufferGeom = geometryEngine.buffer(incident.geometry, distance, unitCode);
       this.graphicsLayer = graphicsLayer;
       this.graphicsLayer.clear();
 
-      var tabLayers = this.tab.tabLayers;
-      var defArray = [];
-      for (var i = 0; i < tabLayers.length; i++) {
-        var layer = tabLayers[i];
-        var query = new Query();
-        query.returnGeometry = true;
-        query.geometry = bufferGeom;
-        query.outFields = this._getFields(layer);
-        query.outSpatialReference = this.parent.map.spatialReference;
-        defArray.push(layer.queryFeatures(query));
-      }
-      var defList = new DeferredList(defArray);
-      defList.then(lang.hitch(this, function(defResults) {
-        for (var r = 0; r < defResults.length; r++) {
-          var featureSet = defResults[r][1];
-          var layer = tabLayers[r];
-          var fields = this._getFields(layer);
-          var graphics = featureSet.features;
-          if (graphics.length > 0) {
-            for (var g = 0; g < graphics.length; g++) {
-              var gra = graphics[g];
-              var geom = gra.geometry;
-              var dist = this._getDistance(incident.geometry, geom);
-              var newAttr = {
-                DISTANCE: dist
-              };
-              for (var f = 0; f < fields.length; f++) {
-                newAttr[fields[f]] = gra.attributes[fields[f]];
-              }
-              gra.attributes = newAttr;
-            }
-            graphics.sort(this._compareDistance);
-            results.push(graphics[0]);
-          }
+      // layer filter
+      var id = this.tab.tabLayers[0].id;
+      var expr = "";
+      this.parent.opLayers.traversal(function(layerInfo){
+        if(id === layerInfo.id && layerInfo.getFilter()) {
+          expr = layerInfo.getFilter();
+          return true;
         }
-        this._processResults(results);
-      }));
+      });
+
+      var query = new Query();
+      query.returnGeometry = true;
+      query.geometry = bufferGeom;
+      query.where = expr;
+      query.outFields = this._getFields(this.featureLayer);
+      query.outSpatialReference = this.parent.map.spatialReference;
+      this.featureLayer.queryFeatures(query, lang.hitch(this, function(featureSet){
+        var fields = this._getFields(this.featureLayer);
+        var graphics = featureSet.features;
+        if (graphics.length > 0) {
+          for (var g = 0; g < graphics.length; g++) {
+            var gra = graphics[g];
+            var geom = gra.geometry;
+            var dist = this._getDistance(incident.geometry, geom);
+            var newAttr = {
+              DISTANCE: dist
+            };
+            for (var f = 0; f < fields.length; f++) {
+              newAttr[fields[f]] = gra.attributes[fields[f]];
+            }
+            gra.attributes = newAttr;
+          }
+          graphics.sort(this._compareDistance);
+          results.push(graphics[0]);
+          this._processResults(results);
+        }
+      }), lang.hitch(this, this._processError));
+    },
+
+    // process error
+    _processError: function() {
+      this.container.innerHTML = "";
+      domClass.remove(this.container, "loading");
+      this.container.innerHTML = this.parent.nls.noFeaturesFound;
     },
 
     // process results
@@ -200,20 +227,19 @@ define([
         var symText = new TextSymbol(num, fnt, "#ffffff");
         symText.setOffset(0, -4);
 
-        if (attr.OUTSIDE_POLYGON === null) {
-          var distSym = new SimpleLineSymbol(
-            SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 0, 1]), 1);
-          var distLine = new Polyline(loc.spatialReference);
-          var distPt = this.incident.geometry;
-          if (this.incident.geometry.type !== "point") {
-            distPt = this.incident.geometry.getExtent().getCenter();
-          }
-          distLine.addPath([loc, distPt]);
-          this.graphicsLayer.add(new Graphic(distLine, distSym, {}));
-        }
+        // if (attr.OUTSIDE_POLYGON === null) {
+        //   var distSym = new SimpleLineSymbol(
+        //     SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 0, 1]), 1);
+        //   var distLine = new Polyline(loc.spatialReference);
+        //   var distPt = this.incident.geometry;
+        //   if (this.incident.geometry.type !== "point") {
+        //     distPt = this.incident.geometry.getExtent().getCenter();
+        //   }
+        //   distLine.addPath([loc, distPt]);
+        //   this.graphicsLayer.add(new Graphic(distLine, distSym, {}));
+        // }
         this.graphicsLayer.add(new Graphic(loc, sms, attr));
         this.graphicsLayer.add(new Graphic(loc, symText, attr));
-
       }
 
     },

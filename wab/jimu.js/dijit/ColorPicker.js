@@ -23,10 +23,11 @@ define(['dojo/_base/declare',
     'dojo/_base/Color',
     'dijit/TooltipDialog',
     'dijit/popup',
-    'dojox/widget/ColorPicker'
+    'dojox/widget/ColorPicker',
+    'jimu/utils'
   ],
   function(declare, _WidgetBase, _TemplatedMixin, lang, html, on, Color, TooltipDialog,
-    dojoPopup, DojoColorPicker) {
+    dojoPopup, DojoColorPicker, jimuUtils) {
     return declare([_WidgetBase, _TemplatedMixin], {
       baseClass: 'jimu-color-picker',
       declaredClass: 'jimu.dijit.ColorPicker',
@@ -34,10 +35,12 @@ define(['dojo/_base/declare',
       _isTooltipDialogOpened: false,
 
       //options:
-      color: null,//dojo.Color or hex string
+      color: null, //dojo.Color or hex string
       showHex: true,
       showHsv: true,
       showRgb: true,
+      ensureMode: false,
+      showLabel: false,
 
       //public methods:
       //setColor
@@ -47,40 +50,46 @@ define(['dojo/_base/declare',
       //events:
       //change
 
+      postMixInProperties: function() {
+        this.nls = window.jimuNls.common;
+      },
+
       postCreate: function() {
         this.inherited(arguments);
-        if(this.color){
-          if(!(this.color instanceof Color)){
+        if (this.color) {
+          if (!(this.color instanceof Color)) {
             this.color = new Color(this.color);
           }
-        }
-        else{
+        } else {
           this.color = new Color('#ccc');
         }
 
         html.setStyle(this.domNode, 'backgroundColor', this.color.toHex());
+        if (this.showLabel) {
+          this._changeLabel(this.color);
+        }
         this._createTooltipDialog(this.domNode);
         this._hideTooltipDialog();
       },
 
-      destroy: function(){
+      destroy: function() {
         dojoPopup.close(this.tooltipDialog);
         this.picker.destroy();
         this.tooltipDialog.destroy();
         this.inherited(arguments);
       },
 
-      isPartOfPopup: function(target){
+      isPartOfPopup: function(target) {
         var node = this.tooltipDialog.domNode;
         var isInternal = target === node || html.isDescendant(target, node);
         return isInternal;
       },
 
-      hideTooltipDialog: function () {
+      hideTooltipDialog: function() {
         this._hideTooltipDialog();
       },
 
-      _showTooltipDialog: function(){
+      _showTooltipDialog: function() {
         dojoPopup.open({
           parent: this.getParent(),
           popup: this.tooltipDialog,
@@ -89,43 +98,79 @@ define(['dojo/_base/declare',
         this._isTooltipDialogOpened = true;
       },
 
-      _hideTooltipDialog: function(){
+      _hideTooltipDialog: function() {
         dojoPopup.close(this.tooltipDialog);
         this._isTooltipDialogOpened = false;
       },
 
-      _createTooltipDialog: function(){
+      _createTooltipDialog: function() {
         var ttdContent = html.create("div");
         this.tooltipDialog = new TooltipDialog({
           content: ttdContent
         });
+        html.addClass(this.tooltipDialog.domNode, 'jimu-color-picker-dialog');
         var picker = new DojoColorPicker({
           showHex: this.showHex,
           showRgb: this.showRgb,
           showHsv: this.showHsv,
           value: this.color.toHex(),
-          onChange: lang.hitch(this, function(newHex){
-            var color = new Color(newHex);
-            this.setColor(color);
+          onChange: lang.hitch(this, function(newHex) {
+            if (!this.ensureMode) {
+              var color = new Color(newHex);
+              this.setColor(color);
+            }
           })
         });
         picker.placeAt(ttdContent);
         picker.startup();
 
-        this.own(on(this.domNode, 'click', lang.hitch(this, function(event){
+        if (this.ensureMode) {
+          var cancel = html.create('div', {
+            'class': 'jimu-btn jimu-btn-vacation jimu-float-trailing',
+            'title': this.nls.cancel,
+            'innerHTML': this.nls.cancel
+          }, ttdContent);
+          this.own(on(cancel, 'click', lang.hitch(this, function() {
+            this._hideTooltipDialog();
+          })));
+
+          var ok = html.create('div', {
+            'class': 'jimu-btn jimu-float-trailing',
+            'title': this.nls.ok,
+            'innerHTML': this.nls.ok
+          }, ttdContent);
+          this.own(on(ok, 'click', lang.hitch(this, function() {
+            var c = this.picker.get('value');
+            this.setColor(new Color(c));
+            this._hideTooltipDialog();
+          })));
+
+          var apply = html.create('div', {
+            'class': 'jimu-btn jimu-float-trailing',
+            'title': this.nls.apply,
+            'innerHTML': this.nls.apply
+          }, ttdContent);
+          this.own(on(apply, 'click', lang.hitch(this, function() {
+            var c = this.picker.get('value');
+            this.setColor(new Color(c));
+          })));
+        }
+
+
+        this.own(on(this.domNode, 'click', lang.hitch(this, function(event) {
           event.stopPropagation();
           event.preventDefault();
 
-          if(this._isTooltipDialogOpened){
+          if (this._isTooltipDialogOpened) {
             this._hideTooltipDialog();
-          }else{
+          } else {
             this._showTooltipDialog();
           }
         })));
 
-        this.own(on(document.body, 'click', lang.hitch(this, function(event){
+        this.own(on(document.body, 'click', lang.hitch(this, function(event) {
           var target = event.target || event.srcElement;
-          if(!this.isPartOfPopup(target)){
+          if (!this.isPartOfPopup(target)) {
             this._hideTooltipDialog();
           }
         })));
@@ -133,28 +178,45 @@ define(['dojo/_base/declare',
         this.picker = picker;
       },
 
-      setColor: function(newColor){
-        if(!(newColor instanceof Color)){
+      setColor: function(newColor) {
+        if (!(newColor instanceof Color)) {
           return;
         }
         var oldColor = this.color;
         var oldHex = '';
-        if(oldColor){
+        if (oldColor) {
           oldHex = oldColor.toHex();
         }
         var newHex = newColor.toHex();
         this.color = newColor;
         html.setStyle(this.domNode, 'backgroundColor', newHex);
-        if(oldHex !== newHex){
+        if (oldHex !== newHex) {
+          this.picker.set('value', newHex);
           this.onChange(new Color(newHex));
         }
       },
 
-      getColor:function(){
+      getColor: function() {
         return this.color;
       },
 
-      onChange:function(newColor){/*jshint unused: false*/}
+      _changeLabel: function(newColor) {
+        html.empty(this.domNode);
+        html.create('span', {
+          innerHTML: newColor.toHex(),
+          className: "color-label",
+          style: {
+            color: jimuUtils.invertColor(newColor.toHex())
+          }
+        }, this.domNode);
+      },
 
+      onChange: function(newColor) {
+        /*jshint unused: false*/
+
+        if (this.showLabel) {
+          this._changeLabel(newColor);
+        }
+      }
     });
   });

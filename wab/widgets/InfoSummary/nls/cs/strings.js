@@ -1,11 +1,5 @@
-﻿define(
-   ({
-    title: "Widget InfoSummary",
-    helpText: "ÚKOL: text nápovědy InfoSummary",
-    labels: {
-      status: "Stav",
-      result: "Výsledek"
-    },
-    _widgetLabel: "Shrnutí informací (Beta)"
-  })
-);
+define({
+  "_widgetLabel": "Shrnutí informací",
+  "title": "Widget InfoSummary",
+  "helpText": "Text nápovědy shrnutí informací"
+});

@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Mesure de l\'image"
-  })
-);
+define({
+  "_widgetLabel": "Mesure de l'image"
+});

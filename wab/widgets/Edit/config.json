@@ -8,6 +8,10 @@
       "reshapeVisible": false
     },
     "layerInfos": [],
-    "useFilterEdit": false
+    "useFilterEdit": false,
+    "autoApplyEditWhenGeometryIsMoved": false,
+    "snappingTolerance": 15,
+    "popupTolerance": 5,
+    "stickyMoveTolerance": 0
   }
 }

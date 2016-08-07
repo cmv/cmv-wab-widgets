@@ -34,7 +34,7 @@ define([
     getExtent: function() {
     },
 
-    _resetLayerObjectVisiblityBeforeInit: function() {
+    _resetLayerObjectVisiblity: function() {
       // do not do anything.
     },
 
@@ -120,6 +120,10 @@ define([
     },
 
     _onVisibleLayersChanged: function() {
+    },
+
+    getScaleRange: function() {
+      return this.originOperLayer.wms.layerInfo.getScaleRange();
     }
 
   });

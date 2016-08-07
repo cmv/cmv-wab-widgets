@@ -35,15 +35,15 @@
       // initialize layer chooser
       this._initLayerSelector();
       //provide handler when cancel button is clicked
-      on(this.cancelButton, "click", lang.hitch(this, function () {
+      this.own(on(this.cancelButton, "click", lang.hitch(this, function () {
         this.onCancelClick();
-      }));
-      on(this.okButton, "click", lang.hitch(this, function () {
+      })));
+      this.own(on(this.okButton, "click", lang.hitch(this, function () {
         if (!domClass.contains(this.okButton, "jimu-state-disabled")) {
           this._getSelectedSearchLayers();
           this.onOkClick();
         }
-      }));
+      })));
     },
 
     /**
@@ -55,7 +55,7 @@
         multiple: true,
         createMapResponse: this.map.webMapResponse,
         showLayerTypes: ['FeatureLayer'],
-        filter: LayerChooserFromMap.createQueryableLayerFilter()
+        filter: this._createFiltersForLayerSelector()
       };
       this._layerChooserFromMap = new LayerChooserFromMap(args);
       this._layerChooserFromMap.placeAt(this.layerSelectorNode);
@@ -69,6 +69,19 @@
           domClass.add(this.okButton, "jimu-state-disabled");
         }
       });
+    },
+
+    /*create filters to get layers with supported features
+    * @memberOf widgets/NearMe/setting/layerChooserPopup
+    **/
+    _createFiltersForLayerSelector: function () {
+      var types, featureLayerFilter, imageServiceLayerFilter, filters, combinedFilter;
+      types = ['point', 'polyline', 'polygon'];
+      featureLayerFilter = LayerChooserFromMap.createFeaturelayerFilter(types, false, false);
+      imageServiceLayerFilter = LayerChooserFromMap.createImageServiceLayerFilter(true);
+      filters = [featureLayerFilter, imageServiceLayerFilter];
+      combinedFilter = LayerChooserFromMap.orCombineFilters(filters);
+      return combinedFilter;
     },
 
     /**
@@ -98,7 +111,8 @@
         for (i = 0; i < selectedLayerItems.length; i++) {
           layerItem = {
             "url": selectedLayerItems[i].layerInfo.layerObject.url,
-            "geometryType": selectedLayerItems[i].layerInfo.layerObject.geometryType
+            "geometryType": selectedLayerItems[i].layerInfo.layerObject.geometryType,
+            "id": selectedLayerItems[i].layerInfo.id
           };
           if (selectedLayerItems[i].layerId) {
             layerItem.layerId = selectedLayerItems[i].layerId;

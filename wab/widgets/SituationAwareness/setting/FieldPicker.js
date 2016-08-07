@@ -52,30 +52,7 @@ function (declare,
   return declare([BaseWidget, _WidgetsInTemplateMixin, Evented], {
     templateString: template,
     baseClass: 'jimu-widget-SAT-setting',
-    //summaryLayers : [],
     advStat: {},
-    // operationsList : [{
-    //   value : 'area',
-    //   label : 'Area'
-    // }, {
-    //   value : 'avg',
-    //   label : 'Average'
-    // }, {
-    //   value : 'count',
-    //   label : 'Count'
-    // }, {
-    //   value : 'length',
-    //   label : 'Length'
-    // }, {
-    //   value : 'max',
-    //   label : 'Maximum'
-    // }, {
-    //   value : 'min',
-    //   label : 'Minimum'
-    // }, {
-    //   value : 'sum',
-    //   label : 'Summation'
-    // }],
     fieldsList: null,
     callerLayer: null,
     callerTab: null,
@@ -86,21 +63,23 @@ function (declare,
       this.map = args.map;
     },
 
+    postMixInProperties: function () {
+      this.inherited(arguments);
+      this.nls.common = window.jimuNls.common;
+    },
+
     postCreate: function () {
       this.inherited(arguments);
       this.startup();
     },
 
     startup: function () {
-      //this.inherited(arguments);
-      //var title = dom.byId(this.divLayerTitle).innerHTML;
-      //dom.byId(this.divLayerTitle).innerHTML = title + " " + this.callerLayer;
-
       var fields = null;
+      //TODO all these titles need to be pulled from nls
       if (this.callerTab.type === "summary") {
         fields = [{
           name: "layer",
-          title: "Field",
+          title: this.nls.fieldTitle,
           "class": "label",
           type: "empty",
           width: "250px"
@@ -112,33 +91,52 @@ function (declare,
           width: "200px"
         }, {
           name: "type",
-          title: "Type",
+          title: this.nls.typeTitle,
           "class": "sumlabel",
           type: "empty"
         }, {
           name: "actions",
-          title: "Actions",
+          title: this.nls.actionsTitle,
           "class": "actions",
           type: "actions",
           actions: ["up", "down", "delete"]
         }];
+      } else if (this.callerTab.type === "groupedSummary") {
+        fields = [{
+          name: "layer",
+          title: this.nls.groupByField,
+          "class": "label",
+          type: "empty",
+          width: "40%"
+        }, {
+          name: "label",
+          title: this.nls.layerLabel,
+          "class": "label",
+          type: "empty",
+          width: "20%"
+        }, {
+          name: "type",
+          title: this.nls.labelType,
+          "class": "label",
+          type: "empty",
+          width: "20%"
+        }];
       } else {
         fields = [{
           name: "layer",
-          title: "Field",
+          title: this.nls.fieldTitle,
           "class": "label",
           type: "empty",
           width: "60%"
         }, {
           name: "actions",
-          title: "Actions",
+          title: this.nls.actionsTitle,
           "class": "actions",
           type: "actions",
           actions: ["up", "down", "delete"],
           width: "40%"
         }];
       }
-
 
       var args = {
         fields: fields
@@ -150,19 +148,30 @@ function (declare,
       });
       this.displayFieldsTable.startup();
 
-      this.operationsList = [{
-        value: 'sum',
-        label: this.nls.sum
-      }, {
-        value: 'avg',
-        label: this.nls.avg
-      }, {
-        value: 'min',
-        label: this.nls.min
-      }, {
-        value: 'max',
-        label: this.nls.max
-      }];
+      this.operationsList = [];
+      if (this.callerTab.type === "summary") {
+        this.operationsList.push({
+          value: 'sum',
+          label: this.nls.sum
+        }, {
+          value: 'avg',
+          label: this.nls.avg
+        }, {
+          value: 'min',
+          label: this.nls.min
+        }, {
+          value: 'max',
+          label: this.nls.max
+        });
+      } else if (this.callerTab.type === "groupedSummary") {
+        this.operationsList.push({
+          value: 'pre',
+          label: this.nls.prefix
+        }, {
+          value: 'suf',
+          label: this.nls.suffix
+        });
+      }
 
       // TO DO: change column label
       /*jshint unused: true*/
@@ -174,15 +183,14 @@ function (declare,
         domStyle.set(this.chk_summaryLabels, "display", "none");
       }
 
+      this.btnCancel.innerText = this.nls.common.cancel;
       this.own(on(this.btnCancel, 'click', lang.hitch(this, function () {
         this.emit('cancel');
       })));
 
+      this.btnOk.innerText = this.nls.common.ok;
       this.own(on(this.btnOk, 'click', lang.hitch(this, function () {
         this.updateSummaryType();
-        //this.emit('ok', this.summaryLayers);
-        // TO DO: simplify advStat structure
-        // clean up
         var ok = false;
         for (var key in this.advStat.stats) {
           if (this.advStat.stats.hasOwnProperty(key)) {
@@ -200,15 +208,12 @@ function (declare,
       this.advStat = {};
       this._getAllValidLayers();
 
-      this.own(on(this.btnAddField, 'click', lang.hitch(this, this._addTabRow)));
-
-      // this.own(on(this.fieldTable, 'row-delete', lang.hitch(this, function() {
-      //   var rows = this.fieldTable.getRows();
-      //   if (rows.length <= 0) {
-      //     html.addClass(this.btnOk, 'jimu-state-disabled');
-      //   }
-      // })));
-
+      if (this.callerTab.type === "groupedSummary") {
+        //hide add field
+        domStyle.set(this.btnAddField, "display", "none");
+      } else {
+        this.own(on(this.btnAddField, 'click', lang.hitch(this, this._addTabRow)));
+      }
     },
 
     _updateGeomOptions: function (geomType) {
@@ -268,7 +273,6 @@ function (declare,
           this.objectIdField = layer.objectIdField;
           aStat = {
             "url": layer.url,
-            //"name" : layer.name,
             "stats": {}
           };
           fields = lang.clone(layer.fields);
@@ -278,17 +282,15 @@ function (declare,
           this.objectIdField = layer.layerObject.objectIdField;
           aStat = {
             "url": layer.layerObject.url,
-            //"name" : layer.title,
             "stats": {}
           };
           fields = lang.clone(layer.layerObject.fields);
         }
-        //this.summaryLayers.push(tempLayer);
+
         this.advStat = aStat;
         // ST: update geom options
         this._updateGeomOptions(geomType);
 
-        //if (this.summaryLayers.length >= 1) {
         if (this.advStat.url) {
           this._setFields(fields);
           if (typeof (this.callerTab.advStat) !== 'undefined' && this.callerTab.advStat) {
@@ -309,17 +311,18 @@ function (declare,
                 }));
               }
             }
-            // if (domClass.contains(this.btnOk, 'jimu-state-disabled')) {
-            //   html.removeClass(this.btnOk, 'jimu-state-disabled');
-            // }
+          }
+          var a = this.callerTab.advStat;
+          if (!a || (typeof(a) !== 'undefined' && !a.hasOwnProperty('stats'))) {
+            if (this.fieldsList.length > 0) {
+              this._addTabRow();
+            } else {
+              domStyle.set(this.displayFieldsTable.domNode, 'display', "none");
+              domStyle.set(this.btnAddField, "display", "none");
+            }
           }
         }
-        //else {
-        //this._noLayersDisplay();
-        //}
-
       }
-
     },
 
     checkStringWidth: function (v) {
@@ -376,7 +379,7 @@ function (declare,
         this._addTabTypes(tr);
         this._addTabLabel(tr);
         tr.selectFields.set("value", pTab.expression);
-        if (this.callerTab.type === "summary") {
+        if (this.callerTab.type === "summary" || this.callerTab.type === "groupedSummary") {
           tr.labelText.set("value", pTab.label);
           tr.selectTypes.set("value", pKey);
         }
@@ -396,9 +399,6 @@ function (declare,
         this._addTabFields(tr);
         this._addTabTypes(tr);
         this._addTabLabel(tr);
-        // if (domClass.contains(this.btnOk, 'jimu-state-disabled')) {
-        //   html.removeClass(this.btnOk, 'jimu-state-disabled');
-        // }
       }
     },
 
@@ -406,12 +406,18 @@ function (declare,
       var lyrOptions = lang.clone(this.fieldsList);
       var td = query('.simple-table-cell', tr)[0];
       if (td) {
-        html.setStyle(td, "verticalAlign", "middle");
+        var className;
+        if (this.callerTab.type === "summary") {
+          className = "shortSelect";
+        } else {
+          className = "longSelect";
+        }
         var tabLayers = new Select({
           style: {
-            width: "100%",
-            height: "30px"
+            height: "26px",
+            width: "100%"
           },
+          "class": className,
           options: lyrOptions
         });
         tabLayers.placeAt(td);
@@ -421,15 +427,14 @@ function (declare,
     },
 
     _addTabLabel: function (tr) {
-      if (this.callerTab.type !== "summary") {
+      if (this.callerTab.type !== "summary" && this.callerTab.type !== "groupedSummary") {
         return;
       }
       var td = query('.simple-table-cell', tr)[1];
-      html.setStyle(td, "verticalAlign", "middle");
       var labelTextBox = new ValidationTextBox({
         style: {
           width: "100%",
-          height: "30px"
+          height: "26px"
         }
       });
 
@@ -441,17 +446,16 @@ function (declare,
     },
 
     _addTabTypes: function (tr) {
-      if (this.callerTab.type !== "summary") {
+      if (this.callerTab.type !== "summary" && this.callerTab.type !== "groupedSummary") {
         return;
       }
       var typeOptions = lang.clone(this.operationsList);
       var td = query('.simple-table-cell', tr)[2];
       if (td) {
-        html.setStyle(td, "verticalAlign", "middle");
         var tabTypes = new Select({
           style: {
             width: "100%",
-            height: "30px"
+            height: "26px"
           },
           options: typeOptions
         });
@@ -463,15 +467,9 @@ function (declare,
 
     updateSummaryType: function () {
       var trs = this.displayFieldsTable.getRows();
-      if (this.callerTab.type !== "summary") {
+      if (this.callerTab.type !== "summary" && this.callerTab.type !== "groupedSummary") {
         var flds = [];
         array.forEach(trs, function (tr) {
-          //flds.push({
-          //    value: 0,
-          //    expression: tr.selectFields.value,
-          //    label: tr.labelText.value ? tr.labelText.value : tr.selectFields.textDirNode.innerText
-          //});
-          //TODO check out the txtDirNode thing that was changed for some FF specific issue
           flds.push({
             value: 0,
             expression: tr.selectFields.value,
@@ -479,7 +477,6 @@ function (declare,
           });
         });
         if (flds.length > 0) {
-          //this.summaryLayers[0].stats.outFields = flds;
           this.advStat.stats.outFields = flds;
         }
       } else {
@@ -528,14 +525,17 @@ function (declare,
           //Field names in "advanced" summary mode were not displaying correctly when the attributes were turned off in the corresponding popup configuration
           for (var i = 0; i < tr.selectFields.options.length; i++) {
             if (tr.selectFields.options[i].value === tr.selectFields.value) {
-              statBlock.label = tr.labelText.value ? tr.labelText.value : tr.selectFields.options[i].label;
+              if (this.callerTab.type !== "groupedSummary") {
+                statBlock.label = tr.labelText.value ? tr.labelText.value : tr.selectFields.options[i].label;
+              } else {
+                statBlock.label = tr.labelText.value;
+              }
               break;
             }
           }
           if (typeof (statBlock.label) === 'undefined') {
             statBlock.label = statBlock.expression;
           }
-          //this.summaryLayers[0].stats[tr.selectTypes.value].push(statBlock);
           this.advStat.stats[tr.selectTypes.value].push(statBlock);
         }));
       }
@@ -570,9 +570,7 @@ function (declare,
     },
 
     destroy: function () {
-      //this.summaryLayers = null;
       this.advStat = null;
     }
   });
-
 });

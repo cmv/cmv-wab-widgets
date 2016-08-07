@@ -6,6 +6,7 @@ define([
   "dojo/dom-class",
   "dojo/query",
   "dojo/_base/lang",
+  "dojo/_base/array",
   "./utils",
   "./search",
   "./item-list",
@@ -25,7 +26,8 @@ define([
   "esri/geometry/webMercatorUtils",
   "esri/InfoTemplate",
   "jimu/dijit/Message",
-  "jimu/dijit/LoadingIndicator"
+  "jimu/dijit/LoadingIndicator",
+  "dijit/registry"
 ], function (
   declare,
   BaseWidget,
@@ -34,6 +36,7 @@ define([
   domClass,
   query,
   lang,
+  array,
   appUtils,
   SearchInstance,
   ItemList,
@@ -53,7 +56,8 @@ define([
   webMercatorUtils,
   InfoTemplate,
   Message,
-  LoadingIndicator
+  LoadingIndicator,
+  registry
 ) {
   // to create a widget, derive it from BaseWidget.
   return declare([BaseWidget], {
@@ -180,8 +184,13 @@ define([
     _destroyWidgetData: function () {
       if (this._itemListObject) {
         this._itemListObject.removeGraphicsLayer();
+        this._itemListObject.showAllLayers();
         this._itemListObject.destroy();
         this._itemListObject = null;
+      }
+      //clear buffer graphics layer from map
+      if (this._bufferGraphicLayer) {
+        this._bufferGraphicLayer.clear();
       }
       this._clearResults();
     },
@@ -206,7 +215,8 @@ define([
       var i;
       for (i = 0; i < this.config.searchLayers.length; i++) {
         lang.mixin(this.config.searchLayers[i], this.appUtils.getLayerDetailsFromMap(
-            this.config.searchLayers[i].baseURL, this.config.searchLayers[i].layerId));
+          this.config.searchLayers[i].baseURL, this.config.searchLayers[i]
+          .layerId, this.config.searchLayers[i].id));
       }
     },
 
@@ -227,6 +237,9 @@ define([
     * @memberOf widgets/NearMe/Widget
     */
     _initWidgetComponents: function () {
+      //create graphic layer to add buffer
+      this._bufferGraphicLayer = new GraphicsLayer();
+      this.map.addLayer(this._bufferGraphicLayer);
       //create graphic layer to add search location graphic
       this._highlightGraphicsLayer = new GraphicsLayer();
       this.map.addLayer(this._highlightGraphicsLayer);
@@ -240,6 +253,9 @@ define([
       this._initLoading();
       //initialize layer list widget
       this._initLayerList();
+      // show bufferslider widget if configured layers
+      // are not polygon type and intersect polygon flag is disabled
+      this._setBufferSliderVisiblity();
       //create tool-tip to be shown on map move
       this._mapTooltip = domConstruct.create("div", {
         "class": "tooltip",
@@ -248,7 +264,7 @@ define([
       domStyle.set(this._mapTooltip, "position", "fixed");
       domStyle.set(this._mapTooltip, "display", "none");
       //reset the widget's components on window resize and on widget open
-      on(window, 'resize', lang.hitch(this, this._onWindowResize));
+      this.own(on(window, 'resize', lang.hitch(this, this._onWindowResize)));
     },
 
     /**
@@ -274,6 +290,7 @@ define([
         searchOptions: searchOptions,
         domNode: this.search,
         config: this.config,
+        nls: this.nls,
         map: this.map
       });
       //handle search widget events
@@ -331,16 +348,17 @@ define([
         //create info-template
         infoTemplate = new InfoTemplate();
         infoTemplate.setContent("${Match_addr}");
-        infoTemplate.setTitle("Searched Location");
+        infoTemplate.setTitle(this.nls.searchLocationTitle);
         //clears previous features of the infowindow
         this.map.infoWindow.clearFeatures();
         //set title and content to infowindow
-        this.map.infoWindow.setTitle("Searched Location");
+        this.map.infoWindow.setTitle(this.nls.searchLocationTitle);
         this.map.infoWindow.setContent(result.address.address.Match_addr);
         //show infowindow on selected location
         screenPoint = this.map.toScreen(this._searchedLocation.geometry);
         this.map.infoWindow.show(screenPoint, this.map.getInfoWindowAnchor(
           screenPoint));
+        this.map.infoWindow.isShowing = true;
       }
     },
 
@@ -542,7 +560,7 @@ define([
     * @memberOf widgets/NearMe/Widget
     **/
     _createBuffer: function () {
-      var params, geometryService;
+      var params, geometryService, screenPoint;
       geometryService = new GeometryService(this.config.helperServices.geometry.url);
       if (this._bufferParams.BufferDistance > 0) {
         //set the buffer parameters
@@ -556,7 +574,16 @@ define([
         params.geometries = [this._searchedLocation.geometry];
         geometryService.buffer(params, lang.hitch(this, function (
           geometries) {
-          this.map.setExtent(geometries[0].getExtent().expand(1.5));
+          this._showBuffer(geometries);
+          this.map.setExtent(geometries[0].getExtent().expand(1.5)).then(lang.hitch(this,
+          function () {
+            if (this.map.infoWindow && this.map.infoWindow.isShowing) {
+              screenPoint = this.map.toScreen(this._searchedLocation.geometry);
+              this.map.infoWindow.show(screenPoint, this.map.getInfoWindowAnchor(
+            screenPoint));
+            }
+          }));
+
           this._itemListObject.displayLayerList(this._searchedLocation,
             geometries[0]);
         }), lang.hitch(this, function () {
@@ -571,6 +598,19 @@ define([
       }
     },
 
+    //show buffer on map if buffer visibility is set to true in config
+    _showBuffer: function (bufferedGeometries) {
+      if (this.config.bufferInfo && this.config.bufferInfo.isVisible) {
+        this._bufferGraphicLayer.clear();
+        if (this.config && this.config.symbols && this.config.symbols.bufferSymbol) {
+          var symbol = symbolJsonUtils.fromJson(this.config.symbols.bufferSymbol);
+          array.forEach(bufferedGeometries, lang.hitch(this, function (geometry) {
+            var graphic = new Graphic(geometry, symbol);
+            this._bufferGraphicLayer.add(graphic);
+          }));
+        }
+      }
+    },
     /**
     * Set the selected feature from results
     * @memberOf widgets/NearMe/Widget
@@ -661,11 +701,14 @@ define([
         config: this.config,
         nls: this.nls,
         loading: this._loading,
-        parentDiv: this.domNode.parentElement,
+        parentDivId: this.id,
         folderUrl: this.folderUrl,
         outerContainer: this.layerListOuterDiv
       });
-      dijit.byId(this.domNode.parentElement.id).resize();
+
+      if (this.id && registry.byId(this.id) && registry.byId(this.id).resize) {
+        registry.byId(this.id).resize();
+      }
     },
 
     /**
@@ -678,6 +721,39 @@ define([
       });
       this._loading.placeAt(this.domNode);
       this._loading.startup();
+    },
+
+    /**
+    * This function checks if all configured layers are
+    * not polygon and intersectSearchedLocation flag
+    * is disabled then it shows horizontal slider widget
+    * @memberOf widgets/NearMe/Widget
+    */
+    _setBufferSliderVisiblity: function () {
+      var hideHorizontalSliderFlag = true, itemListMainContainer, horzontalSliderNode;
+      // if layers are configured in configuration
+      if (this.config.searchLayers && this.config.searchLayers.length > 0) {
+        // looping through the configured layers
+        array.some(this.config.searchLayers, lang.hitch(this, function (layer) {
+          // if geometryType is other than esriGeometryPolygon
+          // sets flag to false
+          if (layer.geometryType !== "esriGeometryPolygon") {
+            hideHorizontalSliderFlag = false;
+            return false;
+          }
+        }));
+        // if horizontal slider && intersectSearchedLocation flag is true
+        // then resize item list container else show horizontal slider widget
+        if (this.config.intersectSearchedLocation && hideHorizontalSliderFlag) {
+          itemListMainContainer = query(".esriCTItemListMainContainer", this.domNode);
+          if (itemListMainContainer) {
+            domClass.add(itemListMainContainer[0], "esriCTItemListOverrideMainContainer");
+          }
+        } else {
+          horzontalSliderNode = query(".esriCTSliderDiv", this.widgetMainNode);
+          domClass.remove(horzontalSliderNode[0], "esriCTHidden");
+        }
+      }
     }
   });
 });

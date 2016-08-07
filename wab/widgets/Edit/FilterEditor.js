@@ -98,8 +98,24 @@ define([
             items = array.filter(items, function (item) {
               var match = false;
               var regex = new RegExp(filterText, "ig");
-              if (regex.test(item.label)) {
-                match = true;
+              // Search using item label
+              if (item.hasOwnProperty("label")) {
+                if (item.label.match(regex)) {
+                  if (item.label.match(regex).length > 0) {
+                    match = true;
+                  }
+                }
+              }
+              // Search using the name from the
+              // item template property
+              if (item.hasOwnProperty("template")) {
+                if (item.template.hasOwnProperty("name")) {
+                  if (item.template.name.match(regex)) {
+                    if (item.template.name.match(regex).length > 0) {
+                      match = true;
+                    }
+                  }
+                }
               }
               return match;
             });

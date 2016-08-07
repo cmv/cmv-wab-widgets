@@ -3,7 +3,8 @@ define({
     _widgetLabel: "My Location",
     title: "Find my location",
     browserError: "Geolocation is not supported by this browser.",
-    failureFinding: "Can not find your location. Please check your browser to ensure that your location is shared."
+    failureFinding: "Can not find your location. Please check your browser to ensure that your location is shared.",
+    httpNotSupportError: "This widget is available only when the app is accessed through HTTPS in this browser."
   }),
   "ar": 1,
   "cs": 1,
@@ -15,6 +16,7 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
+  "hr": 1,
   "it": 1,
   "ja": 1,
   "ko": 1,
@@ -27,6 +29,7 @@ define({
   "pt-pt": 1,
   "ro": 1,
   "ru": 1,
+  "sr": 1,
   "sv": 1,
   "th": 1,
   "tr": 1,

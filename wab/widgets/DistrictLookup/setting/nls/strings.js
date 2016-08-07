@@ -30,11 +30,11 @@ define({
       selectPrecinctSymbolLabel: "Select symbol to highlight polygon", // shown as hint label in config UI dialog box for selecting precinct symbol
       selectGraphicLocationSymbol: "Address or location symbol", // shown as label in config UI dialog box for graphic symbol in routing
       graphicLocationSymbolHintText: "Hint: Symbol for searched address or clicked location", // shown as hint label in config UI dialog box for selecting graphic symbol
-      precinctSymbolHintText: "Hint: Used to display symbol for selected polygon" // shown as hint label in config UI dialog box for selecting graphic symbol for precinct
+      precinctSymbolHintText: "Hint: Used to display symbol for selected polygon", // shown as hint label in config UI dialog box for selecting graphic symbol for precinct
+      selectColorForPoint: "Select color to highlight point",
+      selectColorForPointHintText: "Hint: Used to display highlight color for selected point"
     },
     layerSelector: {
-      okButton: "OK", // shown as a button text for layerSelector configuration panel
-      cancelButton: "Cancel", // shown as a button text for layerSelector configuration panel
       selectPolygonLayerLabel: "Select polygon layer", // shown as a label in config UI dialog box for selecting polygon (precinct) layer on map
       selectPolygonLayerHintText: "Hint: Used to select polygon layer.", // shown as hint label in config UI dialog box for selecting polygon (precinct) layer on map
       selectRelatedPointLayerLabel: "Select point layer related to polygon layer", // shown as a label in config UI dialog box for selecting polling place layer on map
@@ -44,17 +44,14 @@ define({
       errorInSelectingRelatedLayer: "Please select point layer related to polygon layer." // shown as an error label in alert box for selecting polling place layer from map
     },
     routeSetting: {
-      routeSettingTabTitle: "Direction Settings", // shown as a label in config UI dialog box for route setting
+      routeSettingTabTitle: "Directions Settings", // shown as a label in config UI dialog box for route setting
       routeServiceUrl: "Routing service", // shown as a label in config UI dialog box for setting the route url
-      travelModeServiceUrl: "Travel Mode service", // shown as a label in config UI dialog box for setting the travelmode url
       buttonSet: "Set", // shown as a button text for route setting to set route url in config UI dialog box
       routeServiceUrlHintText: "Hint: Click ‘Set’ to browse and select a network analysis routing service", // shown as a hint label in config UI dialog box to select a route url
       directionLengthUnit: "Direction length units", // shown as a label(options) of select(dropdown) in config UI dialog box in routing section
       unitsForRouteHintText: "Hint: Used to display reported units for route", // shown as hint label in config UI dialog box to display routing unit
       selectRouteSymbol: "Select symbol to display route", // shown as label in config UI dialog box for selcting symbol for routing
       routeSymbolHintText: "Hint: Used to display line symbol of the route", //shown as hint to select route symbol
-      travelModeServiceUrlHintText: "Hint: Click ‘Set’ to browse and select a Travel Mode service", // shown as a hint label in config UI dialog box to select a travelMode service url
-      invalidTravelmodeServiceUrl: "Please specify a valid Travel Mode service", // shown as an error label in alert box when invalid travel mode service url is configured
       routingDisabledMsg: "To enable directions ensure that routing is enabled in the ArcGIS Online item." // shown as message in routeSettings tab when routing is disabled in webmap
     },
     networkServiceChooser: {
@@ -65,11 +62,9 @@ define({
       exampleText: "Example", // shown as a label in route service configuration panel to consider example of route services
       hintRouteURL1: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/", // shown as a label hint in route service configuration panel
       hintRouteURL2: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World", // shown as a label hint in route service configuration panel
-      okButton: "OK", // shown as a button text for route service configuration panel
-      cancelButton: "Cancel", // shown as a button text for route service configuration panel
-      nextButton: "Next", // shown as a button text for route service configuration panel
-      backButton: "Back", // shown as a button text for route service configuration panel
-      invalidRouteServiceURL: "Please specify a valid Route service." // Shown as an error in alert box invalid route service url is configured.
+      invalidRouteServiceURL: "Please specify a valid Route service.", // Shown as an error in alert box invalid route service url is configured.
+      rateLimitExceeded: "Rate limit exceeded. Please try again later.", // Shown as an error in alert box if rate limit is exceeded.
+      errorInvokingService: "Username or password is incorrect." // Shown as an error in alert box if error found while generating token for service.
     },
     symbolPickerPreviewText: "Preview:"
   }),
@@ -83,6 +78,7 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
+  "hr": 1,
   "it": 1,
   "ja": 1,
   "ko": 1,
@@ -95,6 +91,7 @@ define({
   "pt-pt": 1,
   "ro": 1,
   "ru": 1,
+  "sr": 1,
   "sv": 1,
   "th": 1,
   "tr": 1,

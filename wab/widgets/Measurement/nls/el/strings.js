@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Μέτρηση"
-  })
-);
+define({
+  "_widgetLabel": "Μέτρηση"
+});

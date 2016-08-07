@@ -3,13 +3,14 @@
   "2D": true,
   "3D": true,
   "platform": "HTML",
-  "version": "2.0.1",
-  "wabVersion": "2.0.1",
+  "version": "2.1",
+  "wabVersion": "2.1",
   "author": "Esri R&D Center Beijing",
   "description": "",
   "copyright": "",
   "license": "http://www.apache.org/licenses/LICENSE-2.0",
   "properties": {
-    "hasVersionManager": true
+    "hasVersionManager": true,
+    "supportMultiInstance": false
   }
 }

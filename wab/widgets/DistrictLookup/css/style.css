@@ -89,10 +89,18 @@
 {
     margin-top: 10px;
 }
-
+.jimu-widget-districtlookup .esriCTListPanel
+{
+    height: calc(100% - 65px);
+    overflow-y: auto;
+}
 .jimu-widget-districtlookup .esriCTResultsPanel
 {
     height: calc(100% - 61px);
+}
+.jimu-widget-districtlookup .esriCTResultsPanelOverrideHeight
+{
+    height: calc(100% - 95px);
 }
 
 .jimu-widget-districtlookup .esriCTInfoContent
@@ -103,6 +111,69 @@
 .jimu-widget-districtlookup .esriCTDirectionPanel
 {
     padding: 20px;
+}
+
+.jimu-widget-districtlookup .esriCTlistOfResultPanel
+{
+    width: calc(100% - 12px);
+    height: 36px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 35px;
+    padding: 0px 10px 0 0;
+    float: left;
+}
+
+.jimu-widget-districtlookup .esriCTItemLeftArrow
+{
+    background-image: url('../images/left-arrow.png');
+    float: left;
+    height: 20px;
+    width: 10px;
+    background-repeat: no-repeat;
+    background-color: Gray;
+    margin-top: 7px;
+    margin-left: 20px;
+}
+
+.jimu-widget-districtlookup .esriCTItemRighttArrow
+{
+    background-image: url('../images/right-arrow.png');
+    background-repeat: no-repeat;
+    background-color: Gray;
+    height: 20px;
+    width: 10px;
+    float: left;
+    margin-top: 10px;
+}
+
+.jimu-widget-districtlookup .esriCTBackButtonText
+{
+    margin-left: 51px;
+    font-weight: bold;
+}
+
+.jimu-widget-districtlookup .esriCTBackButton
+{
+    height: 35px;
+    width: 100%;
+    cursor: pointer;
+    line-height: 35px;
+}
+
+.jimu-widget-districtlookup .esriCTTopBorder
+{
+    border-top: 1px solid #464646;
+}
+
+.jimu-widget-districtlookup .esriCTMiddleBorder
+{
+    border-bottom: 1px solid #D8D8D8;
+    width: 100%;
+    float: left;
+    padding: 0 20px;
 }
 /*--------------------End of styles for result panel ----------------------*/
 
@@ -202,3 +273,25 @@
 }
 
 /*------------------End of styles for popup attachments--------------------*/
+
+/*--------------------------------RTL Starts---------------------------------*/
+
+.esriRtl .jimu-widget-districtlookup .esriCTItemLeftArrow
+{
+    background-image: url('../images/right-arrow.png');
+    float: right;
+    margin-right: 22px;
+}
+
+.esriRtl .jimu-widget-districtlookup .esriCTItemRighttArrow
+{
+    background-image: url('../images/left-arrow.png');
+}
+
+.esriRtl .jimu-widget-districtlookup .esriCTlistOfResultPanel
+{
+    float: right;
+}
+
+/*-------------------------------RTL Ends----------------------------------------*/
+

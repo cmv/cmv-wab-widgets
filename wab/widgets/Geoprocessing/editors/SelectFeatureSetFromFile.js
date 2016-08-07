@@ -32,15 +32,15 @@ define(['dojo/_base/declare',
   'jimu/dijit/Message',
   'jimu/portalUrlUtils',
   'jimu/symbolUtils',
-  '../BaseEditor',
+  './BaseFeatureSetEditor',
   'dijit/form/Form',
   'dijit/form/Select'
 ],
 function(declare, lang, domAttr, domStyle, on, JSON,
   template, _TemplatedMixin, _WidgetsInTemplateMixin, esriRequest,
   scaleUtils, InfoTemplate, FeatureLayer, SimpleRenderer, FeatureSet,
-  Message, portalUrlUtils, symbolUtils, BaseEditor){
-  return declare([BaseEditor, _TemplatedMixin, _WidgetsInTemplateMixin], {
+  Message, portalUrlUtils, symbolUtils, BaseFeatureSetEditor){
+  return declare([BaseFeatureSetEditor, _TemplatedMixin, _WidgetsInTemplateMixin], {
     baseClass: 'jimu-gp-editor-base jimu-gp-editor-file',
     templateString: template,
     editorName: 'SelectFeatureSetFromFile',
@@ -62,12 +62,16 @@ function(declare, lang, domAttr, domStyle, on, JSON,
     },
 
     getValue: function(){
-      if(this.layer){
-        var featureset = new FeatureSet();
-        featureset.features = this.layer.graphics;
-        return featureset;
-      }else{
-        return null;
+      if(this.activeViewIndex === 0) {
+        if(this.layer){
+          var featureset = new FeatureSet();
+          featureset.features = this.layer.graphics;
+          return featureset;
+        }else{
+          return null;
+        }
+      } else {
+        return this.getFeatureSet();
       }
     },
 

@@ -29,12 +29,15 @@ define([
    'dojox/charting/action2d/Tooltip',
    'dojox/charting/action2d/Highlight',
    'dojox/charting/action2d/MoveSlice',
+   'dojox/charting/plot2d/Spider',
+   'dojox/charting/widget/SelectableLegend',
+   'dojox/charting/action2d/Magnify',
    'dojox/charting/plot2d/Bars',
    'dojox/charting/axis2d/Default'
 ],
 function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare, lang,
     _WidgetsInTemplateMixin, template, Chart, Pie, Tooltip, Highlight,
-    MoveSlice) {
+    MoveSlice, Spider, SelectableLegend, Magnify) {
 
   return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
     baseClass: 'jimu-widget-RelatedTableCharts-layout',
@@ -62,16 +65,16 @@ function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare
     * Resize the chart after specified duration timeout
     * @memberOf widgets/RelatedTableCharts/setting/charLayout
     **/
-    resize: function (duration) {
+    resizeChart: function (duration) {
       if (this.chart) {
         setTimeout(lang.hitch(this, function () {
           //in case of pie chart recreate the chart
-          if (this.config.chartConfig.chartType === "PieChart") {
-            this._createPieChart();
-          }
-          else {
+          if (this.config.chartConfig.chartType !== "PieChart") {
             this.chart.resize();
+          } else {
+            this._initChart();
           }
+          this.onChartResize();
         }), duration);
       }
     },
@@ -110,6 +113,9 @@ function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare
         case "PieChart":
           this._createPieChart();
           break;
+        case "PolarChart":
+          this._createPolarChart();
+          break;
         default:
           domAttr.set(this.chartContainer, "innerHTML", this.nls.errMsgNoFeaturesFound);
       }
@@ -136,7 +142,7 @@ function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare
     * @memberOf widgets/RelatedTableCharts/setting/charLayout
     **/
     _createBarChart: function () {
-      var chart, yAxis = {}, xAxis = {}, tip, chartHeight = 40, fontFamily, fontSize,
+      var chart, yAxis = {}, xAxis = {}, chartHeight = 40, fontFamily, fontSize,
       fontColor, chartSeriesProps = {};
       domConstruct.empty(this.chartContainer);
       chartHeight = this._getBarChartContainerHeight();
@@ -160,7 +166,8 @@ function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare
         includeZero: false,
         vertical: true,
         titleFontColor: fontColor,
-        titleFont: "normal normal normal " + fontSize + ' ' + fontFamily
+        titleFont: "normal normal normal " + fontSize + ' ' + fontFamily,
+        font: "normal normal normal 9px" + ' ' + fontFamily
       };
       xAxis = {
         fixLower: "major",
@@ -168,7 +175,8 @@ function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare
         minorTicks: false,
         includeZero: true,
         titleFontColor: fontColor,
-        titleFont: "normal normal normal " + fontSize + ' ' + fontFamily
+        titleFont: "normal normal normal " + fontSize + ' ' + fontFamily,
+        font: "normal normal normal 9px" + ' ' + fontFamily
       };
       //set chart options based on if it is for preview or not
       if (this.config.isPreview) {
@@ -185,7 +193,7 @@ function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare
           width: 0
         };
       } else {
-        tip = new Tooltip(chart, "default");
+        new Tooltip(chart, "default");
         yAxis.title = this._getFieldValues(this.config.chartConfig.labelYAxis,
           this.config.selectedFeature.attributes);
         xAxis.title = this._getFieldValues(this.config.chartConfig.labelXAxis,
@@ -227,7 +235,7 @@ function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare
     **/
     _createPieChart: function () {
       var chart, chartNodeDiv,
-        tip, plotObject = {}, pieRadius = 45;
+        plotObject = {}, pieRadius = 45;
       domConstruct.empty(this.chartContainer);
       chartNodeDiv = domConstruct.create("div", {
         "style": "width:100%; height:100%; overflow:auto"
@@ -266,7 +274,7 @@ function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare
       chart.addPlot("default", plotObject);
       //if chart is not for preview then set tooltips
       if (!this.config.isPreview) {
-        tip = new Tooltip(chart, "default");
+        new Tooltip(chart, "default");
       }
       //If the fill color is specified then apply the it
       if (this.config.chartData.fill) {
@@ -291,6 +299,102 @@ function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare
     },
 
     /**
+    * create polar chart as per the settings
+    * @memberOf widgets/RelatedTableCharts/setting/charLayout
+    **/
+    _createPolarChart: function () {
+      var chartNodeDiv, chart, key, fontFamily, seriesFillAlphaValue = 0.2,
+        dataObj, i, showLegend = false;
+      if (this.chart) {
+        this.chart.destroy();
+      }
+      domConstruct.empty(this.chartContainer);
+      domStyle.set(this.chartContainer, "direction", "inherit");
+      chartNodeDiv = domConstruct.create("div", {
+        "style": "width:100%; height:100%; overflow:hidden"
+      }, this.chartContainer);
+      fontFamily = domStyle.get(this.chartDescription, "fontFamily");
+      chart = new Chart(chartNodeDiv);
+      //set polygon opacity for polar chart if 'polygonFill' is set to true in config
+      if (!this.config.chartConfig.showPolygonFill) {
+        seriesFillAlphaValue = 0;
+      }
+      chart.addPlot("default", {
+        type: Spider,
+        labelOffset: -10,
+        divisions: 5,
+        seriesFillAlpha: seriesFillAlphaValue,
+        markerSize: 3,
+        precision: 0,
+        spiderType: "polygon",
+        axisFont: "normal normal normal 9px/25px" + ' ' + fontFamily
+      });
+      //If theme is selected, apply the same on chart
+      if (this.config.chartData.selectedTheme) {
+        chart.setTheme(this.config.chartData.selectedTheme);
+      } else if (this.config.chartConfig.chartColor.colorInfo && this.config.chartConfig
+        .chartColor.colorInfo.layerField) {
+        showLegend = true;
+      }
+      //add series to chart
+      for (i = 0; i < this.config.chartData.chartSeries.length; i++) {
+        dataObj = this.config.chartData.chartSeries[i];
+        for (key in dataObj) {
+          if (dataObj.hasOwnProperty(key)) {
+            if (this.config.chartData.fill) {
+              //set chart series Properties
+              //If the fill color is specified then apply it
+              chart.addSeries(key, dataObj[key], {
+                fill: this.config.chartData.fill
+              });
+            } else if (dataObj[key].fill) {
+              chart.addSeries(key, dataObj[key], {
+                fill: dataObj[key].fill,
+                legend: dataObj[key].legendLabel
+              });
+            } else {
+              chart.addSeries(key, dataObj[key]);
+            }
+          }
+        }
+      }
+      //if chart is not for preview then set tooltips
+      if (!this.config.isPreview) {
+        new Tooltip(chart, "default");
+      }
+      new Highlight(chart, "default");
+      new Magnify(chart, "default", { duration: 800, scale: 1.5 });
+      chart.render();
+      this.chart = chart;
+      //if chart is not for preview and coloy by field value option is configured then only show
+      //legend panel for polar graph
+      if (!this.config.isPreview && showLegend) {
+        domStyle.set(this.legendContainer, "display", "block");
+        this._createChartLegend(chart);
+      }
+      this.onChartCreated();
+    },
+
+    /**
+    * create  legend for polar chart
+    * @memberOf widgets/RelatedTableCharts/setting/charLayout
+    **/
+    _createChartLegend: function (chart) {
+      setTimeout(lang.hitch(this, function () {
+        if (this.legend) {
+          //destroy old legend instance
+          this.legend.destroy();
+          this.legend = null;
+        }
+        domConstruct.empty(this.legendNode);
+        this.legend = new SelectableLegend({
+          chart: chart,
+          horizontal: true
+        }, domConstruct.create("div", {}, this.legendNode));
+      }), 1500);
+    },
+
+    /**
     * callback which confirms the creation of particular chart
     * @memberOf widgets/RelatedTableCharts/setting/charLayout
     **/
@@ -298,6 +402,9 @@ function (BaseWidgetSetting, jimuUtils, domAttr, domConstruct, domStyle, declare
 
     },
 
+    onChartResize: function () {
+
+    },
     /**
     * fetch field values from the feature attributes
     * @memberOf widgets/RelatedTableCharts/setting/charLayout

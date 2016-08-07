@@ -43,6 +43,10 @@ function(declare, BaseWidget) {
 
     onSignOut: function(){
       console.log('onSignOut');
+    },
+
+    showVertexCount: function(count){
+      this.vertexCount.innerHTML = 'The vertex count is: ' + count;
     }
   });
 });

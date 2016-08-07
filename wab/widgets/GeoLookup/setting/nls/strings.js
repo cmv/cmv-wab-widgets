@@ -21,7 +21,7 @@ define({
       symbolLabelOutside : 'Select the symbol for locations outside:'
     },
     advSettings : {
-      label: "Advanced Settings", 
+      label: "Advanced Settings",
       latFieldsDesc : "Possible field names for Latitude field.",
       longFieldsDesc : "Possible field names for Longitude field.",
       intersectFieldDesc : "The name of the field created to store value if lookup intersected a layer.",
@@ -52,6 +52,7 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
+  "hr": 1,
   "it": 1,
   "ja": 1,
   "ko": 1,
@@ -64,6 +65,7 @@ define({
   "pt-pt": 1,
   "ro": 1,
   "ru": 1,
+  "sr": 1,
   "sv": 1,
   "th": 1,
   "tr": 1,

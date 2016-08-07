@@ -24,7 +24,9 @@ define([
   'esri/kernel',
   './PortalAnalysis'
 ], function(declare, lang, Deferred, portalUtils, portalUrlUtils, Role, esriNs, PortalAnalysis) {
-  return declare([], {
+  var instance = null;
+
+  var clazz = declare([], {
     userRole: null,
     userPortalUrl: null,
     portalAnalysis: null,
@@ -55,7 +57,7 @@ define([
         return def;
       }
 
-      var portal = portalUtils.getPortal(portalUrl);
+      var portal = portalUtils.getPortal(this.portalUrl);
       if(portal.haveSignIn()){
         return this._loadUserInfo(portal);
       }else{
@@ -71,9 +73,13 @@ define([
         }else{
           return portalHost.signIn().then(lang.hitch(this, function(credential){
             return this._loadUserInfo(portalHost, credential);
-          }));
+          }), function() {
+            return false;
+          });
         }
-      }));
+      }), function() {
+        return false;
+      });
     },
 
     _registerOrgCredential: function(credential, orgPortalUrl){
@@ -110,7 +116,9 @@ define([
         }else{
           return false;
         }
-      }));
+      }), function() {
+        return false;
+      });
     },
 
     _privilegeLoaded: function(){
@@ -129,7 +137,7 @@ define([
       if(this._privilegeLoaded()){
         return this.userRole.isAdmin();
       }else{
-        return null;
+        return false;
       }
     },
 
@@ -147,11 +155,20 @@ define([
 
     //check to show analysis UX
     canPerformAnalysis: function(){
-      return this.portalAnalysis.canPerformAnalysis();
+      return this.portalAnalysis !== null && this.portalAnalysis.canPerformAnalysis();
     },
 
     hasPrivileges: function(privileges){
-      return this.portalAnalysis.hasPrivileges(privileges);
+      return this.portalAnalysis !== null && this.portalAnalysis.hasPrivileges(privileges);
     }
   });
+
+  clazz.getInstance = function(portalUrl) {
+    if(instance === null) {
+      instance = new clazz(portalUrl);
+    }
+    return instance;
+  };
+
+  return clazz;
 });

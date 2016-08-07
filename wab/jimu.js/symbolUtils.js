@@ -15,12 +15,14 @@
 ///////////////////////////////////////////////////////////////////////////
 
 define([
+    'require',
     'dojo/_base/lang',
     'dojo/_base/html',
     'dojox/gfx',
-    'esri/symbols/jsonUtils'
+    'esri/symbols/jsonUtils',
+    'esri/symbols/PictureMarkerSymbol'
   ],
-  function(lang, html, gfx, esriSymJsonUtils) {
+  function(require, lang, html, gfx, esriSymJsonUtils, PictureMarkerSymbol) {
     var mo = {};
 
     //public methods:
@@ -148,6 +150,14 @@ define([
       return esriSymJsonUtils.fromJson(args);
     };
 
+    mo.getGreyPinMarkerSymbol = function(){
+      var url = require.toUrl('jimu/css/images/grey_pin.png');
+      var symbol = new PictureMarkerSymbol(url, 16, 16);
+      symbol.setOffset(0, 8);
+      return symbol;
+    };
+
+    //surfaceSize: {width,height}, for example, {width:32,height:32}
     mo.createSymbolNode = function(symbol, /* optional */ surfaceSize){
       // var nodeWidth = 36;
       // var nodeHieght = 36;

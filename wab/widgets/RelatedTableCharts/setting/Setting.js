@@ -51,6 +51,11 @@ define([
         this._handelEvents();
       },
 
+      postMixInProperties: function () {
+        //mixin default nls with widget nls
+        this.nls = lang.mixin(this.nls, window.jimuNls.common);
+      },
+
       postCreate: function () {
         //create table for chart list
         this._createChartListTable();

@@ -1,5 +1,5 @@
 ﻿
-/*-----------------------Styles for Layout tab container-----------------------*/
+/*-----------------------Styles for chart Layout container-----------------------*/
 .jimu-widget-RelatedTableCharts-layout .esriCTLabels
 {
     width: 100%;
@@ -26,7 +26,6 @@
     margin: 10px 50px;
     display: inline-block;
     direction: ltr;
-
 }
 
 .jimu-widget-RelatedTableCharts-layout .esriCTChartDescription
@@ -34,3 +33,30 @@
     margin: 0 10px 10px 10px;
     word-break: break-word;
 }
+
+.jimu-widget-RelatedTableCharts-layout .esriCTLegendContainer
+{
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.jimu-widget-RelatedTableCharts-layout .esriCTLegendContainer .dijitCheckBox
+{
+    margin: 1px;
+}
+
+.jimu-widget-RelatedTableCharts-layout .dojoxLegendNode td
+{
+    padding: 6px 4px 6px 6px;
+}
+
+.jimu-widget-RelatedTableCharts-layout .dojoxLegendNode
+{
+    border-top: 1px solid #DDDDDD;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+

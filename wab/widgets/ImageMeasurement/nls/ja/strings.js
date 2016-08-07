@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "画像計測"
-  })
-);
+define({
+  "_widgetLabel": "画像計測"
+});

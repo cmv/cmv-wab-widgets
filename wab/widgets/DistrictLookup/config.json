@@ -1,5 +1,6 @@
 {
     "directionLengthUnit": "UNIT_STATUTE_MILE",
+	"highlightColor":"#00FFFF",
     "symbols": {
         "precinctSymbol": {
             "color": [

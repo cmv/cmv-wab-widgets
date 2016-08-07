@@ -1,11 +1,5 @@
-﻿define(
-   ({
-    title: "Widżet Podsumowanie informacji",
-    helpText: "DO ZROBIENIA — tekst pomocy dla widżetu Podsumowanie informacji",
-    labels: {
-      status: "Status",
-      result: "Wynik"
-    },
-    _widgetLabel: "Podsumowanie (Beta)"
-  })
-);
+define({
+  "_widgetLabel": "Podsumowanie informacji",
+  "title": "Widżet Podsumowanie informacji",
+  "helpText": "Tekst pomocy dla widżetu Podsumowanie informacji"
+});

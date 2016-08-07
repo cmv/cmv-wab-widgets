@@ -47,6 +47,8 @@ define([
       searchDijit: null,
       searchResults: null,
 
+      _startWidth: null,
+
       postCreate: function() {
         if (this.closeable || !this.isOnScreen) {
           html.addClass(this.searchNode, 'default-width-for-openAtStart');
@@ -65,6 +67,10 @@ define([
         LayerInfos.getInstance(this.map, this.map.itemInfo)
           .then(lang.hitch(this, function(layerInfosObj) {
             this.layerInfosObj = layerInfosObj;
+            this.own(this.layerInfosObj.on(
+            'layerInfosFilterChanged',
+            lang.hitch(this, this.onLayerInfosFilterChanged)));
+
             utils.setMap(this.map);
             utils.setLayerInfosObj(this.layerInfosObj);
             utils.setAppConfig(this.appConfig);
@@ -179,13 +185,25 @@ define([
         }
       },
 
-      setPosition: function() {
-        this._resetSearchDijitStyle();
+      setPosition: function(position) {
+        this._resetSearchDijitStyle(position);
         this.inherited(arguments);
       },
 
       resize: function() {
         this._resetSearchDijitStyle();
+      },
+
+      onLayerInfosFilterChanged: function(changedLayerInfos) {
+        array.some(changedLayerInfos, lang.hitch(this, function(info) {
+          if (this.searchDijit && this.searchDijit.sources && this.searchDijit.sources.length > 0) {
+            array.forEach(this.searchDijit.sources, function(s) {
+              if (s._featureLayerId === info.id) {
+                s.featureLayer.setDefinitionExpression(info.getFilter());
+              }
+            });
+          }
+        }));
       },
 
       _resetSearchDijitStyle: function() {
@@ -196,10 +214,9 @@ define([
 
         setTimeout(lang.hitch(this, function() {
           if (this.searchDijit && this.searchDijit.domNode) {
-            // only need width of domNode
-            // var box = html.getMarginBox(this.domNode);
             var box = {
-              w: parseInt(html.getComputedStyle(this.domNode).width, 10)
+              w: !window.appInfo.isRunInMobile ? 274 : // original width of search dijit
+                parseInt(html.getComputedStyle(this.domNode).width, 10)
             };
             var sourcesBox = html.getMarginBox(this.searchDijit.sourcesBtnNode);
             var submitBox = html.getMarginBox(this.searchDijit.submitNode);
@@ -292,6 +309,11 @@ define([
               if (!template) {
                 delete convertedSource.infoTemplate;
               }
+              if (convertedSource._featureLayerId) {
+                var layerInfo = this.layerInfosObj
+                  .getLayerInfoById(convertedSource._featureLayerId);
+                flayer.setDefinitionExpression(layerInfo.getFilter());
+              }
               def.resolve(convertedSource);
             })));
 
@@ -347,14 +369,25 @@ define([
           var source = this.searchDijit.sources[sourceIndex];
           if (source && 'featureLayer' in source) {
             var popupInfo = this._getSourcePopupInfo(source);
-            var formatedAttrs = this._getFormatedAttrs(
-              lang.clone(e.feature.attributes),
-              source.featureLayer.fields,
-              source.featureLayer.typeIdField,
-              source.featureLayer.types,
-              popupInfo
-            );
-            e.feature.attributes = formatedAttrs;
+            var notFormatted = (popupInfo && popupInfo.description &&
+            popupInfo.description.match(/http(s)?:\/\//)) ||
+            (popupInfo && popupInfo.mediaInfos && popupInfo.mediaInfos.length > 0);
+
+            if (!notFormatted) {
+              var formatedAttrs = this._getFormatedAttrs(
+                lang.clone(e.feature.attributes),
+                source.featureLayer.fields,
+                source.featureLayer.typeIdField,
+                source.featureLayer.types,
+                popupInfo
+              );
+              // set a private property for select-result to get original feature from layer.
+              if (!e.feature.__attributes) {
+                e.feature.__attributes = e.feature.attributes;
+              }
+
+              e.feature.attributes = formatedAttrs;
+            }
           }
         }
 
@@ -617,6 +650,28 @@ define([
         var dataSourceIndex = e.sourceIndex;
         var sourceResults = this.searchResults[dataSourceIndex];
         var dataIndex = 0;
+        var that = this;
+
+        var getGraphics = function(layer, fid) {
+          var graphics = layer.graphics;
+          var gs = array.filter(graphics, function(g) {
+            return g.attributes[layer.objectIdField] === fid;
+          });
+          return gs;
+        };
+        var showPopupByFeatures = function(features) {
+          var location = null;
+          that.map.infoWindow.setFeatures(features);
+          if (features[0].geometry.type === "point") {
+            location = features[0].geometry;
+          } else {
+            location = features[0].geometry.getCenter();
+          }
+          that.map.infoWindow.show(location, {
+            closetFirst: true
+          });
+        };
+
         for (var i = 0, len = sourceResults.length; i < len; i++) {
           if (jimuUtils.isEqual(sourceResults[i], result)) {
             dataIndex = i;
@@ -636,6 +691,29 @@ define([
               html.addClass(li, 'result-item-selected');
             }
           }));
+
+        var layer = this.map.getLayer(e.source._featureLayerId);
+
+        if (layer) {
+          var gs = getGraphics(layer, e.result.feature.__attributes[layer.objectIdField]);
+          if (gs.length > 0) {
+            showPopupByFeatures(gs);
+          } else {
+            var handle = on(layer, 'update-end', lang.hitch(this, function() {
+              if (this.domNode) {
+                var gs = getGraphics(layer, e.result.feature.__attributes[layer.objectIdField]);
+                if (gs.length > 0) {
+                  showPopupByFeatures(gs);
+                }
+              }
+
+              if (handle && handle.remove) {
+                handle.remove();
+              }
+            }));
+            this.own(handle);
+          }
+        }
       },
 
       _onClearSearch: function() {

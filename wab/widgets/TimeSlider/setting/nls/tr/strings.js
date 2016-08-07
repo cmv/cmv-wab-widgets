@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    showLayerLabels: "Gereçteki zamana bağlı katman adlarını görüntüleyin."
-  })
-);
+define({
+  "showLayerLabels": "Gereçteki zamana bağlı katman adlarını görüntüleyin."
+});

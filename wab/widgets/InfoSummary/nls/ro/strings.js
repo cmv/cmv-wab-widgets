@@ -1,11 +1,5 @@
-﻿define(
-   ({
-    title: "Widgetul InfoSummary",
-    helpText: "TODO Text ajutor InfoSummay",
-    labels: {
-      status: "Stare",
-      result: "Rezultat"
-    },
-    _widgetLabel: "Rezumat informaţii (Beta)"
-  })
-);
+define({
+  "_widgetLabel": "Rezumat informaţii",
+  "title": "Widgetul InfoSummary",
+  "helpText": "Text ajutor InfoSummary"
+});

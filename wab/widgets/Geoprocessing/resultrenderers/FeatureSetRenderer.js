@@ -31,6 +31,10 @@ define([
       if(this.value.features && this.value.features.length > 0){
         this._displayText();
         this._drawResultFeature(this.param, this.value);
+      }else{
+        domStyle.set(this.clearNode, 'display', 'none');
+        domStyle.set(this.exportNode, 'display', 'none');
+        this.labelContent.innerHTML = this.nls.emptyResult;
       }
     },
 
@@ -83,6 +87,19 @@ define([
     },
 
     _drawResultFeature: function(param, featureset){
+      var infoTemplate;
+      if(!param.popup){
+        param.popup = {
+          enablePopup: true,
+          title: '',
+          fields: []
+        };
+      }
+      if(param.popup.enablePopup){
+        //Use param.popup.title or a non-exist field name as the title of popup window.
+        infoTemplate = new InfoTemplate(param.popup.title || '${Non-Exist-Field}',
+            this._generatePopupContent(featureset));
+      }
       if(this.config.shareResults && !this.config.useDynamicSchema){
         if(!param.defaultValue || !param.defaultValue.geometryType){
           throw Error('Output parameter default value does not provide enough information' +
@@ -91,29 +108,28 @@ define([
         param.defaultValue.name = param.name;
         var featureCollection = {
           layerDefinition: param.defaultValue,
-          featureSet: null
+          featureSet: featureset
         };
         this.resultLayer =  new FeatureLayer(featureCollection, {
-          id: this.widgetUID + param.name
+          id: this.widgetUID + param.name,
+          infoTemplate: infoTemplate
         });
       }else{
         this.resultLayer =  new GraphicsLayer({
-          id: this.widgetUID + param.name
+          id: this.widgetUID + param.name,
+          infoTemplate: infoTemplate
         });
+        array.forEach(featureset.features, function(feature){
+          this.resultLayer.add(feature);
+        }, this);
       }
       this.resultLayer.title = param.label || param.name;
       this._addResultLayer(param.name);
 
-      if(!param.popup){
-        param.popup = {
-          enablePopup: true,
-          title: '',
-          fields: []
-        };
-      }
-      var len = featureset.features.length, renderer = param.renderer;
+      var renderer = param.renderer;
       if(this.config.useDynamicSchema || !renderer){
-        if(featureset.geometryType === 'esriGeometryPoint'){
+        if(featureset.geometryType === 'esriGeometryPoint' ||
+            featureset.geometryType === 'esriGeometryMultipoint'){
           renderer = new SimpleRenderer(defaultSymbol.pointSymbol);
         }else if(featureset.geometryType === 'esriGeometryPolyline'){
           renderer = new SimpleRenderer(defaultSymbol.lineSymbol);
@@ -122,18 +138,6 @@ define([
         }
       }else{
         renderer = rendererUtils.fromJson(renderer);
-      }
-      var infoTemplate;
-      if(param.popup.enablePopup){
-        //Use param.popup.title or a non-exist field name as the title of popup window.
-        infoTemplate = new InfoTemplate(param.popup.title || '${Non-Exist-Field}',
-            this._generatePopupContent(featureset));
-      }
-      for (var i = 0; i < len; i++) {
-        if(infoTemplate){
-          featureset.features[i].setInfoTemplate(infoTemplate);
-        }
-        this.resultLayer.add(featureset.features[i]);
       }
       this.resultLayer.setRenderer(renderer);
 

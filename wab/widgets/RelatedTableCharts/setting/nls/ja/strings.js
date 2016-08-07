@@ -1,59 +1,91 @@
-﻿define(
-   ({
-
-    chartSettingLabel: "チャート設定",  //shown as a label in config UI dialog box.
-    addNewLabel: "新規追加", //shown as a button text to add layers.
-    generalSettingLabel: "一般設定", //shown as a button text to general settings button.
-
-    layerChooser: {
-      title: "チャートを作成するレイヤーの選択", //shown as title on layer chooser popup.
-      selectPolygonLayerLabel: "レイヤーの選択", //shown as a label in config UI dialog box for layer chooser.
-      selectPolygonLayerHintText: "ヒント: 複数のチャートを構成する場合、各レイヤーのジオメトリ タイプが同じである必要があります", // shown as a hint text in config UI dialog box for selecting layer from map.
-      selectRelatedTableLayerLabel: "レイヤーに関連するテーブルの選択", //shown as a label in config UI dialog box for layer chooser.
-      selectRelatedTableLayerHintText: "ヒント: 数値フィールドを含んでいるテーブルのみが表示されます", // shown as a hint text in config UI dialog box for selecting table related to layer.
-      errorInSelectingPolygonLayer: "関連するポイント レイヤーがあるレイヤーを選択してください。", // shown as an error label in alert box for selecting layer from map.
-      errorInSelectingRelatedLayer: "レイヤーに関連する有効なテーブル/レイヤーを選択してください。", // shown as an error in alert box if error in selecting related table layer.
-      polygonLayerNotHavingRelationships: "選択したレイヤーには、関連するテーブル/レイヤーがありません。", // shown as an error in alert box if Selected layer don't have any related table/layer.
-      okButton: "OK", //shown as a button text.
-      cancelButton: "キャンセル" //shown as a button text.
-    },
-    ChartSetting: {
-      sectionTitle: "セクション タイトル", // shown as a label in config UI dialog box.
-      sectionTitleHintText: "ヒント: セクションのヘッダー タイトルに表示されます", // shown as a hint text in config UI dialog box for section title.
-      chartTitle: "チャートのタイトル", // shown as a label in config UI dialog box.
-      chartTitleHintText: "ヒント: チャートの上部の中央に表示されます", // shown as a hint text in config UI dialog box for section title.
-      chartDescription: "説明", // shown as a label in cofig UI.
-      chartDescriptionHintText: "ヒント: チャートの下に表示されます", // shown as a hint text in config UI dialog box.
-      chartType: "チャート タイプ", // shown as a label which shows type of chart.
-      barChart: "バー チャート", // shown as a label for bar chart radio button.
-      pieChart: "パイ チャート", // shown as a label for pie chart radio button.
-      dataSeriesField: "データ シリーズ フィールド", // shown as a label for selecting data series set.
-      labelField: "ラベル フィールド", // shown as a label for selecting label field set.
-      chartColor: "チャートの色", // shown as a label which shows color for chart.
-      singleColor: "単一色", // shown as a label for single color radio button.
-      colorByTheme: "テーマ別の色", // shown as a label for color by theme radio button.
-      colorByFieldValue: "フィールド値別の色", // shown as a label for color by field value radio button.
-      xAxisTitle: "X 軸のタイトル", // shown as a label to enter title in bottom left corner.
-      xAxisHintText: "ヒント: X 軸のタイトル", // shown as a hint text which shows position of label in config UI dialog box.
-      yAxisTitle: "Y 軸のタイトル", // shown as a label to enter title in bottom left corner.
-      yAxisHintText: "ヒント: Y 軸のタイトル", // shown as a hint text which shows position of label in config UI dialog box.
-      fieldColorLabel: "ラベル", // shown as a header in table.
-      fieldColorColor: "色", // shown as a header in table.
-      defaultFieldSelectLabel: "選択", // shown as a label in config UI dialog box.
-      errMsgFieldValuesNotFound: "選択したフィールドの値を検索できません", // shown as an error in alert box.
-      errMsgSectionTitle: "セクション タイトルを入力してください", // shown as an error in alert box if section title is empty.
-      errMsgFieldByValue: "フィールド値を選択してください", // shown as an error in alert box if color by field value is empty.
-      settingTabTitle: "設定", // shown as a label of tab in config UI
-      layoutTabTitle: "レイアウト" // shown as a label of tab in config UI
-    },
-    GeneralSetting: {
-      legendGeneralSettingText: "一般設定", // shown as a label of general setting legend.
-      locationSymbolLabel: "グラフィックス位置シンボル", // shown as a label for selecting graphic location symbol.
-      locationSymbolHintText: "ヒント: 住所のシンボルの表示および位置のクリックに使用されます", // shown as a hint text for selecting graphic location symbol.
-      refreshIntervalLabel: "更新間隔", // shown as a label of refresh interval.
-      refreshIntervalHintText: "ヒント: この間隔に基づいてチャートが更新されます。1 ～ 1440 分の範囲内の値を指定します。", // shown as an error for refresh interval.
-      errMsgRefreshInterval: "0 ～ 1440 分の範囲内の更新間隔を指定してください",  // shown as an error message.
-      symbolPickerPreviewText: "プレビュー:"
+define({
+  "chartSettingLabel": "チャート設定",
+  "addNewLabel": "新規追加",
+  "generalSettingLabel": "一般設定",
+  "layerChooser": {
+    "title": "チャートを作成するレイヤーの選択",
+    "selectPolygonLayerLabel": "レイヤーの選択",
+    "selectPolygonLayerHintText": "ヒント: 複数のチャートを構成する場合、各レイヤーのジオメトリ タイプが同じである必要があります",
+    "selectRelatedTableLayerLabel": "レイヤーに関連するテーブルの選択",
+    "selectRelatedTableLayerHintText": "ヒント: 数値フィールドを含んでいるテーブルのみが表示されます",
+    "errorInSelectingPolygonLayer": "関連するポイント レイヤーがあるレイヤーを選択してください。",
+    "errorInSelectingRelatedLayer": "レイヤーに関連する有効なテーブル/レイヤーを選択してください。",
+    "polygonLayerNotHavingRelationships": "選択したレイヤーには、関連するテーブル/レイヤーがありません。"
+  },
+  "ChartSetting": {
+    "sectionTitle": "セクション タイトル",
+    "sectionTitleHintText": "ヒント: セクションのヘッダー タイトルに表示されます",
+    "chartTitle": "チャートのタイトル",
+    "chartTitleHintText": "ヒント: チャートの上部の中央に表示されます",
+    "chartDescription": "説明",
+    "chartDescriptionHintText": "ヒント: チャートの下に表示されます",
+    "chartType": "チャート タイプ",
+    "barChart": "バー チャート",
+    "pieChart": "パイ チャート",
+    "polarChart": "極座標チャート",
+    "dataSeriesField": "データ シリーズ フィールド",
+    "labelField": "ラベル フィールド",
+    "chartColor": "チャートの色",
+    "singleColor": "単一色",
+    "colorByTheme": "テーマ別の色",
+    "colorByFieldValue": "フィールド値別の色",
+    "xAxisTitle": "X 軸のタイトル",
+    "xAxisHintText": "ヒント: X 軸のタイトル",
+    "yAxisTitle": "Y 軸のタイトル",
+    "yAxisHintText": "ヒント: Y 軸のタイトル",
+    "fieldColorLabel": "ラベル",
+    "fieldColorColor": "色",
+    "defaultFieldSelectLabel": "選択",
+    "errMsgFieldValuesNotFound": "選択したフィールドの値を検索できません",
+    "errMsgSectionTitle": "セクション タイトルを入力してください",
+    "errMsgFieldByValue": "フィールド値を選択してください",
+    "settingTabTitle": "設定",
+    "layoutTabTitle": "レイアウト",
+    "polarChartSelectFieldsHintText": "ヒント: 極座標チャートを生成するためのフィールドを選択します",
+    "visibilityText": "可視性",
+    "fieldNameText": "フィールド名",
+    "aliasNameText": "エイリアス",
+    "errMsgPolarFieldsRequired": "極座標チャートを生成するには、3 つ以上のフィールドを選択してください",
+    "polarChartPolygonFillLabel": "塗りつぶしポリゴン",
+    "polarChartPolygonFillHintText": "ヒント: チェックボックスをオンにすると、塗りつぶしポリゴンが極座標グラフに表示されます。",
+    "ThemeSelector": {
+      "themeAdobebricks": "Adobebricks",
+      "themeAlgae": "Algae",
+      "themeBahamation": "Bahamation",
+      "themeBlueDusk": "BlueDusk",
+      "themeCubanShirts": "CubanShirts",
+      "themeDesert": "Desert",
+      "themeDistinctive": "Distinctive",
+      "themeDollar": "Dollar",
+      "themeGrasshopper": "Grasshopper",
+      "themeGrasslands": "Grasslands",
+      "themeGreySkies": "GreySkies",
+      "themeHarmony": "Harmony",
+      "themeIndigoNation": "IndigoNation",
+      "themeIreland": "Ireland",
+      "themeMiamiNice": "MiamiNice",
+      "themeMinty": "Minty",
+      "themePurpleRain": "PurpleRain",
+      "themeRoyalPurples": "RoyalPurples",
+      "themeSageToLime": "SageToLime",
+      "themeTufte": "Tufte",
+      "themeWatersEdge": "WatersEdge",
+      "themeWetlandText": "Wetland",
+      "themePlotKitblue": "PlotKit.blue",
+      "themePlotKitcyan": "PlotKit.cyan",
+      "themePlotKitgreen": "PlotKit.green",
+      "themePlotKitorange": "PlotKit.orange",
+      "themePlotKitpurple": "PlotKit.purple",
+      "themePlotKitred": "PlotKit.red"
     }
-  })
-);
+  },
+  "GeneralSetting": {
+    "legendGeneralSettingText": "一般設定",
+    "locationSymbolLabel": "グラフィックス位置シンボル",
+    "locationSymbolHintText": "ヒント: 住所のシンボルの表示および位置のクリックに使用されます",
+    "refreshIntervalLabel": "更新間隔",
+    "refreshIntervalHintText": "ヒント: この間隔に基づいてチャートが更新されます。1 ～ 1440 分の範囲内の値を指定します。",
+    "errMsgRefreshInterval": "0 ～ 1440 分の範囲内の更新間隔を指定してください",
+    "symbolPickerPreviewText": "プレビュー:"
+  }
+});

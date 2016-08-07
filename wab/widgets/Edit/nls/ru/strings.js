@@ -1,13 +1,13 @@
-﻿define(
-   ({
-    _widgetLabel: "Редактировать",
-    title: "Выберите шаблон для создания объектов",
-    pressStr: "Нажмите ",
-    ctrlStr: " CTRL ",
-    snapStr: " чтобы включить замыкание",
-    close: "Закрыть",
-    featureLayers: "Векторные слои1",
-    searchTemplates: "Поиск шаблонов",
-    noAvailableTempaltes: "Нет доступных шаблонов"
-  })
-);
+define({
+  "_widgetLabel": "Редактировать",
+  "_featureAction_Edit": "Редактировать",
+  "title": "Выберите шаблон для создания объектов",
+  "pressStr": "Нажмите ",
+  "ctrlStr": " CTRL ",
+  "snapStr": " чтобы включить замыкание",
+  "close": "Закрыть",
+  "featureLayers": "Векторные слои",
+  "searchTemplates": "Поиск шаблонов",
+  "noAvailableTempaltes": "Нет доступных шаблонов",
+  "noCanCreateLayerAreCurrentlyVisible": "В данный момент нет видимых создаваемых слоев."
+});

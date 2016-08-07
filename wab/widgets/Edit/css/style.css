@@ -4,14 +4,26 @@
   position: relative;
 }
 
-/*about template picker*/
+.jimu-widget-edit .jimu-loading-shelter .loading-container {
+  width: 48px;
+}
+
+
 .jimu-widget-edit .templatePicker {
-	position: absolute;
+  position: absolute;
+  width: 100%;
+  bottom: 53px;
+}
+
+/***********about templatePicker**************/
+/*
+.jimu-widget-edit .templatePicker {
+  position: absolute;
   left: 0;
   right: 0;
   top: 18px;
   bottom: 53px;
-  height: auto; /*just for BoxTheme*/
+  height: auto; /just for BoxTheme/
 }
 
 .jimu-widget-edit .grid {
@@ -37,8 +49,21 @@
 .jimu-widget-edit .dojoxGridRowTable {
   width: 100%;
 }
+*/
 
-/*about editor*/
+.jimu-widget-edit .dojoxGridRow {
+  border: 0;
+}
+
+.jimu-widget-edit .dojoxGridScrollbox {
+  overflow-x: hidden;
+}
+
+.jimu-widget-edit  .templatePicker .grid .dojoxGridCell {
+  border: 0px solid #FFFFFF;
+}
+
+/***************about editor toolbar****************/
 .jimu-widget-edit .esriEditor {
   position: absolute;
   bottom: 0;
@@ -54,10 +79,6 @@
   min-height: 50px;
 }
 
-/***********about templatePicker**************/
-.jimu-widget-edit  .templatePicker .grid .dojoxGridCell {
-  border: 0px solid #FFFFFF;
-}
 
 
 /*********about attributeInspector**********/

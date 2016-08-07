@@ -38,12 +38,6 @@ define(function() {
     }
 
     mo.getServerByUrl = function(_url){
-      //test: http://www.arcgis.com => www.arcgis.com
-      //test: https://www.arcgis.com/ => www.arcgis.com
-      //test: //www.arcgis.com => www.arcgis.com
-      //test: http://www.arcgis.com/sharing/rest => www.arcgis.com
-      //test: http://10.112.18.151:6080/arcgis/rest/services => 10.112.18.151:6080
-      //test: //www.arcgis.com/sharing/rest => www.arcgis.com
       _url = (_url || '').trim();
       _url = _url.replace(/^(http(s?):?)\/\//gi, '');
 
@@ -55,11 +49,6 @@ define(function() {
     };
 
     mo.getServerWithProtocol = function(_url){
-      //test: http://www.arcgis.com/sharing/rest => http://www.arcgis.com
-      //test: https://www.arcgis.com/sharing/rest => https://www.arcgis.com
-      //test: //www.arcgis.com/sharing/rest => //www.arcgis.com
-      //test: http://10.112.18.151:6080/arcgis/rest/services => http://10.112.18.151:6080
-
       var result = '';
       _url = (_url || '').trim();
 
@@ -115,27 +104,16 @@ define(function() {
     };
 
     mo.isOnline = function(_url){
-      //test: http://esridevbeijing.maps.arcgis.com => true
-      //test: http://www.arcgis.com => true
       var server = mo.getServerByUrl(_url).toLowerCase();
       return server.indexOf('.arcgis.com') >= 0;
     };
 
     mo.isArcGIScom = function(_url){
-      //test: http://esridevbeijing.maps.arcgis.com => false
-      //test: http://www.arcgis.com => true
       var server = mo.getServerByUrl(_url).toLowerCase();
       return server === 'www.arcgis.com' || server === 'arcgis.com';
     };
 
     mo.getStandardPortalUrl = function(_portalUrl){
-      //test: http://www.arcgis.com/sharing/rest//// => http://www.arcgis.com
-      //test: www.arcgis.com => http://www.arcgis.com
-      //test: http://www.arcgis.com/ => http://www.arcgis.com
-      //test: https://www.arcgis.com/ => https://www.arcgis.com
-      //test: 10.112.18.151 => http://10.112.18.151/arcgis
-      //test: 10.112.18.151/gis => http://10.112.18.151/gis
-      //test: http://analysis.arcgis.com => http://analysis.arcgis.com
       var server = mo.getServerByUrl(_portalUrl);
       if (server === '') {
         return '';
@@ -197,6 +175,8 @@ define(function() {
           defaultProtocol = 'http:';
           if (url.startWith('//')) {
             url = defaultProtocol + url; //http: + //js.arcgis.com
+          } else {
+            url = defaultProtocol + "//" + url;
           }
         }
 
@@ -300,7 +280,7 @@ define(function() {
       var portalUrl = mo.getStandardPortalUrl(_portalUrl);
       portalUrl = portalUrl.replace(/\/*$/g, '');
       if(portalUrl){
-        searchUrl = portalUrl + '/' + 'sharing/rest/search';
+        searchUrl = portalUrl + '/sharing/rest/search';
       }
       return searchUrl;
     };
@@ -334,8 +314,8 @@ define(function() {
 
     mo.getGenerateTokenUrl = function(_portalUrl){
       var tokenUrl = '';
+      _portalUrl = mo.getStandardPortalUrl(_portalUrl);
       if(_portalUrl){
-        _portalUrl = mo.getStandardPortalUrl(_portalUrl);
         tokenUrl = _portalUrl + '/sharing/rest/generateToken';
       }
       return tokenUrl;

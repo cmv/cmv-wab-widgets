@@ -1,11 +1,7 @@
 define({
   root: ({
     selectAnalysisTools:"Select analysis tools to use in the widget.",
-    selected: "selected",
-    name: "Name",
     graphicalDisplay:"Graphical display",
-    usage: "Usage",
-    settings: "Settings",
     toolSetting: "Set tool details",
     toolLabel: "The tool display name",
     showHelpTip: "Show help links in the widget",
@@ -70,6 +66,7 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
+  "hr": 1,
   "it": 1,
   "ja": 1,
   "ko": 1,
@@ -82,6 +79,7 @@ define({
   "pt-pt": 1,
   "ro": 1,
   "ru": 1,
+  "sr": 1,
   "sv": 1,
   "th": 1,
   "tr": 1,

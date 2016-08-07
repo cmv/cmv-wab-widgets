@@ -1,6 +1,7 @@
 define({
   root: ({
     _widgetLabel: "Incident Analysis",
+    _featureAction_SetAsIncident: "Set As Incident",
     incident: "Incident",
     weather: "Weather",
     locate_incident: "Locate Incident",
@@ -23,7 +24,6 @@ define({
     FRI: "FRI",
     SAT: "SAT",
     defaultTabMsg: "No incidents identified.",
-    actionLabel: "Set As Incident",
     useMapExtent: "Use the current map extent",
     noFeaturesFound: "No features found.",
     downloadCSV: "DOWNLOAD CSV",
@@ -45,6 +45,7 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
+  "hr": 1,
   "it": 1,
   "ja": 1,
   "ko": 1,
@@ -57,6 +58,7 @@ define({
   "pt-pt": 1,
   "ro": 1,
   "ru": 1,
+  "sr": 1,
   "sv": 1,
   "th": 1,
   "tr": 1,

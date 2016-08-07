@@ -1,0 +1,33 @@
+.jimu-widget-select-setting {
+  margin: 20px 0;
+}
+.jimu-widget-select-setting .config-section {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.jimu-widget-select-setting .config-section label {
+  font-family: "Avenir-Medium";
+  font-size: 12px;
+  font-color: #353535;
+}
+.jimu-widget-select-setting .config-section .jimu-color-picker {
+  width: 30px;
+  height: 30px;
+  margin: 0 20px;
+}
+.jimu-widget-select-setting .config-section .option {
+  margin: 15px;
+}
+.jimu-widget-select-setting .config-section .option input {
+  margin: 0 10px;
+}
+.jimu-widget-select-setting .inline > div {
+  display: inline-block;
+}
+.jimu-widget-select-setting .label {
+  font-family: "Avenir-Medium";
+  font-size: 14px;
+  font-color: #353535;
+}
+
+/*# sourceMappingURL=style.css.map */

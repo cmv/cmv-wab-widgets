@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Pamatkartes galerija"
-  })
-);
+define({
+  "_widgetLabel": "Pamatkartes galerija"
+});

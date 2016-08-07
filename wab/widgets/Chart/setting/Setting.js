@@ -18,6 +18,7 @@ define([
   'dojo/_base/declare',
   'dojo/_base/lang',
   'dojo/_base/array',
+  'dojo/_base/html',
   'dojo/on',
   'dijit/_WidgetsInTemplateMixin',
   'jimu/BaseWidgetSetting',
@@ -31,8 +32,8 @@ define([
   'dijit/form/Select',
   'dijit/form/TextBox'
 ],
-function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
-  _FeaturelayerSourcePopup, jimuUtils,  FilterUtils, SingleChartSetting) {
+function(declare, lang, array, html, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
+  _FeaturelayerSourcePopup, jimuUtils,  FilterUtils, SingleChartSetting, SimpleTable) {
   return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
     baseClass: 'jimu-widget-chart-setting',
     currentSCS: null,
@@ -57,10 +58,36 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
 
     postCreate: function(){
       this.inherited(arguments);
-
+      this._initSelf();
       if(this.config){
         this.setConfig(this.config);
       }
+    },
+
+    _initSelf: function(){
+      var fields = [{
+        name: "name",
+        title: this.nls.name,
+        width: "auto",
+        type: "text",
+        editable: false
+      }, {
+        name: "actions",
+        title: "",
+        width: "70px",
+        type: "actions",
+        actions: ["up", "down", "delete"]
+      }];
+      this.chartList = new SimpleTable({
+        fields: fields,
+        autoHeight: false,
+        selectable: true,
+        style: "position:absolute; top:0; bottom:10px;"
+      });
+      html.addClass(this.chartList.domNode, 'chart-list-table');
+      this.own(on(this.chartList, 'row-delete', lang.hitch(this, this._onChartItemRemoved)));
+      this.own(on(this.chartList, 'row-select', lang.hitch(this, this._onChartItemSelected)));
+      this.chartList.placeAt(this.chartListContent, 'first');
     },
 
     _updateConfig: function() {
@@ -153,9 +180,8 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
 
       var featurePopup = new _FeaturelayerSourcePopup(args);
       this.own(on(featurePopup, 'ok', lang.hitch(this, function(item){
-
         //{name, url, definition}
-        var radioType = featurePopup.getSelectedRadioType();
+        var layerSourceType = featurePopup.getSelectedRadioType();
         featurePopup.close();
 
         if(this.currentSCS){
@@ -171,14 +197,13 @@ function(declare, lang, array, on, _WidgetsInTemplateMixin, BaseWidgetSetting,
           this.chartList.selectRow(tr);
           if(this.currentSCS){
             var expr = null;
-            if(radioType === 'map'){
-              var layerObject = item.layerInfo && item.layerInfo.layerObject;
-              if(layerObject && typeof layerObject.getDefinitionExpression === 'function'){
-                expr = layerObject.getDefinitionExpression();
-              }
-            }
-            this.currentSCS.setNewLayerDefinition(item.name, item.url, item.definition,
-                                                  chartName, expr);
+            // if(layerSourceType === 'map'){
+            //   var layerObject = item.layerInfo && item.layerInfo.layerObject;
+            //   if(layerObject && typeof layerObject.getDefinitionExpression === 'function'){
+            //     expr = layerObject.getDefinitionExpression();
+            //   }
+            // }
+            this.currentSCS.setNewLayerDefinition(item, layerSourceType, chartName, expr);
           }
         }
       })));

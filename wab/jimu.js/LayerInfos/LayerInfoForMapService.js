@@ -34,10 +34,9 @@ esriRequest, esriLang, LayerInfoFactory) {
     _sublayerIdent: null,
     controlPopupInfo: null,
     _jsapiLayerInfos: null,
+    _oldFilter: null,
 
-    constructor: function(operLayer, map, options) {
-
-      this._layerOptions = options.layerOptions ? options.layerOptions: null;
+    constructor: function(operLayer, map) {
 
       //other initial methods depend on '_jsapiLayerInfos', so must init first.
       this._initJsapiLayerInfos();
@@ -50,6 +49,15 @@ esriRequest, esriLang, LayerInfoFactory) {
 
       // init control popup
       this._initControlPopup();
+    },
+
+    _initOldFilter: function() {
+      if(this.layerObject &&
+         this.layerObject.layerDefinitions) {
+        this._oldFilter = this.layerObject.layerDefinitions;
+      } else {
+        this._oldFilter = [];
+      }
     },
 
     _initJsapiLayerInfos: function() {
@@ -132,25 +140,26 @@ esriRequest, esriLang, LayerInfoFactory) {
       return this._convertGeometryToMapSpatialRef(extent);
     },
 
-    _resetLayerObjectVisiblityBeforeInit: function() {
-      if(this._layerOptions) {
+    _resetLayerObjectVisiblity: function(layerOptions) {
+      var layerOption  = layerOptions ? layerOptions[this.id]: null;
+      if(layerOptions) {
         //reste visibility for parent layer.
-        if(this._layerOption) {
-          this.layerObject.setVisibility(this._layerOption.visible);
+        if(layerOption) {
+          this.layerObject.setVisibility(layerOption.visible);
         }
 
         //reset visibility of sublayers.
         if (this.layerObject.declaredClass !== 'esri.layers.ArcGISDynamicMapServiceLayer') {
           return;
         }
-        // 1, init this.subLayerVisible according to this._layerOptions
+        // 1, init this.subLayerVisible according to layerOptions
         var haseConfiguredInLayerOptionsflag = false;
         var visibleLayersForUpdateSubLayerVisible = [];
         array.forEach(this._jsapiLayerInfos, function(jsapiLayerInfo) {
           var absoluteSublayerId = this.id + '_' + jsapiLayerInfo.id;
-          if(esriLang.isDefined(this._layerOptions[absoluteSublayerId])) {
+          if(esriLang.isDefined(layerOptions[absoluteSublayerId])) {
             haseConfiguredInLayerOptionsflag = true;
-            if(this._layerOptions[absoluteSublayerId].visible) {
+            if(layerOptions[absoluteSublayerId].visible) {
               visibleLayersForUpdateSubLayerVisible.push(jsapiLayerInfo.id);
             }
           }
@@ -173,7 +182,6 @@ esriRequest, esriLang, LayerInfoFactory) {
           });
           this.setSubLayerVisible(subLayersVisible);
         }
-
       }
     },
 
@@ -238,10 +246,24 @@ esriRequest, esriLang, LayerInfoFactory) {
       //   paramerter:
       //   {subLayerId: visble}
       var ary = [-1, -1, -1], index;
+      var tempVisibleLayers = [];
       var visibleLayers = array.filter(this.originOperLayer.layerObject.visibleLayers,
                                        function(visibleSubId) {
         return visibleSubId !== -1;
       });
+
+      // remove group layers from layerObject.visibleLayers.
+      //var convertVisibleLayersResult = this._converVisibleLayers(visibleLayers);
+      //visibleLayers = convertVisibleLayersResult.visibleLayersForSetVisibleLayers;
+
+      // remove group layers from layerObject.visibleLayers.
+      array.forEach(visibleLayers, function(subLayerIndex) {
+        if(!this._isGroupLayerBySubId(subLayerIndex)) {
+          tempVisibleLayers.push(subLayerIndex);
+        }
+      }, this);
+
+      visibleLayers = tempVisibleLayers;
 
       for (var child in layersVisible) {
         if(layersVisible.hasOwnProperty(child) &&
@@ -525,7 +547,10 @@ esriRequest, esriLang, LayerInfoFactory) {
       if(this._sublayerIdent.empty) {
         this._sublayerIdent.empty = false;
         this._request(url).then(lang.hitch(this, function(results) {
-          this._sublayerIdent.definitions = results.layers;
+          //this._sublayerIdent.definitions = results.layers;
+          array.forEach(results.layers, function(layerIdent) {
+            this._sublayerIdent.definitions[layerIdent.id] = layerIdent;
+          }, this);
           this._sublayerIdent.defLoad.resolve();
           def.resolve(this._sublayerIdent.definitions[subId]);
         }), lang.hitch(this, function(err) {
@@ -648,10 +673,19 @@ esriRequest, esriLang, LayerInfoFactory) {
      * Event
      ***************/
     _bindEvent: function() {
+      var handle;
       this.inherited(arguments);
       if(this.layerObject && !this.layerObject.empty) {
-        this.layerObject.on('visible-layers-change',
+        // binding visible change event.
+        handle = this.layerObject.on('visible-layers-change',
                             lang.hitch(this, this._onVisibleLayersChanged));
+        this._eventHandles.push(handle);
+
+        // bind filter change event
+        handle = aspect.after(this.layerObject,
+                              'setLayerDefinitions',
+                              lang.hitch(this, this._onFilterChanged));
+        this._eventHandles.push(handle);
       }
     },
 
@@ -758,7 +792,38 @@ esriRequest, esriLang, LayerInfoFactory) {
       }, this);
 
       return result;
-    }
+    },
 
+    _onFilterChanged: function() {
+      var changedLayerInfo;
+      var changedLayerInfos = [];
+      var currentLayerDefinitions = this.layerObject.layerDefinitions;
+      var layerDefinitionsLength = currentLayerDefinitions.length >
+                                      this._oldFilter.length ?
+                                    currentLayerDefinitions.length :
+                                    this._oldFilter.length;
+      for(var subLayerIndex  = 0; subLayerIndex < layerDefinitionsLength; subLayerIndex++) {
+        var oldDefinition = this._oldFilter[subLayerIndex] ?
+                            this._oldFilter[subLayerIndex] :
+                            null;
+        var currentDefinition = currentLayerDefinitions[subLayerIndex] ?
+                                currentLayerDefinitions[subLayerIndex] :
+                                null;
+
+        if(currentDefinition !== oldDefinition) {
+          changedLayerInfo = this.findLayerInfoById(this.id + '_' + subLayerIndex);
+          if(changedLayerInfo && changedLayerInfo.isLeaf()) {
+            changedLayerInfos.push(changedLayerInfo);
+          }
+        }
+      }
+
+      if(changedLayerInfos.length > 0) {
+        topic.publish('layerInfos/layerInfo/filterChanged', changedLayerInfos);
+        // update old layerDefinitions
+        this._oldFilter = currentLayerDefinitions;
+      }
+
+    }
   });
 });

@@ -50,6 +50,7 @@ define([
       postMixInProperties: function(){
         this.inherited(arguments);
         lang.mixin(this.nls, jsapiBundle.analysisTools);
+        lang.mixin(this.nls, window.jimuNls.common);
       },
 
       postCreate: function() {
@@ -97,16 +98,19 @@ define([
        * @param {Object} rowData Config of analysis dijit tool
        */
       _addRow: function(rowData){
+        var toolName = toolSettings.getToolName(rowData);
         //TODO: temporary fix
         if(rowData.title === 'chooseBestFacilities') {
           this.nls[rowData.title] = this.nls.chooseBestFacilities;
           this.nls[rowData.usage] = this.nls.chooseBestFacilities;
         }
 
-        var tr = domConstruct.create("tr", {'class':'tools-table-tr'}, this.tbody);
+        var tr = domConstruct.create("tr", {
+          'class': 'tools-table-tr',
+          title: toolName
+        }, this.tbody);
 
         tr.rowData = rowData;
-        var toolName = toolSettings.getToolName(rowData);
         //create checkbox
         var chkTd = domConstruct.create("td", {'class': 'checkbox-td'}, tr);
         var chkBox = new CheckBox({
@@ -146,7 +150,7 @@ define([
 
         //create tool setting
         var settingTr = domConstruct.create("tr", {
-          'class':'setting',
+          'class': 'setting',
           title: toolName
         }, this.tbody);
         var settingTd = domConstruct.create("td", {
@@ -246,7 +250,6 @@ define([
           chkBox.set('checked', domClass.contains(trDom, 'selected'));
         }
         this._updateInfoString();
-        console.debug(trDom.rowData.name + " toggled");
       },
 
       /**
@@ -284,7 +287,7 @@ define([
               }
 
               //set tool setting
-              var settingTr = query('tr[title=' + toolConfig.name + ']', this.tbody)[0];
+              var settingTr = query('tr.setting[title=' + toolConfig.name + ']', this.tbody)[0];
               if(settingTr){
                 var toolSetting = settingTr.toolSetting;
                 if(toolSetting){
@@ -329,7 +332,7 @@ define([
               var toolItem = {
                 name: toolName
               };
-              var settingTr = query('tr[title=' + toolName + ']', this.tbody)[0];
+              var settingTr = query('tr.setting[title=' + toolName + ']', this.tbody)[0];
               var toolSetting = settingTr.toolSetting;
 
               if(toolSetting){

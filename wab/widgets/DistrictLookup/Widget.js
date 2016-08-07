@@ -1,4 +1,3 @@
-/*global define, dijit */
 define([
   'dojo/_base/declare',
   'jimu/BaseWidget',
@@ -33,7 +32,8 @@ define([
   "jimu/dijit/TabContainer",
   "dijit/layout/ContentPane",
   "jimu/dijit/LoadingIndicator",
-  "dojo/_base/array"
+  "dojo/_base/array",
+  "dijit/registry"
 ], function (
   declare,
   BaseWidget,
@@ -68,7 +68,8 @@ define([
   JimuTabContainer,
   ContentPane,
   LoadingIndicator,
-  array
+  array,
+  registry
 ) {
   return declare([BaseWidget], {
 
@@ -93,6 +94,12 @@ define([
     _directionsWidget: null, // Direction widget object
     _isValidConfig: null, //Flag to check whether config has valid data for the widget
     _hasMulitpleSourcesInSearch: true, //Set this flag if their are multiple sources in search
+
+    postMixInProperties: function(){
+      //mixin default nls with widget nls
+      this.nls = lang.mixin(this.nls, window.jimuNls.common);
+    },
+
     startup: function () {
       domClass.add(this.domNode.parentElement,
         "esriCTPollingPlaceContentPanel");
@@ -212,6 +219,10 @@ define([
       lang.mixin(this.config.pollingPlaceLayerInfo,
         this._getLayerDetailsFromMap(this.config.pollingPlaceLayerInfo
           .baseURL, this.config.pollingPlaceLayerInfo.layerId));
+      //to ensure backward compatibility check if newly added kesy are present in config, if not add default values for it.
+      if (!this.config.highlightColor) {
+        this.config.highlightColor = "#00FFFF";
+      }
     },
 
     /**
@@ -372,16 +383,36 @@ define([
             //Create's and display route between selected location and polling place
             this._routeSelectedLocations();
           }
-          if (this.domNode.parentElement && this.domNode.parentElement.id &&
-            dijit.byId(this.domNode.parentElement.id)) {
-            dijit.byId(this.domNode.parentElement.id).resize();
+          if (this.id && registry.byId(this.id)) {
+            registry.byId(this.id).resize();
           }
         }));
         this.tabContainer.startup();
       } else {
+        domClass.add(informationPanel, "esriCTTopBorder");
         domConstruct.place(informationPanel, this.resultsPanel,
-          "first");
+          "second");
       }
+      //handle back button click
+      this.own(on(this.backButtonNode, "click", lang.hitch(this, function () {
+        domClass.add(this.resultsPanel, "esriCTHidden");
+        domClass.remove(this.featuresListNode, "esriCTHidden");
+        this._clearGrahics();
+        domClass.add(this._precinctInfoContentDiv,
+          "esriCTHidden");
+        domClass.add(this._pollingPlaceInfoContentDiv,
+          "esriCTHidden");
+        //clear Directions
+        if (this._directionsWidget) {
+          this._directionsWidget.clearDirections();
+          // reset the routeCalculated flag to false as directions are cleared now
+          this._routeCalculated = false;
+        }
+        //reselect the information tab
+        if (this.tabContainer) {
+          this.tabContainer.selectTab(this.nls.informationTabTitle);
+        }
+      })));
     },
 
     /**
@@ -391,9 +422,8 @@ define([
     _showResultPanel: function () {
       domClass.remove(this.resultsPanel, "esriCTHidden");
       //refresh widget container as the tabs were not getting rendered properly
-      if (this.domNode && this.domNode.parentElement && this.domNode.parentElement
-        .id && dijit.byId(this.domNode.parentElement.id)) {
-        dijit.byId(this.domNode.parentElement.id).resize();
+      if (this.id && registry.byId(this.id)) {
+        registry.byId(this.id).resize();
       }
       //reset components after showing result
       this._resetComponents();
@@ -430,6 +460,7 @@ define([
         searchOptions: searchOptions,
         domNode: this.search,
         config: this.config,
+        nls: this.nls,
         map: this.map
       });
       //handle search widget events
@@ -489,11 +520,11 @@ define([
         //create info-template
         infoTemplate = new InfoTemplate();
         infoTemplate.setContent("${Match_addr}");
-        infoTemplate.setTitle("Searched Location");
+        infoTemplate.setTitle(this.nls.searchLocationTitle);
         //clears previous features of the infowindow
         this.map.infoWindow.clearFeatures();
         //set title and content to infowindow
-        this.map.infoWindow.setTitle("Searched Location");
+        this.map.infoWindow.setTitle(this.nls.searchLocationTitle);
         this.map.infoWindow.setContent(result.address.address.Match_addr);
         //show infowindow on selected location
         screenPoint = this.map.toScreen(this._selectedLocation.geometry);
@@ -618,9 +649,15 @@ define([
       }
       //hide the result panel
       this._hideResultPanel();
+      domClass.add(this._precinctInfoContentDiv,
+        "esriCTHidden");
+      domClass.add(this._pollingPlaceInfoContentDiv,
+        "esriCTHidden");
       //clear the selected/searched location and selected pollingPlace
       this._selectedLocation = null;
       this._selectedPollingPlace = null;
+      //It clears the list of result
+      this._clearFeatureList();
     },
 
     /**
@@ -734,43 +771,43 @@ define([
         intersectingPolygonQuery.geometry = selectedLocation.geometry;
         this._precinctLayer.queryFeatures(intersectingPolygonQuery,
           lang.hitch(this, function (result) {
-            var precinctAttachmentsDiv;
+            var i, rowItem, row;
             //proceed only if precinct polygon is found otherwise show error
             if (result && result.features && result.features.length >
               0) {
-              //Highlight Precinct on map
-              this._highlightPrecinctPolygon(result.features[0]);
-              //Zoom to precinct polygon
-              this.map.setExtent(result.features[0].geometry.getExtent()
-                .expand(1.5));
-              //Show info content of selected precinct
-              if (this._precinctLayer.infoTemplate) {
-                domClass.remove(this._precinctInfoContentDiv,
-                  "esriCTHidden");
-                this._precinctInfoContent.set("content", result.features[
-                  0].getContent());
-                dijit.byId(this.domNode.parentElement.id).resize();
-                //show attachments if layer has attachments and it is enabled from webmap
-                if (this._precinctLayer.hasAttachments && this.config
-                  .precinctLayerInfo.popupInfo.showAttachments) {
-                  //Get attachments node from popup (code to remove attachemnts links from popoup)
-                  precinctAttachmentsDiv = query(
-                    ".attachmentsSection", this._precinctInfoContentDiv
-                  );
-                  if (precinctAttachmentsDiv.length > 0) {
-                    precinctAttachmentsDiv =
-                      precinctAttachmentsDiv[0];
-                    domClass.remove(precinctAttachmentsDiv,
-                      "hidden");
-                  }
-                  //fetch and show thumbnails of the attachments in precinctAttachmentsDiv
-                  this._showAttachments(result.features[0],
-                    precinctAttachmentsDiv, this._precinctLayer
-                  );
+              if (result.features.length > 1) {
+                this._clearFeatureList();
+                this._clearGrahics();
+                domClass.remove(this.featuresListNode, "esriCTHidden");
+                domClass.remove(this.backButtonNode, "esriCTHidden");
+                domClass.add(this.resultsPanel, "esriCTResultsPanelOverrideHeight");
+                this.stackedPolygons = result.features;
+                for (i = 0; i < result.features.length; i++) {
+                  row = domConstruct.create("div", {
+                    "class": "esriCTMiddleBorder"
+                  }, this.featuresListNode);
+
+                  rowItem = domConstruct.create("div", {
+                    "innerHTML": result.features[i].getTitle(),
+                    "title": result.features[i].getTitle(),
+                    "class": "esriCTlistOfResultPanel"
+                  }, row);
+
+                  domConstruct.create("div", {
+                    "class": "esriCTItemRighttArrow"
+                  }, row);
+
+                  domAttr.set(row, "index", i);
+                  this.own(on(row, "click", lang.hitch(this, this.rowClicked)));
+                  this._loading.hide();
                 }
+
               }
-              //get polling place
-              this._getRelatedPollingPlaces(result.features[0]);
+              else {
+                domClass.add(this.backButtonNode, "esriCTHidden");
+                domClass.remove(this.resultsPanel, "esriCTResultsPanelOverrideHeight");
+                this._showSelectedFeature(result.features[0]);
+              }
             } else {
               this._showMessage(this.nls.noPrecinctFoundMsg);
               this._loading.hide();
@@ -783,6 +820,83 @@ define([
       } else {
         this._showMessage(this.nls.noPrecinctFoundMsg);
         this._loading.hide();
+      }
+    },
+
+    /**
+    * This function will used at row clicked.
+    * @params{object} evt
+    * @memberOf widgets/DistrictLookup/Widget
+    **/
+    rowClicked: function (evt) {
+      var rowIndex;
+      rowIndex = parseInt(domAttr.get(evt.currentTarget, "index"), 10);
+      this._showSelectedFeature(this.stackedPolygons[rowIndex]);
+    },
+
+    /**
+    * This function will show selected feature in result panel.
+    * @params{object} selectedFeature
+    * @memberOf widgets/DistrictLookup/Widget
+    **/
+    _showSelectedFeature: function (selectedFeature) {
+      var precinctAttachmentsDiv;
+      domClass.add(this.featuresListNode, "esriCTHidden");
+      domClass.remove(this.resultsPanel, "esriCTHidden");
+      //Highlight Precinct on map
+      this._highlightPrecinctPolygon(selectedFeature);
+      //Zoom to precinct polygon
+      this.map.setExtent(selectedFeature.geometry.getExtent()
+                .expand(1.5));
+      //Show info content of selected precinct
+      if (this._precinctLayer.infoTemplate) {
+        domClass.remove(this._precinctInfoContentDiv,
+                  "esriCTHidden");
+        this._precinctInfoContent.set("content", selectedFeature.getContent());
+        if (this.id && registry.byId(this.id)) {
+          registry.byId(this.id).resize();
+        }
+        //show attachments if layer has attachments and it is enabled from webmap
+        if (this._precinctLayer.hasAttachments && this.config
+                  .precinctLayerInfo.popupInfo.showAttachments) {
+          //Get attachments node from popup (code to remove attachemnts links from popoup)
+          precinctAttachmentsDiv = query(
+                    ".attachmentsSection", this._precinctInfoContentDiv
+                  );
+          if (precinctAttachmentsDiv.length > 0) {
+            precinctAttachmentsDiv =
+                      precinctAttachmentsDiv[0];
+            domClass.remove(precinctAttachmentsDiv,
+                      "hidden");
+          }
+          //fetch and show thumbnails of the attachments in precinctAttachmentsDiv
+          this._showAttachments(selectedFeature,
+                    precinctAttachmentsDiv, this._precinctLayer
+                  );
+        }
+      }
+      //get polling place
+      this._getRelatedPollingPlaces(selectedFeature);
+    },
+
+    /**
+    * This function will clear list of feauture's from result panel.
+    * @memberOf widgets/DistrictLookup/Widget
+    **/
+    _clearFeatureList: function () {
+      if (this.featuresListNode) {
+        this.stackedPolygons = [];
+        domConstruct.empty(this.featuresListNode);
+      }
+    },
+
+    /**
+    * clear graphics from map
+    * @memberOf widgets/DistrictLookup/Widget
+    **/
+    _clearGrahics: function () {
+      if (this._highlightGraphicsLayer) {
+        this._highlightGraphicsLayer.clear();
       }
     },
 
@@ -815,6 +929,10 @@ define([
             this._getPollingPlacePoint(selectedPollingPlaceId);
           } else {
             this._showMessage(this.nls.noPollingPlaceFoundMsg);
+            //as no polling place hide its infoContent and set selectedPollingPlace to null
+            domClass.add(this._pollingPlaceInfoContentDiv,
+                "esriCTHidden");
+            this._selectedPollingPlace = null;
             this._loading.hide();
           }
         }), lang.hitch(this, function () {
@@ -870,6 +988,10 @@ define([
             }
           } else {
             this._showMessage(this.nls.noPollingPlaceFoundMsg);
+            //as no polling place hide its infoContent and set selectedPollingPlace to null
+            domClass.add(this._pollingPlaceInfoContentDiv,
+                "esriCTHidden");
+            this._selectedPollingPlace = null;
             this._loading.hide();
           }
           this._loading.hide();
@@ -930,7 +1052,7 @@ define([
       isSymbolFound = false;
       symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE,
         null, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-          new Color([0, 255, 255, 1]), 3));
+          new Color(this.config.highlightColor), 3));
       symbol.setColor(null);
       symbol.size = 30; //set default Symbol size which will be used in case symbol not found.
       //check if layer is valid and have valid renderer object then only check for other symbol properties
@@ -1050,12 +1172,12 @@ define([
               "src": imagePath
             }, imageContent);
             // Hide loader Image after image loaded
-            on(imageDiv, "load", lang.hitch(this, this._onImageLoad));
+            this.own(on(imageDiv, "load", lang.hitch(this, this._onImageLoad)));
             // Show image in new tab on click of the image thumbnail
-            on(imageDiv, "click", lang.hitch(this, this._displayImageAttachments));
+            this.own(on(imageDiv, "click", lang.hitch(this, this._displayImageAttachments)));
           }
         }
-        dijit.byId(this.domNode.parentElement.id).resize();
+        registry.byId(this.domNode.parentElement.id).resize();
       }));
     },
 
@@ -1129,9 +1251,6 @@ define([
             .routeSymbol),
           routeTaskUrl: this.config.routeService
         };
-        if (this.config.travelModeService && this.config.travelModeService !== "") {
-          directionParams.travelModesServiceUrl = this.config.travelModeService;
-        }
         //create instance of the direction widget with the configured properties
         this._directionsWidget = new Directions(directionParams, domConstruct.create(
         "div", {}, this._directionPanel));
@@ -1139,9 +1258,11 @@ define([
         this._directionsWidget.startup();
       }
       //handle directions-finish event to resize the widget and hide the loading indicator
-      on(this._directionsWidget, "directions-finish", lang.hitch(this,
+      this._directionsWidget.on("directions-finish", lang.hitch(this,
         function () {
-          dijit.byId(this.domNode.parentElement.id).resize();
+          if (this.id && registry.byId(this.id)) {
+            registry.byId(this.id).resize();
+          }
           this._loading.hide();
         }));
       //clears previous directions
@@ -1217,6 +1338,5 @@ define([
         }
       }
     }
-
   });
 });

@@ -39,6 +39,11 @@ define([
       nls: this.nls,
       config: this.config,
       graphicLocatoionSymbolJSON: null, //to store selected symbol json
+      postMixInProperties: function () {
+        //mixin default nls with widget nls
+        this.nls = lang.mixin(this.nls, window.jimuNls.common);
+      },
+
       postCreate: function () {
         this._createSymbolPickerNode();
         this._setRefreshIntervalTxtBxValue();
@@ -61,7 +66,8 @@ define([
         //create params to initialize 'symbolchooserPopup' widget
         params = {
           symbolChooserTitle: this.nls.locationSymbolLabel,
-          symbolParams: objSymbol
+          symbolParams: objSymbol,
+          nls: this.nls
         };
         //display configured symbol in symbol chooser node
         this._showSelectedSymbol(symbolChooserNode, objSymbol.symbol);

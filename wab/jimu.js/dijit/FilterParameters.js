@@ -15,6 +15,10 @@
 ///////////////////////////////////////////////////////////////////////////
 
 define([
+  'dojo/on',
+  'dojo/Evented',
+  'dojo/Deferred',
+  'dojo/promise/all',
   'dojo/_base/declare',
   'dijit/_WidgetBase',
   'dijit/_TemplatedMixin',
@@ -28,9 +32,10 @@ define([
   'jimu/utils',
   './_SingleFilterParameter'
 ],
-  function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, lang,
+  function(on, Evented, Deferred, all, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, lang,
   html, array, query, registry, filterUtils, jimuUtils, _SingleFilterParameter) {
-    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+
+    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
       baseClass: 'jimu-filter-parameters',
       templateString: '<div>' +
                         '<table style="width:100%;border-collapse:collapse;">' +
@@ -45,6 +50,9 @@ define([
 
       _filterUtils:null,
 
+      //events:
+      //change
+
       postMixInProperties:function(){
         this.nls = window.jimuNls.filterBuilder;
         this._filterUtils = new filterUtils();
@@ -57,7 +65,11 @@ define([
         this.inherited(arguments);
       },
 
-      getFilterExpr:function(){
+      //the default value of showErrorTip is true
+      getFilterExpr:function(showErrorTip){
+        if(showErrorTip === undefined){
+          showErrorTip = true;
+        }
         var newPartsObj = this.partsObj;
         var spArray = this._getAllInteractiveSinglePartArray(newPartsObj);
         for(var i = 0; i < spArray.length; i++){
@@ -68,7 +80,7 @@ define([
             var spDom = query(selector, this.tbody)[0];
             if(spDom){
               var sp = registry.byNode(spDom);
-              var newValueObj = sp.getValueObj();
+              var newValueObj = sp.getValueObj(showErrorTip);
               if(!newValueObj){
                 return null;
               }
@@ -93,29 +105,54 @@ define([
         this.layerInfo = null;
       },
 
+      //return a deferred object
+      //if resolved, means it build successfully
+      //if rejected, means it fail to build
       build:function(url, layerInfo, partsObj){
+        var resultDef = new Deferred();
         this.clear();
         this.url = url;
         this.layerInfo = layerInfo;
         this.partsObj = lang.clone(partsObj);
         var interactiveSPA = this._getAllInteractiveSinglePartArray(this.partsObj);
-        array.forEach(interactiveSPA, lang.hitch(this, function(singlePart){
-          var tr = html.create('tr', {innerHTML:'<td></td>'}, this.tbody);
-          var td = query('td', tr)[0];
-          var fieldName = singlePart.fieldObj.name;
-          var fieldInfo = this._getFieldInfo(fieldName, this.layerInfo);
-          var args = {
-            nls: this.nls,
-            part: singlePart,
-            fieldInfo: fieldInfo,
-            OPERATORS: this.OPERATORS,
-            url: this.url
-          };
-          var sp = new _SingleFilterParameter(args);
-          sp.placeAt(td);
-          sp.startup();
-          singlePart.spId = sp.id;
-        }));
+
+        if(interactiveSPA.length > 0){
+          var defs = array.map(interactiveSPA, lang.hitch(this, function(singlePart){
+            var def = new Deferred();
+            var tr = html.create('tr', {innerHTML:'<td></td>'}, this.tbody);
+            var td = query('td', tr)[0];
+            var fieldName = singlePart.fieldObj.name;
+            var fieldInfo = this._getFieldInfo(fieldName, this.layerInfo);
+            var args = {
+              nls: this.nls,
+              part: singlePart,
+              fieldInfo: fieldInfo,
+              OPERATORS: this.OPERATORS,
+              url: this.url
+            };
+            var sp = new _SingleFilterParameter(args);
+            this.own(on(sp, 'change', lang.hitch(this, this._onSingleFilterParameterChanged)));
+            sp.placeAt(td);
+            sp.startup();
+            singlePart.spId = sp.id;
+            this.own(on(sp, 'build-done', lang.hitch(this, function(){
+              def.resolve();
+            })));
+            this.own(on(sp, 'build-error', lang.hitch(this, function(err){
+              def.reject(err);
+            })));
+            return def;
+          }));
+          all(defs).then(lang.hitch(this, function(){
+            resultDef.resolve();
+          }), lang.hitch(this, function(){
+            resultDef.reject();
+          }));
+        }else{
+          resultDef.resolve();
+        }
+
+        return resultDef;
       },
 
       _getFieldInfo:function(fieldName, lyrDef){
@@ -148,6 +185,11 @@ define([
           }
         }
         return result;
+      },
+
+      _onSingleFilterParameterChanged: function(){
+        //when changed, we should get the filter silently and don't show error tip
+        this.emit('change', this.getFilterExpr(false));
       }
 
     });

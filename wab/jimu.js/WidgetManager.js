@@ -95,7 +95,7 @@ define(['dojo/_base/declare',
 
           setting = lang.clone(setting);
           if (!setting.folderUrl) {
-            utils.processWidgetSetting(setting);
+            utils.widgetJson.processWidgetJson(setting);
           }
 
           findWidget = this.getWidgetById(setting.id);
@@ -116,7 +116,7 @@ define(['dojo/_base/declare',
                   } catch (err) {
                     console.log('create [' + setting.uri + '] error:' + err.stack);
                     new Message({
-                      message: 'create widget error: ' + setting.uri
+                      message: window.jimuNls.widgetManager.createWidgetError + ': ' + setting.uri
                     });
                     def.reject(err);
                   }
@@ -194,21 +194,19 @@ define(['dojo/_base/declare',
           }
 
           xhr(url, {
-            handleAs:'json'
+            handleAs:'json',
+            headers: {
+              "X-Requested-With": null
+            }
           }).then(lang.hitch(this, function(manifest){
             manifest.amdFolder = widgetJson.amdFolder;
             manifest.category = 'widget';
-            if(!widgetJson.label){
-              utils.addI18NLabel(manifest).then(lang.hitch(this, function(){
-                this._processManifest(manifest);
-                utils.addManifest2WidgetJson(widgetJson, manifest);
-                def.resolve(widgetJson);
-              }));
-            }else{
+
+            utils.manifest.addI18NLabel(manifest).then(lang.hitch(this, function(){
               this._processManifest(manifest);
-              utils.addManifest2WidgetJson(widgetJson, manifest);
+              utils.widgetJson.addManifest2WidgetJson(widgetJson, manifest);
               def.resolve(widgetJson);
-            }
+            }));
           }), function(err){
             def.reject(err);
           });
@@ -242,8 +240,8 @@ define(['dojo/_base/declare',
         },
 
         _processManifest: function(manifest){
-          utils.addManifestProperies(manifest);
-          utils.processManifestLabel(manifest, window.dojoConfig.locale);
+          utils.manifest.addManifestProperies(manifest);
+          utils.manifest.processManifestLabel(manifest, window.dojoConfig.locale);
         },
 
         createWidget: function(setting, clazz, resouces) {
@@ -360,7 +358,7 @@ define(['dojo/_base/declare',
                 def.resolve(settingObject);
               } catch (err) {
                 new Message({
-                  message: 'Create widget setting page error:' + setting.uri
+                  message: window.jimuNls.widgetManager.createWidgetSettingPageError + ':' + setting.uri
                 });
                 def.reject(err);
               }
@@ -661,10 +659,17 @@ define(['dojo/_base/declare',
               encodeURIComponent(configFileArray[configFileArray.length - 1]);
             configFile = configFileArray.join('/');
             return xhr(configFile, {
-              handleAs: "json"
+              handleAs: "json",
+              headers: {
+                "X-Requested-With": null
+              }
             });
           } else {
-            return this._tryLoadResource(setting, 'config');
+            return this._tryLoadResource(setting, 'config').then(function(config){
+              //this property is used in map config plugin
+              setting.isDefaultConfig = true;
+              return config;
+            });
           }
         },
 
@@ -749,7 +754,10 @@ define(['dojo/_base/declare',
             return def;
           }
           return xhr(configFilePath, {
-            handleAs: "json"
+            handleAs: "json",
+            headers: {
+              "X-Requested-With": null
+            }
           });
         },
 
@@ -1065,7 +1073,7 @@ define(['dojo/_base/declare',
                 def.resolve(data);
               }, function(err) {
                 new Message({
-                  message: 'load widget resouce error: ' + setting.uri
+                  message: window.jimuNls.widgetManager.loadWidgetResourceError + ': ' + setting.uri
                 });
                 def.reject(err);
               });
@@ -1081,7 +1089,11 @@ define(['dojo/_base/declare',
             hasp = 'hasStyle';
           } else if (flag === 'i18n') {
             file = setting.amdFolder + 'nls/strings.js';
-            setting.i18nFile = setting.amdFolder + 'nls/strings';
+            if(setting.isRemote){
+              setting.i18nFile = file;
+            }else{
+              setting.i18nFile = setting.amdFolder + 'nls/strings';
+            }
             hasp = 'hasLocale';
           } else if (flag === 'template') {
             file = setting.amdFolder + 'Widget.html';
@@ -1120,6 +1132,8 @@ define(['dojo/_base/declare',
             this.closeWidget(widget);
           }
           this._removeWidget(widget);
+          this.emit('widget-destroyed', widget.id);
+          topic.publish('widgetDestroyed', widget.id);
           console.log('destroy widget [' + widget.uri + '].');
         },
 

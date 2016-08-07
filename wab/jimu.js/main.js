@@ -18,6 +18,9 @@ define([
     './ConfigManager',
     './LayoutManager',
     './DataManager',
+    './WidgetManager',
+    './FeatureActionManager',
+    './SelectionManager',
     'dojo/_base/html',
     'dojo/_base/lang',
     'dojo/_base/array',
@@ -39,11 +42,12 @@ define([
     'dojo/i18n',
     'dojo/i18n!./nls/main'
   ],
-  function(ConfigManager, LayoutManager, DataManager, html, lang, array, on, mouse, topic, cookie,
-    Deferred, all, ioquery, domReady, esriConfig, esriRequest, urlUitls, IdentityManager,
+  function(ConfigManager, LayoutManager, DataManager, WidgetManager, FeatureActionManager, SelectionManager,
+     html, lang, array, on, mouse,
+    topic, cookie, Deferred, all, ioquery, domReady, esriConfig, esriRequest, urlUitls, IdentityManager,
     portalUrlUtils, jimuUtils, require, i18n, mainBundle) {
     /* global jimuConfig:true */
-    var mo = {};
+    var mo = {}, appConfig;
 
     //set the default timeout to 3 minutes
     esriConfig.defaults.io.timeout = 60000 * 3;
@@ -99,6 +103,19 @@ define([
         }
       }
 
+      // Use proxies to replace the premium content
+      if(!window.isBuilder && appConfig &&
+          !appConfig.mode &&
+          appConfig.appProxies &&
+          appConfig.appProxies.length > 0) {
+        array.some(appConfig.appProxies, function(proxyItem) {
+          if(ioArgs.url.indexOf(proxyItem.sourceUrl) >= 0) {
+            ioArgs.url = ioArgs.url.replace(proxyItem.sourceUrl, proxyItem.proxyUrl);
+            return true;
+          }
+        });
+      }
+
       return ioArgs;
     });
 
@@ -146,9 +163,9 @@ define([
       breakPoints: [600, 1280]
     }, jimuConfig);
 
-    window.wabVersion = '2.0.1';
-    // window.productVersion = 'Web AppBuilder for ArcGIS (Developer Edition) 2.0 Beta';
-    window.productVersion = 'Web AppBuilder for ArcGIS (Developer Edition) 2.0';
+    window.wabVersion = '2.1';
+    // window.productVersion = 'Online 4.2';
+    window.productVersion = 'Web AppBuilder for ArcGIS (Developer Edition) 2.1';
     // window.productVersion = 'Portal for ArcGIS 10.4 Beta2';
 
     function initApp() {
@@ -165,7 +182,9 @@ define([
         }
       }
 
-      DataManager.getInstance();
+      DataManager.getInstance(WidgetManager.getInstance());
+      FeatureActionManager.getInstance();
+      SelectionManager.getInstance();
 
       html.setStyle(jimuConfig.loadingId, 'display', 'none');
       html.setStyle(jimuConfig.mainPageId, 'display', 'block');
@@ -178,6 +197,8 @@ define([
 
       layoutManager.startup();
       configManager.loadConfig();
+      //load this module here to make load modules and load app parallelly
+      require(['dynamic-modules/preload']);
     }
 
     function getUrlParams() {
@@ -189,6 +210,18 @@ define([
 
       p = ioquery.queryToObject(s.substr(1));
       return p;
+    }
+
+    if(window.isBuilder){
+      topic.subscribe("app/appConfigLoaded", onAppConfigChanged);
+      topic.subscribe("app/appConfigChanged", onAppConfigChanged);
+    }else{
+      topic.subscribe("appConfigLoaded", onAppConfigChanged);
+      topic.subscribe("appConfigChanged", onAppConfigChanged);
+    }
+
+    function onAppConfigChanged(_appConfig){
+      appConfig = _appConfig;
     }
 
     mo.initApp = initApp;

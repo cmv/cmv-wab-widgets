@@ -26,6 +26,16 @@ define([
     postCreate: function(){
       this.inherited(arguments);
       var fields = [];
+
+      if(!this.value.features || this.value.features.length === 0){
+        domStyle.set(this.clearNode, 'display', 'none');
+        domStyle.set(this.exportNode, 'display', 'none');
+        domStyle.set(this.magnifyNode, 'display', 'none');
+        this.tableNode.innerHTML = this.nls.emptyResult;
+        return;
+      }
+      domStyle.set(this.magnifyNode, 'display', '');
+
       if(!this.config.useDynamicSchema &&
           this.param.defaultValue &&
           this.param.defaultValue.output &&
@@ -43,19 +53,34 @@ define([
 
       if(this.config.shareResults){
         //add table to the map
-        LayerInfos.getInstance(this.map, this.map.itemInfo)
-          .then(lang.hitch(this, function(layerInfosObject){
-            var featureCollection = {
-              layerDefinition: {
-                'fields': fields
-              },
-              featureSet: this.value
-            };
-            layerInfosObject.addTable({
-              featureCollectionData: featureCollection,
-              title: this.param.label || this.param.name
-            });
-          }));
+        var tableInfo, layerInfosObject = LayerInfos.getInstanceSync();
+
+        var featureCollection = {
+          layerDefinition: {
+            'fields': fields
+          },
+          featureSet: this.value
+        };
+        tableInfo = layerInfosObject.addTable({
+          featureCollectionData: featureCollection,
+          title: this.param.label || this.param.name
+        });
+
+        // make clear button available
+        domStyle.set(this.clearNode, 'display', '');
+        domAttr.set(this.clearNode, 'title', this.nls.clear);
+
+        this.own(on(this.clearNode, 'click', lang.hitch(this, function(){
+          layerInfosObject.removeTable(tableInfo);
+          domStyle.set(this.exportNode, 'display', 'none');
+          domStyle.set(this.clearNode, 'display', 'none');
+          domStyle.set(this.magnifyNode, 'display', 'none');
+          this.labelContent.innerHTML = this.nls.cleared;
+          domConstruct.empty(this.tableNode);
+          if(this.table) {
+            this.table.destroy();
+          }
+        })));
       }
 
       var data = array.map(this.value.features, function(feature){

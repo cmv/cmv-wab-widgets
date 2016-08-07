@@ -10,7 +10,7 @@
 }
 
 .jimu-main-font{
-  font-family: Verdana,Arial,sans-serif;
+  /*font-family: Verdana,Arial,sans-serif;*/
   /*font-size: 63%;*/
 }
 
@@ -62,7 +62,7 @@
 .jimu-widget{
   font-size: 12px;
   font-weight: normal;
-  color: #838383;
+  color: #000;
 }
 
 .jimu-widget-title{
@@ -239,7 +239,8 @@
 
 /* css for SimpleTable dijit */
 .jimu-simple-table .head-section{
-  background-color: #518dca;
+  /*background-color: #518dca;*/
+  background-color: #888888;
 }
 
 .jimu-simple-table .simple-table-title{
@@ -248,12 +249,14 @@
 }
 
 .jimu-simple-table .simple-table-row:hover{
-  background-color: #edf2f5;
+  /*background-color: #edf2f5;*/
+  background-color: #eee;
   color: #7989a0;
 }
 
 .jimu-simple-table .simple-table-row.jimu-state-active{
-  background-color: #e3ecf2;
+  /*background-color: #e3ecf2;*/
+  background-color: #ddd;
   color: #596679;
 }
 
@@ -277,23 +280,23 @@
 
 /* css for _ItemTable dijit */
 .jimu-item-table .item-border{
-	border: 3px solid #15a4fa;
-  -webkit-border-radius:5px;
+	border: 3px solid #24B5CC;
+  /*-webkit-border-radius:5px;
   -moz-border-radius:5px;
   -o-border-radius:5px;
   -ms-border-radius:5px;
-  border-radius:5px;
+  border-radius:5px;*/
 }
 
 .jimu-item-table .item-thumbnail{
 	background-repeat:no-repeat;
   background-position:center center;
   border:1px solid #d2dae2;
-  -webkit-border-radius:5px;
+  /*-webkit-border-radius:5px;
   -moz-border-radius:5px;
   -o-border-radius:5px;
   -ms-border-radius:5px;
-  border-radius:5px;
+  border-radius:5px;*/
 	background-size:cover;
   cursor: default;
 }
@@ -310,19 +313,27 @@
 
 /* css for TabContainer3 dijit */
 .jimu-tab3 .tab-item-td{
-  color:#bdc1c8;
+  color: #898989;
 	border-left: 0;
   border-right: 0;
   border-top: 0;
   border-bottom: 1px solid #ccc;
 }
 
-.jimu-tab3 .tab-item-td.jimu-state-active{
+/*.jimu-tab3 .tab-item-td.jimu-state-active{
   color: #48494B;
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
   border-top: 2px solid #15a4fa;
   border-bottom: 0;
+}*/
+
+.jimu-tab3 .tab-item-td.jimu-state-active{
+  color: #48494B;
+  border-bottom: 2px solid #24B5CC;
+  /*font-family: "Avenir Medium";*/
+  color: #000;
+  font-weight: bold;
 }
 
 /* css for LayerChooserFromMap dijit */
@@ -331,7 +342,8 @@
 }
 
 /* css for DrawBox dijit */
-.jimu-draw-box .draw-item.jimu-state-active,.jimu-draw-box .draw-item:hover{
+.jimu-draw-box .draw-item.jimu-state-active,
+.jimu-draw-box.enabled .draw-item:hover{
   background-color: #c0c0c0;
 }
 
@@ -377,4 +389,13 @@
 
 .jimu-draw-box .text-icon{
   background-image: url(images/draw_text.png);
+}
+
+.jimu-draw-box .drawings-clear{
+  background-image: url(images/rubbish_bin_white.png);
+  background-color: #D0021B;
+}
+
+.jimu-draw-box.enabled .drawings-clear:hover{
+  background-color: #B60016;
 }

@@ -47,6 +47,12 @@ function(declare, lang, array, html, on, Deferred, all,
     baseClass: 'jimu-widget-geoprocessing',
     name: 'Geoprocessing',
 
+    postMixInProperties: function(){
+      this.inherited(arguments);
+      lang.mixin(this.nls, window.jimuNls.common);
+      lang.mixin(this.nls, window.jimuNls.units);
+    },
+
     startup: function(){
       this.inherited(arguments);
 
@@ -353,7 +359,9 @@ function(declare, lang, array, html, on, Deferred, all,
           }
         }
         retDef.resolve(retValues);
-      }));
+      }), function(err) {
+        retDef.reject(err);
+      });
       return retDef;
     },
 
@@ -478,7 +486,7 @@ function(declare, lang, array, html, on, Deferred, all,
       inputEditor.placeAt(editorContainerNode);
 
       if(inputEditor.editorName === 'SelectFeatureSetFromDraw'){
-        this.drawTools.push(inputEditor);
+        this.drawTools.push(inputEditor.drawBox);
       }
 
       node.param = param;
@@ -535,6 +543,22 @@ function(declare, lang, array, html, on, Deferred, all,
       }else{
         return null;
       }
+    },
+
+    /**
+     * Use selected feature set as input for GP
+     */
+    useSelectionAsInput: function(featureSet, layer) {
+      array.forEach(this.inputNodes, function(node){
+        if (node.param.dataType === 'GPFeatureRecordSetLayer' &&
+            node.param.defaultValue &&
+            utils.getTypeByGeometryType(node.param.defaultValue.geometryType) ===
+            featureSet.geometryType) {
+          node.inputEditor.setFeatureSet(featureSet, layer);
+        }
+      }, this);
+
+      this.tab.selectTab(this.nls.input);
     }
   });
 

@@ -33,11 +33,10 @@ define([
   "./layerChooserPopup",
   "../utils",
   "jimu/portalUtils",
-  "jimu/dijit/GpSource",
-  "esri/request",
   'jimu/symbolUtils',
   "jimu/dijit/TabContainer3",
   "dojo/dom-class",
+  "jimu/dijit/CheckBox",
   "dojo/domReady!"
 ], function (
   declare,
@@ -59,8 +58,6 @@ define([
   LayerChooserPopup,
   appUtils,
   portalUtils,
-  GpSource,
-  esriRequest,
   symbolUtils,
   TabContainer3,
   domClass
@@ -77,7 +74,23 @@ define([
       this.inherited(arguments);
     },
 
+    postMixInProperties: function(){
+      //mixin default nls with widget nls
+      this.nls = lang.mixin(this.nls, window.jimuNls.common);
+    },
+
     postCreate: function () {
+      var defaultBufferSymbol = {
+        "color": [255, 189, 1, 0],
+        "outline": {
+          "color": [255, 189, 1, 255],
+          "width": 2.25,
+          "type": "esriSLS",
+          "style": "esriSLSSolid"
+        },
+        "type": "esriSFS",
+        "style": "esriSFSSolid"
+      };
       //initialize tabs
       this._initTabs();
       //create object to store standard unit format for buffer distance unit, direction length unit and distance unit
@@ -141,19 +154,32 @@ define([
          "esriGeometryPolyline", this.nls.routeSetting.selectRouteSymbol);
       this._createSymbolPicker(this.pointSymbolNode, "graphicLocationSymbol",
          "esriGeometryPoint", this.nls.searchSetting.selectGraphicLocationSymbol);
-      // attach 'click' event on 'set' button to set the route URL and travel mode service URL
+      //as bufferSymbol was not configurable in prev versions add it's default value
+      if (this.config && this.config.symbols &&
+        !this.config.symbols.hasOwnProperty("bufferSymbol")) {
+        this.config.symbols.bufferSymbol = defaultBufferSymbol;
+        //hide the symbol chooser as it was not configurable in prev versions
+        domClass.add(this.bufferColorSetting, "esriCTHidden");
+      }
+      this._createSymbolPicker(this.polygonSymbolNode, "bufferSymbol",
+         "esriGeometryPolygon", this.nls.searchSetting.bufferColorLabel);
+      // attach 'click' event on 'set' button to set the route URL
       this.own(on(this.onSetBtnClickNode, 'click', lang.hitch(this, this._showRouteChooser)));
-      this.own(on(this.travelModeSetBtnNode, 'click', lang.hitch(this,
-        this._showGPServiceChooser)));
       //create color picker
       this._createColorPicker();
       //display configuration setting options in UI panel
       this.setConfig();
+
+      // bind 'click' event on bufferVisibiliyCheckBox for show/hide the buffer color setting section
+      if (this.bufferVisibiliyCheckBox.checkNode) {
+        this.own(on(this.bufferVisibiliyCheckBox.checkNode, 'click', lang.hitch(this, this
+          ._onVisibilityChange)));
+      }
     },
 
     /**
     * This function the initializes jimu tab for setting and layout
-    * @memberOf widgets/DistrictLookup/setting/Setting
+    * @memberOf widgets/NearMe/setting/Setting
     **/
     _initTabs: function () {
       var layerSettingTab, routeSettingTab, tabs;
@@ -218,15 +244,30 @@ define([
       this.config = {
         "fontColor": this._fontColorPicker.color.toHex(),
         "searchLayers": this._searchLayers,
+        "bufferInfo": this._getBufferInfo(),
         "defaultBufferDistance": Math.round(this.defaultBufferDistanceNode.value),
         "maxBufferDistance": Math.round(this.maxBufferDistanceNode.value),
         "bufferDistanceUnit": this._unitsDetails[this.selectBufferUnitNode.value],
+        "zoomToFeature": this.zoomToSelectedFeature.getValue(),
+        "intersectSearchedLocation": this.intersectSearchLocation.getValue(),
         "routeService": this.routeServiceURLNode.value,
-        "travelModeService": this.travelModeServiceURLNode.value,
         "directionLengthUnit": this._unitsDetails[this.directionLengthUnitNode.value],
+        "selectedSearchLayerOnly": this.searchLayerResultNode.getValue(),
         "symbols": this._symbolParams
       };
       return this.config;
+    },
+
+    /**
+    * get buffer info- color,opacity and visibility
+    * @memberOf widgets/NearMe/setting/setting
+    **/
+    _getBufferInfo: function () {
+      var bufferInfo = {};
+      bufferInfo = {
+        "isVisible": this.bufferVisibiliyCheckBox.getValue()
+      };
+      return bufferInfo;
     },
 
     /**
@@ -246,6 +287,10 @@ define([
           //set search layers in config UI
           this._setSearchLayersInfo(this.config.searchLayers);
         }
+        if (this.config.bufferInfo) {
+          //set configured color selected in color picker node for buffer
+          this._setBufferInfo(this.config.bufferInfo);
+        }
         if (this.config.defaultBufferDistance) {
           //set default buffer distance value
           this.defaultBufferDistanceNode.set("value", this.config.defaultBufferDistance);
@@ -262,6 +307,10 @@ define([
           //set direction length unit
           this.directionLengthUnitNode.set("value", this.config.directionLengthUnit.value);
         }
+        if (this.config.selectedSearchLayerOnly) {
+          this.searchLayerResultNode.setValue(this.config.selectedSearchLayerOnly);
+        }
+
         //set the route service url if previously configured
         //else if set it to organizations routing service
         //else set it to AGOL world routing service
@@ -275,16 +324,15 @@ define([
             "//route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World"
           );
         }
-        //set the travel mode service url if previously configured
-        //else if set it to organizations routing utility service
-        //else set it to empty as this is optional URL
-        if (this.config.travelModeService) {
-          this.travelModeServiceURLNode.set("value", this.config.travelModeService);
-        } else if (helperServices && helperServices.routingUtilities &&
-          helperServices.routingUtilities.url) {
-          this.travelModeServiceURLNode.set("value", helperServices.routingUtilities.url);
-        } else {
-          this.travelModeServiceURLNode.set("value", "");
+
+        // Enables the Zoom to selected feature, if it was enabled earlier
+        if (this.config.zoomToFeature) {
+          this.zoomToSelectedFeature.setValue(this.config.zoomToFeature);
+        }
+
+        // Enables the intersect searched location, if it was enabled earlier
+        if (this.config.intersectSearchedLocation) {
+          this.intersectSearchLocation.setValue(this.config.intersectSearchedLocation);
         }
       }
     },
@@ -316,6 +364,7 @@ define([
         params = {
           symbolChooserTitle: symbolChooserTitle,
           symbolParams: objSymbol,
+          nls: this.nls,
           symbolType: symbolType
         };
         //display configured symbol in symbol chooser node
@@ -394,10 +443,11 @@ define([
     },
 
     /**
-    * This function creates color picker instance to select font color
+    * This function creates color picker instance to select font color and buffer color
     * @memberOf widgets/NearMe/setting/setting
     **/
     _createColorPicker: function () {
+      //color picker for font
       this._fontColorPicker = new ColorPicker(null, domConstruct.create("div", {},
         this.colorPickerNode));
     },
@@ -426,76 +476,6 @@ define([
       popupContainer = query(".widget-setting-popup")[0];
       this._loading.placeAt(popupContainer);
       this._loading.startup();
-    },
-
-    /**
-    * Creates and show popup to choose travel mode service URL.
-    * @memberOf widgets/NearMe/setting/Setting
-    */
-    _showGPServiceChooser: function () {
-      var args = {
-        portalUrl: this.appConfig.portalUrl
-      },
-        gpSource = new GpSource(args),
-        popup = new Popup({
-          titleLabel: this.nls.routeSetting.travelModeServiceUrl,
-          width: 830,
-          height: 560,
-          content: gpSource
-        });
-
-      this.own(on(gpSource, 'ok', lang.hitch(this, function (tasks) {
-        if (tasks.length === 0) {
-          this._errorMessage(this.nls.routeSetting.invalidTravelmodeServiceUrl);
-          return;
-        }
-        this._validateGPServiceURL(tasks[0].url, popup);
-      })));
-      this.own(on(gpSource, 'cancel', lang.hitch(this, function () {
-        popup.close();
-      })));
-    },
-
-    /**
-    * This function used for querying TravelModes form the configured service url
-    * @memberOf widgets/NearMe/settings/Setting
-    */
-    _validateGPServiceURL: function (gpServiceURL, popup) {
-      var args, travelmodeServiceUrl;
-      travelmodeServiceUrl = gpServiceURL + "/execute";
-      args = {
-        url: travelmodeServiceUrl,
-        content: {
-          f: "json"
-        },
-        handleAs: "json",
-        callbackParamName: "callback"
-      };
-      esriRequest(args).then(lang.hitch(this, function (response) {
-        var i = 0, isValid = false;
-        // if response returned from the queried request
-        if (response.hasOwnProperty("results")) {
-          if (response.results.length > 0) {
-            for (i = 0; i < response.results.length; i++) {
-              if (response.results[i].hasOwnProperty("paramName")) {
-                if (response.results[i].paramName === "supportedTravelModes") {
-                  isValid = true;
-                  break;
-                }
-              }
-            }
-          }
-        }
-        //if URL is valid travel mode service URL then set in the textBox else show error
-        if (isValid) {
-          this.travelModeServiceURLNode.set("value", gpServiceURL);
-          popup.close();
-        } else {
-          this._errorMessage(this.nls.routeSetting.invalidTravelmodeServiceUrl);
-        }
-      }), lang.hitch(this, function () {
-        this._errorMessage(this.nls.routeSetting.invalidTravelmodeServiceUrl);
-      }));
     },
 
     /**
@@ -563,7 +543,7 @@ define([
     _setSearchLayersInfo: function (searchLayers) {
       for (var i = 0; i < searchLayers.length; i++) {
         lang.mixin(searchLayers[i], this._appUtils.getLayerDetailsFromMap(
-            searchLayers[i].baseURL, searchLayers[i].layerId));
+            searchLayers[i].baseURL, searchLayers[i].layerId, searchLayers[i].id));
       }
       this._setSearchLayers(searchLayers);
     },
@@ -573,35 +553,64 @@ define([
     * @memberOf widgets/NearMe/setting/setting
     */
     _setSearchLayers: function (searchLayers) {
-      var i, divLayerList, imgPath, divGeometryIcon;
+      var i, divLayerList, imgPath, divGeometryIcon, geomType;
       this._searchLayers = searchLayers;
       domConstruct.empty(this.layerListNode);
       for (i = 0; i < searchLayers.length; i++) {
-        //set geometry icon for layer
-        if (searchLayers[i].geometryType === "esriGeometryPoint") {
-          imgPath = "point_layer.png";
-        } else if (searchLayers[i].geometryType === "esriGeometryPolygon") {
-          imgPath = "polygon_layer.png";
-        } else if (searchLayers[i].geometryType === "esriGeometryLine") {
-          imgPath = "line_layer.png";
-        }
-        divLayerList = domConstruct.create("div", {
-          "class": "esriCTLayerList"
-        }, this.layerListNode);
-        if (imgPath) {
-          divGeometryIcon = domConstruct.create("div", {
-            "class": "esriCTGeometryTypeIcon",
-            "style": {
-              "backgroundImage": "url(" + this.folderUrl + "images/" + imgPath + ")"
-            }
+        if (searchLayers[i].geometryType) {
+          //set geometry icon for layer
+          geomType = utils.getTypeByGeometryType(searchLayers[i].geometryType);
+          if (geomType === "point") {
+            imgPath = "point_layer.png";
+          } else if (geomType === "polygon") {
+            imgPath = "polygon_layer.png";
+          } else if (geomType === "polyline") {
+            imgPath = "line_layer.png";
+          }
+          divLayerList = domConstruct.create("div", {
+            "class": "esriCTLayerList"
+          }, this.layerListNode);
+          if (imgPath) {
+            divGeometryIcon = domConstruct.create("div", {
+              "class": "esriCTGeometryTypeIcon",
+              "style": {
+                "backgroundImage": "url(" + this.folderUrl + "images/" + imgPath + ")"
+              }
+            }, divLayerList);
+          }
+          //create div to display layer title
+          domConstruct.create("div", {
+            "class": "esriCTLayerListItem",
+            "innerHTML": searchLayers[i].title,
+            "title": searchLayers[i].title
           }, divLayerList);
         }
-        //create div to display layer title
-        domConstruct.create("div", {
-          "class": "esriCTLayerListItem",
-          "innerHTML": searchLayers[i].title,
-          "title": searchLayers[i].title
-        }, divLayerList);
+      }
+    },
+
+    /**
+    * set configured buffer info
+    * @param {object} bufferInfo
+    * @memberOf widgets/NearMe/setting/setting
+    **/
+    _setBufferInfo: function (bufferInfo) {
+      if (bufferInfo) {
+        //set buffer visibility as configured
+        this.bufferVisibiliyCheckBox.setValue(bufferInfo.isVisible);
+      }
+      this._onVisibilityChange();
+    },
+
+    /**
+    * show/hide buffer color setting section
+    * @memberOf widgets/NearMe/setting/setting
+    **/
+    _onVisibilityChange: function () {
+      //display color picker if buffer visibility is set to true
+      if (this.bufferVisibiliyCheckBox.getValue()) {
+        domClass.remove(this.bufferColorSetting, "esriCTHidden");
+      } else {
+        domClass.add(this.bufferColorSetting, "esriCTHidden");
       }
     }
   });

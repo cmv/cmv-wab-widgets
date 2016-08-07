@@ -8,6 +8,7 @@ define([
   "esri/tasks/PrintTemplate",
   "esri/request",
   'esri/lang',
+  'esri/arcgis/utils',
   'dojo/_base/lang',
   'dojo/_base/array',
   'dojo/_base/html',
@@ -47,6 +48,7 @@ define([
   PrintTemplate,
   esriRequest,
   esriLang,
+  arcgisUtils,
   lang,
   array,
   html,
@@ -105,9 +107,9 @@ define([
       this.shelter.startup();
       this.shelter.show();
 
-      this.titleNode.set('value', utils.sanitizeHTML(this.defaultTitle));
-      this.authorNode.set('value', utils.sanitizeHTML(this.defaultAuthor));
-      this.copyrightNode.set('value', utils.sanitizeHTML(this.defaultCopyright));
+      this.titleNode.set('value', this.defaultTitle);
+      this.authorNode.set('value', this.defaultAuthor);
+      this.copyrightNode.set('value', this.defaultCopyright);
 
       var serviceUrl = portalUrlUtils.setHttpProtocol(this.printTaskURL);
       var portalNewPrintUrl = portalUrlUtils.getNewPrintUrl(this.appConfig.portalUrl);
@@ -160,6 +162,12 @@ define([
           false);
       }
       if (this.printTask._createOperationalLayers) {
+        // if opLayers contains markerSymbol of map.infoWindow, the print job will failed
+        aspect.after(
+          this.printTask,
+          '_createOperationalLayers',
+          lang.hitch(this, '_fixInvalidSymbol')
+        );
         aspect.after(
           this.printTask,
           '_createOperationalLayers',
@@ -233,6 +241,27 @@ define([
       }
 
       return def;
+    },
+
+    _fixInvalidSymbol: function(opLayers) {
+      array.forEach(opLayers, function(ol) {
+        if (ol.id === 'map_graphics') {
+          var layers = lang.getObject('featureCollection.layers', false, ol);
+          if (layers && layers.length > 0) {
+            array.forEach(layers, function(layer) {
+              if (layer && layer.featureSet &&
+                layer.featureSet.geometryType === "esriGeometryPoint") {
+                array.forEach(layer.featureSet.features, function(f) {
+                  if (f && f.symbol && !f.symbol.style) {
+                    f.symbol.style = "esriSMSSquare";
+                  }
+                });
+              }
+            });
+          }
+        }
+      }, this);
+      return opLayers;
     },
 
     _excludeInvalidLegend: function(opLayers) {
@@ -456,6 +485,16 @@ define([
           false, templateInfo);
         var hasLegend = lang.getObject('layoutOptions.hasLegend', false, templateInfo);
         var hasTitleText = lang.getObject('layoutOptions.hasTitleText', false, templateInfo);
+        var legendLayers = [];
+        if (hasLegend &&
+            this.layoutForm.legend.length > 0 && this.layoutForm.legend[0]) {
+          var legends = arcgisUtils.getLegendLayers({map: this.map, itemInfo: this.map.itemInfo});
+          legendLayers = array.map(legends, function(legend) {
+            return {
+              layerId: legend.layer.id
+            };
+          });
+        }
 
         var template = new PrintTemplate();
         template.format = form.format;
@@ -466,9 +505,7 @@ define([
         template.layoutOptions = {
           authorText: hasAuthorText ? form.author : "",
           copyrightText: hasCopyrightText ? (form.copyright || this._getMapAttribution()) : "",
-          legendLayers: (hasLegend &&
-            this.layoutForm.legend.length > 0 && this.layoutForm.legend[0]) ?
-            null : [],
+          legendLayers: legendLayers,
           titleText: hasTitleText ? form.title : "",
           customTextElements: cteArray
         };

@@ -53,33 +53,19 @@ LayerInfoFactory) {
       return extent;
     },
 
-    _resetLayerObjectVisiblityBeforeInit: function() {
-      /* works code for restore at init.
-      // if(this._layerOption) {
-      //   // according to this._layerOption.visible to set this._visible first.
-      //   this._visible = this._layerOption.visible;
-
-      //   // check/unchek all sublayers according to subLayerInfo._layerOption.visible.
-      //   array.forEach(this.newSubLayers, function(subLayerInfo) {
-      //     if(subLayerInfo._layerOption) {
-      //       subLayerInfo._setTopLayerVisible(subLayerInfo._layerOption.visible);
-      //     }
-      //   }, this);
-      // }
-      */
-
-      /***code for resotre not at init***/
-      if(this._layerOption) {
-
-        // check/unchek all sublayers according to subLayerInfo._layerOption.visible.
+    _resetLayerObjectVisiblity: function(layerOptions) {
+      var layerOption  = layerOptions ? layerOptions[this.id]: null;
+      if(layerOption) {
+        // check/unchek all sublayers according to subLayerOption.visible.
         array.forEach(this.newSubLayers, function(subLayerInfo) {
-          if(subLayerInfo._layerOption) {
-            subLayerInfo.layerObject.setVisibility(subLayerInfo._layerOption.visible);
+          var subLayerOption  = layerOptions ? layerOptions[subLayerInfo.id]: null;
+          if(subLayerOption) {
+            subLayerInfo.layerObject.setVisibility(subLayerOption.visible);
           }
         }, this);
 
-        // according to this._layerOption.visible to set this._visible after all sublayers setting.
-        this._setTopLayerVisible(this._layerOption.visible);
+        // according to layerOption.visible to set this._visible after all sublayers setting.
+        this._setTopLayerVisible(layerOption.visible);
       }
     },
 
@@ -189,6 +175,20 @@ LayerInfoFactory) {
       //   return true if 'showLegend' has not been cnfigured in webmp
       return this.originOperLayer.featureCollection.showLegend !== undefined ?
              this.originOperLayer.featureCollection.showLegend : true;
+    },
+
+    getScaleRange: function() {
+      var scaleRange;
+      var subLayers = this.getSubLayers();
+      if(subLayers[0]) {
+        scaleRange = subLayers[0].getScaleRange();
+      } else {
+        scaleRange = {
+          minScale: 0,
+          maxScale: 0
+        };
+      }
+      return scaleRange;
     }
 
   });

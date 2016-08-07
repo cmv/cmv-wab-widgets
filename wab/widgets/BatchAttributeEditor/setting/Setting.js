@@ -728,7 +728,7 @@ define([
         name : 'label',
         title : this.nls.page3.fieldTable.colAlias,
         type : 'text',
-        editable : true
+        editable : false
       }, {
         name : 'actions',
         title : this.nls.page3.fieldTable.colAction,

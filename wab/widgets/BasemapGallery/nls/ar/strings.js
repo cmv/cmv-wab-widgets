@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "معرض خرائط الأساس"
-  })
-);
+define({
+  "_widgetLabel": "معرض خرائط الأساس"
+});

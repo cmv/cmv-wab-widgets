@@ -84,6 +84,32 @@ function(BaseVersionManager) {
       upgrader: function(oldConfig){
         return oldConfig;
       }
+    }, {
+      version: '2.0Beta',
+      upgrader: function(oldConfig){
+        return oldConfig;
+      }
+    }, {
+      version: '2.0',
+      upgrader: function(oldConfig){
+        return oldConfig;
+      }
+    }, {
+      version: '2.0.1',
+      upgrader: function(oldConfig){
+        return oldConfig;
+      }
+    }, {
+      version: '2.1',
+      upgrader: function(oldConfig){
+        var newConfig = oldConfig;
+        var chart = null;
+        for(var i = 0; i < newConfig.charts.length; i++){
+          chart = newConfig.charts[i];
+          chart.webMapLayerId = "";
+        }
+        return newConfig;
+      }
     }];
   }
 

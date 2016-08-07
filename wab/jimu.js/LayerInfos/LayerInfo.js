@@ -23,12 +23,13 @@ define([
   //'./NlsStrings',
   'dojo/dom-construct',
   'dojo/topic',
+  'dojo/aspect',
   'esri/config',
   'esri/tasks/ProjectParameters',
   'esri/SpatialReference',
   'esri/geometry/webMercatorUtils'
 ], function(declare, array, lang, Deferred, all,
-/*NlsStrings,*/ domConstruct, topic, esriConfig, ProjectParameters,
+/*NlsStrings,*/ domConstruct, topic, aspect, esriConfig, ProjectParameters,
 SpatialReference, webMercatorUtils) {
   return declare(null, {
     originOperLayer: null,
@@ -39,15 +40,15 @@ SpatialReference, webMercatorUtils) {
     newSubLayers:    null,
     parentLayerInfo: null,
     _oldIsShowInMap: null,
+    _oldFilter:      null,
     _eventHandles:   null,
 
-    constructor: function(operLayer, map, options) {
+    constructor: function(operLayer, map) {
       this.originOperLayer = operLayer;
       this.layerObject = operLayer.layerObject;
       this.map = map;
       this.title = this.originOperLayer.title;
       this.id = this.originOperLayer.id;
-      this._layerOption = options.layerOptions ? options.layerOptions[this.id]: null;
       this.parentLayerInfo = operLayer.parentLayerInfo ? operLayer.parentLayerInfo : null;
       this.nls = window.jimuNls.layerInfosMenu;
       this._eventHandles = [];
@@ -55,7 +56,7 @@ SpatialReference, webMercatorUtils) {
 
     init: function() {
       // new section
-      // the order in init method can not changed.
+      // the order of methods below cannot be changed.
       this.newSubLayers = this.obtainNewSubLayers();
       //this._resetLayerObjectVisiblityBeforeInit();
       this.initVisible();
@@ -64,7 +65,14 @@ SpatialReference, webMercatorUtils) {
       }
       // init _oldIsShowInMap, must after initVisible()
       this._oldIsShowInMap = this.isShowInMap();
+      // init _oldFilter
+      this._initOldFilter();
       this._bindEvent();
+    },
+
+    _initOldFilter: function() {
+      // implemented by sub class.
+      this._oldFilter = null;
     },
 
     // to decide layer display in whitch group, now only has two groups: graphic or nographic
@@ -106,13 +114,9 @@ SpatialReference, webMercatorUtils) {
     },
 
     // about change layer order.
-    moveLeftOfIndex: function(index) {
+    moveLayerByIndex: function(index) {
       this.map.reorderLayer(this.layerObject, index);
-    },
-
-    // *************** need to refactor.
-    moveRightOfIndex: function(index) {
-      this.map.reorderLayer(this.layerObject, index);
+      //topic.publish('layerInfos/layerReorder');
     },
 
     //callback(layerInfo){
@@ -172,29 +176,21 @@ SpatialReference, webMercatorUtils) {
       // implemented by sub class.
     },
 
-    _resetLayerObjectVisiblityBeforeInit: function() {
+    _resetLayerObjectVisiblity: function(/*layerOptions*/) {
       // implemented by sub class.
       // Does not do anything by default.
     },
 
-    // options = {
     // layerOptions: {
     //  id: {
     //        visible: true/false
     //      }
     //  }
-    // }
-    resetLayerObjectVisibility: function(options) {
-      if(this.isRootLayer) {
-        this._layerOptions = options.layerOptions ? options.layerOptions: null;
-        //this._layerOption  = options.layerOptions ? options.layerOptions[this.id]: null;
-        this.traversal(function(layerInfos) {
-          layerInfos._layerOption =
-                options.layerOptions ? options.layerOptions[layerInfos.id]: null;
-        });
-        if(this._layerOption !== undefined) {
-          this._resetLayerObjectVisiblityBeforeInit();
-        }
+    resetLayerObjectVisibility: function(layerOptions) {
+      //dos not have the capability to set sublayers only.
+      var layerOption  = layerOptions ? layerOptions[this.id]: null;
+      if(this.isRootLayer && layerOption) {
+        this._resetLayerObjectVisiblity(layerOptions);
       }
     },
 
@@ -291,38 +287,44 @@ SpatialReference, webMercatorUtils) {
     },*/
 
 
-    _isShowInMapChanged: function(oldIsShowInMap) {
-      // summary:
-      //   Judge is show in map changed after contorl from layerInfo.
-      // description:
-      //   paramerter:
-      //     oldIsShowInMap
-      //   result:
-      //     publish 'isShowInMapChanged' event with all changed layers, if
-      //     current layer is changed.
-      //     all sublayer will changed if current layer is changed.
+    _isShowInMapChanged: function() {
+      var showInMapChanged = false;
       var newIsShowInMap = this.isShowInMap();
-      if (oldIsShowInMap === newIsShowInMap) {
-        return;
-      } else if(newIsShowInMap === false) {
+      if(newIsShowInMap === false) {
         //hide map's popup.
         this.map.infoWindow.hide();
       }
+      if (this._oldIsShowInMap !== newIsShowInMap) {
+        // update _oldIsShowInMap
+        this._oldIsShowInMap = newIsShowInMap;
+        showInMapChanged = true;
+      }
+      return showInMapChanged;
+    },
+
+    _isShowInMapChanged2: function() {
+      // summary:
+      //   Judge is show in map changed after contorl from layerInfo.
+      // description:
+      //   result:
+      //     publish 'isShowInMapChanged' event with all changed layerInfos
       var changedLayerInfos = [];
       this.traversal(function(layerInfo) {
-        changedLayerInfos.push(layerInfo);
+        if(layerInfo._isShowInMapChanged()) {
+          changedLayerInfos.push(layerInfo);
+        }
       });
       topic.publish('layerInfos/layerInfo/isShowInMapChanged', changedLayerInfos);
     },
 
+    /*
     _isShowInMapChanged2: function() {
+      // summary:
+      //   Judge is show in map changed after contorl from layerInfo.
+      // description:
+      //   result:
+      //     publish 'isShowInMapChanged' event with all changed layerInfos
       var newIsShowInMap = this.isShowInMap();
-      // if (this._oldIsShowInMap === newIsShowInMap) {
-      //   return;
-      // } else if(newIsShowInMap === false) {
-      //   //hide map's popup.
-      //   this.map.infoWindow.hide();
-      // }
 
       if(newIsShowInMap === false) {
         //hide map's popup.
@@ -338,6 +340,7 @@ SpatialReference, webMercatorUtils) {
         subLayerInfo._isShowInMapChanged2();
       });
     },
+    */
 
     _visibleChanged: function() {
       var changedLayerInfos = [this];
@@ -417,6 +420,15 @@ SpatialReference, webMercatorUtils) {
       }
     },
 
+    getRootLayerInfo: function() {
+      var rootLayerInfo = this;
+      while(rootLayerInfo.parentLayerInfo) {
+        rootLayerInfo = rootLayerInfo.parentLayerInfo;
+      }
+
+      return rootLayerInfo;
+    },
+
     isShowInMap: function() {
       var isShow = true;
       var currentLayerInfo = this;
@@ -469,10 +481,30 @@ SpatialReference, webMercatorUtils) {
       // summary:
       //   get filter from webmap defination.
       // description:
-      //   return null directly if has not configured filter in webmap.
+      //   return null directly if filter has not been configured in webmap.
       return this.originOperLayer.layerDefinition ?
              this.originOperLayer.layerDefinition.definitionExpression :
              null;
+    },
+
+    getFilter: function() {
+      // summary:
+      //   get filter from layerObject.
+      // description:
+      //   return null if does not have or cannot get it.
+      // implemented by sub class.
+      return null;
+    },
+
+    setFilter: function(/*layerDefinitionExpression*/) {
+      // summary:
+      //   set layer definition expression to layerObject.
+      // paramtter
+      //   layerDefinitionExpression: layer definition expression
+      //   set 'null' to delete layer definition expression
+      // description:
+      //   operation will skip if layer not support filter.
+      // implemented by sub class.
     },
 
     getShowLegendOfWebmap: function() {
@@ -490,7 +522,7 @@ SpatialReference, webMercatorUtils) {
     },
 
     getUrl: function() {
-      return this.layerObject.url;
+      return this.layerObject.url || this.layerObject._url;
     },
 
     // search types on all sublayers by recursion
@@ -576,6 +608,8 @@ SpatialReference, webMercatorUtils) {
     },
 
     isMapNotesLayerInfo: function() {
+      // summary:
+      //    is map notes layerInfo means that layerInfo is root of map notes.
       var isMapNotesLayerInfo;
       if (this.originOperLayer.featureCollection &&
         this.id.indexOf("mapNotes_") === 0 &&
@@ -588,13 +622,83 @@ SpatialReference, webMercatorUtils) {
       return isMapNotesLayerInfo;
     },
 
+    getScaleRange: function() {
+      var scaleRange;
+      if(this.layerObject &&
+         (this.layerObject.minScale >= 0) &&
+         (this.layerObject.maxScale >= 0)) {
+        scaleRange = {
+          minScale: this.layerObject.minScale,
+          maxScale: this.layerObject.maxScale
+        };
+      } else {
+        scaleRange = {
+          minScale: 0,
+          maxScale: 0
+        };
+      }
+      return scaleRange;
+    },
+
+    isCurrentScaleInTheScaleRange: function() {
+      var scaleRange = this.getScaleRange();
+      var mapScale = this.map.getScale();
+      var isInTheScaleRange;
+      if((scaleRange.minScale === 0) && (scaleRange.maxScale === 0)) {
+        isInTheScaleRange = true;
+      } else {
+        if((scaleRange.minScale === 0 ? true : scaleRange.minScale > mapScale) &&
+           (scaleRange.maxScale === 0 ? true : mapScale > scaleRange.maxScale)) {
+          isInTheScaleRange = true;
+        } else {
+          isInTheScaleRange = false;
+        }
+      }
+      return isInTheScaleRange;
+    },
+
+    isInScale: function() {
+      var isInScale = true;
+      var currentLayerInfo = this;
+      while(currentLayerInfo) {
+        isInScale = currentLayerInfo.isCurrentScaleInTheScaleRange();
+        currentLayerInfo = currentLayerInfo.parentLayerInfo;
+        if(!isInScale) {
+          break;
+        }
+      }
+      return isInScale;
+    },
+
+    enablePopup: function() {
+      // implemented by sub class.
+    },
+
+    disablePopup: function() {
+      // implemented by sub class.
+    },
+
     /****************
      * Event
      ***************/
     _bindEvent: function() {
+      var handle;
       if(this.layerObject && !this.layerObject.empty) {
-        var handle = this.layerObject.on('visibility-change',
+        // bind visibilit-change event
+        handle = this.layerObject.on('visibility-change',
                                      lang.hitch(this, this._onVisibilityChanged));
+        this._eventHandles.push(handle);
+
+        // bind filter change event
+        handle = aspect.after(this.layerObject,
+                               'setDefinitionExpression',
+                               lang.hitch(this, this._onFilterChanged));
+        this._eventHandles.push(handle);
+
+        // temporary code for bind setRenderer event, just for featureLayer currentlly.
+        handle = aspect.after(this.layerObject,
+                              'setRenderer',
+                              lang.hitch(this, this._onRendererChanged));
         this._eventHandles.push(handle);
       }
     },
@@ -609,6 +713,24 @@ SpatialReference, webMercatorUtils) {
       //_isShowInMapChanged2 is dependent on _visible,
       // so muse update _visible(useing this.initVisible) at before
       this._isShowInMapChanged2();
+    },
+
+    _onFilterChanged: function() {
+      var oldFilter = this._oldFilter ? this._oldFilter : null;
+      var currentFilter = this.layerObject.getDefinitionExpression();
+      currentFilter = currentFilter ? currentFilter : null;
+
+      if(oldFilter !== currentFilter) {
+        topic.publish('layerInfos/layerInfo/filterChanged', [this]);
+        // update old layerDefinitions
+        this._oldFilter = currentFilter;
+      }
+    },
+
+    _onRendererChanged: function() {
+      var changedLayerInfos = [this];
+      topic.publish('layerInfos/layerInfo/rendererChanged', changedLayerInfos);
     }
+
   });
 });

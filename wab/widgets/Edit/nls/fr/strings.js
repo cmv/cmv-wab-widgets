@@ -1,13 +1,13 @@
-﻿define(
-   ({
-    _widgetLabel: "Mise à jour",
-    title: "Sélectionnez un modèle pour créer des entités",
-    pressStr: "Appuyez sur ",
-    ctrlStr: " CTRL ",
-    snapStr: " pour activer la capture",
-    close: "Fermer",
-    featureLayers: "Couches d’entités 1",
-    searchTemplates: "Rechercher des modèles",
-    noAvailableTempaltes: "Aucun modèle disponible"
-  })
-);
+define({
+  "_widgetLabel": "Mise à jour",
+  "_featureAction_Edit": "Modifie",
+  "title": "Sélectionnez un modèle pour créer des entités",
+  "pressStr": "Appuyez sur ",
+  "ctrlStr": " CTRL ",
+  "snapStr": " pour activer la capture",
+  "close": "Fermer",
+  "featureLayers": "Couches d'entités",
+  "searchTemplates": "Rechercher des modèles",
+  "noAvailableTempaltes": "Aucun modèle disponible",
+  "noCanCreateLayerAreCurrentlyVisible": "Aucune couche à créer n'est actuellement visible."
+});

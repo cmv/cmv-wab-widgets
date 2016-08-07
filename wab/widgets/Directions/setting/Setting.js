@@ -25,21 +25,22 @@ define([
     'jimu/utils',
     'jimu/portalUtils',
     'jimu/dijit/Message',
-    'esri/request',
+    //'esri/request',
     'jimu/dijit/CheckBox',
+    'jimu/dijit/ServiceURLComboBox',
     'jimu/dijit/ServiceURLInput',
     'dijit/form/NumberSpinner',
     'dijit/form/ValidationTextBox',
     'dijit/form/Select'
   ],
   function(declare, lang, html, dojoConfig, Deferred, _WidgetsInTemplateMixin, BaseWidgetSetting,
-    jimuUtils, portalUtils, Message, esriRequest, CheckBox) {
+           jimuUtils, portalUtils, Message, /*esriRequest,*/ CheckBox) {
 
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
       baseClass: 'jimu-widget-directions-setting',
       _ROUTE_WORLD: "Route_World",
       _serviceUrlInputInvalidClass: "jimu-serviceurl-input-invalid",
-      _routeTaskUrl:'http://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World',
+      _routeTaskUrl:'http://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/',//Route_World',
       _locatorUrl:'http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer',
       _travelModesUrl: "http://logistics.arcgis.com/arcgis/rest/services/World/Utilities/GPServer",
       _trafficLayerUrl: "http://traffic.arcgis.com/arcgis/rest/services/World/Traffic/MapServer",
@@ -68,7 +69,7 @@ define([
         }
       },
 
-      postCreate: function(){
+      postCreate: function() {
         this.inherited(arguments);
         this.autoComplete = new CheckBox();
         this.autoComplete.placeAt(this.autoCompleteTd, 'first');
@@ -76,14 +77,24 @@ define([
 
         this.portal = portalUtils.getPortal(this.appConfig.portalUrl);
 
-        this.routeUrl.setProcessFunction(lang.hitch(this, function(result){
+        this.routeUrl.setProcessFunction(lang.hitch(this, function(result) {
           var isRouteLayer = false;
-          if(result && result.data){
+          if (result && result.data) {
             isRouteLayer = result.data.layerType === 'esriNAServerRouteLayer';
           }
-          var url = this._getHandledUrlFromServiceUrlInput(this.routeUrl);
-          var reg = /\/rest\/services\/.+\/NAServer/gi;
-          return isRouteLayer && reg.test(url);
+
+          if (true === isRouteLayer) {
+            //if it is a isRouteLayer, use it as is
+            return isRouteLayer;
+          } else {
+            //not a isRouteLayer, select a layer form data.routeLayers
+            this._setRouteUrl(result);
+            //this.routeUrl.focus();
+            //this.routeUrl.openDropDown();
+            var url = this._getHandledUrlFromServiceUrlInput(this.routeUrl);
+            var reg = /\/rest\/services\/.+\/NAServer/i;
+            return reg.test(url);
+          }
         }));
 
         this.locatorUrl.setProcessFunction(lang.hitch(this, function(){
@@ -157,7 +168,7 @@ define([
         var geocoderOptions = this.config.geocoderOptions;
         if(geocoderOptions && typeof geocoderOptions === 'object'){
           this.autoComplete.setValue(geocoderOptions.autoComplete === true);
-          this.maxLocations.set('value', geocoderOptions.maxLocations);
+          this.maximumSuggestions.set('value', geocoderOptions.maxLocations);
           this.minCharacters.set('value', geocoderOptions.minCharacters);
           this.searchDelay.set('value', geocoderOptions.searchDelay);
           var geocoders = geocoderOptions.geocoders;
@@ -202,60 +213,14 @@ define([
 
       _getRouteTaskUrl: function(){
         var def = new Deferred();
-        if(this.config.routeTaskUrl){
+        if (this.config.routeTaskUrl) {
           def.resolve(this.config.routeTaskUrl);
         }
-        else{
-          this.portal.loadSelfInfo().then(lang.hitch(this, function(response){
+        else {
+          this.portal.loadSelfInfo().then(lang.hitch(this, function(response) {
             var url = this._getRouteUrlFromPortalSelf(response);
-            if(url){
-              this._suffixRouteTaskUrl(url, def);
-              //def.resolve(url);
-            }else{
-              def.resolve(this._routeTaskUrl);
-            }
-          }), lang.hitch(this, function(err){
-            console.error(err);
-            def.resolve(this._routeTaskUrl);
-          }));
-        }
-        return def;
-      },
-      _suffixRouteTaskUrl: function(routeTaskUrl, def) {
-        if (this._endsWith(routeTaskUrl, this._ROUTE_WORLD)) {
-          def.resolve(routeTaskUrl);
-        } else {
-          //send a xhr to query routeLayers
-          esriRequest({
-            url: routeTaskUrl,
-            hanleAs: 'json',
-            content: {
-              f: 'json'
-            },
-            callbackParamName: 'callback'
-          }).then(lang.hitch(this, function(serverInfo) {
-            if (typeof serverInfo === "undefined" || typeof serverInfo.routeLayers === "undefined") {
-              def.resolve(this._routeTaskUrl);
-              return;
-            }
-
-            var rls = serverInfo.routeLayers;
-            //find "Route_World"
-            var firstRouteLayer = "", findFlag = false;
-            for (var i = 0, len = rls.length; i < len; i++) {
-              var routeLayer = rls[i];
-              if (0 === i) {
-                firstRouteLayer = routeLayer;
-              }
-              if (routeLayer === this._ROUTE_WORLD) {
-                findFlag = true;
-                def.resolve(this._suffixWithSlant(routeTaskUrl, this._ROUTE_WORLD));
-                return;
-              }
-            }
-
-            if (false === findFlag && firstRouteLayer) {
-              def.resolve(this._suffixWithSlant(routeTaskUrl, firstRouteLayer));
+            if (url) {
+              def.resolve(url);
             } else {
               def.resolve(this._routeTaskUrl);
             }
@@ -264,7 +229,9 @@ define([
             def.resolve(this._routeTaskUrl);
           }));
         }
+        return def;
       },
+
       _suffixWithSlant: function(url, suffix) {
         if (this._endsWith(url, "/")) {
           url += suffix;
@@ -405,8 +372,8 @@ define([
           return false;
         }
 
-        if(!this.maxLocations.validate()){
-          this._showValidationErrorTip(this.maxLocations);
+        if(!this.maximumSuggestions.validate()){
+          this._showValidationErrorTip(this.maximumSuggestions);
           this._showParametersTip();
           return false;
         }
@@ -435,7 +402,7 @@ define([
           },
           geocoderOptions: {
             autoComplete: this.autoComplete.getValue(),
-            maxLocations: this.maxLocations.get('value'),
+            maxLocations: this.maximumSuggestions.get('value'),
             minCharacters: this.minCharacters.get('value'),
             searchDelay: this.searchDelay.get('value'),
             arcgisGeocoder: false,
@@ -464,7 +431,30 @@ define([
         new Message({
           message: this.nls.parametersTip
         });
-      }
+      },
 
+      _setRouteUrl: function(result) {
+        if (result && result.data && result.data.routeLayers) {
+          var rawUrl = this.routeUrl.getValue(),
+            hasRouteWorldFlag = false;
+
+          for (var i = 0, len = result.data.routeLayers.length; i < len; i++) {
+            var routeLayer = result.data.routeLayers[i];
+            var itme = {
+              id: routeLayer,
+              name: this._suffixWithSlant(rawUrl, routeLayer),
+              value: this._suffixWithSlant(rawUrl, routeLayer)
+            };
+            if (routeLayer === this._ROUTE_WORLD) {
+              hasRouteWorldFlag = true;
+            }
+            this.routeUrl.store.put(itme);
+          }
+
+          if (hasRouteWorldFlag) {
+            this.routeUrl.setValue(this._suffixWithSlant(rawUrl, this._ROUTE_WORLD));
+          }
+        }
+      }
     });
   });

@@ -1,19 +1,22 @@
-﻿define(
-   ({
-    defaultAreaUnit: "Pindala vaikeühik",
-    defaultLengthUnit: "Pikkuse vaikeühik",
-    acres: "Aakrit",
-    sqMiles: "Ruutmiili",
-    sqKilometers: "Ruutkilomeetrit",
-    hectares: "Hektarit",
-    sqYards: "Ruutjardi",
-    sqFeet: "Ruutjalga",
-    sqMeters: "Ruutmeetrit",
-    miles: "Miili",
-    kilometers: "Kilomeetrit",
-    feet: "Jalga",
-    meters: "Meetrit",
-    yards: "Jardi",
-    nauticalMiles: "Meremiili"
-  })
-);
+define({
+  "defaultAreaUnit": "Pindala vaikeühik",
+  "defaultLengthUnit": "Pikkuse vaikeühik",
+  "acres": "Aakrit",
+  "sqMiles": "Ruutmiili",
+  "sqKilometers": "Ruutkilomeetrit",
+  "hectares": "Hektarit",
+  "sqYards": "Ruutjardi",
+  "sqFeet": "Ruutjalga",
+  "sqMeters": "Ruutmeetrit",
+  "miles": "Miili",
+  "kilometers": "Kilomeetrit",
+  "feet": "Jalga",
+  "meters": "Meetrit",
+  "yards": "Jardi",
+  "nauticalMiles": "Meremiili",
+  "showArea": "Pindala",
+  "showDistance": "Vahemaa",
+  "showLocation": "Asukoht",
+  "showtools": "Kuva mõõtmise tööriistad:",
+  "allHidedTips": "Valida tuleb vähemalt üks tööriist."
+});

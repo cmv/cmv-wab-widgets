@@ -101,7 +101,7 @@ function(Evented,
                 checked : false,
                 children : this.childList
               };
-            this.layerStore.push(dataItem);
+              this.layerStore.push(dataItem);
             }
           } else if (layer.layerType === 'ArcGISMapServiceLayer') {
             this.childList = [];

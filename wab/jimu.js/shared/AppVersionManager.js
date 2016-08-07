@@ -382,6 +382,16 @@ function(BaseVersionManager, utils) {
       },
 
       compatible: true
+    }, {
+      version: '2.1',
+
+      description: 'The version for Online 4.2.',
+
+      upgrader: function(oldConfig){
+        return oldConfig;
+      },
+
+      compatible: true
     }];
 
     this.isCompatible = function(_oldVersion, _newVersion){

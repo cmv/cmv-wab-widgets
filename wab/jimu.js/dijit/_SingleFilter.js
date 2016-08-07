@@ -1038,6 +1038,9 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
               callbackParamName:'callback',
               timeout:15000
             }).then(lang.hitch(this, function(response){
+              if(!this.domNode){
+                return;
+              }
               var uniqueValueInfos = response && response.uniqueValueInfos;
               var fieldInfo = this._getSelectedFilteringItem(this.fieldsSelect);
               if(uniqueValueInfos && fieldInfo && item.id === fieldInfo.id){

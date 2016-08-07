@@ -1,0 +1,9 @@
+define({
+  "addTaskTip": "Dodajte jedan ili više filtara widgetu i konfigurirajte parametre za svaki od njih.",
+  "newFilter": "Novi filtar",
+  "filterExpression": "Izraz za filtriranje",
+  "layerDefaultSymbolTip": "Upotrijebi zadani simbol sloja",
+  "uploadImage": "Učitaj sliku",
+  "selectLayerTip": "Odaberite sloj.",
+  "setTitleTip": "Postavite naslov."
+});

@@ -2,10 +2,8 @@ define(
   ["dojo/_base/declare",
     "dojo/_base/lang",
     "dojo/_base/array",
-    "dojo/_base/query",
     "dojo/text!./EditFields.html",
     'dijit/_TemplatedMixin',
-    'dijit/registry',
     'jimu/BaseWidgetSetting',
     'jimu/dijit/SimpleTable',
     "jimu/dijit/Popup"
@@ -14,10 +12,8 @@ define(
     declare,
     lang,
     array,
-    query,
     template,
     _TemplatedMixin,
-    registry,
     BaseWidgetSetting,
     Table,
     Popup) {

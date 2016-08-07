@@ -16,10 +16,12 @@
 
 define([
   'dojo/_base/declare',
-  './LayerChooserFromMap',
-  'dojo/_base/html'
+  'dojo/Deferred',
+  'dojo/_base/html',
+  'dojo/_base/lang',
+  './LayerChooserFromMap'
 ],
-function(declare, LayerChooserFromMap, html) {
+function(declare, Deferred, html, lang, LayerChooserFromMap) {
   return declare([LayerChooserFromMap], {
     baseClass: 'jimu-featurelayer-chooser-from-map',
     declaredClass: 'jimu.dijit.FeaturelayerChooserFromMap',
@@ -28,6 +30,7 @@ function(declare, LayerChooserFromMap, html) {
     types: null,//available values:['point','polyline','polygon']
     showLayerFromFeatureSet: false,
     showTable: false,//if true, types will be ignored for table layer
+    onlyShowVisible: false,//if the layer is a Table, this option is ignored
 
     //public methods:
     //getSelectedItems return [{name, url, layerInfo}]
@@ -38,6 +41,7 @@ function(declare, LayerChooserFromMap, html) {
 
     postMixInProperties:function(){
       this.inherited(arguments);
+      this.basicFilter = lang.hitch(this, this.basicFilter);
       this.filter = LayerChooserFromMap.createFeaturelayerFilter(this.types,
                                                                  this.showLayerFromFeatureSet,
                                                                  this.showTable);
@@ -46,6 +50,17 @@ function(declare, LayerChooserFromMap, html) {
     postCreate: function(){
       this.inherited(arguments);
       html.addClass(this.domNode, 'jimu-basic-layer-chooser-from-map');
+    },
+
+    //override basicFilter method of LayerChooserFromMap
+    basicFilter: function(layerInfo) {
+      var def = new Deferred();
+      if (this.onlyShowVisible && layerInfo.getLayerType() !== 'Table') {
+        def.resolve(layerInfo.isShowInMap());
+      } else {
+        def.resolve(true);
+      }
+      return def;
     },
 
     //both getSelectedItems and getAllItems return [{name, url, layerInfo}]

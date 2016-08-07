@@ -20,7 +20,6 @@ define([
   'dojo/aspect',
   'dijit/form/Select',
   'dijit/form/TextBox',
-  'esri/symbols/jsonUtils',
   'jimu/dijit/CheckBox',
   'jimu/dijit/URLInput',
   'jimu/utils',
@@ -30,15 +29,16 @@ define([
   './editors/SelectFeatureSetFromUrl',
   './editors/SelectFeatureSetFromLayer',
   './editors/SelectFeatureSetFromFile',
+  './editors/SelectFeatureSetFromDraw',
   './editors/DataFileEditor',
   './editors/RasterLayerEditor',
   './editors/RecordSetEditor'
 ],
 function(array, on, aspect,
-  Select, TextBox, symbolUtils, CheckBox, URLInput, utils, simpleEditors,
+  Select, TextBox, CheckBox, URLInput, utils, simpleEditors,
   FeatureSetEditorChooser, FeatureSetResultEditor, SelectFeatureSetFromUrl,
-  SelectFeatureSetFromLayer, SelectFeatureSetFromFile, DataFileEditor, RasterLayerEditor,
-  RecordSetEditor) {
+  SelectFeatureSetFromLayer, SelectFeatureSetFromFile, SelectFeatureSetFromDraw,
+  DataFileEditor, RasterLayerEditor, RecordSetEditor) {
   var mo = {}, map, editors = [], nls;
 
   mo.createEditor = function(param, direction, context, options) {
@@ -136,14 +136,11 @@ function(array, on, aspect,
           var drawType = utils.getTypeByGeometryType(param.defaultValue.geometryType);
           o.types = [drawType];
           o.showClear = true;
-          if(param.symbol){
-            o[drawType + 'Symbol'] = symbolUtils.fromJson(param.symbol);
-          }
         }else{
           o.showClear = true;
         }
 
-        editor = new simpleEditors.SelectFeatureSetFromDraw(o);
+        editor = new SelectFeatureSetFromDraw(o);
       }
     }else if(editorName === 'SelectFeatureSetFromLayer'){
       if(param.defaultValue){

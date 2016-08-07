@@ -14,7 +14,8 @@
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////////
 
-define(['dojo/_base/declare',
+define([
+  'dojo/_base/declare',
   'dijit/_WidgetBase',
   'dijit/_TemplatedMixin',
   'dijit/_WidgetsInTemplateMixin',
@@ -30,6 +31,7 @@ define(['dojo/_base/declare',
 ],
 function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, registry, Select,
   template, on, query, lang, array, html, SimpleTable) {
+
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
     baseClass: 'jimu-query-setting-sort-fields',
     templateString: template,
@@ -245,7 +247,6 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, registr
         style: 'width:120px;height:20px;'
       });
       html.addClass(select.domNode, this._fieldNameSelectClassName);
-      html.addClass(select.domNode, 'restrict-select-width');
       select.placeAt(td);
       array.forEach(restFields, lang.hitch(this, function(fieldName){
         var alias = this._getFieldAlias(fieldName);
@@ -271,14 +272,6 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, registr
       var selects = this._getAllFieldSelects();
       array.forEach(selects, lang.hitch(this, function(select){
         var currentValue = select.get('value');
-
-        select.domNode.title = "";
-
-        var option = select.getOptions(currentValue);
-
-        if(option && option.label){
-          select.domNode.title = option.label;
-        }
 
         var options = select.getOptions();
         var removeOptions = array.filter(options, lang.hitch(this, function(option){

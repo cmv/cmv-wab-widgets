@@ -24,7 +24,7 @@ define(['dojo/_base/lang',
   "dojo/store/Cache",
   "dojo/store/Memory",
   "esri/lang",
-  './FeatureLayerQueryStore',
+  './table/FeatureLayerQueryStore',
   'jimu/utils'
 ], function(
   lang, array, LayerInfos, Deferred, all,
@@ -76,7 +76,8 @@ define(['dojo/_base/lang',
     return def.promise;
   };
 
-  exports.generateColumnsFromFields = function(pInfos, fields, typeIdField, types, supportsOrder) {
+  exports.generateColumnsFromFields = function(pInfos, fields, typeIdField, types,
+    supportsOrder, supportsStatistics) {
     function getFormatInfo(fieldName) {
       if (pInfos && esriLang.isDefined(pInfos.fieldInfos)) {
         for (var i = 0, len = pInfos.fieldInfos.length; i < len; i++) {
@@ -90,31 +91,50 @@ define(['dojo/_base/lang',
       return null;
     }
     var columns = {};
+    columns.selectionHandle = {
+      label: "",
+      className: "selection-handle-column",
+      hidden: false,
+      unhidable: true,
+      filed: "selection-handle-column",
+      sortable: false,
+      _cache: {
+        sortable: false,
+        statistics: false
+      }
+    };
     array.forEach(fields, lang.hitch(exports, function(_field, i, fields) {
       var techFieldName = "field" + i;
       var isDomain = !!_field.domain;
       var isDate = _field.type === "esriFieldTypeDate";
       var isTypeIdField = typeIdField && (_field.name === typeIdField);
+      var isNumber = _field.type === "esriFieldTypeDouble" ||
+        _field.type === "esriFieldTypeSingle" ||
+        _field.type === "esriFieldTypeInteger" ||
+        _field.type === "esriFieldTypeSmallInteger";
+      var isString = _field.type === "esriFieldTypeString";
+
       columns[techFieldName] = {
         label: _field.alias || _field.name,
         className: techFieldName,
         hidden: fields.length === 1 ? false : !_field.show && esriLang.isDefined(_field.show),
         unhidable: fields.length === 1 ? false :
           !_field.show && esriLang.isDefined(_field.show) && _field._pk,
-        field: _field.name
+        field: _field.name,
+        sortable: false,
+        _cache: {
+          sortable: !!supportsOrder,
+          statistics: supportsStatistics && !isDomain && isNumber
+        }
       };
 
-      columns[techFieldName].sortable = !!supportsOrder;
 
-      if (fields[i].type === "esriFieldTypeString") {
+      if (isString) {
         columns[techFieldName].formatter = lang.hitch(exports, exports.urlFormatter);
-      } else if (fields[i].type === "esriFieldTypeDate") {
+      } else if (isDate) {
         columns[techFieldName].formatter = lang.hitch(
           exports, exports.dateFormatter, getFormatInfo(_field.name));
-      } else if (fields[i].type === "esriFieldTypeDouble" ||
-        fields[i].type === "esriFieldTypeSingle" ||
-        fields[i].type === "esriFieldTypeInteger" ||
-        fields[i].type === "esriFieldTypeSmallInteger") {
+      } else if (isNumber) {
         columns[techFieldName].formatter = lang.hitch(
           exports, exports.numberFormatter, getFormatInfo(_field.name));
       }
@@ -236,7 +256,6 @@ define(['dojo/_base/lang',
             ret.push(layerInfos[i]);
           }
         }));
-        fixDuplicateNames(ret);
 
         def.resolve(ret);
       }), lang.hitch(this, function(err) {
@@ -343,23 +362,6 @@ define(['dojo/_base/lang',
     }
     return order.concat(dest);
   };
-
-  function fixDuplicateNames(layerObjects) {
-    var titles = [],
-      duplicateLayers = [];
-    array.forEach(layerObjects, function(layerObject) {
-      var pos = titles.indexOf(layerObject.name);
-      if (pos < 0) {
-        titles.push(layerObject.name);
-      } else {
-        duplicateLayers.push(layerObjects[pos]);
-        duplicateLayers.push(layerObject);
-      }
-    });
-    array.forEach(duplicateLayers, function(layerObject) {
-      layerObject.name = layerObject.name + '-' + layerObject.id;
-    });
-  }
 
   function clipValidFields(sFields, rFields) {
     if (!(sFields && sFields.length)) {

@@ -117,6 +117,7 @@
   position: absolute;
   top: 35px;
   left: 0;
+  font-size: 12px;
 }
 
 .jimu-rtl .jimu-widget-search-setting .jimu-widget-search-locator-source-setting .source-details-section .country-code-row .example{

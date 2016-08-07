@@ -21,21 +21,30 @@ define([
     'dojo/_base/html',
     'dojo/i18n!esri/nls/jsapi',
     'dojo/on',
+    'dojo/json',
     'dojo/Deferred',
+    'dojo/aspect',
     'dijit/_WidgetsInTemplateMixin',
     'jimu/BaseWidget',
     'jimu/MapManager',
     'jimu/LayerInfos/LayerInfos',
+    'jimu/dijit/LoadingShelter',
+    'jimu/utils',
+    'jimu/portalUrlUtils',
     'esri/dijit/editing/Editor',
     'esri/dijit/Popup',
     "esri/dijit/editing/TemplatePicker",
+    "esri/geometry/Extent",
+    "esri/geometry/Point",
+    "esri/renderers/jsonUtils",
     "dijit/form/Button",
     "./utils",
     './FilterEditor'
   ],
-  function(declare, lang, array, html, esriBundle, on, Deferred, _WidgetsInTemplateMixin,
-    BaseWidget, MapManager, LayerInfos, Editor, Popup, TemplatePicker, Button,
-    editUtils, FilterEditor) {
+  function(declare, lang, array, html, esriBundle, on, Json, Deferred, aspect,
+    _WidgetsInTemplateMixin, BaseWidget, MapManager, LayerInfos, LoadingShelter,
+    jimuUtils, portalUrlUtils, Editor, Popup, TemplatePicker,
+    Extent, Point, rendererJsonUtils, Button, editUtils, FilterEditor) {
     return declare([BaseWidget, _WidgetsInTemplateMixin], {
       name: 'Edit',
       baseClass: 'jimu-widget-edit',
@@ -43,15 +52,15 @@ define([
       _defaultStartStr: "",
       _defaultAddPointStr: "",
       resetInfoWindow: {},
-      _sharedInfoBetweenEdits: {
-        editCount: 0,
-        resetInfoWindow: null
-      },
+      _mapInfoStorage: null,
       _jimuLayerInfos: null,
       editPopup: null,
       _configEditor: null,
       _layerObjectsParaForTempaltePicker: null,
       _createOverDef: null,
+      _releaseEventAfterActiveArray: null,
+      _canCreateLayersAreAllInvisibleFlag: null,
+      _layerInfoParamArrayUseForRervertRenderre: null,
 
       startup: function() {
         this.inherited(arguments);
@@ -59,12 +68,23 @@ define([
                                                     {"class":"jimu-widget-edit-infoWindow"},
                                                     null,
                                                     this.map.root));
+        this.loading = new LoadingShelter({
+          hidden: true
+        });
+        this.loading.placeAt(this.domNode);
       },
 
       _init: function() {
+        this._mapInfoStorage = {
+          resetInfoWindow: null,
+          snappingTolerance: null
+        };
         this._editorMapClickHandlers = [];
         this._layerObjectsParaForTempaltePicker = [];
         this._configEditor = lang.clone(this.config.editor);
+        this._releaseEventAfterActiveArray = [];
+        this._canCreateLayersAreAllInvisibleFlag = false;
+        this._layerInfoParamArrayUseForRervertRenderre = [];
         this._createOverDef = new Deferred();
       },
 
@@ -73,10 +93,21 @@ define([
         LayerInfos.getInstance(this.map, this.map.itemInfo)
           .then(lang.hitch(this, function(operLayerInfos) {
             this._jimuLayerInfos = operLayerInfos;
+
+            var timeoutValue;
+            if(this.appConfig.theme.name === "BoxTheme") {
+              timeoutValue = 1050;
+              this.loading.show();
+            } else {
+              timeoutValue = 1;
+            }
             setTimeout(lang.hitch(this, function() {
+              if(!this.loading.hidden) {
+                this.loading.hide();
+              }
               this.widgetManager.activateWidget(this);
               this._createEditor();
-            }), 1);
+            }), timeoutValue);
           }));
       },
 
@@ -85,10 +116,12 @@ define([
        *******************************/
       onActive: function(){
         this.disableWebMapPopup();
+        this._bindEventAfterActive();
       },
 
       onDeActive: function(){
         this.enableWebMapPopup();
+        this._releaseEventAfterActive();
       },
 
       disableWebMapPopup: function() {
@@ -101,8 +134,8 @@ define([
         this._enableMapClickHandler();
 
         // instead of Mapmanager.resetInfoWindow by self resetInfoWindow
-        if (this._sharedInfoBetweenEdits.resetInfoWindow === null) {
-          this._sharedInfoBetweenEdits.resetInfoWindow = mapManager.resetInfoWindow;
+        if (this._mapInfoStorage.resetInfoWindow === null) {
+          this._mapInfoStorage.resetInfoWindow = mapManager.resetInfoWindow;
           this.own(on(this.map.infoWindow, "show", lang.hitch(this, function() {
             if (window.appInfo.isRunInMobile) {
               this.map.infoWindow.maximize();
@@ -111,23 +144,25 @@ define([
         }
         mapManager.resetInfoWindow = lang.hitch(this, function() {});
 
-        //this._sharedInfoBetweenEdits.editCount++;
+        // backup map snappingTolerance and reset it.
+        if(this.map.snappingManager && this._configEditor.snappingTolerance !== undefined) {
+          this._mapInfoStorage.snappingTolerance = this.map.snappingManager.tolerance;
+          // default value is 15 pixels, compatible with old version app.
+          this.map.snappingManager.tolerance = this._configEditor.snappingTolerance;
+        }
       },
 
       enableWebMapPopup: function() {
         var mapManager = MapManager.getInstance();
         var mapInfoWindow = mapManager.getMapInfoWindow();
-        // recover restInfoWindow when close widget.
-        //this._sharedInfoBetweenEdits.editCount--;
-        if (this._sharedInfoBetweenEdits.resetInfoWindow) {
-          //this._sharedInfoBetweenEdits.editCount === 0 &&
-
+        // revert restInfoWindow when close widget.
+        if (this._mapInfoStorage.resetInfoWindow) {
           this.map.setInfoWindow(mapInfoWindow.bigScreen);
           mapManager.isMobileInfoWindow = false;
 
           mapManager.resetInfoWindow =
-            lang.hitch(mapManager, this._sharedInfoBetweenEdits.resetInfoWindow);
-          this._sharedInfoBetweenEdits.resetInfoWindow = null;
+            lang.hitch(mapManager, this._mapInfoStorage.resetInfoWindow);
+          this._mapInfoStorage.resetInfoWindow = null;
           mapManager.resetInfoWindow();
           this._disableMapClickHandler();
           // hide popup and delete selection
@@ -135,6 +170,10 @@ define([
           this.editor._clearSelection();
           // recall enableWebMap
           mapManager.enableWebMapPopup();
+        }
+        // revert map snappingTolerance.
+        if(this.map.snappingManager && this._mapInfoStorage.snappingTolerance !== null) {
+          this.map.snappingManager.tolerance = this._mapInfoStorage.snappingTolerance;
         }
       },
 
@@ -153,7 +192,7 @@ define([
             if(editorMapClickHandler && editorMapClickHandler.remove) {
               editorMapClickHandler.remove();
             }
-          });
+          }, this);
           this._editorMapClickHandlers = [];
         }
       },
@@ -272,7 +311,8 @@ define([
             var layerObject = map.getLayer(map.graphicsLayerIds[i]);
             if(layerObject &&
                layerObject.url &&
-               (layerObject.url.toLowerCase() === layerUrl.toLowerCase())) {
+               (portalUrlUtils.removeProtocol(layerObject.url.toLowerCase()) ===
+                portalUrlUtils.removeProtocol(layerUrl.toLowerCase()))) {
               resultLayerObject = layerObject;
               break;
             }
@@ -307,6 +347,17 @@ define([
             layerInfo.featureLayer = layerObject;
             resultLayerInfosParam.push(layerInfo);
           }
+
+          // update this._canCreateLayersAreAllInvisibleFlag
+          if(!this._canCreateLayersAreAllInvisibleFlag &&
+             layerObject &&
+             layerObject.isEditable &&
+             layerObject.isEditable() &&
+             layerObject.getEditCapabilities &&
+             layerObject.getEditCapabilities() &&
+             !layerObject.visible) {
+            this._canCreateLayersAreAllInvisibleFlag = true;
+          }
         }, this);
         return resultLayerInfosParam;
       },
@@ -321,6 +372,14 @@ define([
             this._layerObjectsParaForTempaltePicker.push(layerInfo.featureLayer);
           }
         }, this);
+
+        // change string of templatePicker is empty
+        this._defaultTempaltePickerEmpeyStr =
+            esriBundle.widgets.templatePicker.creationDisabled;
+        if(this._canCreateLayersAreAllInvisibleFlag) {
+          esriBundle.widgets.templatePicker.creationDisabled =
+            this.nls.noCanCreateLayerAreCurrentlyVisible;
+        }
 
         var bottomStyle = this._configEditor.toolbarVisible ? "" : "bottom: 0px";
         var topStyle = this._configEditor.useFilterEdit ? "top: 115px" : "top: 18px";
@@ -360,6 +419,10 @@ define([
         }
         settings.layerInfos = this._getLayerInfosParam();
         settings.templatePicker = this._getTemplatePicker(settings.layerInfos);
+        // set popup tolerance
+        if(this._configEditor.popupTolerance !== undefined) {
+          settings.singleSelectionTolerance = this._configEditor.popupTolerance;
+        }
 
         return settings;
       },
@@ -375,7 +438,7 @@ define([
       },
 
       /***************************************
-      * Methods for add extra works
+      * Methods for extra works
       ****************************************/
       _addButtonToInspector: function() {
         var closeButton = new Button({
@@ -426,6 +489,8 @@ define([
           }
         }, this);
 
+        // change render to service render if renderer has been changed.
+        this._changeToServiceRenderer(settings);
       },
 
       _worksAfterCreate: function(settings) {
@@ -434,9 +499,7 @@ define([
         // resize editPopup
         this.editPopup.resize(500, 251);
         // update templatePicker for responsive.
-        this.editor.templatePicker.update();
-        //just for BoxTheme
-        setTimeout(lang.hitch(this, this._update), 900);
+        this.editor.templatePicker.update(true);
         // // reset default selectionSymbol that change by Editor dijit.
         // array.forEach(this.editor.settings.layerInfos, function(layerInfo) {
         //   layerInfo.featureLayer.setSelectionSymbol();
@@ -446,11 +509,17 @@ define([
         this._addFilterEditor(settings);
 
         this._createOverDef.resolve();
+
+        // bind events after create.
+        this._bindEventsAfterCreate();
+
       },
 
       _worksAfterClose: function() {
         esriBundle.toolbars.draw.start = this._defaultStartStr;
         esriBundle.toolbars.draw.addPoint = this._defaultAddPointStr;
+        esriBundle.widgets.templatePicker.creationDisabled =
+          this._defaultTempaltePickerEmpeyStr;
 
         // show lable layer.
         var labelLayer = this.map.getLayer("labels");
@@ -462,14 +531,272 @@ define([
         if(this._filterEditor) {
           this._filterEditor.destroy();
         }
+
+        // revert renderer to layer renderer.
+        this._revertToLayerRenderer();
+      },
+
+      _bindEventsAfterCreate: function() {
+        /*
+        this.own(on(this.editor.editToolbar,
+              'graphic-move-start',
+              lang.hitch(this, this._onGraphicMoveStart)));
+        */
+
+        this.own(on(this.editor.editToolbar,
+              'graphic-move-stop',
+              lang.hitch(this, this._onGraphicMoveStop)));
+      },
+
+      _bindEventAfterActive: function() {
+        var handle = aspect.before(this.map,
+              'onClick',
+              lang.hitch(this, this._beforeMapClick));
+        this._releaseEventAfterActiveArray.push(handle);
+      },
+
+      _releaseEventAfterActive: function() {
+        array.forEach(this._releaseEventAfterActiveArray, function(handle) {
+          handle.remove();
+        }, this);
+        this._releaseEventAfterActiveArray = [];
+      },
+
+      _changeToServiceRenderer: function(settings) {
+        array.forEach(settings.layerInfos, function(layerInfo) {
+          if(!layerInfo.featureLayer._json) {
+            return;
+          }
+          var layerRenderer = layerInfo.featureLayer.renderer;
+          var layerRendererJson = layerRenderer.toJson();
+          var serviceDefJson = Json.parse(layerInfo.featureLayer._json);
+          var serviceRendererJson = serviceDefJson.drawingInfo.renderer;
+          if(!jimuUtils.isEqual(layerRendererJson, serviceRendererJson)) {
+            layerInfo._layerRenderer = layerRenderer;
+            this._layerInfoParamArrayUseForRervertRenderre.push(layerInfo);
+            layerInfo.featureLayer.setRenderer(rendererJsonUtils.fromJson(serviceRendererJson));
+            layerInfo.featureLayer.redraw();
+          }
+        }, this);
+      },
+
+      _revertToLayerRenderer: function() {
+        array.forEach(this._layerInfoParamArrayUseForRervertRenderre, function(layerInfo) {
+          if(layerInfo._layerRenderer) {
+            layerInfo.featureLayer.setRenderer(layerInfo._layerRenderer);
+            layerInfo.featureLayer.redraw();
+          }
+        }, this);
+        this._layerInfoParamArrayUseForRervertRenderre = [];
+      },
+
+      /*****************************
+       * Methods for control graphic
+       ****************************/
+      _updateSelectedFeature: function(selectedFeature) {
+        if(selectedFeature) {
+          selectedFeature.getLayer().applyEdits(null, [selectedFeature]);
+          this.editor._clearSelection();
+        }
+      },
+
+      _autoApplyEditWhenGeometryIsModified: function(/*graphicMoveStopEvent*/) {
+        var editToolbarCurrentState = this.editor.editToolbar.getCurrentState();
+        var selectedFeature = editToolbarCurrentState && editToolbarCurrentState.graphic;
+
+        //if( this._configEditor.autoApplyEditWhenGeometryIsMoved &&
+        //   graphicMoveStopEvent &&
+        //   graphicMoveStopEvent.target &&
+        //   graphicMoveStopEvent.target._modified) {
+
+        if(this._configEditor.autoApplyEditWhenGeometryIsMoved) {
+          if(this._checkStickyMoveTolerance()) {
+            this._updateSelectedFeature(selectedFeature);
+          } else {
+            // not sure the geometry has been changed or not except for 'point'
+            if(editToolbarCurrentState.isModified && selectedFeature.geometry.type !== "point") {
+              this._updateSelectedFeature(selectedFeature);
+            }
+          }
+        }
+      },
+
+      _checkStickyMoveTolerance: function() {
+        var isOut = true;
+        var editToolbarCurrentState = this.editor.editToolbar.getCurrentState();
+        var selectedFeature = editToolbarCurrentState && editToolbarCurrentState.graphic;
+        if(selectedFeature) {
+          if(!this._isOutStickyMoveToleranceCheckedByMoveTrack(selectedFeature)) {
+            this._revertGraphicPosition(selectedFeature);
+            isOut = false;
+          }
+
+          // delete position record after checked sticky move.
+          delete selectedFeature._moveTrack;
+          delete selectedFeature._originalGeometryAtMoveStart;
+        }
+        return isOut;
+      },
+
+      _isOutStickyMoveToleranceCheckedByOriginalGeometry: function(selectedFeature) {
+        var referencePoint;
+        var movedReferencePoint;
+        var mapWidth;
+        var tolerancePerPixel;
+        var toleranceMapUnit;
+        var toleranceExtent;
+        var isOut = true;
+        // init referencePoint and movedReferencePoint
+        if(selectedFeature.geometry.type === 'point') {
+          referencePoint = selectedFeature._originalGeometryAtMoveStart;
+          movedReferencePoint = selectedFeature.geometry;
+        } else {
+          if(selectedFeature.geometry.getExtent &&
+              selectedFeature._originalGeometryAtMoveStart.getExtent) {
+            referencePoint = selectedFeature._originalGeometryAtMoveStart.getExtent().getCenter();
+            movedReferencePoint = selectedFeature.geometry.getExtent().getCenter();
+          }
+        }
+
+        if(this._configEditor.stickyMoveTolerance &&
+            referencePoint &&
+            movedReferencePoint) {
+          mapWidth = this.map.extent.getWidth();
+          tolerancePerPixel = mapWidth / this.map.width;
+          toleranceMapUnit = this._configEditor.stickyMoveTolerance * tolerancePerPixel;
+          toleranceExtent = new Extent(0,
+                                       0,
+                                       toleranceMapUnit,
+                                       toleranceMapUnit,
+                                       selectedFeature.spatialReference);
+          toleranceExtent = toleranceExtent.centerAt(referencePoint);
+          if(toleranceExtent.contains(movedReferencePoint)) {
+            isOut = false;
+          }
+        }
+        return isOut;
+      },
+
+      _isOutStickyMoveToleranceCheckedByMoveTrack: function(selectedFeature) {
+        var isOut = true;
+        var mapWidth;
+        var tolerancePerPixel;
+        var toleranceMapUnit;
+        var toleranceExtent;
+        var moveTrack = selectedFeature._moveTrack;
+        var movedReferencePoint;
+
+        if(moveTrack) {
+          movedReferencePoint = new Point(moveTrack.x,
+                                          moveTrack.y,
+                                          selectedFeature.spatialReference);
+        }
+
+        if(this._configEditor.stickyMoveTolerance &&
+            movedReferencePoint) {
+          mapWidth = this.map.extent.getWidth();
+          tolerancePerPixel = mapWidth / this.map.width;
+          toleranceMapUnit = this._configEditor.stickyMoveTolerance * tolerancePerPixel;
+          toleranceExtent = new Extent(-toleranceMapUnit / 2,
+                                       -toleranceMapUnit / 2,
+                                       toleranceMapUnit,
+                                       toleranceMapUnit,
+                                       selectedFeature.spatialReference);
+          if(toleranceExtent.contains(movedReferencePoint)) {
+            isOut = false;
+          }
+        }
+        return isOut;
+      },
+
+      _revertGraphicPosition: function(selectedFeature) {
+
+        // according to original geometry to revert .
+        /*
+        if(selectedFeature._originalGeometryAtMoveStart) {
+          selectedFeature.geometry = selectedFeature._originalGeometryAtMoveStart;
+          delete selectedFeature._originalGeometryAtMoveStart;
+        }
+        */
+
+        var moveTrack = selectedFeature._moveTrack;
+        // according to move track to revert .
+        if(moveTrack) {
+          switch (selectedFeature.geometry.type) {
+          case 'point':
+            selectedFeature.geometry.x -= moveTrack.x;
+            selectedFeature.geometry.y += moveTrack.y;
+            break;
+          case 'polygon':
+            array.forEach(selectedFeature.geometry.rings, function(ring) {
+              array.forEach(ring, function(point) {
+                point[0] -= moveTrack.x;
+                point[1] += moveTrack.y;
+              });
+            });
+            break;
+          case 'polyline':
+            array.forEach(selectedFeature.geometry.paths, function(path) {
+              array.forEach(path, function(point) {
+                point[0] -= moveTrack.x;
+                point[1] += moveTrack.y;
+              });
+            });
+            break;
+          case 'multiPoint':
+            array.forEach(selectedFeature.geometry.points, function(point) {
+              point[0] -= moveTrack.x;
+              point[1] += moveTrack.y;
+            });
+            break;
+          default:
+            return;
+          }
+
+          //hide editing assistance geometry when !autoApplyEditWhenGeometryIsMoved.
+          if(!this._configEditor.autoApplyEditWhenGeometryIsMoved) {
+            array.forEach(this.editor.editToolbar._getAffectedTools("MOVE"), function(tool) {
+              tool.suspend();
+            }, this);
+          }
+
+          if(selectedFeature.geometry.type === "point") {
+            this.editor._clearSelection();
+          }
+
+          selectedFeature.draw();
+        }
+      },
+
+      _recordsSelectedFeatureInfoWhenMoveStart: function(moveStartEvent) {
+        var selectedFeature = moveStartEvent && moveStartEvent.graphic;
+        if (selectedFeature && selectedFeature.geometry) {
+          selectedFeature._originalGeometryAtMoveStart = lang.clone(selectedFeature.geometry);
+        }
+      },
+
+      _recordsSelectedFeatureInfoWhenMoveStop: function(moveStopEvetn) {
+        var selectedFeature = moveStopEvetn && moveStopEvetn.graphic;
+        var transform = moveStopEvetn && moveStopEvetn.transform;
+        var mapWidth = this.map.extent.getWidth();
+        var lengthPerPixel = mapWidth / this.map.width;
+
+        if (selectedFeature && transform) {
+          if(!selectedFeature._moveTrack) {
+            // the first move at graphic edit period.
+            selectedFeature._moveTrack = {x: 0, y: 0};
+          }
+          selectedFeature._moveTrack.x += transform.dx * lengthPerPixel;
+          selectedFeature._moveTrack.y += transform.dy * lengthPerPixel;
+        }
       },
 
       /*************************
-       * Events of Widget
+       * Response events
        ************************/
       _update: function() {
         if(this.editor){
-          this.editor.templatePicker.update();
+          this.editor.templatePicker.update(true);
         }
       },
 
@@ -498,15 +825,29 @@ define([
         setTimeout(lang.hitch(this, this._update), 100);
       },
 
-      // onReceiveData: function(name, widgetId, data) {
-      //   this._createOverDef.then(lang.hitch(this, function() {
-      //     this.map.onClick(data.clickEvt);
-      //   }));
-      // }
       reClickMap: function(clickEvt) {
         this._createOverDef.then(lang.hitch(this, function() {
           this.map.onClick(clickEvt);
         }));
+      },
+
+      _onGraphicMoveStart: function(evt) {
+        this._recordsSelectedFeatureInfoWhenMoveStart(evt);
+      },
+
+      _onGraphicMoveStop: function(evt) {
+        this._recordsSelectedFeatureInfoWhenMoveStop(evt);
+        this._autoApplyEditWhenGeometryIsModified(evt);
+      },
+
+      _onGraphicChangeStop: function(evt) {
+        this._autoApplyEditWhenGeometryIsModified(evt);
+      },
+
+      _beforeMapClick: function() {
+        if(!this._configEditor.autoApplyEditWhenGeometryIsMoved) {
+          this._checkStickyMoveTolerance();
+        }
       }
 
     });

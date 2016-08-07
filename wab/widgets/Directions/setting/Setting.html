@@ -10,8 +10,10 @@
 					<span class="jimu-ellipsis">${nls.routeUrl}</span>
 				</td>
 				<td class="route-td">
-					<input data-dojo-attach-point="routeUrl" data-dojo-type="jimu/dijit/ServiceURLInput"
-					data-dojo-attach-props="trim:true" type="text" style="width:100%;" placeHolder="${_routeTaskUrl}" />
+					<select data-dojo-attach-point="routeUrl" data-dojo-type="jimu/dijit/ServiceURLComboBox"
+									data-dojo-attach-props="trim:true;hasDownArrow:false;autoComplete:true"
+									id="routeLayer" name="routeLayer" style="width:100%;height:30px;">
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -71,10 +73,10 @@
 						<tbody>
 							<tr>
 								<td style="width:200px;">
-									<span class="jimu-ellipsis">${nls.maxLocations}</span>
+									<span class="jimu-ellipsis">${nls.maximumSuggestions}</span>
 								</td>
 								<td style="width:auto;">
-									<input data-dojo-attach-point="maxLocations" data-dojo-type="dijit/form/NumberSpinner" data-dojo-props='required:true,value:6,smallDelta:1,largeDelta:1,constraints:{min:1},intermediateChanges:true' type="text" style="width:220px;" />
+									<input data-dojo-attach-point="maximumSuggestions" data-dojo-type="dijit/form/NumberSpinner" data-dojo-props='required:true,value:6,smallDelta:1,largeDelta:1,constraints:{min:1},intermediateChanges:true' type="text" style="width:220px;" />
 								</td>
 							</tr>
 						</tbody>

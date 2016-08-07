@@ -64,7 +64,7 @@ define(['dojo/_base/declare',
         }
 
         var _Pl;
-        if (l.layerObject.layerInfos) {
+        if (l.layerObject && l.layerObject.layerInfos) {
           _Pl = l.layerObject;
         } else if (l.li && typeof (l.li.parentLayerID) !== 'undefined') {
           _Pl = this._map.getLayer(l.li.parentLayerID);
@@ -153,12 +153,15 @@ define(['dojo/_base/declare',
       if (lyrs) {
         for (var key in lyrs) {
           var l = lyrs[key];
-
           if (alreadyChecked.indexOf(l.id) === -1) {
             if (l.visibleSubLayers) {
               l.layerObject.setVisibleLayers(l.visibleSubLayers);
             } else if (typeof (l.pl) === 'undefined') {
-              l.layerObject.setVisibility(auto ? false : l.visible);
+              if (l.id && l.id.indexOf('_CL') === -1) {
+                l.layerObject.setVisibility(false);
+              } else {
+                l.layerObject.setVisibility(auto ? false : l.visible);
+              }
             } else {
               var visLayers = lang.clone(l.layerObject.visibleLayers);
               if (l.layerObject.layerInfos) {
@@ -168,7 +171,9 @@ define(['dojo/_base/declare',
                     var kk = lyrs[k];
                     if (kk.li) {
                       if (kk.li.subLayerId && visLayers.indexOf(kk.li.subLayerId) === -1) {
-                        visLayers.push(kk.li.subLayerId);
+                        if (l.id.indexOf('_CL') === -1) {
+                          visLayers.push(kk.li.subLayerId);
+                        }
                       }
                     }
                   }
@@ -192,11 +197,14 @@ define(['dojo/_base/declare',
                   }
                 }
               } else {
-                if (l.layerObject.setVisibility) {
-                  l.layerObject.setVisibility(auto ? false : l.visible);
-                }
-                if (l.pl.hasOwnProperty('visibility')) {
-                  l.pl.visibility = auto ? false : l.visible;
+                var lo = l.layerObject;
+                if ((l.id && l.id.indexOf('_CL') === -1) || (lo.id && lo.id.indexOf('_CL') === -1)) {
+                  if (l.layerObject.setVisibility) {
+                    l.layerObject.setVisibility(auto ? false : l.visible);
+                  }
+                  if (l.pl.hasOwnProperty('visibility')) {
+                    l.pl.visibility = auto ? false : l.visible;
+                  }
                 }
               }
             }
@@ -215,16 +223,24 @@ define(['dojo/_base/declare',
           clusterLayers[key] = this._layerList[key];
           if (this._layerList[key].pl) {
             if (this._layerList[key].pl.setVisibility) {
-              this._layerList[key].pl.setVisibility(true);
+              this._layerList[key].pl.setVisibility(false);
             }
             if (this._layerList[key].pl.hasOwnProperty('visibility')) {
-              this._layerList[key].pl.visibility = true;
+              this._layerList[key].pl.visibility = false;
+            }
+          }
+          if (this._layerList[key].layerObject._parentLayer) {
+            if (this._layerList[key].layerObject._parentLayer.setVisibility) {
+              this._layerList[key].layerObject._parentLayer.setVisibility(false);
+            }
+            if (this._layerList[key].layerObject._parentLayer.hasOwnProperty('visibility')) {
+              this._layerList[key].layerObject._parentLayer.visibility = false;
             }
           }
         }
       }
       if (Object.keys(clusterLayers).length > 0) {
-        this.setLayerVisibility(clusterLayers, true);
+        this.setLayerVisibility(clusterLayers, false);
       }
 
       this._layerList = {};

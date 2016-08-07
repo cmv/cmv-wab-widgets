@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Görüntü Ölçümü"
-  })
-);
+define({
+  "_widgetLabel": "Görüntü Ölçümü"
+});

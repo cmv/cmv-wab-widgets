@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Kuvan mitat"
-  })
-);
+define({
+  "_widgetLabel": "Kuvan mitat"
+});

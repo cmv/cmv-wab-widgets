@@ -1,13 +1,13 @@
-﻿define(
-   ({
-    _widgetLabel: "Editar",
-    title: "Selecione um modelo para criar feições",
-    pressStr: "Pressionar ",
-    ctrlStr: " CTRL ",
-    snapStr: " para habilitar o ajuste",
-    close: "Fechar",
-    featureLayers: "Camadas de Feição 1",
-    searchTemplates: "Pesquisar Modelos",
-    noAvailableTempaltes: "Nenhum modelo disponível"
-  })
-);
+define({
+  "_widgetLabel": "Editar",
+  "_featureAction_Edit": "Editar",
+  "title": "Selecione um modelo para criar feições",
+  "pressStr": "Pressionar ",
+  "ctrlStr": " CTRL ",
+  "snapStr": " para habilitar o ajuste",
+  "close": "Fechar",
+  "featureLayers": "Camadas de Feições",
+  "searchTemplates": "Pesquisar Modelos",
+  "noAvailableTempaltes": "Nenhum modelo disponível",
+  "noCanCreateLayerAreCurrentlyVisible": "Nenhuma camada editável está atualmente visível."
+});

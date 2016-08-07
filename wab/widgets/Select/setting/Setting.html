@@ -1,0 +1,23 @@
+<div>
+  <div class="config-section inline">
+    <div class="label">${nls.setSelectionColor}</div>
+    <div data-dojo-attach-point="colorPicker" data-dojo-type="jimu/dijit/ColorPickerButton">
+    </div>
+  </div>
+  <div class="config-section">
+    <div class="label">${nls.selectionMode}</div>
+    <div class="option">
+      <input name="selectionMode" type="radio" data-dojo-attach-point="partialMode"
+            data-dojo-attach-event="onclick: _onSelectPartialMode"/>
+      <label>${nls.partiallyWithin}</label>
+    </div>
+    <div class="option">
+      <input name="selectionMode" type="radio" data-dojo-attach-point="whollyMode"
+            data-dojo-attach-event="onclick: _onSelectWhollyMode"/>
+      <label>${nls.whollyWithin}</label>
+    </div>
+  </div>
+  <div class="config-section">
+    <div data-dojo-attach-point="exportCheckBoxDiv"></div>
+  </div>
+</div>

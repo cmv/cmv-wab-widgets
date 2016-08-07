@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Måling"
-  })
-);
+define({
+  "_widgetLabel": "Måling"
+});

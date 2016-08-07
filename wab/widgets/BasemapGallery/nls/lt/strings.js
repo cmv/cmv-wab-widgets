@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Pagrindo žemėlapiai"
-  })
-);
+define({
+  "_widgetLabel": "Pagrindo žemėlapiai"
+});

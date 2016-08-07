@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    showLayerLabels: "Toon tijdgebonden laagnamen op de widget."
-  })
-);
+define({
+  "showLayerLabels": "Toon tijdgebonden laagnamen op de widget."
+});

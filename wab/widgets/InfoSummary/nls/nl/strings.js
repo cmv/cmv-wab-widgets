@@ -1,11 +1,5 @@
-﻿define(
-   ({
-    title: "InfoSummary Widget",
-    helpText: "TODO InfoSummary Helptekst",
-    labels: {
-      status: "Status",
-      result: "Resultaat"
-    },
-    _widgetLabel: "Infosamenvatting (bèta)"
-  })
-);
+define({
+  "_widgetLabel": "InfoSummary",
+  "title": "InfoSummary Widget",
+  "helpText": "InfoSummary Helptekst"
+});

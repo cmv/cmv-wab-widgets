@@ -119,8 +119,7 @@
               geocoder.locator = new Locator(geocoder.url);
               geocoder.placefinding = true;
               geocoder.singleLineFieldName = "SingleLine";
-              geocoder.name = geocoder.name ||
-                "Esri World Geocoder";
+              geocoder.name = geocoder.name || this.nls.worldGeocoderName;
               //set place holder with geocoder name if it is not configured
               geocoder.placeholder = geocoder.placeholder || geocoder.name;
               if (this.config.searchExtent) {

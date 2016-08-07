@@ -1,14 +1,16 @@
 define({
   root: ({
     _widgetLabel: "Edit",
+    _featureAction_Edit: "Edit",
     title: "Select a template to create features",
     pressStr: "Press ",
     ctrlStr: " CTRL ",
     snapStr: " to enable snapping",
     close: "Close",
-    featureLayers: "Feature Layers1",
+    featureLayers: "Feature Layers",
     searchTemplates: "Search Templates",
-    noAvailableTempaltes: "No available templates"
+    noAvailableTempaltes: "No available templates",
+    noCanCreateLayerAreCurrentlyVisible:"No creatable layers are currently visible."
   }),
   "ar": 1,
   "cs": 1,
@@ -20,6 +22,7 @@ define({
   "fi": 1,
   "fr": 1,
   "he": 1,
+  "hr": 1,
   "it": 1,
   "ja": 1,
   "ko": 1,
@@ -32,6 +35,7 @@ define({
   "pt-pt": 1,
   "ro": 1,
   "ru": 1,
+  "sr": 1,
   "sv": 1,
   "th": 1,
   "tr": 1,

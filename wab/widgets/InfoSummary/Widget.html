@@ -1,18 +1,19 @@
 <div>
-  <div id="panelMain" class="panelContent" data-dojo-attach-point="panelMain">
+  <div class="panelContent" data-dojo-attach-point="panelMain">
     <div class="page">
       <div class="pageContent rounded" data-dojo-attach-point="pageContent">
-        <div class="pageHeader roundedTop" data-dojo-attach-point="pageHeader" id="pageHeader">
+        <div class="pageHeader roundedTop jimu-main-background" data-dojo-attach-point="pageHeader">
           <div class="pageLabel" data-dojo-attach-point="pageLabel"></div>
           <div class="pageCounter">
             <div data-dojo-attach-point="panelMainIcon" />
           </div>
         </div>
         <div class="pageTitle" data-dojo-attach-point="pageTitle"></div>
-        <div id="pageCloseMain" class="pageClose" data-dojo-attach-point="pageCloseMain" data-dojo-attach-event="onclick:_close"></div>
+        <div class="lastUpdated" data-dojo-attach-point="lastUpdated"></div>
+        <div class="pageClose" data-dojo-attach-point="pageCloseMain" data-dojo-attach-event="onclick:_close"></div>
       </div>
       <div class="pageBody" data-dojo-attach-point="pageBody">
-        <div id="pageMain" class="resultsContent" data-dojo-attach-point="pageMain"></div>
+        <div class="resultsContent noselect" data-dojo-attach-point="pageMain"></div>
       </div>
     </div>
   </div>

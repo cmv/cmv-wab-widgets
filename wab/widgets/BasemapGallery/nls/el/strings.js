@@ -1,5 +1,3 @@
-﻿define(
-   ({
-    _widgetLabel: "Συλλογή υποβάθρων"
-  })
-);
+define({
+  "_widgetLabel": "Συλλογή υποβάθρων"
+});

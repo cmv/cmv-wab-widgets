@@ -19,9 +19,12 @@ define([
    'dojo/_base/array',
    'dojo/_base/event',
    'dojo/_base/lang',
-   'dojo/_base/html',
    'dojo/_base/Color',
    'dojo/DeferredList',
+   'dojo/dom-class',
+   'dojox/gfx/fx',
+   'dojo/on',
+   'dojo/Evented',
    'esri/layers/GraphicsLayer',
    'esri/graphic',
    'esri/geometry/Extent',
@@ -29,18 +32,24 @@ define([
    'esri/symbols/PictureMarkerSymbol',
    'esri/symbols/SimpleMarkerSymbol',
    'esri/symbols/SimpleLineSymbol',
+   'esri/symbols/TextSymbol',
+   'esri/symbols/Font',
    'esri/renderers/SimpleRenderer',
    'esri/request',
    'esri/tasks/query',
    'esri/tasks/QueryTask',
-   'esri/symbols/jsonUtils'
+   'esri/symbols/jsonUtils',
+   'esri/layers/FeatureLayer'
 ], function (declare,
   array,
   dojoEvent,
   lang,
-  html,
   Color,
   DeferredList,
+  domClass,
+  fx,
+  on,
+  Evented,
   GraphicsLayer,
   Graphic,
   Extent,
@@ -48,13 +57,16 @@ define([
   PictureMarkerSymbol,
   SimpleMarkerSymbol,
   SimpleLineSymbol,
+  TextSymbol,
+  Font,
   SimpleRenderer,
   esriRequest,
   Query,
   QueryTask,
-  jsonUtils) {
-  var clusterLayer = declare('ClusterLayer', [GraphicsLayer], {
-
+  jsonUtils,
+  FeatureLayer) {
+  var clusterLayer = declare('ClusterLayer', [GraphicsLayer, Evented], {
+    //TODO change size breaks to equal interval eg. breaks = (max - min) / numRanges;
     constructor: function (options) {
       //Defaults
       this.clusterGraphics = null;
@@ -62,76 +74,145 @@ define([
       this.clusterSize = 120;
       this._singles = [];
       this._showSingles = true;
-      this.initalLoad = true;
       this.updateFeatures = [];
 
       //Options
       this._parentLayer = options.parentLayer;
+      if (this._parentLayer) {
+        this.objectIdField = this._parentLayer.objectIdField;
+        this.fields = this._parentLayer.fields;
+      }
       this.name = options.name;
       this._map = options.map;
       this.color = Color.fromString(options.color || '#ff0000');
+      this._styleColor = options._styleColor;
       this.symbolData = options.lyrInfo.symbolData;
+      this.countColor = this.symbolData._highLightColor;
       this.itemId = options.lyrInfo.itemId;
       this.refresh = options.lyrInfo.refresh;
+      this.displayFeatureCount = this.symbolData.displayFeatureCount;
       this.node = options.node;
-      this._features = options.features;
+      this.countEnabled = options.countEnabled;
+      this.legendNode = options.legendNode;
       this.id = options.id;
       this.infoTemplate = options.infoTemplate;
       this.url = options.lyrInfo.url;
       this._testRenderer = options.lyrInfo.renderer;
-      if (options.originOperLayer) {
-        this._getInfoTemplate(options.originOperLayer);
+      this.originOperLayer = options.originOperLayer;
+      if (this.originOperLayer) {
+        this._getInfoTemplate(this.originOperLayer);
       }
-
+      this.lyrInfo = options.lyrInfo;
+      this.lyrType = options.lyrType;
+      this.filter = options.filter;
       this._setupSymbols();
       this._setFieldNames();
-      this._initFeatures();
+      this.countFeatures(this._parentLayer);
+
+      if(this._parentLayer.refreshInterval > 0) {
+        setInterval(lang.hitch(this, this._updateEnd), this._parentLayer.refreshInterval * 60000);
+      }
+
     },
 
-    _initFeatures: function () {
-      if (typeof (this._features) === 'undefined') {
-        if (typeof (this.url) !== 'undefined') {
-          this.loadData(this.url);
+    countFeatures: function (lyr) {
+      //Query the features based on map extent for supported layer types
+      var q = new Query();
+      q.geometry = this._map.extent;
+      if (lyr.queryCount) {
+        lyr.queryCount(q, lang.hitch(this, function (r) {
+          if (r > 0) {
+            //Feature collection layers with no features
+            // throw an error that I can't seem to catch when you
+            //apply a where clause such as "1=1"
+            this.nodeCount = r;
+            this._initFeatures(this._parentLayer);
+          }
+          else {
+            this.nodeCount = 0;
+            var fl = new FeatureLayer(lyr.url);
+            on(fl, "load", lang.hitch(this, function() {
+              this.countFeatures(fl);
+            }));
+          }
+        }));
+      } else {
+        this._initFeatures(this._parentLayer);
+      }
+    },
+
+    _initFeatures: function (lyr) {
+      this._features = [];
+      var loading = true;
+      var q = new Query();
+      var staticLayers = ["CSV", "Feature Collection", "GeoRSS", "KML"];
+      if (staticLayers.indexOf(this.lyrType) > -1 || this.url === null) {
+        this._getSourceFeatures(lyr.graphics);
+        this.clusterFeatures();
+      } else if (typeof (this.url) !== 'undefined') {
+        this.loadData(this.url);
+      } else {
+        q.where = this.filter ? this.filter : "1=1";
+        q.outFields = this._fieldNames;
+        q.returnGeometry = true;
+        if (lyr.queryFeatures) {
+          lyr.queryFeatures(q).then(lang.hitch(this, function (results) {
+            if (results.features) {
+              this._getSourceFeatures(results.features);
+              this.clusterFeatures();
+            }
+          }));
         } else {
-          this.loaded = "error";
+          loading = "error";
         }
       }
-      else {
-        this.loaded = true;
+      if (loading !== "error") {
+        if (!this.extentChangeSignal) {
+          this.extentChangeSignal = this._map.on('extent-change', lang.hitch(this, this.handleMapExtentChange));
+        }
+        if (!this.clickSignal) {
+          this.clickSignal = this.on('click', lang.hitch(this, this.handleClick));
+        }
       }
+    },
 
-      if (this.loaded !== "error") {
-        this.extentChangeSignal = this._map.on('extent-change', lang.hitch(this, this.handleMapExtentChange));
-        this.clickSignal = this.on('click', lang.hitch(this, this.handleClick));
+    _getSourceFeatures: function (features) {
+      this._features = [];
+      for (var i = 0; i < features.length; i++) {
+        var g = features[i];
+        if (g.geometry) {
+          this._features.push(g);
+        }
       }
     },
 
     //this is a duplicate of what's in settings...as the infoTemplate passed from settings was not being honored
     // for MapServer sublayers...works fine without this for hosted layers
     _getInfoTemplate: function (originOpLayer) {
-      var infoTemplate;
-      if (originOpLayer) {
-        if (originOpLayer.parentLayerInfo) {
-          if (originOpLayer.parentLayerInfo.controlPopupInfo) {
-            var infoTemplates = originOpLayer.parentLayerInfo.controlPopupInfo.infoTemplates;
-            if (infoTemplates) {
-              if (this.url) {
-                var subLayerId = this.url.split("/").pop();
-                if (subLayerId) {
-                  if (infoTemplates.indexOf) {
-                    if (infoTemplates.indexOf(subLayerId) > -1) {
-                      this.infoTemplate = infoTemplates[subLayerId].infoTemplate;
-                    }
-                  } else if (infoTemplates.hasOwnProperty(subLayerId)) {
-                    this.infoTemplate = infoTemplates[subLayerId].infoTemplate;
-                  }
+      var l;
+      if (originOpLayer.parentLayerInfo) {
+        l = originOpLayer.parentLayerInfo;
+      } else {
+        l = originOpLayer;
+      }
+      if (l.controlPopupInfo) {
+        var infoTemplates = l.controlPopupInfo.infoTemplates;
+        if (infoTemplates) {
+          if (this.url) {
+            var subLayerId = this.url.split("/").pop();
+            if (subLayerId) {
+              if (infoTemplates.indexOf) {
+                if (infoTemplates.indexOf(subLayerId) > -1) {
+                  this.infoTemplate = infoTemplates[subLayerId].infoTemplate;
                 }
+              } else if (infoTemplates.hasOwnProperty(subLayerId)) {
+                this.infoTemplate = infoTemplates[subLayerId].infoTemplate;
               }
             }
           }
+          this.setInfoTemplate(this.infoTemplate);
         }
       }
-      return infoTemplate;
     },
 
     _setFieldNames: function () {
@@ -140,9 +221,21 @@ define([
       if (this.infoTemplate) {
         if (typeof (this.infoTemplate.info) !== 'undefined') {
           var fieldInfos = this.infoTemplate.info.fieldInfos;
-          for (var i = 0; i < fieldInfos.length; i++) {
-            if (fieldInfos[i].visible) {
-              this._fieldNames.push(fieldInfos[i].fieldName);
+          if (fieldInfos) {
+            for (var i = 0; i < fieldInfos.length; i++) {
+              if (fieldInfos[i].visible) {
+                this._fieldNames.push(fieldInfos[i].fieldName);
+              }
+            }
+          }
+        }
+      }
+      if (this.symbolData.featureDisplayOptions) {
+        if (this.symbolData.featureDisplayOptions.fields.length > 0) {
+          for (var ii = 0; ii < this.symbolData.featureDisplayOptions.fields.length; ii++) {
+            var f = this.symbolData.featureDisplayOptions.fields[ii];
+            if (this._fieldNames.indexOf(f.name) === -1) {
+              this._fieldNames.push(f.name);
             }
           }
         }
@@ -151,6 +244,10 @@ define([
         //get all fields
         this._fieldNames = ["*"];
       }
+    },
+
+    setLayerInfo: function(lyrInfo){
+      this.lyrInfo = lyrInfo;
     },
 
     clearSingles: function (singles) {
@@ -187,17 +284,18 @@ define([
       var q = new Query();
       q.returnGeometry = false;
       q.geometry = this._map.extent;
+      if (this.filter) {
+        q.where = this.filter;
+      } else {
+        q.where = "1=1";
+      }
       var qt = new QueryTask(url);
       qt.executeForIds(q).then(lang.hitch(this, function (results) {
         if (this.node) {
-          this.node.innerHTML = results ? results.length.toLocaleString() : 0;
-          html.setStyle(this.node.parentNode.childNodes[1], "right", this.node.clientWidth + "px");
-          var h = 70 - this.node.parentNode.childNodes[1].childNodes[0].clientHeight;
-          if (h > 2) {
-            html.setStyle(this.node.parentNode.childNodes[1], "top", h / 2 + "px");
-          } else {
-            html.setStyle(this.node.parentNode.childNodes[1], "top", 2 + "px");
+          if (domClass.contains(this.node, 'searching')) {
+            domClass.remove(this.node, 'searching');
           }
+          this.node.innerHTML = results ? results.length.toLocaleString() : 0;
         }
       }));
     },
@@ -207,6 +305,9 @@ define([
         this.initalCount(url);
         var q = new Query();
         q.where = "1=1";
+        if (this.filter) {
+          q.where = this.filter;
+        }
         q.returnGeometry = false;
         this.queryPending = true;
         var qt = new QueryTask(url);
@@ -236,21 +337,22 @@ define([
               queryList.then(lang.hitch(this, function (queryResults) {
                 this.queryPending = false;
                 if (!this.cancelRequest) {
-
                   if (queryResults) {
                     var sr = this._map.spatialReference;
                     var fs = [];
                     for (var i = 0; i < queryResults.length; i++) {
-                      for (var ii = 0; ii < queryResults[i][1].features.length; ii++) {
-                        var item = queryResults[i][1].features[ii];
-                        if (typeof (item.geometry) !== 'undefined') {
-                          var geom = new Point(item.geometry.x, item.geometry.y, sr);
-                          var gra = new Graphic(geom);
-                          gra.setAttributes(item.attributes);
-                          if (this.infoTemplate) {
-                            gra.setInfoTemplate(this.infoTemplate);
+                      if (queryResults[i][1].features) {
+                        for (var ii = 0; ii < queryResults[i][1].features.length; ii++) {
+                          var item = queryResults[i][1].features[ii];
+                          if (typeof (item.geometry) !== 'undefined') {
+                            var geom = new Point(item.geometry.x, item.geometry.y, sr);
+                            var gra = new Graphic(geom);
+                            gra.setAttributes(item.attributes);
+                            if (this.infoTemplate) {
+                              gra.setInfoTemplate(this.infoTemplate);
+                            }
+                            fs.push(gra);
                           }
-                          fs.push(gra);
                         }
                       }
                     }
@@ -264,9 +366,13 @@ define([
                     if (shouldUpdate) {
                       this._features = fs;
                       this.clusterFeatures();
-                    }
 
-                    this.loaded = true;
+                      this.emit("update-end",{
+                        bubbles: true,
+                        cancelable: true
+                      });
+
+                    }
                   }
                 } else {
                   console.log("Cancelled ClusterLayer 2");
@@ -283,7 +389,6 @@ define([
     //click
     handleClick: function (event) {
       var singles = [];
-
       if (event.graphic) {
         var g = event.graphic;
         if (g.attributes) {
@@ -293,14 +398,14 @@ define([
             singles = attr.Data;
             event.stopPropagation();
             this._addSingles(singles);
-            this._map.infoWindow.setFeatures(attr.Data);
           } else {
             this._map.infoWindow.setFeatures([g]);
           }
         }
       }
-
-      this._map.infoWindow.show(event.mapPoint);
+      if (this.infoTemplate) {
+        this._map.infoWindow.show(event.mapPoint);
+      }
       dojoEvent.stop(event);
     },
 
@@ -340,18 +445,14 @@ define([
           for (var ii = 0; ii < responseFeatureSetFeatures.length; ii++) {
             var item = responseFeatureSetFeatures[ii];
             if (item.geometry) {
-              this._features.push({
-                attributes: item.attributes,
-                geometry: new Point(item.geometry.x, item.geometry.y, sr)
-              });
-
               var gra = new Graphic(this.getGraphicOptions(item, sr, r));
               gra.setAttributes(item.attributes);
-              if (this._infoTemplate) {
-                gra.setInfoTemplate(this._infoTemplate);
+              if (this.infoTemplate) {
+                gra.setInfoTemplate(this.infoTemplate);
               }
               gra.setSymbol(r.getSymbol(gra));
               this._parentLayer.add(gra);
+              this._features.push(gra);
 
             } else {
               console.log("Null geometry skipped");
@@ -405,59 +506,54 @@ define([
     },
 
     flashGraphics: function (graphics) {
-      var cls = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, this.color, 7);
-      var cls2 = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, this.color, 3);
+      for (var i = 0; i < graphics.length; i++) {
+        var g = graphics[i];
+        this._flashFeature(g);
+      }
+    },
 
-      var cls4 = new SimpleLineSymbol(SimpleLineSymbol.STYLE_NULL, new Color(0, 0, 0, 0), 0);
-      var x = 0;
-
-      clearInterval(this.s);
-
-      this.s = setInterval(lang.hitch(this, function () {
-        for (var i = 0; i < graphics.length; i++) {
-          var g = graphics[i];
-          var s;
-          if (x % 2) {
-            s = g.symbol;
-            if (s) {
-              if (typeof (s.setOutline) === 'function') {
-                s.setOutline(cls);
-              }
-              g.setSymbol(s);
-            }
-          } else {
-            s = g.symbol;
-            if (s) {
-              if (typeof (s.setOutline) === 'function') {
-                s.setOutline(cls2);
-              }
-              g.setSymbol(s);
-            }
+    _flashFeature: function (feature) {
+      var symbol;
+      if (feature.geometry) {
+        var color = Color.fromHex(this._styleColor);
+        var color2 = lang.clone(color);
+        color2.a = 0.4;
+        symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, feature.symbol.size,
+          new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+          color, 1),
+          color2);
+      }
+      var g = new Graphic(feature.geometry, symbol);
+      this._map.graphics.add(g);
+      var dShape = g.getDojoShape();
+      if (dShape) {
+        fx.animateStroke({
+          shape: dShape,
+          duration: 700,
+          color: {
+            start: dShape.strokeStyle.color,
+            end: dShape.strokeStyle.color
+          },
+          width: {
+            start: 18,
+            end: 0
           }
-        }
-        this.redraw();
-        x = x + 1;
-        if (x === 5) {
-          clearInterval(this.s);
-          for (var j = 0; j < graphics.length; j++) {
-            var gra = graphics[j];
-            var sym = gra.symbol;
-            if (typeof (sym) !== 'undefined') {
-              if (typeof (sym.setOutline) === 'function') {
-                sym.setOutline(cls4);
-              }
-              gra.setSymbol(sym);
-            }
-          }
-          this.redraw();
-          //TODO handle in a better way
-          this.clusterFeatures();
-        }
-      }), 600);
+        }).play();
+        setTimeout(this._clearFeature, 850, g);
+      }
+    },
+
+    _clearFeature: function (f) {
+      var gl = f.getLayer();
+      gl.remove(f);
     },
 
     setColor: function (color) {
       this.color = color;
+    },
+
+    setStyleColor: function(color){
+      this._styleColor = color;
     },
 
     cancelPendingRequests: function () {
@@ -535,8 +631,42 @@ define([
             var label = count.toString();
             var size = label.length * 19;
             var size2 = size;
+            size += 5;
 
-            this._setSymbols(size + 5, size2 + 1);
+            var fnt = new Font();
+            fnt.family = "Arial";
+            fnt.size = "16px";
+            var symText = new TextSymbol(label, fnt, this.countColor);
+            symText.setOffset(0, -4);
+
+            var testSize;
+            if (this.symbolData && this.symbolData.symbol) {
+              if (this.symbolData.symbol.size) {
+                testSize = this.symbolData.symbol.size;
+              } else if (this.symbolData.symbol.width) {
+                var w = this.symbolData.symbol.width;
+                var h = this.symbolData.symbol.height;
+                testSize = w >= h ? w : h;
+              }
+            } else if (this.icon.width) {
+              size = this.icon.width >= size ? this.icon.width + 5: size;
+              size = this.icon.height >= size ? this.icon.height + 5: size;
+              size2 = this.icon.width >= size2 ? this.icon.width + 1: size2;
+              size2 = this.icon.height >= size2 ? this.icon.height + 1: size2;
+            } else if (this.icon.size) {
+              testSize = this.icon.size;
+            }
+
+            if (testSize) {
+              size = testSize >= size ? testSize + 5 : size;
+              size2 = testSize >= size2 ? testSize + 1 : size2;
+            }
+
+            if (size2 >= size) {
+              size += size2 - size === 0 ? 4 : (size2 - size) + 5;
+            }
+
+            this._setSymbols(size + 15, size);
 
             var attr = {
               Count: count,
@@ -546,14 +676,26 @@ define([
               if (typeof (this.symbolData) !== 'undefined') {
                 if (this.symbolData.symbolType !== 'CustomSymbol') {
                   this.add(new Graphic(clusterGraphic.center, this.csym, attr));
-                  this.add(new Graphic(clusterGraphic.center, this.csym3, attr));
+                  if (this.displayFeatureCount) {
+                    this.add(new Graphic(clusterGraphic.center, symText, attr));
+                  } else {
+                    this.add(new Graphic(clusterGraphic.center, this.csym3, attr));
+                  }
                 } else {
                   this.add(new Graphic(clusterGraphic.center, this.csym, attr));
-                  this.add(new Graphic(clusterGraphic.center, this.psym, attr));
+                  if (this.displayFeatureCount) {
+                    this.add(new Graphic(clusterGraphic.center, symText, attr));
+                  } else {
+                    this.add(new Graphic(clusterGraphic.center, this.psym, attr));
+                  }
                 }
               } else {
                 this.add(new Graphic(clusterGraphic.center, this.csym, attr));
-                this.add(new Graphic(clusterGraphic.center, this.psym, attr));
+                if (this.displayFeatureCount) {
+                  this.add(new Graphic(clusterGraphic.center, symText, attr));
+                } else {
+                  this.add(new Graphic(clusterGraphic.center, this.psym, attr));
+                }
               }
             } else {
               //TODO look to see if this could be consolidated further
@@ -596,29 +738,10 @@ define([
 
     _updateNode: function (total) {
       if (this.node) {
-        this.node.innerHTML = total.toLocaleString();
-        var w;
-
-        if (this.node.clientWidth && this.node.clientWidth > 0) {
-          w = this.node.clientWidth;
+        if (total) {
+          this.node.innerHTML = total.toLocaleString();
         } else {
-          w = total.toLocaleString().length * 10;
-        }
-        html.setStyle(this.node.parentNode.childNodes[1], "right", w + "px");
-
-        var h;
-        if (this.node.parentNode.childNodes[1].childNodes[0].clientHeight === 0) {
-          this.initalLoad = true;
-          h = 60;
-        } else {
-          h = 70 - this.node.parentNode.childNodes[1].childNodes[0].clientHeight;
-          this.initalLoad = false;
-        }
-
-        if (h > 2) {
-          html.setStyle(this.node.parentNode.childNodes[1], "top", h / 2 + "px");
-        } else {
-          html.setStyle(this.node.parentNode.childNodes[1], "top", 2 + "px");
+          this.node.innerHTML = 0;
         }
       }
     },
@@ -719,9 +842,9 @@ define([
 
     _setupSymbols: function () {
       if (typeof (this.symbolData) !== 'undefined') {
+        this.countColor = this.symbolData._highLightColor;
         this.backgroundClusterSymbol = this.symbolData.clusterSymbol;
         this.icon = this.symbolData.icon;
-
         if (this.symbolData.symbolType === "LayerSymbol") {
           if (this._parentLayer.renderer) {
             this.renderer = this._parentLayer.renderer;
@@ -733,13 +856,15 @@ define([
           this.renderer = new SimpleRenderer(jsonUtils.fromJson(this.symbolData.symbol));
         }
 
-        //Default single symbol if none are found through the layers renderer fo some reason
-        //TODO may pull this out completely if we go the renderer route
         var symColor = this.color.toRgb();
         var cls = new SimpleLineSymbol(SimpleLineSymbol.STYLE_NULL, new Color(0, 0, 0, 0), 0);
         this._singleSym = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 9, cls,
           new Color([symColor[0], symColor[1], symColor[2], 0.5]));
       }
+    },
+
+    getLayer: function(){
+      return this;
     },
 
     getClusterCenter: function (graphics) {
@@ -754,10 +879,20 @@ define([
       return cPt;
     },
 
+    destroy: function () {
+      this._clear();
+      this.removeEventListeners();
+    },
+
     _clear: function () {
       this.clear();
       this._features = [];
+    },
+
+    _updateEnd: function() {
+      this.loadData(this.url);
     }
+
   });
 
   return clusterLayer;

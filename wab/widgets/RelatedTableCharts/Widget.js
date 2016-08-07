@@ -233,6 +233,12 @@ define([
             if (searchInstance.search.sources.length < 2) {
               this._hasMulitpleSourcesInSearch = false;
             }
+            //Reduce size of suggetion box only in smartphones
+            if (window.appInfo.isRunInMobile && searchInstance.search &&
+              searchInstance.search.suggestionsNode) {
+              domStyle.set(searchInstance.search.suggestionsNode, "height",
+                "110px");
+            }
             this._onWindowResize();
             //override style according to theme
             this.setTheme();
@@ -290,14 +296,16 @@ define([
         //handle mouse move on map to show tooltip only on non-touch devices
         if ("ontouchstart" in document.documentElement) {
           domStyle.set(this._mapTooltip, "display", "none");
-        }
-        else {
+        } else {
           this._mapMoveHandler = this.map.on("mouse-move", lang.hitch(
           this, this._onMapMouseMove));
           this.map.on("mouse-out", lang.hitch(this, function () {
             domStyle.set(this._mapTooltip, "display", "none");
           }));
         }
+        //handle extent change event to show popup near the selected location
+        this._extentChangeHandler = this.map.on("extent-change", lang.hitch(
+          this, this._onExtentChange));
       },
 
       /**
@@ -339,6 +347,18 @@ define([
       },
 
       /**
+      * check whether info popup is opened and set its location on map
+      * @memberOf widgets/RelatedTableCharts/Widget.js
+      **/
+      _onExtentChange: function () {
+        if (this._selectedLocation && this.map.infoWindow && this.map.infoWindow.isShowing) {
+          var screenPoint = this.map.toScreen(this._selectedLocation.geometry);
+          this.map.infoWindow.show(screenPoint, this.map.getInfoWindowAnchor(
+              screenPoint));
+        }
+      },
+
+      /**
       * This function will disconnects the map events
       * @memberOf widgets/RelatedTableCharts/Widget.js
       **/
@@ -350,6 +370,9 @@ define([
         if (this._mapMoveHandler) {
           this._mapMoveHandler.remove();
           this._mapTooltip.style.display = "none";
+        }
+        if (this._extentChangeHandler) {
+          this._extentChangeHandler.remove();
         }
       },
 
@@ -552,8 +575,8 @@ define([
       },
 
       destroy: function () {
-        this.inherited(arguments);
         this._clearResults();
+        this.inherited(arguments);
       },
       /**
       * This function initialize the workFlow of searching
@@ -624,9 +647,6 @@ define([
         if (this.accordionContainer) {
           domClass.add(this.accordionContainer, "esriCTHidden");
         }
-        if (this.errorNode) {
-          domClass.add(this.errorNode, "esriCTHidden");
-        }
         //clear auto refresh timers
         this._clearTimer();
       },
@@ -667,6 +687,10 @@ define([
             //reset timer as new result is shown
             this._resetTimer();
           } else {
+            //if no data available then reset chat array
+            if (this.accordionPanel) {
+              this.accordionPanel.chartArray = [];
+            }
             domClass.add(this.accordionContainer, "esriCTHidden");
             domClass.remove(this.errorNode, "esriCTHidden");
           }
@@ -786,7 +810,8 @@ define([
         //if selected geometry is point get its extent
         //else if geometry is polygon get its centroid
         //else directly use geometry
-        if (selectedLocation.geometry.type === "point") {
+        if (selectedLocation.geometry.type === "point" && featureLayer.geometryType ===
+          "esriGeometryPoint") {
           featureGeometry = this._extentFromPoint(selectedLocation.geometry).centerAt(
             selectedLocation.geometry);
         } else if (selectedLocation.geometry.type === "polygon") {
@@ -852,11 +877,7 @@ define([
       * @memberOf widgets/RelatedTableCharts/Widget.js
       **/
       _getRelatedRecords: function (def, selectedIndex, selectedFeatureID) {
-        var relQuery, chartData, indexValue = 0, currentObject, isLabelFieldDate = false;
-        chartData = {
-          chartSeries: [],
-          chartLabels: []
-        };
+        var relQuery, currentObject, isLabelFieldDate = false;
         currentObject = this.config.charts[selectedIndex];
         relQuery = new RelationshipQuery();
         relQuery.outFields = ["*"];
@@ -881,76 +902,16 @@ define([
         //query related features
         this._operationalLayers[selectedIndex].queryRelatedFeatures(relQuery,
           lang.hitch(this, function (relRecords) {
-            var fset, features, i;
+            var fset, features;
             fset = relRecords[selectedFeatureID];
             features = fset ? fset.features : [];
             //If selected feature has related records proceed and create chart data
             if (features.length > 0) {
-              array.forEach(features, lang.hitch(this, function (
-                currentFeature, index) {
-                var chartLabels = {},
-                  chartSeries = {}, labelValue = "";
-                indexValue = indexValue + 1;
-                chartSeries.y = currentFeature.attributes[
-                  currentObject.chartConfig.dataSeriesField];
-                //added spaces in tooltip to fix width issue
-                chartSeries.tooltip = currentFeature.attributes[
-                    currentObject.chartConfig.dataSeriesField] +
-                  "&nbsp;&nbsp;&nbsp;&nbsp;";
-                chartLabels = {
-                  "value": index + 1,
-                  "y": currentFeature.attributes[currentObject.chartConfig
-                    .dataSeriesField]
-                };
-                //if label field is not configured set the value as as empty else set from attributes
-                if (currentObject.chartConfig.labelField === "esriCTEmptyOption") {
-                  labelValue = "";
-                } else {
-                  //check if value of the configured field is zero them set 0 in label
-                  if (currentFeature.attributes[currentObject.chartConfig.labelField] === 0) {
-                    labelValue = 0;
-                  }
-                  else {
-                    //if configured field type is date then convert the epoch date to locale date else set the value for attributes
-                    if (isLabelFieldDate) {
-                      labelValue = this._getLocaleFormatedDate(currentFeature.attributes[
-                        currentObject.chartConfig.labelField]);
-                    } else {
-                      labelValue = currentFeature.attributes[currentObject.chartConfig
-                        .labelField] || "";
-                    }
-                  }
-                  //set sort value which will be used to sort chart data
-                  chartLabels.sortValue = currentFeature.attributes[currentObject.chartConfig.
-                  labelField] || "";
-                  chartSeries.sortValue = currentFeature.attributes[currentObject.chartConfig.
-                  labelField] || "";
-                }
-                chartLabels.text = labelValue;
-                chartSeries.text = labelValue;
-                //text in charts always should be string, so add empty string to it
-                chartLabels.text = chartLabels.text + "";
-                if (currentObject.chartConfig.chartColor.colorType ===
-                  "ColorByFieldValue") {
-                  chartSeries.fill = this._getColorForFieldValue(
-                    currentFeature.attributes[currentObject.chartConfig
-                      .chartColor.colorInfo.layerField],
-                    currentObject);
-                }
-                chartData.chartLabels.push(chartLabels);
-                chartData.chartSeries.push(chartSeries);
-              }));
-              if (currentObject.chartConfig.labelField !== "esriCTEmptyOption") {
-                //Sort chart data according to text(labels)
-                chartData.chartLabels.sort(this._sortChartData);
-                chartData.chartSeries.sort(this._sortChartData);
-                //as we have sorted chart data the values need to organized again
-                for (i = 0; i < chartData.chartLabels.length; i++) {
-                  chartData.chartLabels[i].value = i + 1;
-                }
+              if (currentObject.chartConfig.chartType !== "PolarChart") {
+                this._createChartData(currentObject, features, isLabelFieldDate, def);
+              } else {
+                this._createPolarChartData(currentObject, features, selectedIndex, def);
               }
-              //set the configured color settings for chart
-              this._setChartColorSettings(def, chartData, currentObject);
             } else {
               def.resolve();
             }
@@ -961,10 +922,135 @@ define([
       },
 
       /**
+      * create chart data to generate polar graph
+      * @param {object} currentObject: current chart settings object
+      * @param {array} features: query response
+      * @param {boolean} isLabelFieldDate: flag to check label field
+      * @param {object} def: deferred object
+      * @memberOf widgets/RelatedTableCharts/Widget.js
+      */
+      _createChartData: function (currentObject, features, isLabelFieldDate, def) {
+        var chartData = {
+          chartSeries: [],
+          chartLabels: []
+        }, i;
+        array.forEach(features, lang.hitch(this, function (currentFeature, index) {
+          var chartLabels = {}, chartSeries = {}, labelValue = "";
+          chartSeries.y = currentFeature.attributes[
+                  currentObject.chartConfig.dataSeriesField];
+          //added spaces in tooltip to fix width issue
+          chartSeries.tooltip = currentFeature.attributes[
+                    currentObject.chartConfig.dataSeriesField] +
+                  "&nbsp;&nbsp;&nbsp;&nbsp;";
+          chartLabels = {
+            "value": index + 1,
+            "y": currentFeature.attributes[currentObject.chartConfig
+                    .dataSeriesField]
+          };
+          //if label field is not configured set the value as as empty else set from attributes
+          if (currentObject.chartConfig.labelField === "esriCTEmptyOption") {
+            labelValue = "";
+          } else {
+            //check if value of the configured field is zero them set 0 in label
+            if (currentFeature.attributes[currentObject.chartConfig.labelField] === 0) {
+              labelValue = 0;
+            } else {
+              //if configured field type is date then convert the epoch date to locale date else set the value for attributes
+              if (isLabelFieldDate) {
+                labelValue = this._getLocaleFormatedDate(currentFeature.attributes[
+                        currentObject.chartConfig.labelField]);
+              } else {
+                labelValue = currentFeature.attributes[currentObject.chartConfig
+                        .labelField] || "";
+              }
+            }
+            //set sort value which will be used to sort chart data
+            chartLabels.sortValue = currentFeature.attributes[currentObject.chartConfig.
+                  labelField] || "";
+            chartSeries.sortValue = currentFeature.attributes[currentObject.chartConfig.
+                  labelField] || "";
+          }
+          chartLabels.text = labelValue;
+          chartSeries.text = labelValue;
+          //text in charts always should be string, so add empty string to it
+          chartLabels.text = chartLabels.text + "";
+          if (currentObject.chartConfig.chartColor.colorType ===
+                  "ColorByFieldValue") {
+            chartSeries.fill = this._getColorForFieldValue(
+                    currentFeature.attributes[currentObject.chartConfig
+                      .chartColor.colorInfo.layerField],
+                    currentObject);
+          }
+          chartData.chartLabels.push(chartLabels);
+          chartData.chartSeries.push(chartSeries);
+        }));
+        if (currentObject.chartConfig.labelField !== "esriCTEmptyOption") {
+          //Sort chart data according to text(labels)
+          chartData.chartLabels.sort(this._sortChartData);
+          chartData.chartSeries.sort(this._sortChartData);
+          //as we have sorted chart data the values need to organized again
+          for (i = 0; i < chartData.chartLabels.length; i++) {
+            chartData.chartLabels[i].value = i + 1;
+          }
+        }
+        //set the configured color settings for chart
+        this._setChartColorSettings(def, chartData, currentObject);
+      },
+
+      /**
+      * create chart data to generate polar graph
+      * @param {object} currentObject: current chart settings object
+      * @param {array} features: query response
+      * @param {object} def: deferred object
+      * @memberOf widgets/RelatedTableCharts/Widget.js
+      */
+      _createPolarChartData: function (currentObject, features, selectedIndex, def) {
+        var chartData = {
+          chartSeries: [],
+          chartLabels: []
+        }, fieldInfos, objectIdField, orderfield;
+
+        if (currentObject.chartConfig.chartColor.colorType ===
+          "ColorByFieldValue") {
+          orderfield = currentObject.chartConfig.chartColor.colorInfo.layerField;
+          features.sort(function (a, b) {
+            if (b.attributes[orderfield] > a.attributes[orderfield]) {
+              return -1;
+            }
+            if (b.attributes[orderfield] < a.attributes[orderfield]) {
+              return 1;
+            }
+            return 0;
+          });
+        }
+        fieldInfos = currentObject.chartConfig.polarChartConfig;
+        objectIdField = this._operationalLayers[selectedIndex].objectIdField;
+        array.forEach(features, lang.hitch(this, function (currentFeature) {
+          var key = {}, dataObj = {}, chartSeries = {}, obj = {};
+          for (key in fieldInfos) {
+            dataObj[fieldInfos[key].alias] = currentFeature.attributes[fieldInfos[key].fieldName];
+          }
+          chartSeries = { "data": dataObj };
+          if (currentObject.chartConfig.chartColor.colorType ===
+                  "ColorByFieldValue") {
+            chartSeries.fill = this._getColorForFieldValue(
+                    currentFeature.attributes[currentObject.chartConfig
+                      .chartColor.colorInfo.layerField],
+                    currentObject);
+            //get legend label from color by field value
+            chartSeries.legendLabel = currentFeature.attributes[orderfield];
+          }
+          obj[currentFeature.attributes[objectIdField]] = chartSeries;
+          chartData.chartSeries.push(obj);
+        }));
+        this._setChartColorSettings(def, chartData, currentObject);
+      },
+
+      /**
       * This function is used to create buffer parameters based on geometry and radius
       * @param{object} first feature
       * @param{object} second feature
-      * @memberOf main
+      * @memberOf widgets/RelatedTableCharts/Widget.js
       */
       _sortChartData: function (a, b) {
         if (a.sortValue > b.sortValue) {
@@ -1347,6 +1433,8 @@ define([
                         }
                         //set popup info
                         selectedLayer.popupInfo = subLayer.popupInfo;
+                        //reset definitionExpression
+                        selectedLayer.definitionExpression = null;
                         //set layer's definitionExpression
                         if (subLayer.layerDefinition) {
                           //set layer's definitionExpression
@@ -1373,6 +1461,8 @@ define([
                   selectedLayer.title = layer.title;
                   //set popup info
                   selectedLayer.popupInfo = layer.popupInfo;
+                  //reset definitionExpression
+                  selectedLayer.definitionExpression = null;
                   if (layer.layerDefinition) {
                     //set layer's definitionExpression
                     if (layer.layerDefinition.definitionExpression) {
