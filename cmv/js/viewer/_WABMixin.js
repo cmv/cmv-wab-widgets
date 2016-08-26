@@ -9,7 +9,12 @@ define([
 
     'jimu/WidgetManager',
     'jimu/ConfigManager',
-    'dojo/i18n!jimu/nls/main'
+    'jimu/MapManager',
+    'jimu/LayerInfos/LayerInfos',
+
+    'dojo/i18n!jimu/nls/main',
+
+    'config/wabapp-config'
 
 ], function (
     declare,
@@ -22,7 +27,12 @@ define([
 
     WidgetManager,
     ConfigManager,
-    mainBundle
+    MapManager,
+    LayerInfos,
+
+    mainBundle,
+
+    wabConfig
 ) {
 
     return declare(null, {
@@ -68,7 +78,7 @@ define([
             /* customizations for WAB widgets */
             if (options.widgetManager) {
                 if (!this.widgetManager) {
-                    this.createWidgetManager();
+                    this.configureWAB();
                 }
                 options.widgetManager = this.widgetManager;
             }
@@ -90,7 +100,7 @@ define([
             }
         },
 
-        createWidgetManager: function () {
+        configureWAB: function () {
             //minimal configuration of global vars
             // polluting the global namespace is bad! ;)
             window.jimuConfig = {
@@ -99,26 +109,34 @@ define([
             };
             window.jimuNls = mainBundle;
             window.isRTL = false;
-            window.appInfo = {};
 
-            this.widgetManager = WidgetManager.getInstance();
-            this.widgetManager.map = this.map;
-
-            // create a minimal configuration
-            var cm = new ConfigManager();
-            cm.appConfig = {
-                theme: {
-                    name: 'cmv'
-                },
-                map: {},
-                portalUrl: 'https://www.arcgis.com/'
+            var pathparts = window.location.pathname.split('/');
+            var pagename= pathparts.pop();
+            window.appInfo = {
+                appPath: pathparts.join('/') + '/'
             };
-            this.widgetManager.appConfig = cm.getAppConfig();
 
             // make the map look like a "webmap"
             if (!this.map.itemInfo) {
                 this.createMapItemInfo();
             }
+
+            // create a minimal configuration
+            var cm = new ConfigManager();
+            //wabConfig.map.layers = this.getOperationalLayers();
+            wabConfig.map.mapOptions = this.config.mapOptions;
+            cm.appConfig = cm._addDefaultValues(wabConfig);
+
+            var mm = MapManager.getInstance({
+                appConfig: cm.getAppConfig()
+            });
+            mm.map = this.map;
+
+            var lm = LayerInfos.getInstance(this.map, this.map.itemInfo);
+
+            this.widgetManager = WidgetManager.getInstance();
+            this.widgetManager.map = this.map;
+            this.widgetManager.appConfig = cm.getAppConfig();
 
             // tap into the map's infoWindowOnClick method
             if (this.mapClickMode.defaultMode === 'identify') {
@@ -134,9 +152,26 @@ define([
         },
 
         createMapItemInfo: function () {
-            var layers = [], basemapLayers = [], layer;
+            var basemap = this.map.getBasemap();
+            this.map.itemInfo = {
+                item: {
+                    title: '',
+                    description: ''
+                },
+                itemData: {
+                    baseMap: {
+                        baseMapLayers: this.getBaseMapLayers(),
+                        title: basemap
+                    },
+                    operationLayers: this.getOperationalLayers(),
+                    bookmarks: []
+                }
+            };
+        },
 
-            // add all the operational layers
+        // get all the operational layers
+        getOperationalLayers: function () {
+            var layers = [], layer;
             array.forEach(this.config.operationalLayers, lang.hitch(this, function (opLayer) {
                 layer = this.map.getLayer(opLayer.options.id);
                 if (layer) {
@@ -149,13 +184,16 @@ define([
                     });
                 }
             }));
+            return layers;
+        },
 
-            // add the basemap layer(s)
-            var basemap = this.map.getBasemap();
+        // get the basemap layer(s)
+        getBaseMapLayers: function () {
+            var layers = [], layer;
             array.forEach(this.map.basemapLayerIds, lang.hitch(this, function (layerId) {
                 layer = this.map.getLayer(layerId);
                 if (layer) {
-                    basemapLayers.push({
+                    layers.push({
                         id: layer.id,
                         opacity: layer.opacity,
                         url: layer.url,
@@ -163,22 +201,7 @@ define([
                     });
                 }
             }));
-
-            this.map.itemInfo = {
-                item: {
-                    title: '',
-                    description: ''
-                },
-                itemData: {
-                    baseMap: {
-                        baseMapLayers: basemapLayers,
-                        title: basemap
-                    },
-                    operationLayers: layers,
-                    bookmarks: []
-                }
-            };
+            return layers;
         }
-
     });
 });
