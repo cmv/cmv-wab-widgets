@@ -141,6 +141,7 @@ define([
                             {
                                 id: 'WABChart',
                                 uri: 'wabwidgets/Chart/Widget',
+                                version: '2.1',
                                 config: {
                                     "charts": [
                                         {
