@@ -36,6 +36,11 @@ define([
             var widgets = [],
                 paneWidgets;
 
+            // support for WAB widgets
+            if (this.configureWAB) {
+                this.configureWAB();
+            }
+
             for (var key in this.config.widgets) {
                 if (this.config.widgets.hasOwnProperty(key)) {
                     var widget = lang.clone(this.config.widgets[key]);
@@ -154,14 +159,10 @@ define([
                 options.layerInfos = this.identifyLayerInfos;
             }
 
-            /* customizations for WAB widgets */
-            if (options.widgetManager) {
-                if (!this.widgetManager) {
-                    this.configureWAB();
-                }
-                options.widgetManager = this.widgetManager;
+            // support for WAB widgets
+            if (options.widgetManager && this.wabWidgetManager) {
+                options.widgetManager = this.wabWidgetManager;
             }
-            /* end customizations for WAB widgets */
 
             // create the widget
             var pnl = options.parentWidget;
