@@ -2,6 +2,10 @@ define([
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/array',
+    'dojo/topic',
+    'dojo/aspect',
+    'put-selector',
+    'dijit/Menu',
 
     'jimu/WidgetManager',
     'jimu/ConfigManager',
@@ -16,6 +20,10 @@ define([
     declare,
     lang,
     array,
+    topic,
+    aspect,
+    put,
+    Menu,
 
     WidgetManager,
     ConfigManager,
@@ -29,8 +37,6 @@ define([
 
     return declare(null, {
 
-        wabWidgetManager: null,
-
         configureWAB: function () {
             //minimal configuration of global vars
             // polluting the global namespace is bad! ;)
@@ -39,7 +45,7 @@ define([
                 breakPoints: [0]
             };
             window.jimuNls = mainBundle;
-            window.isRTL = wabConfig.isRTL;
+            window.isRTL = false;
 
             var pathparts = window.location.pathname.split('/');
             var pagename= pathparts.pop();
@@ -51,7 +57,6 @@ define([
             if (!this.map.itemInfo) {
                 this.createMapItemInfo();
             }
-            var lm = LayerInfos.getInstance(this.map, this.map.itemInfo);
 
             // create a minimal configuration
             var cm = new ConfigManager();
@@ -64,9 +69,23 @@ define([
             });
             mm.map = this.map;
 
-            this.wabWidgetManager = WidgetManager.getInstance();
-            this.wabWidgetManager.map = this.map;
-            this.wabWidgetManager.appConfig = cm.getAppConfig();
+            var lm = LayerInfos.getInstance(this.map, this.map.itemInfo);
+
+            this.widgetManager = WidgetManager.getInstance();
+            this.widgetManager.map = this.map;
+            this.widgetManager.appConfig = cm.getAppConfig();
+
+            // tap into the map's infoWindowOnClick method
+            if (this.mapClickMode.defaultMode === 'identify') {
+                aspect.after(this.map, 'setInfoWindowOnClick', lang.hitch(this, function () {
+                    var enabled = this.map._params.showInfoWindowOnClick;
+                    if (enabled) {
+                        topic.publish('mapClickMode/setDefault');
+                    } else {
+                        topic.publish('mapClickMode/setCurrent', 'none');
+                    }
+                }));
+            }
         },
 
         createMapItemInfo: function () {
