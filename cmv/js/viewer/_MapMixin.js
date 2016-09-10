@@ -4,6 +4,8 @@ define([
     'dojo/on',
     'dojo/dom',
     'dojo/_base/array',
+    'dojo/topic',
+    'dojo/aspect',
     'dojo/Deferred',
 
     'esri/map',
@@ -16,6 +18,8 @@ define([
     on,
     dom,
     array,
+    topic,
+    aspect,
     Deferred,
 
     Map
@@ -177,6 +181,18 @@ define([
                     evt.target.centerAt(pnt);
                 }, 100);
             });
+
+            // tap into the map's setInfoWindowOnClick method
+            if (this.mapClickMode.defaultMode === 'identify') {
+                aspect.after(this.map, 'setInfoWindowOnClick', lang.hitch(this, function () {
+                    var enabled = this.map._params.showInfoWindowOnClick;
+                    if (enabled) {
+                        topic.publish('mapClickMode/setDefault');
+                    } else {
+                        topic.publish('mapClickMode/setCurrent', 'none');
+                    }
+                }));
+            }
 
             // in _LayoutsMixin
             this.createPanes();
