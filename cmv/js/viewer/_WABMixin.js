@@ -37,69 +37,6 @@ define([
 
     return declare(null, {
 
-        createWidget: function (widgetConfig, options, WidgetClass) {
-            // set any additional options
-            if (widgetConfig.id) {
-                options.id = widgetConfig.id + '_widget';
-            }
-            options.parentWidget = widgetConfig.parentWidget;
-
-            //replace config map, layerInfos arrays, etc
-            if (options.map) {
-                options.map = this.map;
-            }
-            if (options.mapRightClickMenu) {
-                // create right-click menu
-                if (!this.mapRightClickMenu) {
-                    this.mapRightClickMenu = new Menu({
-                        targetNodeIds: [this.map.root],
-                        selector: '.esriMapLayers' // restrict to map only
-                    });
-                    this.mapRightClickMenu.startup();
-                }
-                options.mapRightClickMenu = this.mapRightClickMenu;
-            }
-            if (options.mapClickMode) {
-                options.mapClickMode = this.mapClickMode.current;
-            }
-            if (options.legendLayerInfos) {
-                options.layerInfos = this.legendLayerInfos;
-            }
-            if (options.layerControlLayerInfos) {
-                options.layerInfos = this.layerControlLayerInfos;
-            }
-            if (options.editorLayerInfos) {
-                options.layerInfos = this.editorLayerInfos;
-            }
-            if (options.identifyLayerInfos) {
-                options.layerInfos = this.identifyLayerInfos;
-            }
-
-            /* customizations for WAB widgets */
-            if (options.widgetManager) {
-                if (!this.widgetManager) {
-                    this.configureWAB();
-                }
-                options.widgetManager = this.widgetManager;
-            }
-            /* end customizations for WAB widgets */
-
-            // create the widget
-            var pnl = options.parentWidget;
-            if ((widgetConfig.type === 'titlePane' || widgetConfig.type === 'contentPane' || widgetConfig.type === 'floating')) {
-                this[widgetConfig.id] = new WidgetClass(options, put('div')).placeAt(pnl.containerNode);
-            } else if (widgetConfig.type === 'domNode') {
-                this[widgetConfig.id] = new WidgetClass(options, widgetConfig.srcNodeRef);
-            } else {
-                this[widgetConfig.id] = new WidgetClass(options);
-            }
-
-            // start up the widget
-            if (this[widgetConfig.id] && this[widgetConfig.id].startup && !this[widgetConfig.id]._started) {
-                this[widgetConfig.id].startup();
-            }
-        },
-
         configureWAB: function () {
             //minimal configuration of global vars
             // polluting the global namespace is bad! ;)

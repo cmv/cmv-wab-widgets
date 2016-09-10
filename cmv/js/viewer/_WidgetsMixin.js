@@ -25,7 +25,6 @@ define([
     FloatingWidgetDialog
 ) {
 
-    'use strict';
     return declare(null, {
 
         legendLayerInfos: [],
@@ -80,8 +79,10 @@ define([
         widgetLoader: function (widgetConfig, position) {
             var parentId, pnl;
 
-            // only proceed for valid widget types
             var widgetTypes = ['titlePane', 'contentPane', 'floating', 'domNode', 'invisible', 'map'];
+            // add any user-defined widget types
+            widgetTypes = widgetTypes.concat(this.config.widgetTypes || []);
+            // only proceed for valid widget types
             if (array.indexOf(widgetTypes, widgetConfig.type) < 0) {
                 this.handleError({
                     source: 'Controller',
@@ -152,6 +153,15 @@ define([
             if (options.identifyLayerInfos) {
                 options.layerInfos = this.identifyLayerInfos;
             }
+
+            /* customizations for WAB widgets */
+            if (options.widgetManager) {
+                if (!this.widgetManager) {
+                    this.configureWAB();
+                }
+                options.widgetManager = this.widgetManager;
+            }
+            /* end customizations for WAB widgets */
 
             // create the widget
             var pnl = options.parentWidget;
