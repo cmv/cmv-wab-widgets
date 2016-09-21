@@ -175,7 +175,7 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
         ```
         All widget-specific stylesheets will be loaded above this stylesheet in the HEAD.
 
-    - Add stylesheets to help the cmv and cmv themes co-exist:
+    - Add stylesheets to help the CMV and JIMU themes co-exist:
         ``` html
         <!-- needed so that jimu styles play nice with cmv -->
         <link rel="stylesheet" type="text/css" href="./css/cmv-jimu.css">
