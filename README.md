@@ -1,5 +1,5 @@
 # cmv-wab-widgets
-[![Join the chat at https://gitter.im/tmcgee/cmv-wab-widgets](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tmcgee/cmv-wab-widgets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Code Climate](https://codeclimate.com/github/tmcgee/cmv-wab-widgets/badges/gpa.svg)](https://codeclimate.com/github/tmcgee/cmv-wab-widgets) [![Join the chat at https://gitter.im/tmcgee/cmv-wab-widgets](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tmcgee/cmv-wab-widgets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Using widgets from the Esri WebApp Builder in [CMV](https://github.com/cmv/cmv-app).
 
