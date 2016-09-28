@@ -11,5 +11,7 @@ ratings:
 exclude_paths:
     - "cmv/**/*"
     - "wab/**/*"
+    - "widgets/**/*"
     - "**/**.min.css"
     - "**/**.min.js"
+    - "!cmv/js/viewer/_WABMixin.js"
