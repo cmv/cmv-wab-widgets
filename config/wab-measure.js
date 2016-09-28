@@ -64,8 +64,8 @@ define([], function () {
                                 id: 'WABSaveSession',
                                 uri: 'widgets/SaveSession/Widget',
                                 config: {
-                                   fileNameForAllSessions: "cmvSessions.json",
-                                   fileNameTplForSession: "cmvSessions_${name}.json"
+                                    fileNameForAllSessions: 'cmvSessions.json',
+                                    fileNameTplForSession: 'cmvSessions_${name}.json'
                                 }
                             }
                         ]

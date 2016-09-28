@@ -1,0 +1,7 @@
+*.sublime-workspace
+*.sublime-project
+node_modules/
+dist/
+.project
+change.log
+.sublime-grunt.cache

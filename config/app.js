@@ -6,10 +6,10 @@
         packages: [{
             name: 'viewer',
             location: path + 'cmv/js/viewer'
-        },{
+        }, {
             name: 'gis',
             location: path + 'cmv/js/gis'
-        },{
+        }, {
             name: 'widgets',
             location: path + 'widgets'
         }, {
@@ -21,17 +21,17 @@
             main: 'css',
             location: 'https://cdn.rawgit.com/kriszyp/xstyle/v0.3.2'
         /* customizations for WAB widgets */
-        },{
+        }, {
             name: 'jimu',
             location: path + 'wab/jimu.js'
-        },{
+        }, {
             name: 'libs',
             location: path + 'wab/libs'
-        },{
+        }, {
             name: 'wabwidgets',
             location: path + 'wab/widgets'
         /* end customizations for WAB widgets */
-        },{
+        }, {
             name: 'config',
             location: path + 'config'
         }]

@@ -49,7 +49,7 @@
             "getWithoutSet": true
         }],
         "block-scoped-var": 2,
-        "complexity": [2, 20], /** TODO should try to get this lower **/
+        "complexity": [1, 20], /** TODO always try to get this lower **/
         "consistent-return": 2,
         "curly": 2,
         "default-case": 2,
@@ -57,10 +57,11 @@
         "dot-notation": 2,
         "eqeqeq": 2,
         "guard-for-in": 2,
-        "max-statements": [1, 30, {"ignoreTopLevelFunctions": true}],
+        "max-statements": [1, 40, {"ignoreTopLevelFunctions": true}],
         "no-alert": 2,
         "no-caller": 2,
         "no-div-regex": 2,
+        "no-else-return": 2,
         "no-empty-pattern": 2,
         "no-eq-null": 2,
         "no-eval": 2,
@@ -100,11 +101,10 @@
         "yoda": 2,
 
         // ignored best practices rules
-        "no-else-return": 0,
         "no-invalid-this": 0,
         "no-magic-numbers": 0,
         "no-param-reassign": 0,
-        "no-warning-comments": 0,
+        "no-warning-comments": 2,
         "vars-on-top": 0,
 
 
@@ -127,10 +127,10 @@
         "no-undef": 2,
         "no-unused-vars": 2,
         "no-use-before-define": 2,
+        "no-undefined": 2,
 
         // ignore variable rules
         "init-declarations": 0,
-        "no-undefined": 0,
 
 
         /*

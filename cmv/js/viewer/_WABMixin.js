@@ -42,7 +42,7 @@ define([
             window.isRTL = wabConfig.isRTL;
 
             var pathparts = window.location.pathname.split('/');
-            var pagename= pathparts.pop();
+            pathparts.pop();
             window.appInfo = {
                 appPath: pathparts.join('/') + '/'
             };
@@ -51,7 +51,7 @@ define([
             if (!this.map.itemInfo) {
                 this.createMapItemInfo();
             }
-            var lm = LayerInfos.getInstance(this.map, this.map.itemInfo);
+            LayerInfos.getInstance(this.map, this.map.itemInfo);
 
             // create a minimal configuration
             var cm = new ConfigManager();

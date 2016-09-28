@@ -143,299 +143,289 @@ define([
                                 uri: 'wabwidgets/Chart/Widget',
                                 version: '2.1',
                                 config: {
-                                    "charts": [
+                                    'charts': [
                                         {
-                                            "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
-                                            "filter": {
-                                                "logicalOperator": "AND",
-                                                "parts": [],
-                                                "expr": "1=1"
+                                            'url': 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0',
+                                            'filter': {
+                                                'logicalOperator': 'AND',
+                                                'parts': [],
+                                                'expr': '1=1'
                                             },
-                                            "name": "Display values feature by feature",
-                                            "description": "",
-                                            "mode": "feature",
-                                            "symbol": {
-                                                "color": [
+                                            'name': 'Display values feature by feature',
+                                            'description': '',
+                                            'mode': 'feature',
+                                            'symbol': {
+                                                'color': [
                                                     0,
                                                     0,
                                                     128,
                                                     128
                                                 ],
-                                                "size": 18,
-                                                "angle": 0,
-                                                "xoffset": 0,
-                                                "yoffset": 0,
-                                                "type": "esriSMS",
-                                                "style": "esriSMSCircle",
-                                                "outline": {
-                                                    "color": [
+                                                'size': 18,
+                                                'angle': 0,
+                                                'xoffset': 0,
+                                                'yoffset': 0,
+                                                'type': 'esriSMS',
+                                                'style': 'esriSMSCircle',
+                                                'outline': {
+                                                    'color': [
                                                         0,
                                                         0,
                                                         128,
                                                         255
                                                     ],
-                                                    "width": 0.75,
-                                                    "type": "esriSLS",
-                                                    "style": "esriSLSSolid"
+                                                    'width': 0.75,
+                                                    'type': 'esriSLS',
+                                                    'style': 'esriSLSSolid'
                                                 }
                                             },
-                                            "highLightColor": "#ff0000",
-                                            "column": {
-                                                "colors": [
-                                                    "#5d9cd3"
+                                            'highLightColor': '#ff0000',
+                                            'column': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "pie": {
-                                                "colors": [
-                                                    "#5d9cd3",
-                                                    "#eb7b3a",
-                                                    "#a5a5a5",
-                                                    "#febf29",
-                                                    "#4673c2",
-                                                    "#72ad4c"
+                                            'pie': {
+                                                'colors': [
+                                                    '#5d9cd3',
+                                                    '#eb7b3a',
+                                                    '#a5a5a5',
+                                                    '#febf29',
+                                                    '#4673c2',
+                                                    '#72ad4c'
                                                 ],
-                                                "label": true
+                                                'label': true
                                             },
-                                            "bar": {
-                                                "colors": [
-                                                    "#5d9cd3"
+                                            'bar': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "line": {
-                                                "colors": [
-                                                    "#5d9cd3"
+                                            'line': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "labelField": "CITY_NAME",
-                                            "valueFields": [
-                                                "POP"
+                                            'labelField': 'CITY_NAME',
+                                            'valueFields': [
+                                                'POP'
                                             ],
-                                            "sortOrder": "asc"
+                                            'sortOrder': 'asc'
                                         },
                                         {
-                                            "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
-                                            "filter": {
-                                                "logicalOperator": "AND",
-                                                "parts": [],
-                                                "expr": "1=1"
+                                            'url': 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0',
+                                            'filter': {
+                                                'logicalOperator': 'AND',
+                                                'parts': [],
+                                                'expr': '1=1'
                                             },
-                                            "name": "Display values by category",
-                                            "description": "",
-                                            "mode": "category",
-                                            "symbol": {
-                                                "color": [
+                                            'name': 'Display values by category',
+                                            'description': '',
+                                            'mode': 'category',
+                                            'symbol': {
+                                                'color': [
                                                     0,
                                                     0,
                                                     128,
                                                     128
                                                 ],
-                                                "size": 18,
-                                                "angle": 0,
-                                                "xoffset": 0,
-                                                "yoffset": 0,
-                                                "type": "esriSMS",
-                                                "style": "esriSMSCircle",
-                                                "outline": {
-                                                    "color": [
+                                                'size': 18,
+                                                'angle': 0,
+                                                'xoffset': 0,
+                                                'yoffset': 0,
+                                                'type': 'esriSMS',
+                                                'style': 'esriSMSCircle',
+                                                'outline': {
+                                                    'color': [
                                                         0,
                                                         0,
                                                         128,
                                                         255
                                                     ],
-                                                    "width": 0.75,
-                                                    "type": "esriSLS",
-                                                    "style": "esriSLSSolid"
+                                                    'width': 0.75,
+                                                    'type': 'esriSLS',
+                                                    'style': 'esriSLSSolid'
                                                 }
                                             },
-                                            "highLightColor": "#ff0000",
-                                            "column": {
-                                                "colors": [
-                                                    "#5d9cd3"
+                                            'highLightColor': '#ff0000',
+                                            'column': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "pie": {
-                                                "colors": [
-                                                    "#5d9cd3",
-                                                    "#eb7b3a",
-                                                    "#a5a5a5",
-                                                    "#febf29",
-                                                    "#4673c2",
-                                                    "#72ad4c"
+                                            'pie': {
+                                                'colors': [
+                                                    '#5d9cd3',
+                                                    '#eb7b3a',
+                                                    '#a5a5a5',
+                                                    '#febf29',
+                                                    '#4673c2',
+                                                    '#72ad4c'
                                                 ],
-                                                "label": true
+                                                'label': true
                                             },
-                                            "bar": {
-                                                "colors": [
-                                                    "#5d9cd3"
+                                            'bar': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "line": {
-                                                "colors": [
-                                                    "#5d9cd3"
+                                            'line': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "categoryField": "POP_RANK",
-                                            "operation": "sum",
-                                            "valueFields": [
-                                                "POP"
+                                            'categoryField': 'POP_RANK',
+                                            'operation': 'sum',
+                                            'valueFields': [
+                                                'POP'
                                             ],
-                                            "sortOrder": "asc"
+                                            'sortOrder': 'asc'
                                         },
                                         {
-                                            "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
-                                            "filter": {
-                                                "logicalOperator": "AND",
-                                                "parts": [],
-                                                "expr": "1=1"
+                                            'url': 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0',
+                                            'filter': {
+                                                'logicalOperator': 'AND',
+                                                'parts': [],
+                                                'expr': '1=1'
                                             },
-                                            "name": "Display feature counts by category",
-                                            "description": "",
-                                            "mode": "count",
-                                            "symbol": {
-                                                "color": [
+                                            'name': 'Display feature counts by category',
+                                            'description': '',
+                                            'mode': 'count',
+                                            'symbol': {
+                                                'color': [
                                                     0,
                                                     0,
                                                     128,
                                                     128
                                                 ],
-                                                "size": 18,
-                                                "angle": 0,
-                                                "xoffset": 0,
-                                                "yoffset": 0,
-                                                "type": "esriSMS",
-                                                "style": "esriSMSCircle",
-                                                "outline": {
-                                                    "color": [
+                                                'size': 18,
+                                                'angle': 0,
+                                                'xoffset': 0,
+                                                'yoffset': 0,
+                                                'type': 'esriSMS',
+                                                'style': 'esriSMSCircle',
+                                                'outline': {
+                                                    'color': [
                                                         0,
                                                         0,
                                                         128,
                                                         255
                                                     ],
-                                                    "width": 0.75,
-                                                    "type": "esriSLS",
-                                                    "style": "esriSLSSolid"
+                                                    'width': 0.75,
+                                                    'type': 'esriSLS',
+                                                    'style': 'esriSLSSolid'
                                                 }
                                             },
-                                            "highLightColor": "#ff0000",
-                                            "column": {
-                                                "colors": [
-                                                    "#5d9cd3"
+                                            'highLightColor': '#ff0000',
+                                            'column': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "pie": {
-                                                "colors": [
-                                                  "#5d9cd3",
-                                                  "#eb7b3a",
-                                                  "#a5a5a5",
-                                                  "#febf29",
-                                                  "#4673c2",
-                                                  "#72ad4c"
+                                            'pie': {
+                                                'colors': [
+                                                    '#5d9cd3',
+                                                    '#eb7b3a',
+                                                    '#a5a5a5',
+                                                    '#febf29',
+                                                    '#4673c2',
+                                                    '#72ad4c'
                                                 ],
-                                                "label": true
+                                                'label': true
                                             },
-                                            "bar": {
-                                                "colors": [
-                                                  "#5d9cd3"
+                                            'bar': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "line": {
-                                                "colors": [
-                                                  "#5d9cd3"
+                                            'line': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "categoryField": "POP_RANK",
-                                            "sortOrder": "asc"
+                                            'categoryField': 'POP_RANK',
+                                            'sortOrder': 'asc'
                                         },
                                         {
-                                            "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
-                                            "filter": {
-                                                "logicalOperator": "AND",
-                                                "parts": [],
-                                                "expr": "1=1"
+                                            'url': 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0',
+                                            'filter': {
+                                                'logicalOperator': 'AND',
+                                                'parts': [],
+                                                'expr': '1=1'
                                             },
-                                            "name": "Display attribute values as charts",
-                                            "description": "",
-                                            "mode": "field",
-                                            "symbol": {
-                                                "color": [
-                                                  0,
-                                                  0,
-                                                  128,
-                                                  128
-                                                ],
-                                                "size": 18,
-                                                "angle": 0,
-                                                "xoffset": 0,
-                                                "yoffset": 0,
-                                                "type": "esriSMS",
-                                                "style": "esriSMSCircle",
-                                                "outline": {
-                                                    "color": [
-                                                    0,
-                                                    0,
-                                                    128,
-                                                    255
-                                                  ],
-                                                    "width": 0.75,
-                                                    "type": "esriSLS",
-                                                    "style": "esriSLSSolid"
+                                            'name': 'Display attribute values as charts',
+                                            'description': '',
+                                            'mode': 'field',
+                                            'symbol': {
+                                                'color': [0, 0, 128, 128],
+                                                'size': 18,
+                                                'angle': 0,
+                                                'xoffset': 0,
+                                                'yoffset': 0,
+                                                'type': 'esriSMS',
+                                                'style': 'esriSMSCircle',
+                                                'outline': {
+                                                    'color': [0, 0, 128, 255],
+                                                    'width': 0.75,
+                                                    'type': 'esriSLS',
+                                                    'style': 'esriSLSSolid'
                                                 }
                                             },
-                                            "highLightColor": "#ff0000",
-                                            "column": {
-                                                "colors": [
-                                                    "#5d9cd3"
+                                            'highLightColor': '#ff0000',
+                                            'column': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "pie": {
-                                                "colors": [
-                                                    "#5d9cd3",
-                                                    "#eb7b3a",
-                                                    "#a5a5a5",
-                                                    "#febf29",
-                                                    "#4673c2",
-                                                    "#72ad4c"
+                                            'pie': {
+                                                'colors': [
+                                                    '#5d9cd3',
+                                                    '#eb7b3a',
+                                                    '#a5a5a5',
+                                                    '#febf29',
+                                                    '#4673c2',
+                                                    '#72ad4c'
                                                 ],
-                                                "label": true
+                                                'label': true
                                             },
-                                            "bar": {
-                                                "colors": [
-                                                    "#5d9cd3"
+                                            'bar': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "line": {
-                                                "colors": [
-                                                    "#5d9cd3"
+                                            'line': {
+                                                'colors': [
+                                                    '#5d9cd3'
                                                 ],
-                                                "horizontalAxis": true,
-                                                "verticalAxis": true
+                                                'horizontalAxis': true,
+                                                'verticalAxis': true
                                             },
-                                            "operation": "sum",
-                                            "valueFields": [
-                                                "POP_RANK",
-                                                "LABEL_FLAG"
+                                            'operation': 'sum',
+                                            'valueFields': [
+                                                'POP_RANK',
+                                                'LABEL_FLAG'
                                             ]
                                         }
                                     ]
