@@ -4,6 +4,8 @@ define({
   "format": "Formatuoti",
   "layout": "Maketas",
   "settings": "Išplėstinis",
+  "labels": "Žymės",
+  "showLabels": "Rodyti žymes",
   "mapScaleExtent": "Žemėlapio mastelis / aprėptis",
   "preserve": "Išlaikyti",
   "mapScale": "žemėlapio mastelis",

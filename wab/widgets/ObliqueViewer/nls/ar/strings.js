@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "قياس الارتفاع",
   "intialScaleLabel": "حدد مقياس اّوّلي للصور المائلة",
   "smallBuildingLabel": "منطقة حضرية: مبنى صغير",
-  "buildingLabel": "منطقة حضرية: مبنى"
+  "buildingLabel": "منطقة حضرية: مبنى",
+  "azimuthChangeNotification": "لا تتوفر بيانات في الاتجاه المحدد."
 });

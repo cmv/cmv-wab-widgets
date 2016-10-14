@@ -45,7 +45,7 @@ define({
   "save_label": "Lagre alternativer",
   "save_checkbox": "Aktiver lagring",
   "csv_label": "Alternativer for CSV",
-  "csv_checkbox": "Eksporter alle feltene i laget.",
+  "csv_checkbox": "Eksporter alle feltene i laget",
   "display_label": "Visningsalternativer",
   "display_checkbox": "Vis geoobjekter for summering",
   "must_select_template": "Velg en av redigeringsmalene i Lagre alternativer.",

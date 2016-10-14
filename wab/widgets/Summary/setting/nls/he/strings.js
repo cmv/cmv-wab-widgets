@@ -14,5 +14,5 @@ define({
   "displayCluster": "הצג כאשכולות סיכום",
   "showFeatureCount": "הצג מונה ישות",
   "featureCountLabel": "תווית מונה ישות",
-  "missingLayerInWebMap": "הוסף שכבות סיכום למפת Web."
+  "missingLayerInWebMap": "הוסף שכבות סיכום ל- Map Web."
 });

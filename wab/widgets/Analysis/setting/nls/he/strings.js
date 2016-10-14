@@ -20,7 +20,7 @@ define({
   "createDriveTimeAreas": "צור אזורי זמן נסיעה",
   "createDriveTimeAreasUsage": "צור פוליגונים של זמן נסיעה (או מרחק נסיעה) סביב נקודות הקלט של ערכי זמן הנסיעה הנתונים.",
   "createViewshed": "צור שטחים נצפים",
-  "createViewshedUsage": "יוצר אזורים נצפים בהתבסס על מיקומים שתציין.",
+  "createViewshedUsage": "יוצר אזורים נצפים בהתבסס על מיקומים שתגדיר.",
   "createWatersheds": "צור אגני ניקוז",
   "createWatershedsUsage": "יוצר אזורי אגני היקוות בהתבסס על מיקומים שתגדיר.",
   "deriveNewLocations": "גזור מיקומים חדשים",

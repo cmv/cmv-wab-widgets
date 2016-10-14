@@ -47,7 +47,7 @@ define({
     "routeServiceUrl": "שירות מסלול",
     "buttonSet": "הגדר",
     "routeServiceUrlHintText": "רמז: לחץ על 'הגדר' כדי לנתב לשירות מסלול של ניתוח רשת ולבחור אותו",
-    "directionLengthUnit": "יחידות אורך של כיוון",
+    "directionLengthUnit": "יחידות אורך של הוראות נסיעה",
     "unitsForRouteHintText": "רמז: משמש להצגת יחידות מדווחות עבור מסלול",
     "selectRouteSymbol": "בחר סמל להצגת מסלול",
     "routeSymbolHintText": "רמז: משמש להצגת סמל קווי של המסלול",

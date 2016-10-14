@@ -77,10 +77,15 @@
 
 .jimu-widget-nearme-setting .esriCTLayerSelectorNode
 {
-    height: 90px;
+    max-height: 200px;
     overflow: auto;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.jimu-widget-nearme-setting .esriCTLayerSelectorNode .jimu-basic-layer-chooser-from-map .jimu-tree
+{
+    position: relative !important;
 }
 
 .jimu-widget-nearme-setting .esriCTLayerListItem

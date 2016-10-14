@@ -16,11 +16,10 @@
 
 define(['dojo/_base/declare',
   'dojo/_base/lang',
-  'dojo/_base/xhr',
   'dojo/dom-style',
   'dojo/_base/array',
   'dojo/_base/Color'
-], function (declare, lang, xhr, domStyle, array, Color) {
+], function (declare, lang, domStyle, array, Color) {
   var themeColorManager = declare(null, {
     _theme: null,
     _styleName: "",
@@ -35,6 +34,8 @@ define(['dojo/_base/declare',
       this._styleName = options.stylename;
       this.getStyleColor(this._styleName);
       this._options = options;
+      this.ph = options.ph;
+      this.w = options.w;
     },
 
     setStyle: function (styleName) {
@@ -42,37 +43,11 @@ define(['dojo/_base/declare',
       this.getStyleColor(this._styleName);
     },
 
-    /*jshint loopfunc:true */
-    getStyleColor: function (styleName) {
-      var tName = this._theme.name;
-      var sName = styleName ? styleName : this._theme.styles[0];
-      var url = "././themes/" + tName + "/manifest.json";
-      xhr.get({
-        url: url,
-        handleAs: "json",
-        load: lang.hitch(this, function (data) {
-          var styles = data.styles;
-          for (var i = 0; i < styles.length; i++) {
-            var st = styles[i];
-            if (st.name === sName) {
-              var bc;
-              array.forEach(document.styleSheets, function (ss) {
-                var rules = ss.rules ? ss.rules : ss.cssRules;
-                if (rules) {
-                  array.forEach(rules, function (r) {
-                    if (r.selectorText === ".jimu-main-background") {
-                      bc = r.style.getPropertyValue('background-color');
-                    }
-                  });
-                }
-              });
-              this._styleColor = Color.fromRgb(bc).toHex();
-              //this.updateUI(this._styleColor);
-              break;
-            }
-          }
-        })
-      });
+    getStyleColor: function () {
+      setTimeout(lang.hitch(this, function () {
+        var bc = this.w.getComputedStyle(this.ph, null).getPropertyValue('background-color');
+        this._styleColor = Color.fromRgb(bc).toHex();
+      }), 500);
     },
 
     updateUI: function (_styleColor) {

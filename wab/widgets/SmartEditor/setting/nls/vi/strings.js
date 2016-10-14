@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Tùy chọn để xóa đối tượng khỏi lựa chọn đã đặt khi bản ghi được lưu. Nếu đó là bản ghi duy nhất được chọn, bảng điều khiển được chuyển trở về trang mẫu.",
     "useFilterEditor": "Sử dụng bộ lọc mẫu đối tượng",
     "useFilterEditorTip": "Tùy chọn để sử dụng trình chọn Mẫu Bộ lọc cung cấp khả năng xem một mẫu lớp hoặc tìm kiếm mẫu theo tên.",
+    "listenToGroupFilter": "Áp dụng các giá trị bộ lọc từ tiện ích Bộ lọc Nhóm cho các trường Thiết lập sẵn",
+    "listenToGroupFilterTip": "Khi áp dụng một bộ lọc trong tiện ích Bộ lọc Nhóm, bộ lọc sẽ áp dụng giá trị cho một trường phù hợp trong danh sách giá trị đã Thiết lập sẵn.",
+    "keepTemplateActive": "Giữ cho biểu mẫu được chọn hoạt động",
+    "keepTemplateActiveTip": "Khi trình chọn biểu mẫu được hiển thị, nếu trước đó đã chọn một biểu mẫu, hãy bỏ chọn biểu mẫu đó.",
     "layerSettingsTable": {
       "allowDelete": "Cho phép Xóa",
       "allowDeleteTip": "Tùy chọn để cho phép người dùng xóa đối tượng; tắt nếu lớp không hỗ trợ xóa",
@@ -27,9 +31,10 @@ define({
       "fields": "Trường",
       "fieldsTip": "Sửa đổi các trường cần chỉnh sửa và xác định Thuộc tính Thông minh",
       "description": "Mô tả",
-      "descriptionTip": "Ngoài ra, nhập văn bản bạn muốn hiển thị ở đầu trang thuộc tính."
+      "descriptionTip": "Tùy chọn nhập văn bản để hiển thị trên đầu trang thuộc tính."
     },
-    "editFieldError": "Các sửa đổi trường và thuộc tính Thông minh không sẵn có với các lớp không thể chỉnh sửa"
+    "editFieldError": "Các sửa đổi trường và thuộc tính Thông minh không sẵn có với các lớp không thể chỉnh sửa",
+    "noConfigedLayersError": "Trình biên tập Thông minh yêu cầu một hoặc nhiều lớp có thể chỉnh sửa."
   },
   "editDescriptionPage": {
     "title": "Xác định văn bản tổng quan của thuộc tính cho <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Biểu thức kết quả ở định dạng SQL từ tiêu chí được xác định",
       "actions": "Tiêu chí",
       "actionsTip": "Thay đổi thứ tự của quy tắc và xác định tiêu chí về thời điểm kích hoạt tác vụ"
+    },
+    "actions": {
+      "hide": "Ẩn",
+      "required": "Yêu cầu",
+      "disabled": "Vô hiệu hóa"
     }
   },
   "filterPage": {
     "submitHidden": "Gửi dữ liệu thuộc tính cho trường này ngay cả khi bị ẩn?",
-    "title": "Cấu hình mệnh đề cho quy tắc ${action}",
+    "title": "Cấu hình biểu thức cho quy tắc ${action}",
     "filterBuilder": "Đặt tác vụ trên trường khi bản ghi trùng khớp với ${any_or_all} các biểu thức sau",
     "noFilterTip": "Sử dụng các công cụ bên dưới, xác định câu lệnh về thời điểm tác vụ được kích hoạt."
   }

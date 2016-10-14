@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "ジオ ルックアップ",
   "description": "マップ データを視覚化し、<a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'>スプレッドシート</a>に追加するには、スプレッドシートを参照するか、スプレッドシートをここにドラッグします。",
   "selectCSV": "CSV の選択",
   "loadingCSV": "CSV を読み込んでいます",

@@ -21,6 +21,6 @@ define({
   "display": "תצוגה",
   "autoApplyEditWhenGeometryIsMoved": "בצע את העריכה באופן אוטומטי עם הזזת הגיאומטריה",
   "snappingTolerance": "הגדר את טולרנס ההצמדה בפיקסלים",
-  "popupTolerance": "הגדר את המרחק של חלון ה-Popup לעריכת ישויות בפיקסלים",
-  "stickyMoveTolerance": "הגדר את טולרנס ההזזה הדביק בפיקסלים"
+  "popupTolerance": "הגדר את המרחק של החלון הקופץ לעריכת ישויות בפיקסלים",
+  "stickyMoveTolerance": "הגדר את מרחק ההצמדה של הטולרנס בפיקסלים"
 });

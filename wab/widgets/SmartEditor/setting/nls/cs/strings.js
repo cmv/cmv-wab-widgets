@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Možnost odstranit prvek ze sady výběru po uložení záznamu. Pokud jde o jediný vybraný záznam, panel se přepne zpět na stránku šablony.",
     "useFilterEditor": "Použít filtr šablon prvků",
     "useFilterEditorTip": "Možnost použít nástroj pro volbu šablon filtru, která umožňuje zobrazit šablony jedné vrstvy nebo vyhledávat šablony podle názvu.",
+    "listenToGroupFilter": "Použít hodnoty filtrů z widgetu Filtr skupin na přednastavená pole",
+    "listenToGroupFilterTip": "Po aplikaci filtru na widget Filtr skupin aplikuje hodnotu na odpovídající pole v seznamu přednastavených polí.",
+    "keepTemplateActive": "Ponechat vybranou šablonu aktivní",
+    "keepTemplateActiveTip": "Když je zobrazen nástroj pro volbu šablon a šablona byla dříve vybrána, vybere se znovu.",
     "layerSettingsTable": {
       "allowDelete": "Povolit odstranění",
       "allowDeleteTip": "Umožňuje uživatelům odstranit prvek; tato možnost je zakázána, pokud vrstva nepodporuje odstraňování.",
@@ -27,9 +31,10 @@ define({
       "fields": "Pole",
       "fieldsTip": "Umožňuje upravit pole, která budou editována, a definovat chytré atributy.",
       "description": "Popis",
-      "descriptionTip": "Volitelně můžete zadat text, který se zobrazí na horní části stránky atributů."
+      "descriptionTip": "Možnost zadat text, který se zobrazí v horní části stránky atributů."
     },
-    "editFieldError": "Úprava polí a chytré atributy nejsou k dispozici u vrstev, které nejsou editovatelné."
+    "editFieldError": "Úprava polí a chytré atributy nejsou k dispozici u vrstev, které nejsou editovatelné.",
+    "noConfigedLayersError": "Smart Editor vyžaduje jednu či více editovatelných vrstev."
   },
   "editDescriptionPage": {
     "title": "Definujte text přehledu atributů pro vrstvu <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Výsledný výraz ve formátu SQL z definovaného kritéria",
       "actions": "Kritéria",
       "actionsTip": "Změňte pořadí pravidla a definujte kritéria po jeho spuštění"
+    },
+    "actions": {
+      "hide": "Skrýt",
+      "required": "Požadováno",
+      "disabled": "Nepovoleno"
     }
   },
   "filterPage": {
     "submitHidden": "Odeslat atributová data pro toto pole i pokud je skryté?",
-    "title": "Konfigurace podmínky pro pravidlo ${action}",
+    "title": "Konfigurace výrazu pro pravidlo ${fiction}",
     "filterBuilder": "Nastavte akci u pole, pokud se záznam shoduje s ${any_or_all} z následujících výrazů",
     "noFilterTip": "Pomocí níže umístěných nástrojů definujte podmínku pro situaci, kdy je akce aktivní."
   }

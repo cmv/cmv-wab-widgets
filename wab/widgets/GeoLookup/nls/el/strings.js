@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "Geo Lookup",
   "description": "Μεταβείτε σε ένα ή μεταφέρετε ένα <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> υπολογιστικό φύλλο </a> σε αυτό το σημείο, για απεικόνιση και προσάρτηση δεδομένων χάρτη σε αυτό.",
   "selectCSV": "Επιλέξτε CSV",
   "loadingCSV": "Φόρτωση CSV",

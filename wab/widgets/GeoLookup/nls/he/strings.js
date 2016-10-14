@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "חיפוש נתונים גיאוגרפיים",
+  "_widgetLabel": "חיפוש גיאוגרפי",
   "description": "נתב אל <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> גליון אלקטרוני </a> או גרור גליון אלקטרוני לכאן כדי ליצור תצוגה חזותית שלו ולהוסיף לו נתוני מפה.",
   "selectCSV": "בחר קובץ CSV",
   "loadingCSV": "טוען קובץ CSV",

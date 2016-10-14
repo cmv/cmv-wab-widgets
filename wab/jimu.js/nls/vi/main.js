@@ -6,6 +6,7 @@ define({
     "yes": "Có",
     "no": "Không",
     "next": "Tiếp",
+    "previous": "Trước",
     "back": "Quay lại",
     "selected": "đã chọn",
     "name": "Tên",
@@ -52,7 +53,11 @@ define({
     "view": "Xem",
     "newText": "Mới",
     "edit": "Chỉnh sửa",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Bảng",
+    "zoomIn": "Thu nhỏ",
+    "zoomOut": "Phóng to",
+    "continue1": "Tiếp"
   },
   "errorCode": "Mã",
   "errorMessage": "Thông báo",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Phân biệt chữ hoa chữ thường",
     "notSupportCaseSensitiveTip": "Dịch vụ được lưu trữ không hỗ trợ truy vấn phân biệt chữ hoa chữ thường.",
-    "setFilterTip": "Vui lòng thiết lập bộ lọc chính xác."
+    "setFilterTip": "Vui lòng thiết lập bộ lọc chính xác.",
+    "cascadeFilterTip": "Chỉ hiện các giá trị được lọc bởi các biểu thức trước đó."
   },
   "featureLayerSource": {
     "layer": "Lớp",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Bấm vào để khôi phục khả năng hiển thị của phạm vi bản đồ và các lớp khi bạn rời đi."
   },
   "featureActions": {
+    "featureActions": "Các hoạt động cho đối tượng",
     "ZoomTo": "Phóng tới",
     "PanTo": "Quay để",
     "Flash": "Đèn flash",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Thêm vào lựa chọn",
     "removeSelectionTip": "Gỡ bỏ khỏi lựa chọn",
     "selectFromCurrentSelectionTip": "Chọn từ lựa chọn hiện tại",
-    "unselectAllSelectionTip": "Bỏ chọn tất cả đối tượng được chọn hiện tại"
+    "unselectAllSelectionTip": "Bỏ chọn tất cả đối tượng được chọn hiện tại",
+    "selectByPolygon": "Chọn theo Hình đa giác",
+    "selectByCircle": "Chọn theo Hình tròn",
+    "selectByLine": "Chọn theo Đường thẳng",
+    "chooseSelectingTools": "Chọn các công cụ lựa chọn",
+    "darw": "Vẽ",
+    "drawShap": "Vẽ một hình"
   },
   "widgetManager": {
     "createWidgetError": "Lỗi tạo tiện ích",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Trình duyệt của bạn không hỗ trợ ứng dụng web 3D."
+  },
+  "map": {
+    "basemapNotAvailable": "Bản đồ nền không khả dụng.",
+    "displayDefaultBasemap": "Thay vào đó hiển thị bản đồ nền mặc định."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Có quá nhiều đối tượng trong khu vực đã lựa chọn của bạn trên bản đồ. Việc này có thể mất nhiều thời gian để khôi phục toàn bộ dữ liệu.",
+    "askForContinue": "Bạn có muốn tiếp tục không?"
   }
 });

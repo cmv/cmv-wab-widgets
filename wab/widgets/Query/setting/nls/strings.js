@@ -110,7 +110,7 @@ define({
     icon: "Icon",
     newTask: "New Task",
     addTaskTip: "Add one or more queries to the widget and configure parameters for each of them.",
-    webMapPopupTip: "Use Layer's pop-up configuration in the web map",
+    webMapPopupTip: "Use layer's pop-up configuration in the web map",
     customPopupTip: "Configure custom content",
     showResultsSetActions: "Show actions for the results set",
     zoomTo: "Zoom to",
@@ -123,7 +123,8 @@ define({
     uploadImage: "Upload an image",
     attributeCriteira: "Attribute criteria",
     specifyFilterAtRuntimeTip: "Users will need to specify parameters for this expression.",
-    value: "VALUE"
+    value: "VALUE",
+    hideLayersTip: "Turn off query result layers when the widget is closed."
   }),
   "ar": 1,
   "cs": 1,

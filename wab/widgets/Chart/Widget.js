@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,28 +22,26 @@ define([
     'dojo/_base/array',
     'dojo/_base/fx',
     'dojo/on',
-    'dojo/Deferred',
     'dijit/_WidgetsInTemplateMixin',
     'jimu/BaseWidget',
     'jimu/dijit/Message',
     'jimu/dijit/DrawBox',
     'jimu/utils',
     'jimu/filterUtils',
-    'esri/tasks/query',
-    'esri/tasks/QueryTask',
     'esri/layers/GraphicsLayer',
     'esri/renderers/SimpleRenderer',
     'esri/symbols/jsonUtils',
     'esri/request',
     'esri/graphicsUtils',
     './Preview',
+    './Query',
     'jimu/LayerInfos/LayerInfos',
     'jimu/dijit/Popup',
     'jimu/dijit/LoadingShelter'
   ],
-  function(declare, lang, query, html, array, fx, on, Deferred, _WidgetsInTemplateMixin,
-    BaseWidget, Message, DrawBox, jimuUtils, FilterUtils, EsriQuery, QueryTask, GraphicsLayer,
-    SimpleRenderer, symbolJsonUtils, esriRequest, graphicsUtils, Preview, LayerInfos, Popup) {
+  function(declare, lang, query, html, array, fx, on, _WidgetsInTemplateMixin,
+    BaseWidget, Message, DrawBox, jimuUtils, FilterUtils, GraphicsLayer, SimpleRenderer,
+    symbolJsonUtils, esriRequest, graphicsUtils, Preview, Query, LayerInfos, Popup) {
 
     return declare([BaseWidget, _WidgetsInTemplateMixin], {
       name: 'Chart',
@@ -185,7 +183,8 @@ define([
           nls: this.nls,
           map: this.map,
           folderUrl: this.folderUrl,
-          fontColor: "#333333",
+          fontColor: this.appConfig.theme.name === "DartTheme" ? "#ffffff" : "#333333",
+          tooltipColor: this.appConfig.theme.name === "LaunchpadTheme" ? "#ffffff" : "green",
           style: "width:100%;height:100%;",
           isBigPreview: true
         });
@@ -211,6 +210,7 @@ define([
           map: this.map,
           folderUrl: this.folderUrl,
           fontColor: this.appConfig.theme.name === "DartTheme" ? "#ffffff" : "#333333",
+          tooltipColor: this.appConfig.theme.name === "LaunchpadTheme" ? "#ffffff" : "green",
           showZoomIcon: true
         });
         this.preview.placeAt(this.resultsContainer);
@@ -419,7 +419,13 @@ define([
       },
 
       _onBtnClearAllClicked: function(){
-        this._clickClearButton(false);
+        if(this.chartsTbody.childElementCount === 0){
+          return;
+        }
+
+        var isChartListVisible = this.chartList.style.display !== 'none';
+        var dontSlide = isChartListVisible;
+        this._clickClearButton(dontSlide);
       },
 
       _resetDrawBox: function(){
@@ -535,15 +541,16 @@ define([
         if(baseExpr){
           where = "(" + baseExpr + ") AND " + "(" + where + ")";
         }
-        this._query(where, outFields, geometry).then(lang.hitch(this, function(featureSet){
+        this._query(where, outFields, geometry).then(lang.hitch(this, function(response){
+          //response: {status,count,features}
           if(!this.domNode){
             return;
           }
           this.shelter.hide();
-          if(featureSet && featureSet.features){
+          if(response.status > 0){
             var args = {
               config: singleConfig,
-              featureSet: featureSet,
+              features: response.features,
               layerDefinition: this.currentAttrs.layerInfo,
               resultLayer: this.tempResultLayer
             };
@@ -557,7 +564,7 @@ define([
             this.preview.createCharts(args);
 
             //add the filtered features to layer
-            array.forEach(featureSet.features, lang.hitch(this, function(feature){
+            array.forEach(response.features, lang.hitch(this, function(feature){
               this.tempResultLayer.add(feature);
             }));
 
@@ -609,12 +616,27 @@ define([
         this.tempResultLayer.setRenderer(renderer);
       },
 
+      //resovle {status,count,features}
       _query: function(where, outFields, /*optional*/ geometry){
-        var def = new Deferred();
-        var queryParams = new EsriQuery();
         if(!where){
           where = "1=1";
         }
+
+        var options = {};
+        options.url = this.currentAttrs.config.url;
+        options.layerInfo = this.currentAttrs.layerInfo;
+        options.limit = 10 * 1000;
+        options.spatialReference = this.map.spatialReference;
+        options.where = where;
+        options.geometry = geometry;
+        options.outFields = outFields;
+
+        var query = new Query(options);
+        return query.getFeatures();
+
+        /*var def = new Deferred();
+        var queryParams = new EsriQuery();
+
         queryParams.where = where;
         if(geometry){
           queryParams.geometry = geometry;
@@ -640,7 +662,8 @@ define([
             def.reject(err);
           }
         }));
-        return def;
+
+        return def;*/
       },
 
       _clearResultPage: function(){

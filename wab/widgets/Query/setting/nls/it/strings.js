@@ -122,5 +122,6 @@ define({
   "uploadImage": "Carica un'immagine",
   "attributeCriteira": "Criteri attributo",
   "specifyFilterAtRuntimeTip": "Gli utenti devono specificare i parametri per questa espressione.",
-  "value": "VALUE"
+  "value": "VALUE",
+  "hideLayersTip": "Disattivare i layer del risultato dell'interrogazione quando il widget è chiuso."
 });

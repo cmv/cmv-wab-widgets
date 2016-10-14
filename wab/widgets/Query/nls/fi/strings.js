@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Ominaisuusehdot",
   "spatialFilter": "Sijaintisuodatin",
   "value": "ARVO",
-  "noAttributeSpatialFilterTip": "Suodatinta ei ole määritetty. Kaikki kohteet palautetaan."
+  "noAttributeSpatialFilterTip": "Suodatinta ei ole määritetty. Kaikki kohteet palautetaan.",
+  "showAllRelatedRecords": "Näytä kaikki liittyvät tietueet"
 });

@@ -26,11 +26,11 @@ define({
   "useMapExtent": "Usar a extensão de mapa actual",
   "noFeaturesFound": "Não foram encontrados nenhuns elementos.",
   "downloadCSV": "DESCARREGAR CSV",
-  "sum": "SUM",
-  "min": "MIN",
-  "max": "MAX",
-  "avg": "AVG",
+  "sum": "SOMA",
+  "min": "MÍNIMO",
+  "max": "MÁXIMO",
+  "avg": "MÉDIA",
   "count": "CONTAGEM",
   "area": "ÁREA",
-  "length": "LENGTH"
+  "length": "COMPRIMENTO"
 });

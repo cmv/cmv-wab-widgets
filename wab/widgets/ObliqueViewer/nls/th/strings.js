@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "วัดความสูง",
   "intialScaleLabel": "เลือกขนาดเริ่มต้นสำหรับภาพถ่าย",
   "smallBuildingLabel": "เขตเมือง: อาคารขนาดเล็ก",
-  "buildingLabel": "เขตเมือง: อาคาร"
+  "buildingLabel": "เขตเมือง: อาคาร",
+  "azimuthChangeNotification": "ไม่มีข้อมูลในทิศทางที่เลือก"
 });

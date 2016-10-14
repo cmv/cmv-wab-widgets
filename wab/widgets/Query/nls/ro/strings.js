@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Atribuiţi criterii",
   "spatialFilter": "Filtru spaţial",
   "value": "VALOARE",
-  "noAttributeSpatialFilterTip": "Niciun filtru definit. Vor fi returnate toate obiectele spaţiale."
+  "noAttributeSpatialFilterTip": "Niciun filtru definit. Vor fi returnate toate obiectele spaţiale.",
+  "showAllRelatedRecords": "Afişare toate înregistrările corelate"
 });

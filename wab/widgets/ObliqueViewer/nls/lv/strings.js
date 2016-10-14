@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Mērījuma augstums",
   "intialScaleLabel": "Atlasīt netiešā attēla sākotnējo mērogu",
   "smallBuildingLabel": "Pilsētvide: maza ēka",
-  "buildingLabel": "Pilsētvide: ēka"
+  "buildingLabel": "Pilsētvide: ēka",
+  "azimuthChangeNotification": "Atlasītajā virzienā nav datu."
 });

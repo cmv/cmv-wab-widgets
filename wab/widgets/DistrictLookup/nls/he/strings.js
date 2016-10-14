@@ -11,7 +11,7 @@ define({
   "noPollingPlaceFoundMsg": "לא ניתן למצוא את הנקודה המשויכת לפוליגון",
   "attachmentHeader": "קבצים מקושרים",
   "failedToGenerateRouteMsg": "יצירת המסלול נכשלה.",
-  "allPopupsDisabledMsg": "לא מוגדרים חלונות Popup, לא ניתן להציג תוצאות.",
+  "allPopupsDisabledMsg": "לא מוגדרים חלונות קופצים, לא ניתן להציג תוצאות.",
   "worldGeocoderName": "כתובת",
   "searchLocationTitle": "מיקום שחיפשת"
 });

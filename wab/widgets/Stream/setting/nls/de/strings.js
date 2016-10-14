@@ -14,7 +14,7 @@ define({
   "addNew": "Filter hinzufügen",
   "setFilterName": "Filtername festlegen",
   "filterNameExists": "Filtername ist in der Tabelle vorhanden!",
-  "invalidFilterName": "Der Name sollte ein Wort sein, das folgende Zeichen enthält: a-z, A-Z, 0-9 oder _.",
+  "invalidFilterName": "Der Name darf folgende Zeichen enthalten: a-z, A-Z, 0-9 oder _.",
   "noFilterTip": "Kein Filter konfiguriert",
   "addFilterFailed": "Filter konnte nicht hinzugefügt werden",
   "filterName": "Filtername",

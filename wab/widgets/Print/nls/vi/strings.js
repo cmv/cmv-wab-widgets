@@ -4,6 +4,8 @@ define({
   "format": "Định dạng",
   "layout": "Bố cục",
   "settings": "Nâng cao",
+  "labels": "Nhãn",
+  "showLabels": "Hiển thị nhãn",
   "mapScaleExtent": "Phạm vi/tỷ lệ bản đồ",
   "preserve": "Bảo tồn",
   "mapScale": "tỷ lệ bản đồ",

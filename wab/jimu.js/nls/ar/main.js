@@ -6,6 +6,7 @@ define({
     "yes": "نعم",
     "no": "لا",
     "next": "التالي",
+    "previous": "السابق",
     "back": "السابق",
     "selected": "محدد",
     "name": "الاسم",
@@ -52,7 +53,11 @@ define({
     "view": "عرض",
     "newText": "جديد",
     "edit": "تحرير",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "جدول",
+    "zoomIn": "التكبير",
+    "zoomOut": "التصغير.",
+    "continue1": "متابعة"
   },
   "errorCode": "كود",
   "errorMessage": "رسالة",
@@ -236,10 +241,11 @@ define({
     },
     "caseSensitive": "تحسس حالة الأحرف",
     "notSupportCaseSensitiveTip": "الخدمات المستضافة لا تدعم الاستعلام الحساس للحالة.",
-    "setFilterTip": "يرجى تعيين عامل التصفية بشكل صحيح."
+    "setFilterTip": "يرجى تعيين عامل التصفية بشكل صحيح.",
+    "cascadeFilterTip": "عرض القيم التي يتم تصفيتها بواسطة التعبيرات السابقة."
   },
   "featureLayerSource": {
-    "layer": "الطبقة",
+    "layer": "طبقة",
     "browse": "استعراض",
     "selectFromMap": "تحديد من الخريطة",
     "selectFromPortal": "إضافة من Portal for ArcGIS",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "انقر لاستعادة مدى الخريطة ورؤية الطبقات حيث توقفت."
   },
   "featureActions": {
+    "featureActions": "إجراءات المعالم",
     "ZoomTo": "تكبير/تصغير إلى",
     "PanTo": "التحريك إلى",
     "Flash": "وميض",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "إضافة للاختيارات",
     "removeSelectionTip": "إزالة من التحديد",
     "selectFromCurrentSelectionTip": "تحديد من التحديد الحالي",
-    "unselectAllSelectionTip": "ألغ تحديد كل المعالم المحددة حاليًا"
+    "unselectAllSelectionTip": "ألغ تحديد كل المعالم المحددة حاليًا",
+    "selectByPolygon": "تحديد بواسطة المضلع",
+    "selectByCircle": "تحديد بواسطة دائرة",
+    "selectByLine": "تحديد بواسطة خط",
+    "chooseSelectingTools": "اختر أدوات التحديد",
+    "darw": "رسم",
+    "drawShap": "رسم شكل"
   },
   "widgetManager": {
     "createWidgetError": "خطأ في إنشاء عنصر واجهة المستخدم",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "تطبيقات الويب ثلاثية الأبعاد غير مدعومة في المستعرض."
+  },
+  "map": {
+    "basemapNotAvailable": "لم تتوافر خريطة الأساس.",
+    "displayDefaultBasemap": "عرض خريطة الأساس الافتراضية بدلاً من ذلك."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "يوجد الكثير جدًا من المعالم في المنطقة المحددة على الخريطة، قد تستغرق وقتًا طويلاً لاستعادة جميع البيانات.",
+    "askForContinue": "هل تريد المتابعة؟"
   }
 });

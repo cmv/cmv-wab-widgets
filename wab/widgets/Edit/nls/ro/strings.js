@@ -9,5 +9,8 @@ define({
   "featureLayers": "Straturi tematice de obiecte spaţiale",
   "searchTemplates": "Căutare şabloane",
   "noAvailableTempaltes": "Nu există şabloane disponibile",
-  "noCanCreateLayerAreCurrentlyVisible": "Nu este vizibil niciun strat tematic creabil."
+  "noCanCreateLayerAreCurrentlyVisible": "Nu este vizibil niciun strat tematic creabil.",
+  "relatedTables": "Tabele corelate:",
+  "relatedRecords": "Înregistrări corelate:",
+  "noRelatedRecotds": "Nu au fost găsite înregistrări corelate"
 });

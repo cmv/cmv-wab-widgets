@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "Traženje geolokacije",
   "description": "Pregledajte ili povucite <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> proračunsku tablicu </a> ovdje za vizualizaciju i pridodajte joj podatke karte.",
   "selectCSV": "Odaberi CSV",
   "loadingCSV": "Učitavanje CSV-a",

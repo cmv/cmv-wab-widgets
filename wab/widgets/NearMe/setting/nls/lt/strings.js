@@ -59,12 +59,12 @@ define({
   "layerSelector": {
     "selectLayerLabel": "Pasirinkti paieškos sluoksnį (-ius)",
     "layerSelectionHint": "Patarimas: sluoksniui (-iams) pasirinkti naudokite nustatymo mygtuką",
-    "addLayerButton": "Grupė"
+    "addLayerButton": "Nustatyti"
   },
   "routeSetting": {
     "routeSettingTabTitle": "Krypčių nustatymai",
     "routeServiceUrl": "Maršruto paslauga",
-    "buttonSet": "Grupė",
+    "buttonSet": "Nustatyti",
     "routeServiceUrlHintText": "Užuomina: norėdami rasti ir pasirinkti maršrutų paslaugą, spustelėkite Nustatyti",
     "directionLengthUnit": "Krypties ilgio vienetai",
     "unitsForRouteHintText": "Patarimas: naudojama maršruto vienetams rodyti",

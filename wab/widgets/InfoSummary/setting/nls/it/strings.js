@@ -5,7 +5,7 @@ define({
   "layerLabel": "Etichetta",
   "actions": "Azioni",
   "mainPanelTextPlaceholder": "es.: Ultimo aggiornamento:",
-  "invalidInterval": "Sono supportati solo caratteri numerici.",
+  "invalidInterval": "Consentiti solo interi positivi",
   "uploadImage": "Carica immagine",
   "iconColumnText": "Visualizza",
   "refreshInterval": "Tempo in minuti",
@@ -30,7 +30,6 @@ define({
   "panelIconOption": "Visualizza immagine logo",
   "enableRefresh": "Abilita aggiornamento layer",
   "disableRefresh": "Aggiornamento layer supportato solo per raccolte feature",
-  "layer_type_not_supported": "Il tipo di layer non è supportato: ",
   "refreshUnit": "minuti.",
   "symbolOptions": "Simbolo",
   "panelFeatureDisplay": "Pannello",
@@ -41,10 +40,13 @@ define({
   "featureOptionsText": "Opzioni layer",
   "groupOptionsText": "Raggruppa opzioni",
   "panelCountOption": "Visualizza conteggi feature",
-  "rdoStack": "Visualizza nuova linea per ogni campo",
-  "rdoAppend": "Aggiungi campi su una riga singola",
   "missingLayerInWebMap": "Nessun layer operativo trovato.",
   "displayClusterCnt": "Visualizza conteggio feature",
   "defineClusterFont": "Specifica colore carattere",
-  "max_records": "Raggiunto limite campo massimo"
+  "max_records": "Raggiunto limite campo massimo",
+  "hidePanel": "Nascondi pannello",
+  "hidePanelHelp": "Abilita/disabilita visualizzazione pannello.",
+  "continuousRefreshHelp": "Nota: la raccolta feature si aggiorna continuamente.",
+  "panelCountOptionHelp": "Abilita/disabilita visualizzazione numero di feature.",
+  "panelIconOptionHelp": "Abilita/disabilita visualizzazione di un logo sul pannello principale."
 });

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,19 +50,17 @@ define(['dojo/_base/declare',
           html.empty(this.customContentNode);
 
           var aboutContent = html.toDom(this.config.about.aboutContent);
-          // DocumentFragment or single node
-          if (aboutContent.nodeType &&
-            (aboutContent.nodeType === 11 || aboutContent.nodeType === 1)) {
-            var contentImgs = query('img', aboutContent);
+          html.place(aboutContent, this.customContentNode);
+          // single node only(no DocumentFragment)
+          if (this.customContentNode.nodeType && this.customContentNode.nodeType === 1) {
+            var contentImgs = query('img', this.customContentNode);
             if (contentImgs && contentImgs.length) {
               contentImgs.style({
-                maxWidth: (customBox.w - 20) + 'px' // prevent x scroll
+                maxWidth: (customBox.w - 20) + 'px', // prevent x scroll
+                maxHeight: (customBox.h - 40) + 'px'
               });
-            } else if (aboutContent.nodeName.toUpperCase() === 'IMG') {
-              html.setStyle(aboutContent, 'maxWidth', (customBox.w - 20) + 'px');
             }
           }
-          html.place(aboutContent, this.customContentNode);
         }
       }
     });

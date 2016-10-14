@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoVyhledávání",
+  "_widgetLabel": "Geografické vyhledávání",
   "description": "Vyhledejte <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> tabulku </a> nebo ji sem přetáhněte a vizualizujte ji a připojte k ní mapová data.",
   "selectCSV": "Vyberte soubor CSV",
   "loadingCSV": "Načítání souboru CSV",

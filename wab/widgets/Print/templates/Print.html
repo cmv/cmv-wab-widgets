@@ -65,6 +65,21 @@
                             </tr>
                         </table>
                     </div>
+                    <div style="font-weight:bold;" data-dojo-attach-point="labelsTitleNode">
+                        ${nls.labels}:
+                    </div>
+                    <div data-dojo-type="dijit/form/Form" data-dojo-attach-point="labelsFormDijit">
+                        <table cellspacing="5">
+                            <tr>
+                                <td style="vertical-align:middle;">
+                                    ${nls.showLabels}:
+                                </td>
+                                <td>
+                                    <input type="checkbox" data-dojo-type="dijit/form/CheckBox" data-dojo-props="name:'showLabels',value:true,checked:true" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                     <div style="font-weight:bold;">
                         ${nls.mapMetadata}:
                     </div>

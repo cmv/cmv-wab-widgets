@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Nutikas redaktor",
+  "noEditPrivileges": "Teie kontol puudub andmete loomise või muutmise õigus.",
+  "widgetActive": "Aktiivne",
+  "widgetNotActive": "Pole aktiivne",
   "pressStr": "Snäppimise võimaldamiseks ",
   "ctrlStr": " vajutage ",
   "snapStr": " CTRL",
@@ -19,5 +22,6 @@ define({
     "all": "Kõik",
     "noAvailableTempaltes": "Ühtki malli pole saadaval",
     "searchTemplates": "Otsingumallid"
-  }
+  },
+  "invalidConfiguration": "Vidin on konfigureerimata või pole konfiguratsioonis sisalduvad kihid enam kaardil. Avage rakendus koosturirežiimis ja konfigureerige vidin uuesti."
 });

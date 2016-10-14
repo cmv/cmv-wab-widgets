@@ -109,7 +109,7 @@ define({
   "icon": "Biểu tượng",
   "newTask": "Tác vụ Mới",
   "addTaskTip": "Thêm một hoặc nhiều quy vấn vào tiện ích và cấu hình các thông số cho mỗi quy vấn.",
-  "webMapPopupTip": "Sử dụng cấu hình cửa sổ pop-up của Lớp trong bản đồ web",
+  "webMapPopupTip": "Sử dụng cấu hình pop-up của lớp trong bản đồ web",
   "customPopupTip": "Định cấu hình nội dung tùy chỉnh",
   "showResultsSetActions": "Hiện các tác vụ cho kết quả đã đặt",
   "zoomTo": "Phóng tới",
@@ -122,5 +122,6 @@ define({
   "uploadImage": "Tải ảnh lên",
   "attributeCriteira": "Tiêu chí thuộc tính",
   "specifyFilterAtRuntimeTip": "Người dùng sẽ phải chỉ định tham số cho biểu thức này.",
-  "value": "GIÁ TRỊ"
+  "value": "GIÁ TRỊ",
+  "hideLayersTip": "Tắt lớp kết quả truy vấn khi tiện ích bị đóng."
 });

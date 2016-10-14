@@ -6,6 +6,7 @@ define({
     "yes": "Evet",
     "no": "Hayır",
     "next": "İleri",
+    "previous": "Önceki",
     "back": "Geri",
     "selected": "seçili",
     "name": "Ad",
@@ -52,7 +53,11 @@ define({
     "view": "Görüntüle",
     "newText": "Yeni",
     "edit": "Düzenle",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tablo",
+    "zoomIn": "Büyüt",
+    "zoomOut": "Küçült",
+    "continue1": "Devam"
   },
   "errorCode": "Kod",
   "errorMessage": "İleti",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Büyük/Küçük Harf Duyarlı",
     "notSupportCaseSensitiveTip": "Barındırılan hizmetler büyük küçük harf duyarlı sorgulamayı desteklemez.",
-    "setFilterTip": "Filtreyi düzgün şekilde ayarlayın."
+    "setFilterTip": "Filtreyi düzgün şekilde ayarlayın.",
+    "cascadeFilterTip": "Yalnızca önceki ifadeler tarafından filtrelenen değerler gösterilsin."
   },
   "featureLayerSource": {
     "layer": "Katman",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Harita yayılımını ve katman görünürlüğünü bıraktığınız yerden geri yüklemek için tıklayın."
   },
   "featureActions": {
+    "featureActions": "Detay işlemleri",
     "ZoomTo": "Yakınlaştır",
     "PanTo": "Kaydır",
     "Flash": "Parlat",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Seçime ekle",
     "removeSelectionTip": "Seçimden kaldır",
     "selectFromCurrentSelectionTip": "Aktif seçimden seç",
-    "unselectAllSelectionTip": "Geçerli durumda seçili tüm detayların seçimini kaldırın"
+    "unselectAllSelectionTip": "Geçerli durumda seçili tüm detayların seçimini kaldırın",
+    "selectByPolygon": "Alana Göre Seç",
+    "selectByCircle": "Daireyle Seç",
+    "selectByLine": "Çizgiyle Seç",
+    "chooseSelectingTools": "Seçim araçlarını belirleyin.",
+    "darw": "Çiz",
+    "drawShap": "Şekil çiz"
   },
   "widgetManager": {
     "createWidgetError": "Araç oluşturma hatası",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3B web haritaları tarayıcınızda desteklenmiyor."
+  },
+  "map": {
+    "basemapNotAvailable": "Altlık harita mevcut değil.",
+    "displayDefaultBasemap": "Bunun yerine varsayılan altlık harita görüntüleniyor."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Haritada seçtiğiniz alan içinde çok fazla detay var. Tüm verilerin alınması uzun sürebilir.",
+    "askForContinue": "Devam etmek istiyor musunuz?"
   }
 });

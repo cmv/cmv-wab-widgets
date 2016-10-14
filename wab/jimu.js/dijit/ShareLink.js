@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -671,8 +671,8 @@ define(['dojo/_base/declare',
         var options = [];
         this.queryFeature_field.removeOption(this.queryFeature_field.getOptions());
         array.forEach(fields, lang.hitch(this, function(field) {
-          if (["esriFieldTypeSmallInteger", "esriFieldTypeInteger", "esriFieldTypeSingle",
-              "esriFieldTypeDouble"].indexOf(field.type) > -1) {
+          if (["esriFieldTypeString", "esriFieldTypeOID", "esriFieldTypeSmallInteger", "esriFieldTypeInteger",
+              "esriFieldTypeSingle", "esriFieldTypeDouble"].indexOf(field.type) > -1) {
             var opt = {label: field.name, value: field.name};
             options.push(opt);
           }

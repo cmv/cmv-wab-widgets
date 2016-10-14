@@ -2,20 +2,32 @@ define({
   "configText": "Määritä suodatinryhmäsi alla",
   "labels": {
     "groupName": "Suodatinjoukon nimi:",
+    "groupNameTip": "Sen suodattimen nimi, josta käyttäjä valitsee.",
     "groupDesc": "Kuvaus:",
+    "groupDescTip": "Suodatinjoukon kuvaus.",
     "groupOperator": "Esiasetettu operaattori:",
-    "groupDefault": "Esiasetettu arvo:"
+    "groupOperatorTip": "Asetus määrittää etukäteen suodattimen operaattorin. Jos esiasetettua operaattoria ei valita, suodatin käyttää Yhtä suuri kuin -operaattoria.",
+    "groupDefault": "Esiasetettu arvo:",
+    "groupDefaultTip": "Asetus valitsee arvon olemassa olevasta karttatasosta.",
+    "sameLayerAppend": "Kun karttataso luetellaan useammin kuin kerran, käytä seuraavaa operaattoria kenttien välillä:",
+    "sameLayerConjunc": "Liitä seuraavan avulla:"
   },
   "buttons": {
     "addNewGroup": "Lisää uusi ryhmä",
-    "addLayer": "Lisää karttataso"
+    "addNewGroupTip": "Lisää uusi suodatinjoukko.",
+    "addLayer": "Lisää karttataso",
+    "addLayerTip": "Lisää karttataso suodatinjoukkoon."
   },
   "inputs": {
     "groupName": "Anna ryhmällesi nimi",
     "groupDesc": "Ryhmäsi kuvaus",
     "groupDefault": "Anna ennalta määritetty arvo",
     "simpleMode": "Aloita yksinkertaisessa näkymässä",
+    "simpleModeTip": "Asetus yksinkertaistaa määritettyä pienoisohjelman liittymää. Kun valintaruutu valitaan, liittymästä poistetaan operaattorien avattava luettelo ja ehtojen lisäyspainikkeet.",
+    "webmapAppendMode": "Liitä suodatin olemassa olevaan web-kartan suodattimeen seuraavan avulla: ",
+    "webmapAppendModeTip": "Asetus liittää suodatinjoukon olemassa olevaan web-kartan suodattimeen. Tuettuja operaattoreita ovat OR ja AND.",
     "optionsMode": "Piilota pienoisohjelman asetukset",
+    "optionsModeTip": "Asetus tuo näkyviin pienoisohjelman lisäasetukset. Jos valintaruutu valitaan, liittymästä poistetaan määritettyjen suodattimien tallennus ja lataus sekä suodattimen säilyttäminen pienoisohjelman sulkemisen jälkeen.",
     "optionOR": "TAI",
     "optionAND": "JA",
     "optionEQUAL": "YHTÄ SUURI KUIN",
@@ -32,9 +44,15 @@ define({
   },
   "tables": {
     "layer": "Karttatasot",
+    "layerTip": "Karttatason nimi karttaan määritetyssä muodossa.",
     "field": "Kentät",
+    "fieldTip": "Kenttä, jonka perusteella karttataso suodatetaan.",
     "value": "Käytä arvoa",
-    "action": "Poista"
+    "valueTip": "Asetus ottaa käyttöön karttatason arvojen avattavan luettelon. Jos mikään karttataso ei käytä tätä parametria, käyttäjä näkee vain tekstiruudun.",
+    "zoom": "Tarkennus",
+    "zoomTip": "Asetus zoomaa kohteiden laajuuteen suodattimen käytön jälkeen. Valittavissa on vain yksi zoomattava karttataso.",
+    "action": "Poista",
+    "actionTip": "Poista karttataso suodatinjoukosta."
   },
   "popup": {
     "label": "Valitse arvo"
@@ -49,7 +67,10 @@ define({
   "picker": {
     "description": "Käytä tätä lomaketta esiasetetun arvon hakemiseen tälle ryhmälle.",
     "layer": "Valitse karttataso",
+    "layerTip": "Karttatason nimi web-karttaan määritetyssä muodossa.",
     "field": "Valitse kenttä",
-    "value": "Valitse arvo"
+    "fieldTip": "Kenttä, josta esiasetettu arvo määritetään.",
+    "value": "Valitse arvo",
+    "valueTip": "Arvo, jota käytetään pienoisohjelman oletuksena."
   }
 });

@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Išmanusis redaktorius",
+  "noEditPrivileges": "Jūsų paskyra neturi teisės kurti arba modifikuoti duomenų.",
+  "widgetActive": "Aktyvus",
+  "widgetNotActive": "Neaktyvus",
   "pressStr": "Paspauskite ",
   "ctrlStr": " CTRL ",
   "snapStr": " pritraukimui įjungti",
@@ -19,5 +22,6 @@ define({
     "all": "Viskas",
     "noAvailableTempaltes": "Galimų šablonų nėra",
     "searchTemplates": "Ieškoti šablonų"
-  }
+  },
+  "invalidConfiguration": "Valdiklis nesukonfigūruotas arba konfigūracijos sluoksnių žemėlapyje nebėra. Atidarykite aplikaciją kūrimo režime ir iš naujo sukonfigūruokite valdiklį."
 });

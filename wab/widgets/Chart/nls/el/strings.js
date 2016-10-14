@@ -43,5 +43,7 @@ define({
   "yards": "Γιάρδες",
   "nauticalMiles": "Ναυτικά μίλια",
   "back": "Πίσω",
-  "execute": "Εκτέλεση"
+  "execute": "Εκτέλεση",
+  "enlarge": "Μεγέθυνση",
+  "setting": "Ρύθμιση"
 });

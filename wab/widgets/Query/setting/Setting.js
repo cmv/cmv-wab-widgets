@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ define([
   'jimu/filterUtils',
   '../utils',
   './SingleQuerySetting',
+  'jimu/dijit/CheckBox',
   'jimu/dijit/TabContainer'
 ],
 function(on, sniff, query, declare, lang, html, array, _WidgetsInTemplateMixin, BaseWidgetSetting,
@@ -46,14 +47,11 @@ function(on, sniff, query, declare, lang, html, array, _WidgetsInTemplateMixin, 
         this._updateConfig();
       }
       this.noQueryNls = this.nls.noTasksTip;
-      var placeHolders = ['"${newQuery}""', '"${newQuery}"', '„${newQuery}”', '„${newQuery}“', '${newQuery}'];
-      array.some(placeHolders, lang.hitch(this, function(placeHolder){
-        if(this.noQueryNls.indexOf(placeHolder) > 0){
-          this.noQueryNls = this.noQueryNls.replace(placeHolder, "<span>" + this.nls.newQuery + "</span>");
-          return true;
-        }
-        return false;
-      }));
+      var a = '"${newQuery}""';
+      if(this.noQueryNls.indexOf(a) < 0){
+        a = '"${newQuery}"';
+      }
+      this.noQueryNls = this.noQueryNls.replace(a, "<span>" + this.nls.newQuery + "</span>");
     },
 
     _updateConfig: function() {
@@ -80,6 +78,7 @@ function(on, sniff, query, declare, lang, html, array, _WidgetsInTemplateMixin, 
     postCreate:function(){
       this.inherited(arguments);
       this.noQueryTip.innerHTML = this.noQueryNls;
+      this.cbxHideLayersAfterWidgetClosed.setLabel(this.nls.hideLayersTip);
       if(this.config){
         this.setConfig(this.config);
       }
@@ -254,6 +253,7 @@ function(on, sniff, query, declare, lang, html, array, _WidgetsInTemplateMixin, 
     },
 
     setConfig: function(config){
+      this.cbxHideLayersAfterWidgetClosed.setValue(config.hideLayersAfterWidgetClosed);
       var firstTarget = null;
       array.forEach(config.queries, lang.hitch(this, function(singleConfig, index){
         var target = this._createTarget(singleConfig.name);
@@ -277,6 +277,7 @@ function(on, sniff, query, declare, lang, html, array, _WidgetsInTemplateMixin, 
       }
       var targets = query('.item', this.listContent);
       var config = {
+        hideLayersAfterWidgetClosed: this.cbxHideLayersAfterWidgetClosed.getValue(),
         queries: []
       };
       config.queries = array.map(targets, lang.hitch(this, function(target){

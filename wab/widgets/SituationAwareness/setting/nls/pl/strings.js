@@ -45,7 +45,7 @@ define({
   "save_label": "Opcje zapisywania",
   "save_checkbox": "Włącz zapisywanie",
   "csv_label": "Opcje CSV",
-  "csv_checkbox": "Wyeksportuj wszystkie pola w warstwie.",
+  "csv_checkbox": "Wyeksportuj wszystkie pola w warstwie",
   "display_label": "Opcje wyświetlania",
   "display_checkbox": "Wyświetl obiekty podsumowania",
   "must_select_template": "W opcjach zapisywania wybierz jeden z szablonów edycji.",

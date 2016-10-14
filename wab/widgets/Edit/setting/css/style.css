@@ -72,3 +72,16 @@
   box-shadow: 0 0 0;
 }
 
+/**************layerInfos and tableInfos table*************/
+
+.jimu-widget-edit-setting .tableInfos-loading{
+  top: 65px;
+  position: relative;
+}
+
+.jimu-widget-edit-setting .tableInfos-table{
+  display: none;
+  margin-top: 30px;
+  margin-bottom: 5px;
+  position: relative;
+}

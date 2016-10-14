@@ -1,9 +1,11 @@
 {
-  "editor": {
-    "showDeleteButton":  true,
-    "prompOnSave": false,
-    "promptOnDelete": true,
-    "removeOnSave": true,
-    "layerInfos": [ ]
-  }
+    "editor": {
+        "layerInfos": [ ],
+        "displayPromptOnSave": false,
+        "displayPromptOnDelete": false,
+        "removeOnSave": false,
+        "useFilterEditor": false,
+        "listenToGF": false,
+        "keepTemplateSelected": false
+    }
 }

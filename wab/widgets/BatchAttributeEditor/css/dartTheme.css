@@ -22,3 +22,8 @@
 	color: #8A0808 !important;
 	font-weight: bold;
 }
+
+.claro .dijitDateTextBox .dijitArrowButton:before {
+    content:none!important;
+
+}

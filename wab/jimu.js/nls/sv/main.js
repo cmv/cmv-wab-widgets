@@ -6,6 +6,7 @@ define({
     "yes": "Ja",
     "no": "Nej",
     "next": "Nästa",
+    "previous": "Föregående",
     "back": "Bakåt",
     "selected": "valt",
     "name": "Namn",
@@ -52,7 +53,11 @@ define({
     "view": "Visa",
     "newText": "Nytt",
     "edit": "Redigera",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabell",
+    "zoomIn": "Zooma in",
+    "zoomOut": "Zooma ut",
+    "continue1": "Fortsätt"
   },
   "errorCode": "Kod",
   "errorMessage": "Meddelande",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Skiftlägeskänsligt",
     "notSupportCaseSensitiveTip": "Värdbaserade tjänster stöder inte skiftlägeskänsliga frågor.",
-    "setFilterTip": "Ange filtret korrekt."
+    "setFilterTip": "Ange filtret korrekt.",
+    "cascadeFilterTip": "Visa endast värden som filtrerats av tidigare uttryck."
   },
   "featureLayerSource": {
     "layer": "Lager",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Klicka om du vill återställa kartutbredningen och lagrens synlighet där du slutade."
   },
   "featureActions": {
+    "featureActions": "Geoobjektsåtgärder",
     "ZoomTo": "Zooma till",
     "PanTo": "Panorera till",
     "Flash": "Blinka",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Lägg till i urval",
     "removeSelectionTip": "Remove from selection",
     "selectFromCurrentSelectionTip": "Välj från aktuellt urval",
-    "unselectAllSelectionTip": "Avmarkera alla markerade geoobjekt"
+    "unselectAllSelectionTip": "Avmarkera alla markerade geoobjekt",
+    "selectByPolygon": "Välj med polygon",
+    "selectByCircle": "Välj efter cirkel",
+    "selectByLine": "Välj efter linje",
+    "chooseSelectingTools": "Välj markeringsverktyg",
+    "darw": "Rita",
+    "drawShap": "Rita en form"
   },
   "widgetManager": {
     "createWidgetError": "Det uppstod ett fel när widgeten skapades",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D-webbappar kan inte visas i din webbläsare."
+  },
+  "map": {
+    "basemapNotAvailable": "Baskartan är inte tillgänglig.",
+    "displayDefaultBasemap": "Visa standardbaskartan i stället."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Det finns för många geoobjekt inom ditt markerade område på kartan. Det kan ta lång tid att hämta alla data.",
+    "askForContinue": "Vill du fortsätta?"
   }
 });

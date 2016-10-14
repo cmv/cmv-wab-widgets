@@ -16,19 +16,19 @@ define({
     "label": "Aktivieren Sie die Felder, die angehängt werden sollen. Wählen Sie ein Feld aus, um dessen Alias und Reihenfolge zu aktualisieren."
   },
   "symbolArea": {
-    "symbolLabelWithin": "Wählen Sie das Symbol für Positionen innerhalb von:",
-    "symbolLabelOutside": "Wählen Sie das Symbol für Positionen außerhalb von:"
+    "symbolLabelWithin": "Symbol für Positionen innerhalb:",
+    "symbolLabelOutside": "Symbol für Positionen außerhalb:"
   },
   "advSettings": {
     "label": "Erweiterte Einstellungen",
-    "latFieldsDesc": "Mögliche Feldnamen für das Feld \"Breitengrad\".",
-    "longFieldsDesc": "Mögliche Feldnamen für das Feld \"Längengrad\".",
-    "intersectFieldDesc": "Der Name des erstellen Feldes zur Speicherung des Wertes, wenn das Suchergebnis einen Layer überschneidet.",
-    "intersectInDesc": "Zu speichernder Wert, wenn die Position ein Polygon überschneidet.",
-    "intersectOutDesc": "Zu speichernder Wert, wenn die Position kein Polygon überschneidet.",
-    "maxRowCount": "Die maximale Zeilenanzahl in der CSV-Datei.",
-    "cacheNumberDesc": "Punktcluster-Grenzwert für schnelle Verarbeitung.",
-    "subTitle": "Werte für CSV-Datei festlegen."
+    "latFieldsDesc": "Mögliche Feldnamen für das Feld \"Breitengrad\"",
+    "longFieldsDesc": "Mögliche Feldnamen für das Feld \"Längengrad\"",
+    "intersectFieldDesc": "Der Name des erstellen Feldes zur Speicherung des Wertes, wenn das Suchergebnis einen Layer überschneidet",
+    "intersectInDesc": "Zu speichernder Wert, wenn die Position ein Polygon überschneidet",
+    "intersectOutDesc": "Zu speichernder Wert, wenn die Position kein Polygon überschneidet",
+    "maxRowCount": "Die maximale Zeilenanzahl in der CSV-Datei",
+    "cacheNumberDesc": "Punktcluster-Grenzwert für schnelle Verarbeitung",
+    "subTitle": "Werte für CSV-Datei festlegen"
   },
   "noPolygonLayers": "Keine Polygon-Layer",
   "errorOnOk": "Füllen Sie alle Parameter aus, bevor Sie die Konfiguration speichern",

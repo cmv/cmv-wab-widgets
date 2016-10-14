@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -82,7 +82,10 @@ define([
           };
 
           if (!this._store[filterObj.layerId]) {
-            this._store[filterObj.layerId] = {};
+            this._store[filterObj.layerId] = {
+              mapFilterControls: {}
+              // filter_item_idx
+            }; // filter_item_idx, mapFilterControls
           }
 
           var template = lang.replace(this._itemTemplate, parse, /\$\{([^\}]+)\}/ig);
@@ -113,12 +116,46 @@ define([
         this.resize();
       },
 
-      _setItemFilter: function(layerId, idx, expr) {
+      _getPriorityOfMapFilter: function(layerId) {
+        var mapFilterControls = lang.getObject(layerId + '.mapFilterControls', false, this._store);
+        var count = 0;
+        for (var p in mapFilterControls) {
+          var control = mapFilterControls[p];
+          if (control.priority > count) {
+            count = control.priority;
+          }
+        }
+
+        return count;
+      },
+
+      _getMapFilterControl: function(layerId) {
+        var mapFilterControls = lang.getObject(layerId + '.mapFilterControls', false, this._store);
+        var count = 0;
+        var enable = true;
+        for (var p in mapFilterControls) {
+          var control = mapFilterControls[p];
+          if (control.priority > count) {
+            enable = !!control.enable;
+          }
+        }
+
+        return enable;
+      },
+
+      _setItemFilter: function(layerId, idx, expr, enableMapFilter) {
         this._store[layerId]['filter_item_' + idx] = expr;
+
+        var priority = this._getPriorityOfMapFilter(layerId);
+        lang.setObject(layerId + '.mapFilterControls.filter_item_' + idx , {
+          enable: enableMapFilter,
+          priority: priority + 1
+        }, this._store);
       },
 
       _removeItemFilter: function(layerId, idx) {
         delete this._store[layerId]['filter_item_' + idx];
+        delete this._store[layerId].mapFilterControls['filter_item_' + idx];
       },
 
       _getExpr: function(layerId) {
@@ -131,7 +168,7 @@ define([
 
         for (var p in exprs) {
           var expr = exprs[p];
-          if (expr) {
+          if (expr && p !== 'mapFilterControls') {
             parts.push('(' + expr + ')');
           }
         }
@@ -178,15 +215,18 @@ define([
           }
         }
 
+        var enableMapFilter = null;
         if (!applied) {
           this._setItemFilter(layerId, idx, node.filterParams ?
-            node.filterParams.getFilterExpr() : filterObj.filter.expr);
+            node.filterParams.getFilterExpr() : filterObj.filter.expr, filterObj.enableMapFilter);
           layerFilterExpr = this._getExpr(layerId);
-          this.filterManager.applyWidgetFilter(layerId, this.id, layerFilterExpr);
+          enableMapFilter = this._getMapFilterControl(layerId);
+          this.filterManager.applyWidgetFilter(layerId, this.id, layerFilterExpr, enableMapFilter);
         } else {
           this._removeItemFilter(layerId, idx);
           layerFilterExpr = this._getExpr(layerId);
-          this.filterManager.applyWidgetFilter(layerId, this.id, layerFilterExpr);
+          enableMapFilter = this._getMapFilterControl(layerId);
+          this.filterManager.applyWidgetFilter(layerId, this.id, layerFilterExpr, enableMapFilter);
         }
       },
 
@@ -256,9 +296,10 @@ define([
           } else {
             html.addClass(node, 'applied');
           }
-          this._setItemFilter(layerId, idx, node.expr);
+          this._setItemFilter(layerId, idx, node.expr, filterObj.enableMapFilter);
           var layerFilterExpr = this._getExpr(layerId);
-          this.filterManager.applyWidgetFilter(layerId, this.id, layerFilterExpr);
+          var enableMapFilter = this._getMapFilterControl(layerId);
+          this.filterManager.applyWidgetFilter(layerId, this.id, layerFilterExpr, enableMapFilter);
         }
 
         evt.stopPropagation();
@@ -290,7 +331,7 @@ define([
         if (this._store) {
           for (var p in this._store) {
             if (p) {
-              this.filterManager.applyWidgetFilter(p, this.id, "");
+              this.filterManager.applyWidgetFilter(p, this.id, "", null);
             }
           }
         }

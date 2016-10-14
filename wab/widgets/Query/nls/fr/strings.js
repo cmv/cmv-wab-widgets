@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Critères des attributs",
   "spatialFilter": "Filtre spatial",
   "value": "VALEUR",
-  "noAttributeSpatialFilterTip": "Aucun filtre défini. Toutes les entités seront renvoyées."
+  "noAttributeSpatialFilterTip": "Aucun filtre défini. Toutes les entités seront renvoyées.",
+  "showAllRelatedRecords": "Afficher tous les enregistrements associés"
 });

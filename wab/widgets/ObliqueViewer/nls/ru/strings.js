@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Измерить высоту",
   "intialScaleLabel": "Задать начальный масштаб перспективных изображений",
   "smallBuildingLabel": "Городская застройка: небольшие здания",
-  "buildingLabel": "Городская застройка: здания"
+  "buildingLabel": "Городская застройка: здания",
+  "azimuthChangeNotification": "В выбранном направлении нет данных."
 });

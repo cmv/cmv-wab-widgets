@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "屬性準則",
   "spatialFilter": "空間篩選器",
   "value": "值",
-  "noAttributeSpatialFilterTip": "無定義的篩選器。將傳回所有圖徵。"
+  "noAttributeSpatialFilterTip": "無定義的篩選器。將傳回所有圖徵。",
+  "showAllRelatedRecords": "顯示所有相關記錄"
 });

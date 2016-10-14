@@ -6,7 +6,7 @@ define({
   "locate_incident": "Zlokalizuj zdarzenie",
   "clear_incidents": "Wyczyść zdarzenia",
   "reverse_geocoded_address": "Najbliższy adres",
-  "reverse_geocoded_error": "Not available",
+  "reverse_geocoded_error": "Niedostępne",
   "miles": "Mile",
   "kilometers": "Kilometry",
   "feet": "Stopy",

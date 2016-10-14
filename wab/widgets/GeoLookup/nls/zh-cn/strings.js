@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "地理查找",
   "description": "浏览至此处或将<a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'>电子表格</a>拖放至此处进行查看，并为其追加地图数据。",
   "selectCSV": "选择 CSV",
   "loadingCSV": "加载 CSV",

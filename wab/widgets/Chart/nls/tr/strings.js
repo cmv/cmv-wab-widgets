@@ -43,5 +43,7 @@ define({
   "yards": "Yarda",
   "nauticalMiles": "Deniz Mili",
   "back": "Geri",
-  "execute": "Çalıştır"
+  "execute": "Çalıştır",
+  "enlarge": "Genişlet",
+  "setting": "Ayarlar"
 });

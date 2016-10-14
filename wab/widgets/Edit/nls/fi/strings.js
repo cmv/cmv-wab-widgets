@@ -9,5 +9,8 @@ define({
   "featureLayers": "Kohdetasot",
   "searchTemplates": "Hae malleja",
   "noAvailableTempaltes": "Yhtään mallia ei ole käytettävissä",
-  "noCanCreateLayerAreCurrentlyVisible": "Tällä hetkellä ei ole näkyvissä luotavia karttatasoja."
+  "noCanCreateLayerAreCurrentlyVisible": "Tällä hetkellä ei ole näkyvissä luotavia karttatasoja.",
+  "relatedTables": "Liittyvät taulut:",
+  "relatedRecords": "Liittyvät tietueet:",
+  "noRelatedRecotds": "Liittyviä tietueita ei löytynyt"
 });

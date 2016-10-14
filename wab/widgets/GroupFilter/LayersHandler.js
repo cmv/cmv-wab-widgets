@@ -56,7 +56,7 @@ function(Evented,
       array.forEach(this.layers, lang.hitch(this, function(layer) {
         if(!layer.featureCollection) {
           if ((typeof (layer.originOperLayer) !== 'undefined') &&
-            layer.originOperLayer.layerType && layer.originOperLayer.layerType === 'ArcGISFeatureLayer') {
+            layer.originOperLayer.layerType && (layer.originOperLayer.layerType === 'ArcGISFeatureLayer' || layer.originOperLayer.layerType === 'ArcGISImageServiceLayer')) {
             if(typeof(layer.originOperLayer.featureCollection) === 'undefined' ) {
               dataItem = {
                 label : layer.title,

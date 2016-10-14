@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -78,15 +78,15 @@ define(['dojo/_base/declare',
       this._statisticsPopup = new Popup({
         titleLabel: this.nls.statistics,
         content: this.domNode,
-        width: 400,
-        height: 320,
+        width: 270,
+        height: 265,
         buttons: [{
           label: this.nls.ok
         }]
       });
       this.showContent(statInfo);
       // this class come from api.
-      html.addClass(this._statisticsPopup.domNode, "esri-feature-table-dialog");
+      // html.addClass(this._statisticsPopup.domNode, "esri-feature-table-dialog");
     },
 
     _showOneFieldStatContent: function(statInfo, container){
@@ -134,7 +134,7 @@ define(['dojo/_base/declare',
             };
           })),
           style: {
-            width: '200px'
+            width: '150px'
           }
         });
         this.own(on(fieldSelect, 'change', lang.hitch(this, function(fieldName){

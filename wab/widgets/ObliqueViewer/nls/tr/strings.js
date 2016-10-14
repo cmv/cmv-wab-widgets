@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Yüksekliği ölçün",
   "intialScaleLabel": "Eğik resimler için başlangıç ölçeğini seçin",
   "smallBuildingLabel": "Kentsel Alan: Küçük Yapılar",
-  "buildingLabel": "Kentsel Alan: Binalar"
+  "buildingLabel": "Kentsel Alan: Binalar",
+  "azimuthChangeNotification": "Seçilen yönde veri yok."
 });

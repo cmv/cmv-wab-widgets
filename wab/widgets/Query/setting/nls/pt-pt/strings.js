@@ -109,7 +109,7 @@ define({
   "icon": "Ícone",
   "newTask": "Nova Tarefa",
   "addTaskTip": "Adicionar uma ou mais consultas ao widget e configurar parâmetros para cada uma delas.",
-  "webMapPopupTip": "Utilizar a configuração da janela pop-up da Camada no mapa web",
+  "webMapPopupTip": "Utilizar a configuração da janela pop-up da camada no mapa web",
   "customPopupTip": "Configurar conteúdo personalizado",
   "showResultsSetActions": "Exibir ações para o conjunto de resultados",
   "zoomTo": "Efectuar zoom para",
@@ -122,5 +122,6 @@ define({
   "uploadImage": "Carregar uma imagem",
   "attributeCriteira": "Critério de atributos",
   "specifyFilterAtRuntimeTip": "Os utilizadores terão de especificar parâmetros para esta expressão.",
-  "value": "VALOR"
+  "value": "VALOR",
+  "hideLayersTip": "Desative as camadas de resultado de consulta quando o widget é encerrado."
 });

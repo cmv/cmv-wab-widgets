@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Atribūtu kritēriji",
   "spatialFilter": "Telpiskais filtrs",
   "value": "VĒRTĪBA",
-  "noAttributeSpatialFilterTip": "Nav definēts neviens filtrs. Visi elementi tiks atgriezti."
+  "noAttributeSpatialFilterTip": "Nav definēts neviens filtrs. Visi elementi tiks atgriezti.",
+  "showAllRelatedRecords": "Rādīt visus saistītos ierakstus"
 });

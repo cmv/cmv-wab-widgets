@@ -45,7 +45,7 @@ define({
   "save_label": "Salva opzioni",
   "save_checkbox": "Abilita salvataggio",
   "csv_label": "Opzioni CSV",
-  "csv_checkbox": "Esportare tutti i campi nel layer.",
+  "csv_checkbox": "Esporta tutti i campi nel layer",
   "display_label": "Opzioni di visualizzazione",
   "display_checkbox": "Visualizza riepilogo delle feature",
   "must_select_template": "Selezionare uno dei modelli di modifica nelle opzioni di salvataggio.",

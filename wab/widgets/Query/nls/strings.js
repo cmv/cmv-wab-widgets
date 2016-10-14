@@ -84,7 +84,8 @@ define({
     attributeCriteira: "Attribute criteria",
     spatialFilter: "Spatial filter",
     value: "VALUE",
-    noAttributeSpatialFilterTip: "No filters defined. All features will be returned."
+    noAttributeSpatialFilterTip: "No filters defined. All features will be returned.",
+    showAllRelatedRecords: "Show All Related Records"
   }),
   "ar": 1,
   "cs": 1,

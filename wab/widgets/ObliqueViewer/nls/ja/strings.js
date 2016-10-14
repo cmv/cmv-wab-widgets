@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "高さ計測",
   "intialScaleLabel": "傾斜画像の初期縮尺の選択",
   "smallBuildingLabel": "市街地: 小さい建物",
-  "buildingLabel": "市街地: 建物"
+  "buildingLabel": "市街地: 建物",
+  "azimuthChangeNotification": "選択した方向にデータはありません。"
 });

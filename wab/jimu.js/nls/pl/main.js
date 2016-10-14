@@ -6,6 +6,7 @@ define({
     "yes": "Tak",
     "no": "Nie",
     "next": "Dalej",
+    "previous": "Powrót",
     "back": "Wstecz",
     "selected": "wybrane",
     "name": "Nazwa",
@@ -52,7 +53,11 @@ define({
     "view": "Wyświetl",
     "newText": "Nowa",
     "edit": "Edytuj",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabela",
+    "zoomIn": "Powiększ",
+    "zoomOut": "Pomniejsz",
+    "continue1": "Kontynuuj"
   },
   "errorCode": "Kod",
   "errorMessage": "Komunikat",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Uwzględnia wielkość liter",
     "notSupportCaseSensitiveTip": "Hostowane usługi nie obsługują zapytań rozróżniających wielkość liter.",
-    "setFilterTip": "Skonfiguruj poprawnie filtr."
+    "setFilterTip": "Skonfiguruj poprawnie filtr.",
+    "cascadeFilterTip": "Wyświetlaj tylko wartości odfiltrowane przez poprzednie wyrażenia."
   },
   "featureLayerSource": {
     "layer": "Warstwa",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Kliknij, aby przywrócić zasięg mapy i widoczność warstw takie, jak w chwili pozostawienia."
   },
   "featureActions": {
+    "featureActions": "Operacje na obiektach",
     "ZoomTo": "Powiększ do",
     "PanTo": "Przesuń do",
     "Flash": "Lampa błyskowa",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Dodaj do selekcji",
     "removeSelectionTip": "Usuń z wyboru",
     "selectFromCurrentSelectionTip": "Wybierz z bieżącego wyboru",
-    "unselectAllSelectionTip": "Anuluj wybór wszystkich obecnie wybranych obiektów"
+    "unselectAllSelectionTip": "Anuluj wybór wszystkich obecnie wybranych obiektów",
+    "selectByPolygon": "Wybierz  wielokątem",
+    "selectByCircle": "Wybierz okręgiem",
+    "selectByLine": "Wybierz  linią",
+    "chooseSelectingTools": "Wybierz narzędzia do zaznaczania",
+    "darw": "Narysuj",
+    "drawShap": "Narysuj kształt"
   },
   "widgetManager": {
     "createWidgetError": "Błąd tworzenia widżetu",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Twoja przeglądarka nie obsługuje aplikacji internetowych 3D."
+  },
+  "map": {
+    "basemapNotAvailable": "Mapa bazowa jest niedostępna.",
+    "displayDefaultBasemap": "Zamiast niej zostanie wyświetlona domyślna mapa bazowa."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "W obszarze zaznaczonym na mapie jest zbyt wiele obiektów. Wczytanie wszystkich danych może zająć dużo czasu.",
+    "askForContinue": "Czy chcesz kontynuować?"
   }
 });

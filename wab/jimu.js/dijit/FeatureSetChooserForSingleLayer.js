@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,10 +24,11 @@ define([
   'dijit/_TemplatedMixin',
   'dijit/_WidgetsInTemplateMixin',
   'jimu/dijit/DrawBox',
-  'jimu/dijit/_FeatureSetChooserCore'
+  'jimu/dijit/_FeatureSetChooserCore',
+  'esri/symbols/jsonUtils'
 ],
 function(on, Evented, lang, array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, DrawBox,
-  _FeatureSetChooserCore) {
+  _FeatureSetChooserCore, symbolJsonUtils) {
 
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
     baseClass: 'jimu-single-layer-featureset-chooser',
@@ -58,12 +59,24 @@ function(on, Evented, lang, array, declare, _WidgetBase, _TemplatedMixin, _Widge
       this.inherited(arguments);
 
       //init DrawBox
+      var fillSymbol = symbolJsonUtils.fromJson({
+        "style": "esriSFSSolid",
+        "color": [79, 129, 189, 77],
+        "type": "esriSFS",
+        "outline": {
+          "style": "esriSLSSolid",
+          "color": [54, 93, 141, 255],
+          "width": 1.5,
+          "type": "esriSLS"
+        }
+      });
       this.drawBox = new DrawBox({
         map: this.map,
         showClear: true,
         keepOneGraphic: true,
         geoTypes: ['EXTENT']//['POLYGON']
       });
+      this.drawBox.setPolygonSymbol(fillSymbol);
       var drawItemIcons = this.drawBox.getDrawItemIcons();
       array.forEach(drawItemIcons, lang.hitch(this, function(drawItemIcon){
         drawItemIcon.title = "";
@@ -156,6 +169,20 @@ function(on, Evented, lang, array, declare, _WidgetBase, _TemplatedMixin, _Widge
     _onDrawBoxUserClear: function(){
       this.clearAllGraphics();
       this.emit("user-clear");
+    },
+
+    //private method
+    showMiddleFeatureLayer: function(){
+      if(this.featureSetChooserCore){
+        this.featureSetChooserCore.showMiddleFeatureLayer();
+      }
+    },
+
+    //private method
+    hideMiddleFeatureLayer: function(){
+      if(this.featureSetChooserCore){
+        this.featureSetChooserCore.hideMiddleFeatureLayer();
+      }
     }
 
   });

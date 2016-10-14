@@ -4,6 +4,8 @@ define({
   "format": "Format",
   "layout": "Mise en page",
   "settings": "Avancé",
+  "labels": "Etiquettes",
+  "showLabels": "Afficher les étiquettes",
   "mapScaleExtent": "Echelle/étendue de la carte",
   "preserve": "Conserver",
   "mapScale": "échelle de la carte",

@@ -21,7 +21,7 @@ define({
     "esriDUDecimalDegrees": "Grad",
     "esriSquareInches": "Quadratinch",
     "esriSquareFeet": "Quadratfuß",
-    "esriSquareYards": "Quadratyards",
+    "esriSquareYards": "Quadratyard",
     "esriAcres": "Acres",
     "esriSquareMiles": "Quadratmeilen",
     "esriSquareMillimeters": "Quadratmillimeter",
@@ -33,7 +33,7 @@ define({
     "esriSquareKilometers": "Quadratkilometer"
   },
   "operationLabel": {
-    "esriMensurationPoint": "Speicherort",
+    "esriMensurationPoint": "Position",
     "esriMensurationDistanceAndAngle": "Entfernung und Winkel",
     "esriMensurationAreaAndPerimeter": "Fläche und Umfang",
     "esriMensurationHeightFromBaseAndTop": "Höhe: Basis bis Spitze",

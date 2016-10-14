@@ -122,5 +122,6 @@ define({
   "uploadImage": "Last opp et bilde",
   "attributeCriteira": "Attributtvilkår",
   "specifyFilterAtRuntimeTip": "Brukerne må oppgi parametere for dette uttrykket.",
-  "value": "VERDI"
+  "value": "VERDI",
+  "hideLayersTip": "Deaktiver resultatlag for spørringer når widgeten er lukket."
 });

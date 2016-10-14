@@ -122,5 +122,6 @@ define({
   "uploadImage": "이미지 업로드",
   "attributeCriteira": "속성 기준",
   "specifyFilterAtRuntimeTip": "사용자는 이 식에 대한 매개변수를 지정해야 합니다.",
-  "value": "값"
+  "value": "값",
+  "hideLayersTip": "위젯이 닫히면 쿼리 결과 레이어를 끄세요."
 });

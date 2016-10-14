@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Parinktis pašalinti elementą iš žymėjimo, kai įrašas išsaugojamas.  Jei tai yra vienintelis pažymėtas įrašas, skydelis perjungiamas į šablono puslapį.",
     "useFilterEditor": "Naudoti elementų šablonų filtrą",
     "useFilterEditorTip": "Parinktis naudoti filtrų šablonų parinkiklį, kuris leidžia peržiūrėti sluoksnių šablonus ir ieškoti šablonų pagal pavadinimą.",
+    "listenToGroupFilter": "Filtro reikšmių taikymas iš grupių filtro valdiklio norint iš anksto nustatyti laukus",
+    "listenToGroupFilterTip": "Kai grupių filtro valdiklyje pritaikomas filtras, taikykite reikšmę atitinkamam iš anksto nustatytų reikšmių sąrašo laukui.",
+    "keepTemplateActive": "Palikite pasirinktą šabloną aktyvų",
+    "keepTemplateActiveTip": "Jei šablonas buvo pasirinktas anksčiau, iš naujo jį pasirinkite, kai bus rodomas šablonų parinkiklis.",
     "layerSettingsTable": {
       "allowDelete": "Leisti ištrinti",
       "allowDeleteTip": "Parinktis, leidžianti vartotojui ištrinti elementą; išjungiama, jei sluoksnio ištrinti negalima",
@@ -27,9 +31,10 @@ define({
       "fields": "Laukai",
       "fieldsTip": "Modifikuoti redaguotinus laukus ir apibrėžti išmaniuosius atributus",
       "description": "Aprašymas",
-      "descriptionTip": "Pasirinktinai įvesti tekstą, kuris turėtų būti rodomas atributų puslapio viršuje."
+      "descriptionTip": "Teksto, kuris turėtų būti rodomas atributų puslapio viršuje, įvedimo parinktis."
     },
-    "editFieldError": "Neredaguotinuose sluoksniuose laukų modifikavimas ir išmanieji atributai negalimi"
+    "editFieldError": "Neredaguotinuose sluoksniuose laukų modifikavimas ir išmanieji atributai negalimi",
+    "noConfigedLayersError": "Išmanusis redaktorius reikalauja vieno ar kelių redaguojamų sluoksnių"
   },
   "editDescriptionPage": {
     "title": "Nurodyti <b>${layername}</b> atributų apžvalgos tekstą "
@@ -64,6 +69,11 @@ define({
       "expressionTip": "Gauta sąlyga SQL formatu pagal nustatytus kriterijus",
       "actions": "Kriterijai",
       "actionsTip": "Keisti taisyklių tvarką ir nustatyti kriterijus, kai ji suaktyvinama"
+    },
+    "actions": {
+      "hide": "Slėpti",
+      "required": "Privalomas",
+      "disabled": "Neleidžiama"
     }
   },
   "filterPage": {

@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Toiminto, joka poistaa kohteen valintajoukosta, kun tietue tallennetaan. Jos se on ainoa valittu tietue, paneeli vaihdetaan takaisin mallisivulle.",
     "useFilterEditor": "Käytä kohdemallien suodatinta",
     "useFilterEditorTip": "Toiminto, joka käyttää suodatinmallin valitsinta, joka antaa mahdollisuuden katsella yhtä karttatasomallia tai hakea malleja nimen mukaan.",
+    "listenToGroupFilter": "Käytä ryhmäsuodattimen pienoisohjelman suodatinarvoja esiasetetuissa kentissä",
+    "listenToGroupFilterTip": "Kun suodatinta käytetään ryhmäsuodattimen pienoisohjelmassa, käytä arvoa vastaavassa kentässä esiasetettujen arvojen luettelossa.",
+    "keepTemplateActive": "Pidä valittu mallipohja aktiivisena",
+    "keepTemplateActiveTip": "Kun mallipohjan valitsin on näkyvissä, poista aiemmin valitun mallinpohjan valinta.",
     "layerSettingsTable": {
       "allowDelete": "Salli poisto",
       "allowDeleteTip": "Toiminto, joka sallii käyttäjän poistaa kohteen. Se on pois käytöstä, jos karttataso ei mahdollista poistamista",
@@ -27,9 +31,10 @@ define({
       "fields": "Kentät",
       "fieldsTip": "Muokkaa muokattavia kenttiä ja määritä älykkäät ominaisuudet",
       "description": "Kuvaus",
-      "descriptionTip": "Vaihtoehtoisesti voit kirjoittaa tekstin, jonka haluat näkyvän ominaisuussivun yläosassa."
+      "descriptionTip": "Asetus näyttää kirjoitetun tekstin ominaisuussivun yläosassa."
     },
-    "editFieldError": "Kentän muokkaukset ja älykkäät ominaisuudet eivät ole käytettävissä karttatasoissa, joita ei voi muokata"
+    "editFieldError": "Kentän muokkaukset ja älykkäät ominaisuudet eivät ole käytettävissä karttatasoissa, joita ei voi muokata",
+    "noConfigedLayersError": "Älykäs muokkausohjelma edellyttää vähintään yhtä muokattavaa karttatasoa"
   },
   "editDescriptionPage": {
     "title": "Määritä ominaisuuden yleiskatsausteksti karttatasolle <b>${layername}</b> "
@@ -64,6 +69,11 @@ define({
       "expressionTip": "SQL-muodossa oleva määritettyjen ehtojen perusteella syntyvä lauseke",
       "actions": "Hakuperusteet",
       "actionsTip": "Muuta säännön järjestystä ja määritä ehdot, kun se käynnistetään."
+    },
+    "actions": {
+      "hide": "Piilota",
+      "required": "Pakollinen",
+      "disabled": "Poissa käytöstä"
     }
   },
   "filterPage": {

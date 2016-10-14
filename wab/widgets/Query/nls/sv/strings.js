@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Attributkriterier",
   "spatialFilter": "Geografiskt filter",
   "value": "VÄRDE",
-  "noAttributeSpatialFilterTip": "Inga filter har definierats. Alla geoobjekt kommer att returneras."
+  "noAttributeSpatialFilterTip": "Inga filter har definierats. Alla geoobjekt kommer att returneras.",
+  "showAllRelatedRecords": "Visa alla relaterade poster"
 });

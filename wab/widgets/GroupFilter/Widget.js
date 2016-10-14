@@ -23,36 +23,50 @@ define([
   'jimu/LayerInfos/LayerInfos',
   'jimu/utils',
   'jimu/FilterManager',
+  'esri/tasks/query',
+  'esri/tasks/QueryTask',
+  'esri/geometry/geometryEngine',
+  'esri/layers/FeatureLayer',
   './SaveJSON',
   './ReadJSON',
+  './LayersHandler',
   'dojox/html/entities',
   'dijit/form/CheckBox'
 ],
 function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, dom,
   domConstruct, domClass, domAttr, domStyle, on, query, string, lang, array, locale, Select, TextBox,
-  DateTextBox, NumberTextBox, registry, LayerInfos, utils, FilterManager, saveJson, readJson, entities) {
+  DateTextBox, NumberTextBox, registry, LayerInfos, utils, FilterManager, Query, QueryTask,
+  geometryEngine, FeatureLayer, saveJson, readJson, LayersHandler, entities) {
   //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget, _WidgetsInTemplateMixin], {
 
     baseClass: 'jimu-widget-map-filter',
 
     layerList: null,
+    msLayersDesc: null,
     grpSelect: null,
     groupCounter: 0,
+    groupCurrVal: null,
     defaultDef: null,
     runTimeConfig: null,
     useDomain: null,
     useDate: null,
     useValue: null,
     runInitial: false,
+    graphicsHolder: null,
+    slAppendChoice: null,
+    chkAppendToDef: null,
+    filterExt: null,
 
     postCreate: function() {
       this.inherited(arguments);
       this.defaultDef = [];
+      this.graphicsHolder = [];
     },
 
     startup: function() {
       this.inherited(arguments);
+      //this._setTheme();
       if(this.config.optionsMode) {
         domClass.add(this.optionsIcon, "hide-items");
       }
@@ -61,9 +75,27 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
         this.runInitial = true;
       }
 
+      if(typeof(this.config.webmapAppendMode) !== 'undefined') {
+        this.chkAppendToDef.checked = this.config.webmapAppendMode;
+        this.slAppendChoice.value = this.config.slAppendChoice;
+      }
+
       this.createMapLayerList();
 
     },
+
+    /*
+    _setTheme: function () {
+      if (this.appConfig.theme.name === "BoxTheme" ||
+          this.appConfig.theme.name === "DartTheme") {
+        utils.loadStyleLink('dartOverrideCSS', this.folderUrl + "/css/dartTheme.css", null);
+      } else if (this.appConfig.theme.name === "LaunchpadTheme") {
+        utils.loadStyleLink('luanchOverrideCSS', this.folderUrl + "/css/launchPadTheme.css", null);
+      } else {
+
+      }
+    },
+    */
 
     btnNewRowAction: function() {
       this.createNewRow({operator:"=", value:"", conjunc:"OR", state:"new"});
@@ -74,6 +106,7 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
         .then(lang.hitch(this, function(operLayerInfos) {
           if(operLayerInfos._layerInfos && operLayerInfos._layerInfos.length > 0) {
             this.layerList = operLayerInfos._layerInfos;
+            this._pullMapServiceFields(operLayerInfos._layerInfos);
 
             array.forEach(this.layerList, lang.hitch(this, function(layer) {
               if(layer.originOperLayer.layerType !== "ArcGISTiledMapServiceLayer" &&
@@ -102,15 +135,36 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
                   });
                 }
                 else {
-                  this.defaultDef.push({layer: layer.id, definition: "1=1", visible: layer.layerObject.visible});
+                  this.defaultDef.push({layer: layer.id, definition: "", visible: layer.layerObject.visible});
                 }
               }
 
             }));
-            this.createGroupSelection();
+            //this.createGroupSelection();
           }
         }));
     },
+
+    _pullMapServiceFields: function(pLayerInfos) {
+      this.msLayersDesc = [];
+      var layerHandle =  new LayersHandler({
+        "layers": pLayerInfos
+      });
+      this.own(on(layerHandle, "complete", lang.hitch(this, function(results) {
+        var layerInfos = results.data.items;
+        array.forEach(layerInfos, lang.hitch(this, function(layer) {
+          if(layer.children.length > 0) {
+            this.msLayersDesc.push(layer);
+          }
+        }));
+        this.createGroupSelection();
+      })));
+      this.own(on(layerHandle, "error", lang.hitch(this, function() {
+        console.log("error");
+      })));
+      layerHandle.getAllMapLayers();
+    },
+
 
     checkDomainUse: function(pParam) {
       this.useDomain = null;
@@ -119,17 +173,35 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
         if(group.name === pParam.group) {
           array.forEach(group.layers, lang.hitch(this, function(grpLayer) {
             array.forEach(this.layerList, lang.hitch(this, function(layer) {
-              if(grpLayer.layer === layer.id) {
-                array.forEach(layer.layerObject.fields, lang.hitch(this, function(field) {
-                  if(field.name === grpLayer.field) {
-                    if(grpLayer.useDomain !== "") {
-                      this.useValue = grpLayer.useDomain;
-                      if(typeof(field.domain) !== 'undefined') {
-                        this.useDomain = field.domain;
+              if(typeof(layer.newSubLayers) !== 'undefined') {
+                if(layer.newSubLayers.length > 0) {
+                  array.forEach(this.msLayersDesc, lang.hitch(this, function(msLayer) {
+                    array.forEach(msLayer.children, lang.hitch(this, function(child) {
+                      if(child.id === grpLayer.layer) {
+                        array.forEach(child.children, lang.hitch(this, function(childField) {
+                          if(childField.name === grpLayer.field) {
+                            if(grpLayer.useDomain !== "") {
+                              this.useValue = grpLayer.useDomain;
+                            }
+                          }
+                        }));
                       }
-                    }
+                    }));
+                  }));
+                } else {
+                  if(grpLayer.layer === layer.id) {
+                    array.forEach(layer.layerObject.fields, lang.hitch(this, function(field) {
+                      if(field.name === grpLayer.field) {
+                        if(grpLayer.useDomain !== "") {
+                          this.useValue = grpLayer.useDomain;
+                          if(typeof(field.domain) !== 'undefined') {
+                            this.useDomain = field.domain;
+                          }
+                        }
+                      }
+                    }));
                   }
-                }));
+                }
               }
             }));
           }));
@@ -175,16 +247,18 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
 
       this.grpSelect.startup();
       this.own(on(this.grpSelect, "change", lang.hitch(this, function(val) {
-        this.resetLayerDef();
+        this.resetLayerDef({group: this.groupCurrVal});
         this.removeAllRows();
         this.checkDomainUse({group: val});
         this.checkDateUse({group: val});
         this.reconstructRows(val);
         this.updateGroupDesc(val);
-        setTimeout(lang.hitch(this, this.setFilterLayerDef), 500);
+        this.groupCurrVal = val;
+        setTimeout(lang.hitch(this, this.setFilterLayerDef), 1000);
       })));
       this.checkDomainUse({group: this.grpSelect.value});
       this.checkDateUse({group: this.grpSelect.value});
+      this.groupCurrVal = this.grpSelect.value;
 
       if(typeof(this.config.groups[0]) !== 'undefined') {
         descLabel = this.config.groups[0].desc;
@@ -261,7 +335,7 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
       } else {
         if(this.runInitial) {
           this.runInitial = false;
-          setTimeout(lang.hitch(this, this.setFilterLayerDef), 500);
+          setTimeout(lang.hitch(this, this.setFilterLayerDef), 1000);
         }
       }
 
@@ -345,11 +419,21 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
           txtRange.startup();
           this.formatSpacing(pCell);
         }
+      } else if(this.useValue === true) {
+        var paramsDijit = new FilterParameters();
+        paramsDijit.placeAt(pCell);
+        paramsDijit.startup();
+        this.createValueList(pValue, paramsDijit);
       } else if(this.useDate === true) {
-        var d = new Date();
-        var defaultDate = (d.getMonth() + 1)  + "-" + d.getDate() + "-" + d.getFullYear();
+        var d;
+        var defaultDate;
         if(pValue.value !== "") {
-          defaultDate = pValue.value;
+          d = new Date(pValue.value);
+          defaultDate = locale.format(d, { selector: 'date', fullYear: true });
+        }
+        else {
+          d = new Date();
+          defaultDate = locale.format(d, { selector: 'date', fullYear: true });
         }
         var txtDate = new DateTextBox({
           value: defaultDate,
@@ -357,12 +441,8 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
           "class": "userInputNormal"
         }).placeAt(pCell);
         txtDate.startup();
+        txtDate.set("displayedValue",defaultDate);
         this.formatSpacing(pCell);
-      } else if(this.useValue === true) {
-        var paramsDijit = new FilterParameters();
-        paramsDijit.placeAt(pCell);
-        paramsDijit.startup();
-        this.createValueList(pValue, paramsDijit);
       } else {
         var txtFilterParam = new TextBox({
           value: pValue.value /* no or empty value! */,
@@ -381,47 +461,25 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
         if(group.name === this.grpSelect.value) {
           array.forEach(group.layers, lang.hitch(this, function(grpLayer) {
             array.forEach(this.layerList, lang.hitch(this, function(layer) {
-              if(grpLayer.layer === layer.id) {
-                if(grpLayer.useDomain === true) {
-                  var partsObj = {};
-                  partsObj.fieldObj = {};
-                  partsObj.fieldObj.name = grpLayer.field;
-                  partsObj.fieldObj.label = grpLayer.field;
-                  partsObj.fieldObj.shortType = ((grpLayer.dataType).replace("esriFieldType", "")).toLowerCase();
-                  if(partsObj.fieldObj.shortType !== "guid" || partsObj.fieldObj.shortType !== "globalid") {
-                    partsObj.fieldObj.shortType = "string";
-                  }
-                  if(partsObj.fieldObj.shortType !== "date" && partsObj.fieldObj.shortType !== "string") {
-                    partsObj.fieldObj.shortType = "number";
-                  }
-                  partsObj.fieldObj.type = grpLayer.dataType;
-                  partsObj.operator = partsObj.fieldObj.shortType + "OperatorIs";
-                  partsObj.valueObj = {};
-                  partsObj.valueObj.isValid = true;
-                  partsObj.valueObj.type = "unique";
-                  partsObj.valueObj.value = pValue.value;
-                  partsObj.interactiveObj = {};
-                  partsObj.interactiveObj.prompt = "";
-                  partsObj.interactiveObj.hint = "";
-                  partsObj.caseSensitive = false;
-                  parts.push(partsObj);
-                  filter.logicalOperator = "OR";
-                  filter.expr = "";
-                  filter.parts = parts;
-                  pDijit.build(layer.layerObject.url, layer.layerObject, filter);
-
-                  var nodes = query(".jimu-single-filter-parameter");
-                  array.forEach(nodes, function(node) {
-                    var tableNode = query("table", node);
-                    array.forEach(tableNode, function(table) {
-                      domAttr.set(table, "cellpadding", "1");
-                      domAttr.set(table, "cellspacing", "1");
-                    });
-                    var hintNode = query("colgroup", node);
-                    if(hintNode.length > 0) {
-                      domAttr.set(hintNode[0].childNodes[1], "width", "0px");
+              if(layer.newSubLayers.length > 0) {
+                array.forEach(this.msLayersDesc, lang.hitch(this, function(msLayer) {
+                  array.forEach(msLayer.children, lang.hitch(this, function(child) {
+                    if(child.id === grpLayer.layer) {
+                      if(grpLayer.useDomain === true) {
+                        var newFL = new FeatureLayer(child.url);
+                        this.own(on(newFL, "load", lang.hitch(this, function() {
+                          this._callFilterDijit(grpLayer, pValue, child.url, newFL, parts, filter, pDijit);
+                        })));
+                      }
                     }
-                  });
+                  }));
+                }));
+              } else {
+                if(grpLayer.layer === layer.id) {
+                  if(grpLayer.useDomain === true) {
+                    this._callFilterDijit(grpLayer, pValue, layer.layerObject.url,
+                      layer.layerObject, parts, filter, pDijit);
+                  }
                 }
               }
             }));
@@ -429,6 +487,62 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
         }
       }));
     },
+
+    _callFilterDijit: function(pGroupLayer, pValue, pUrl, pLayerObject, pParts, pFilter, pDijit) {
+      var partsObj = {};
+      partsObj.fieldObj = {};
+      partsObj.fieldObj.name = pGroupLayer.field;
+      partsObj.fieldObj.label = pGroupLayer.field;
+      partsObj.fieldObj.shortType = ((pGroupLayer.dataType).replace("esriFieldType", "")).toLowerCase();
+      if(partsObj.fieldObj.shortType !== "guid" || partsObj.fieldObj.shortType !== "globalid") {
+        partsObj.fieldObj.shortType = "string";
+      }
+      if(partsObj.fieldObj.shortType !== "date" && partsObj.fieldObj.shortType !== "string") {
+        partsObj.fieldObj.shortType = "number";
+      }
+      partsObj.fieldObj.type = pGroupLayer.dataType;
+      partsObj.operator = partsObj.fieldObj.shortType + "OperatorIs";
+      partsObj.valueObj = {};
+      partsObj.valueObj.isValid = true;
+      partsObj.valueObj.type = "unique";
+      if((pGroupLayer.dataType).indexOf("Integer") > -1 || (pGroupLayer.dataType).indexOf("Double") > -1 ||
+        (pGroupLayer.dataType).indexOf("Short") > -1) {
+        if(this.useDomain) {
+          partsObj.valueObj.value = Number(pValue.value);
+        } else {
+          partsObj.valueObj.value = pValue.value;
+        }
+      } else {
+        partsObj.valueObj.value = pValue.value;
+      }
+      partsObj.interactiveObj = {};
+      partsObj.interactiveObj.prompt = "";
+      partsObj.interactiveObj.hint = "";
+      partsObj.caseSensitive = false;
+      pParts.push(partsObj);
+      pFilter.logicalOperator = "OR";
+      pFilter.expr = "";
+      pFilter.parts = pParts;
+      pDijit.build(pUrl, pLayerObject, pFilter).then(lang.hitch(this, function() {
+        //pDijit.partsObj.parts[0].valueObj.value = pValue.value;
+        //pDijit.set("value",pValue.value);
+        //pDijit.set("displayedValue","Yes");
+      }));
+
+      var nodes = query(".jimu-single-filter-parameter");
+      array.forEach(nodes, function(node) {
+        var tableNode = query("table", node);
+        array.forEach(tableNode, function(table) {
+          domAttr.set(table, "cellpadding", "1");
+          domAttr.set(table, "cellspacing", "1");
+        });
+        var hintNode = query("colgroup", node);
+        if(hintNode.length > 0) {
+          domAttr.set(hintNode[0].childNodes[1], "width", "0px");
+        }
+      });
+    },
+
 
     formatSpacing: function(pCell) {
       domStyle.set(pCell, {paddingLeft: "2px", paddingRight: "2px"});
@@ -543,13 +657,29 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
           }
           var userInput = "";
           if(typeof cell_value.partsObj !== "undefined") {
-            if(cell_value.getFilterExpr() !== null) {
-              userInput = cell_value.partsObj.parts[0].valueObj.value;
+            // if(cell_value.getFilterExpr() !== null) {
+            //   userInput = cell_value.partsObj.parts[0].valueObj.value;
+            // }
+            var valueProviders = cell_value.getValueProviders();
+            var firstValueProvider = valueProviders[0];
+            var valueObj = firstValueProvider.getValueObject();
+            if(valueObj){
+              userInput = valueObj.value;
             }
           }
           else {
             userInput = cell_value.value;
           }
+
+          //Edge browser hack to bypass the issue with X clearing in select boxes.
+          var valueInput = query(".dijitReset.dijitInputInner", subTable.rows[1].cells[0].childNodes[0]);
+          if (valueInput.length > 0) {
+            if(valueInput[0].value === "") {
+              userInput = "";
+            }
+          }
+          //End Edge hack
+
           sqlParams.push({
             operator: cell_operator.value,
             userValue: userInput,
@@ -561,99 +691,224 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
     },
 
 
+    formatDate: function(value){
+      // see also parseDate()
+      // to bypass the locale dependent connector character format date and time separately
+      var s1 = locale.format(value, {
+        datePattern: "yyyy-MM-dd",
+        selector: "date"
+      });
+      var s2 = locale.format(value, {
+        selector: "time",
+        timePattern: "HH:mm:ss"
+      });
+      return s1 + " " + s2;
+      /* contains comma '2013-03-01, 00:00:00' for locale 'en'
+      return dojo.date.locale.format(value, {
+        datePattern: "yyyy-MM-dd",
+        timePattern: "HH:mm:ss"
+      });
+      */
+    },
 
-    setFilterLayerDef: function() {
-      var createQuery = function(isNum, field, op, value, junc) {
-        // escape all single quotes
-        // decode sanitized input
+    /*
+    addDay: function(date){
+      return new Date(date.getTime() + this.dayInMS);
+    },
+
+    subtractDay: function(date){
+      return new Date(date.getTime() - this.dayInMS);
+    },
+    */
+
+    createQuery: function(isNum, field, op, value, junc, dataType) {
+      // escape all single quotes
+      // decode sanitized input
+      if(isNaN(value)) {
         value = entities.decode(value.replace(/'/g, "''"));
-        // special case of empty value
-        if (value === '') {
-          if(op === '<>' || op === 'NOT LIKE') {
+      }
+      // special case of empty value
+      if (value === '') {
+        if(op === '<>' || op === 'NOT LIKE') {
+          if(dataType.indexOf("Double") > -1 || dataType.indexOf("Single") > -1) {
+            return [field, "IS NOT NULL", junc].join(" ") + " ";
+          } else {
             return [field, "<> '' OR", field, "IS NOT NULL", junc].join(" ") + " ";
+          }
+        } else {
+          if(dataType.indexOf("Double") > -1 || dataType.indexOf("Single") > -1) {
+            return [field, "IS NULL", junc].join(" ") + " ";
           } else {
             return [field, "= '' OR", field, "IS NULL", junc].join(" ") + " ";
           }
         }
-        if (op === 'LIKE' || op === 'NOT LIKE') {
+      }
+      if (op === 'LIKE' || op === 'NOT LIKE') {
+        if (isNum === false) {
           value = "UPPER('%" + value + "%')";
           field = "UPPER(" + field + ")";
-        } else if (op === 'START') {
-          op = 'LIKE';
+        } else {
+          value = "'%" + value + "%'";
+        }
+      } else if (op === 'START') {
+        op = 'LIKE';
+        if (isNum === false) {
           value = "UPPER('" + value + "%')";
           field = "UPPER(" + field + ")";
-        } else if (op === 'END') {
-          op = 'LIKE';
+        } else {
+          value = value + "%";
+        }
+      } else if (op === 'END') {
+        op = 'LIKE';
+        if (isNum === false) {
           value = "UPPER('%" + value + "')";
           field = "UPPER(" + field + ")";
-        } else if (isNum === false) { // wrap string fields if not already
-          var dateObj=Date.parse(value);
-          if (isNaN(dateObj)===true)
-          {
-            value = "UPPER('" + value + "')";
-            field = "UPPER(" + field + ")";
+        } else {
+          value = "%" + value;
+        }
+      } else if (isNum === false) { // wrap string fields if not already
+        if(dataType.indexOf("Date") > -1) {
+          if(op === "=" || op === "<>") {
+            if(op === "=") {
+              op = "BETWEEN";
+            } else {
+              op = "NOT BETWEEN";
+            }
+            value = "'" + this.formatDate(value) + "' AND '" + this.formatDate(value) + "'";
           } else {
-            value = "'" + value + "'";
+            value = "'" + this.formatDate(value) + "'";
           }
         } else {
-
+          value = "UPPER('" + value + "')";
+          field = "UPPER(" + field + ")";
         }
+      } else {
 
-        return [field, op, value, junc].join(" ") + " ";
-      };
+      }
+
+      return [field, op, value, junc].join(" ") + " ";
+    },
+
+    setFilterLayerDef: function() {
+      this.filterExt = null;
+      this.graphicsHolder = [];
       var sqlParams = this.parseTable();
-      array.forEach(this.layerList, lang.hitch(this, function(layer) {
-        array.forEach(this.config.groups, lang.hitch(this, function(group) {
-          if(this.grpSelect.value === group.name) {
+      array.forEach(this.config.groups, lang.hitch(this, function(group) {
+        if(this.grpSelect.value === group.name) {
+          var w2wData = [];
+          array.forEach(this.layerList, lang.hitch(this, function(layer) {
+            //if(this.grpSelect.value === group.name) {
             var msExpr = [];
-            array.forEach(group.layers, lang.hitch(this, function(grpLayer) {
-              var expr = '';
-              var filterType = "";
+            //group.def = [];
+            var expr = '';
+            var layerHolder = '';
+            var filterType = "";
+            var zoomOnFilter = true;
+            array.forEach(group.layers, lang.hitch(this, function(grpLayer, i) {
+              if(typeof(group.appendSameLayer) !== 'undefined' && group.appendSameLayer === true) {
+                if(layerHolder !== grpLayer.layer) {
+                  if (expr !== "") {
+                    this.setupFilterToApply(layer, filterType, expr, msExpr, zoomOnFilter);
+                    expr = '';
+                  }
+                } else {
+                  if (layerHolder !== "") {
+                    expr = expr + " " + group.appendSameLayerConjunc + " ";
+                    if(expr === (" " + group.appendSameLayerConjunc + " ")) {
+                      expr = '';
+                    }
+                  }
+                }
+              } else {
+                expr = '';
+              }
+              //var expr = '';
               if(layer.id === grpLayer.layer) {
                 group.def = [];
                 filterType = "FeatureLayer";
                 array.forEach(sqlParams, lang.hitch(this, function(p) {
                   array.forEach(layer.layerObject.fields, lang.hitch(this, function(field) {
                     if(field.name === grpLayer.field) {
-                      if(((field.type).indexOf("Integer") > -1) || (field.type).indexOf("Double") > -1) {
-                        expr = expr + createQuery(
-                          true,
-                          grpLayer.field,
-                          p.operator,
-                          utils.sanitizeHTML(p.userValue),
-                          p.conjunc
-                        );
+                      if(((field.type).indexOf("Integer") > -1) || (field.type).indexOf("Double") > -1
+                         || (field.type).indexOf("Single") > -1) {
+                        //using modulus to check if it is Int or Float
+                        var userVal = utils.sanitizeHTML(p.userValue);
+                        if(isNaN(userVal) === false) {
+                          if(utils.sanitizeHTML(p.userValue) % 1 !== 0) {
+                            var numArray = userVal.split('.');
+                            if(numArray[1].length > 6) {
+                              numArray[1] = numArray[1].substring(0,6);
+                              userVal = numArray[0] + "." + numArray[1];
+                            }
+                            if(p.operator === '=') {
+                              p.operator = 'LIKE';
+                            } else if(p.operator === '<>') {
+                              p.operator = 'NOT LIKE';
+                            } else {
+                              //nothing, leave existing operator
+                            }
+
+                          }
+                          expr = expr + this.createQuery(
+                            true,
+                            grpLayer.field,
+                            p.operator,
+                            userVal,
+                            p.conjunc,
+                            field.type
+                          );
+                        } else {
+                          console.log("Not a Number");
+                        }
                       }
                       else if ((field.type).indexOf("Date") > -1) {
                         if(p.userValue !== "") {
                           var newDate = new Date(utils.sanitizeHTML(p.userValue));
-                          expr = expr + createQuery(
+                          var format;
+                          if((field.type).indexOf("Time") > -1) {
+                            format = locale.format(newDate, { fullYear: true, datePattern: "yyyy-MM-dd, HH:mm:ss a" });
+                          } else {
+                            format = locale.format(newDate, { fullYear: true, datePattern: "yyyy-MM-dd" });
+                          }
+                          expr = expr + this.createQuery(
                             false,
                             grpLayer.field,
                             p.operator,
-                            locale.format(newDate, {datePattern: "MMMM d, yyyy", selector: "date"}),
-                            p.conjunc
+                            newDate,
+                            //locale.format(newDate, { selector: 'date', fullYear: true }),
+                            //locale.format(newDate, {datePattern: "MMMM d, yyyy", selector: "date"}),
+                            p.conjunc,
+                            field.type
                           );
                         }
                         else {
-                          expr = expr + createQuery(
+                          expr = expr + this.createQuery(
                             false,
                             grpLayer.field, p.operator,
                             utils.sanitizeHTML(p.userValue),
-                            p.conjunc
+                            p.conjunc,
+                            field.type
                           );
                         }
                       }
                       else {
-                        expr = expr + createQuery(
+                        expr = expr + this.createQuery(
                           false,
                           grpLayer.field,
                           p.operator,
                           utils.sanitizeHTML(p.userValue),
-                          p.conjunc
+                          p.conjunc,
+                          field.type
                         );
                       }
                       group.def.push({
+                        field: grpLayer.field,
+                        value: utils.sanitizeHTML(p.userValue),
+                        operator: p.operator,
+                        conjunc: p.conjunc
+                      });
+                      w2wData.push({
+                        field: grpLayer.field,
                         value: utils.sanitizeHTML(p.userValue),
                         operator: p.operator,
                         conjunc: p.conjunc
@@ -669,54 +924,85 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
                 array.forEach(sqlParams, lang.hitch(this, function(p) {
                   if(p.userValue !== "") {
                     if(((grpLayer.dataType).indexOf("Integer") > -1) || (grpLayer.dataType).indexOf("Double") > -1) {
-                      expr = expr + createQuery(
+                      expr = expr + this.createQuery(
                         true,
                         grpLayer.field,
                         p.operator,
                         utils.sanitizeHTML(p.userValue),
-                        p.conjunc
+                        p.conjunc,
+                        grpLayer.dataType
                       );
                     }
                     else if ((grpLayer.dataType).indexOf("Date") > -1) {
                       if(p.userValue !== "") {
                         var newDate = new Date(utils.sanitizeHTML(p.userValue));
-                        expr = expr + createQuery(
+                        var format;
+                        if((field.type).indexOf("Time") > -1) {
+                          format = locale.format(newDate, { fullYear: true, datePattern: "yyyy-MM-dd, HH:mm:ss a" });
+                        } else {
+                          format = locale.format(newDate, { fullYear: true, datePattern: "yyyy-MM-dd" });
+                        }
+                        expr = expr + this.createQuery(
                           false,
                           grpLayer.field,
                           p.operator,
-                          locale.format(newDate, {datePattern: "MMMM d, yyyy", selector: "date"}),
-                          p.conjunc
+                          format,
+                          //locale.format(newDate, { selector: 'date', fullYear: true }),
+                          //locale.format(newDate, {datePattern: "MMMM d, yyyy", selector: "date"}),
+                          p.conjunc,
+                          grpLayer.dataType
                         );
                       } else {
-                        expr = expr + createQuery(
+                        expr = expr + this.createQuery(
                           false,
                           grpLayer.field,
                           p.operator,
                           utils.sanitizeHTML(p.userValue),
-                          p.conjunc
+                          p.conjunc,
+                          grpLayer.dataType
                         );
                       }
                     }
                     else {
-                      expr = expr + createQuery(
+                      expr = expr + this.createQuery(
                         false,
                         grpLayer.field,
                         p.operator,
                         utils.sanitizeHTML(p.userValue),
-                        p.conjunc
+                        p.conjunc,
+                        grpLayer.dataType
                       );
                     }
-                    group.def.push({value: utils.sanitizeHTML(p.userValue), operator: p.operator, conjunc: p.conjunc});
+                    group.def.push({
+                      field: grpLayer.field,
+                      value: utils.sanitizeHTML(p.userValue),
+                      operator: p.operator,
+                      conjunc: p.conjunc});
+                    w2wData.push({
+                      field: grpLayer.field,
+                      value: utils.sanitizeHTML(p.userValue),
+                      operator: p.operator,
+                      conjunc: p.conjunc});
                   }
                   else {
-                    expr = expr + createQuery(
+                    expr = expr + this.createQuery(
                       false,
                       grpLayer.field,
                       p.operator,
                       utils.sanitizeHTML(p.userValue),
-                      p.conjunc
+                      p.conjunc,
+                      grpLayer.dataType
                     );
-                    group.def.push({value: utils.sanitizeHTML(p.userValue), operator: p.operator, conjunc: p.conjunc});
+                    group.def.push({
+                      field: grpLayer.field,
+                      value: utils.sanitizeHTML(p.userValue),
+                      operator: p.operator,
+                      conjunc: p.conjunc});
+                    w2wData.push({
+                      field: grpLayer.field,
+                      value: utils.sanitizeHTML(p.userValue),
+                      operator: p.operator,
+                      conjunc: p.conjunc});
                   }
                 }));
                 if(expr !== "") {
@@ -727,84 +1013,129 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
 
               }
 
-              if(filterType === "FeatureLayer") {
-                console.log(expr);
-                if(expr !== "") {
-                  if(this.chkAppendToDef.checked) {
-                    array.forEach(this.defaultDef, lang.hitch(this, function(def) {
-                      if(def.layer === layer.id ) {
-                        var compositeDef = def.definition + " "  + this.slAppendChoice.value +  " " + expr.trim();
-                        // layer.layerObject.setDefinitionExpression(compositeDef);
-                        this._applyFilter(layer.layerObject, compositeDef);
-                      }
-                    }));
-                  }
-                  else {
-                    // layer.layerObject.setDefinitionExpression(expr.trim());
-                    this._applyFilter(layer.layerObject, expr.trim());
-                  }
-                  layer.layerObject.setVisibility(true);
-                }
-              } else if(filterType === "MapService") {
-                console.log(msExpr);
-                if(msExpr.length > 0) {
-                  if(this.chkAppendToDef.checked) {
-                    array.forEach(this.defaultDef, lang.hitch(this, function(def) {
-                      if(def.layer === layer.id ) {
-                        array.forEach(msExpr, lang.hitch(this, function(expr, i) {
-                          for(var key in def.definition) {
-                            if(def.definition[key] !== 'undefined') {
-                              if(msExpr[i.toString()]) {
-                                msExpr[i.toString()] = def.definition[key] + " "  +
-                                this.slAppendChoice.value +  " " + expr;
-                                console.log(expr);
-                              }
-                            }
-                          }
-                        }));
-                        console.log(msExpr);
-                        layer.layerObject.setLayerDefinitions(msExpr);
-                      }
-                    }));
-                  } else {
-                    layer.layerObject.setLayerDefinitions(msExpr);
-                  }
-                  layer.layerObject.setVisibility(true);
-                }
+              layerHolder = grpLayer.layer;
+              if(typeof(group.appendSameLayer) !== 'undefined' && group.appendSameLayer === false) {
+                this.setupFilterToApply(layer, filterType, expr, msExpr, zoomOnFilter);
               } else {
-                //do nothing, not a valid service
+                if(i === (group.layers.length - 1)) {
+                  this.setupFilterToApply(layer, filterType, expr, msExpr, zoomOnFilter);
+                }
               }
+
             }));
-            this._publishData(group);
+
+          }));
+          if(typeof(w2wData) !== 'undefined' && w2wData.length > 0) {
+            this._publishData(w2wData);
           }
-        }));
+        }
       }));
+
     },
 
-    resetLayerDef: function() {
-      array.forEach(this.layerList, lang.hitch(this, function(layer) {
-        array.forEach(this.defaultDef, lang.hitch(this, function(def) {
-          if(def.layer === layer.id ) {
-
-            if(typeof(layer.layerObject.defaultDefinitionExpression) !== 'undefined'){
-              // layer.layerObject.setDefinitionExpression(def.definition);
-
-              this._applyFilter(layer.layerObject, def.definition);
-            }
-            else if(typeof(layer.layerObject.layerDefinitions) !== 'undefined') {
-              //layer.layerObject.setDefaultLayerDefinitions();
-              layer.layerObject.setLayerDefinitions(def.definition);
-            }
-            else {
-              // layer.layerObject.setDefinitionExpression(def.definition);
-
-              this._applyFilter(layer.layerObject, def.definition);
-            }
-
-            layer.layerObject.setVisibility(def.visible);
-            //this.defaultDef.push({layer: layer.id, definition: layer.layerObject.defaultDefinitionExpression});
+    setupFilterToApply: function(layer, filterType, expr, msExpr, zoomOnFilter) {
+      //if(expr !== "" || msExpr.length > 0) {
+      if(filterType === "FeatureLayer") {
+        if(expr !== "") {
+          /*
+          if(this.chkAppendToDef.checked) {
+            array.forEach(this.defaultDef, lang.hitch(this, function(def) {
+              if(def.layer === layer.id ) {
+                var compositeDef = "(" + def.definition + ") "  + this.slAppendChoice.value +  " " + expr.trim();
+                // layer.layerObject.setDefinitionExpression(compositeDef);
+                this._applyFilter(layer.layerObject, compositeDef, zoomOnFilter);
+              }
+            }));
           }
-        }));
+          else {
+          */
+            // layer.layerObject.setDefinitionExpression(expr.trim());
+          this._applyFilter(layer.layerObject, expr.trim(), zoomOnFilter);
+          //}
+          layer.layerObject.setVisibility(true);
+        }
+      } else if(filterType === "MapService") {
+        //console.log(msExpr);
+        if(msExpr.length > 0) {
+
+          if(this.chkAppendToDef.checked) {
+            array.forEach(this.defaultDef, lang.hitch(this, function(def) {
+              if(def.layer === layer.id ) {
+                array.forEach(msExpr, lang.hitch(this, function(expr, i) {
+                  for(var key in def.definition) {
+                    if(def.definition[key] !== 'undefined') {
+                      if(msExpr[i.toString()]) {
+                        msExpr[i.toString()] = "(" + def.definition[key] + ") "  +
+                        this.slAppendChoice.value +  " " + expr;
+                      }
+                    }
+                  }
+                }));
+                layer.layerObject.setLayerDefinitions(msExpr);
+                this._zoomOnFilter(layer.layerObject, zoomOnFilter);
+              }
+            }));
+          } else {
+            layer.layerObject.setLayerDefinitions(msExpr);
+            this._zoomOnFilter(layer.layerObject, zoomOnFilter);
+          }
+          layer.layerObject.setVisibility(true);
+        }
+      } else {
+        //do nothing, not a valid service
+      }
+      //}
+
+
+    },
+
+    resetLayerDef: function(pParam) {
+      if(typeof(pParam.group) === 'undefined') {
+        pParam.group = this.grpSelect.value;
+      }
+      array.forEach(this.config.groups, lang.hitch(this, function(group) {
+        if(group.name === pParam.group) {
+          array.forEach(group.layers, lang.hitch(this, function(grpLayer) {
+            array.forEach(this.layerList, lang.hitch(this, function(layer) {
+              var flag = false;
+              if(grpLayer.layer === layer.id) {
+                flag = true;
+              } else {
+                if(layer.newSubLayers.length > 0) {
+                  array.forEach(layer.newSubLayers, lang.hitch(this, function(subLyr) {
+                    var subLyrID = layer.id + '.' + (subLyr.id).substring((subLyr.id).lastIndexOf("_") + 1);
+                    if(grpLayer.layer === subLyrID) {
+                      flag = true;
+                    }
+                  }));
+                }
+              }
+              if(flag) {
+                array.forEach(this.defaultDef, lang.hitch(this, function(def) {
+                  if(def.layer === layer.id ) {
+                    if(typeof(layer.layerObject.defaultDefinitionExpression) !== 'undefined'){
+                      // layer.layerObject.setDefinitionExpression(def.definition);
+
+                      this._applyFilter(layer.layerObject, def.definition, false);
+                    }
+                    else if(typeof(layer.layerObject.layerDefinitions) !== 'undefined') {
+                      //layer.layerObject.setDefaultLayerDefinitions();
+                      layer.layerObject.setLayerDefinitions(def.definition);
+                    }
+                    else {
+                      // layer.layerObject.setDefinitionExpression(def.definition);
+
+                      this._applyFilter(layer.layerObject, def.definition, false);
+                    }
+
+                    layer.layerObject.setVisibility(def.visible);
+                    //this.defaultDef.push({layer: layer.id, definition: layer.layerObject.defaultDefinitionExpression});
+                  }
+                }));
+              }
+            }));
+          }));
+        }
       }));
     },
 
@@ -865,13 +1196,13 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
       });
       this.own(on(readDef, "complete", lang.hitch(this, function(results) {
         this.config = JSON.parse(results.UserSettings);
-        this.resetLayerDef();
+        this.resetLayerDef({group: this.grpSelect.value});
         this.removeAllRows();
         this.checkDomainUse({group: this.grpSelect.value});
         this.checkDateUse({group: this.grpSelect.value});
         this.reconstructRows(this.grpSelect.value);
         this.updateGroupDesc(this.grpSelect.value);
-        setTimeout(lang.hitch(this, this.setFilterLayerDef), 500);
+        setTimeout(lang.hitch(this, this.setFilterLayerDef), 1000);
         query(".loadProgressHeader").style("display", "none");
         query(".loadProgressShow").style("display", "none");
         this.jsonFileInput.value = null;
@@ -883,14 +1214,26 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
         query(".loadProgressShow").style("display", "none");
       })));
       readDef.checkFileReader();
+      return true;
     },
     //END: saving/reading functions
 
     //BEGIN: W2W communication
     _publishData: function(pValue) {
+      var fieldList = [];
+      var valueList = [];
+      array.forEach(pValue, lang.hitch(this, function(val) {
+        if(fieldList.indexOf(val.field) === -1) {
+          fieldList.push(val.field);
+        }
+        if(valueList.indexOf(val.value) === -1) {
+          valueList.push(val.value);
+        }
+      }));
       this.publishData({
-        message: pValue
+        message: {fields: fieldList, values: valueList}
       });
+
     },
     //END: W2W communication
 
@@ -920,8 +1263,82 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
       }
     },
 
-    _applyFilter: function(layer, exp){
-      FilterManager.getInstance().applyWidgetFilter(layer.id, this.id, exp);
+    _applyFilter: function(layer, exp, zoom){
+      var howAppend = false;
+      if(this.slAppendChoice.value === "AND") {
+        howAppend = true;
+      }
+      FilterManager.getInstance().applyWidgetFilter(layer.id, this.id, exp, this.chkAppendToDef.checked, howAppend);
+      this._zoomOnFilter(layer, zoom);
+    },
+
+    _zoomOnFilter: function(layer, zoom) {
+      if(this.config.zoomMode) {
+        if(typeof(layer.layerDefinitions) !== "undefined" && layer.layerDefinitions.length > 0) {
+          //map services
+          var zoomEvt = on(this.map, "update-end", lang.hitch(this, function() {
+            var query = new Query();
+            query.outFields = [ "*" ];
+            for (var key in layer.layerDefinitions) {
+              if (layer.layerDefinitions.hasOwnProperty(key)) {
+                var url = layer.url + "/" + key;
+                query.where = layer.layerDefinitions[key];
+                query.returnGeometry = true;
+                query.outSpatialReference = this.map.spatialReference;
+                var qryTask = new QueryTask(url);
+                qryTask.executeForExtent(query, lang.hitch(this, this._queryExtentToZoom));
+              }
+            }
+            zoomEvt.remove();
+          }));
+        } else {
+          //var zoomEvt = on(layer, "update-end", lang.hitch(this, function() {
+          var query = new Query();
+          query.outFields = [ "*" ];
+          if(layer.type === "ArcGISImageServiceLayer") {
+            var url = layer.url;
+            query.where = layer.getDefinitionExpression();
+            query.returnGeometry = true;
+            query.outSpatialReference = this.map.spatialReference;
+            var qryTask = new QueryTask(url);
+            qryTask.executeForExtent(query, lang.hitch(this, this._queryExtentToZoom));
+          } else {
+            //feature layer query
+            layer.queryExtent(query, lang.hitch(this, this._queryExtentToZoom));
+          }
+          //zoomEvt.remove();
+          //}));
+          /*
+          layer.queryFeatures(query, lang.hitch(this, function(featureSet) {
+            if(featureSet.features.length > 0) {
+              var newExtent = graphicsUtils.graphicsExtent(featureSet.features);
+              if(featureSet.features.length === 1) {
+                newExtent = (geometryEngine.geodesicBuffer(newExtent, 100, 9002, false)).getExtent();
+              }
+              this.map.setExtent(newExtent);
+            }
+          }));
+          */
+        }
+
+      }
+    },
+
+    _queryExtentToZoom: function(results) {
+      if(typeof(results.extent) !== 'undefined' && results.extent !== null) {
+        var newExt = (geometryEngine.geodesicBuffer(results.extent, 10, 9002, false)).getExtent();
+        if(this.filterExt === null) {
+          this.filterExt = newExt;
+        }
+        var newMaxX = ((this.filterExt.xmax > newExt.xmax) ? this.filterExt.xmax : newExt.xmax);
+        var newMinX = ((this.filterExt.xmin < newExt.xmin) ? this.filterExt.xmin : newExt.xmin);
+        var newMaxY = ((this.filterExt.ymax > newExt.ymax) ? this.filterExt.ymax : newExt.ymax);
+        var newMinY = ((this.filterExt.ymin < newExt.ymin) ? this.filterExt.ymin : newExt.ymin);
+        newExt = newExt.update(newMinX, newMinY, newMaxX, newMaxY, newExt.spatialReference);
+        newExt = (geometryEngine.geodesicBuffer(newExt, 200, 9002, false)).getExtent();
+        this.filterExt = newExt;
+        this.map.setExtent(newExt);
+      }
     },
 
     onOpen: function(){
@@ -930,7 +1347,7 @@ function(declare, _WidgetsInTemplateMixin, BaseWidget, dijit, FilterParameters, 
 
     onClose: function(){
       if(!this.chkPersistDef.checked) {
-        this.resetLayerDef();
+        this.resetLayerDef({group: this.grpSelect.value});
         this.removeAllRows();
         this.reconstructRows("");
       }

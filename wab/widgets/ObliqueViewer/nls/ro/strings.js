@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Măsuraţi înălţimea",
   "intialScaleLabel": "Selectaţi scala iniţială pentru imaginile oblice",
   "smallBuildingLabel": "Zonă urbană: clădire mică",
-  "buildingLabel": "Zonă urbană: clădire"
+  "buildingLabel": "Zonă urbană: clădire",
+  "azimuthChangeNotification": "Fără date în direcţia selectată."
 });

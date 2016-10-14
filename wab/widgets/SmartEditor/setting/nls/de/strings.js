@@ -5,14 +5,18 @@ define({
     "layerSettings": "Layer-Einstellungen",
     "editDescription": "Anzeigetext für den Bearbeitungsbereich bereitstellen",
     "editDescriptionTip": "Dieser Text wird über der Vorlagenauswahl angezeigt; lassen Sie ihn leer.",
-    "promptOnSave": "Fordern Sie zum Speichern nicht gespeicherter Änderungen auf, wenn das Formular geschlossen oder zum nächsten Datensatz gewechselt wird.",
-    "promptOnSaveTip": "Zeigen Sie eine Eingabeaufforderung an, wenn der Benutzer auf \"Schließen\" klickt oder zum nächsten editierbaren Datensatz navigiert, wenn das aktuelle Feature nicht gespeicherte Änderungen enthält.",
-    "promptOnDelete": "Fordern Sie beim Löschen eines Datensatzes eine Bestätigung an.",
-    "promptOnDeleteTip": "Zeigen Sie eine Eingabeaufforderung an, wenn der Benutzer auf \"Löschen\" klickt, um die Aktion zu bestätigen.",
-    "removeOnSave": "Entfernen Sie das Feature beim Speichern aus der Auswahl.",
+    "promptOnSave": "Zum Speichern nicht gespeicherter Änderungen auffordern, wenn das Formular geschlossen oder zum nächsten Datensatz gewechselt wird",
+    "promptOnSaveTip": "Es wird eine Eingabeaufforderung angezeigt, wenn der Benutzer auf \"Schließen\" klickt oder zum nächsten editierbaren Datensatz navigiert, wenn das aktuelle Feature nicht gespeicherte Änderungen enthält.",
+    "promptOnDelete": "Beim Löschen eines Datensatzes eine Bestätigung anfordern",
+    "promptOnDeleteTip": "Es wird eine Eingabeaufforderung angezeigt, wenn der Benutzer auf \"Löschen\" klickt, um die Aktion zu bestätigen.",
+    "removeOnSave": "Das Feature beim Speichern aus der Auswahl entfernen",
     "removeOnSaveTip": "Option zum Entfernen des Features aus dem Auswahlsatz, wenn der Datensatz gespeichert wird.  Wenn dies der einzige ausgewählte Datensatz ist, wechselt der Bereich zurück zur Vorlagenseite.",
     "useFilterEditor": "Feature-Vorlagenfilter verwenden",
     "useFilterEditorTip": "Option zum Verwenden der Filtervorlagenauswahl, die es ermöglicht, die Vorlagen eines Layers anzuzeigen oder Vorlagen nach Name zu suchen.",
+    "listenToGroupFilter": "Filterwerte aus dem Widget \"Gruppenfilter\" auf voreingestellte Felder anwenden",
+    "listenToGroupFilterTip": "Wenn ein Filter im Widget \"Gruppenfilter\" angewendet wird, wird der Wert auf ein übereinstimmendes Feld in der Liste der voreingestellten Werte angewendet.",
+    "keepTemplateActive": "Ausgewählte Vorlage aktiviert lassen",
+    "keepTemplateActiveTip": "Wenn die Vorlagenauswahl angezeigt wird, wird die zuvor ausgewählte Vorlage erneut ausgewählt.",
     "layerSettingsTable": {
       "allowDelete": "Löschen zulassen",
       "allowDeleteTip": "Option, die Benutzern das Löschen eines Features ermöglicht; sie ist deaktiviert, wenn der Layer die Löschfunktion nicht unterstützt.",
@@ -21,15 +25,16 @@ define({
       "label": "Layer",
       "labelTip": "Name des Layers gemäß der Definition in der Karte",
       "update": "Geometriebearbeitung deaktivieren",
-      "updateTip": "Option zum Deaktivieren der Verschiebung von Geometrie, nachdem sie platziert wurde, bzw. zum Deaktivieren der Verschiebung von Geometrie für ein vorhandenes Feature",
+      "updateTip": "Option zum Deaktivieren der Bearbeitung der Geometrie, nachdem sie platziert wurde, bzw. für ein vorhandenes Feature",
       "allowUpdateOnly": "Nur Update",
       "allowUpdateOnlyTip": "Option, die lediglich die Änderung vorhandener Features zulässt; sie ist standardmäßig aktiviert, jedoch deaktiviert, wenn der Layer die Erstellung neuer Features nicht zulässt.",
       "fields": "Felder",
       "fieldsTip": "Die zu bearbeitenden Felder ändern und intelligente Attribute definieren",
       "description": "Beschreibung",
-      "descriptionTip": "Geben Sie optional Text ein, der im oberen Bereich der Attributseite angezeigt werden soll."
+      "descriptionTip": "Option zum Eingeben von Text, der im oberen Bereich der Attributseite angezeigt werden soll"
     },
-    "editFieldError": "Feldänderungen und intelligente Attribute sind für nicht editierbare Layer nicht verfügbar."
+    "editFieldError": "Feldänderungen und intelligente Attribute sind für nicht editierbare Layer nicht verfügbar.",
+    "noConfigedLayersError": "Smart Editor erfordert mindestens einen editierbaren Layer"
   },
   "editDescriptionPage": {
     "title": "Übersichtstext für <b>${layername}</b> definieren "
@@ -37,9 +42,9 @@ define({
   "fieldsPage": {
     "title": "Felder für <b>${layername}</b> konfigurieren",
     "description": "Verwenden Sie die Spalte \"Voreinstellung\", um vor dem Erstellen eines neuen Features einen Wert einzugeben. Verwenden Sie die Schaltfläche zum Bearbeiten von Aktionen, um intelligente Attribute für einen Layer zu aktivieren. Intelligente Attribute können ein Feld basierend auf Werten in anderen Feldern erfordern, ausblenden oder deaktivieren.",
-    "fieldsNotes": "* ist ein erforderliches Feld.  Wenn \"Anzeigen\" für dieses Feld deaktiviert wird und die Bearbeitungsvorlage diesen Feldwert nicht füllt, können Sie keinen neuen Datensatz speichern.",
+    "fieldsNotes": "* Erforderliches Feld. Wenn \"Anzeigen\" für dieses Feld deaktiviert wird und die Bearbeitungsvorlage diesen Feldwert nicht füllt, können Sie keinen neuen Datensatz speichern.",
     "fieldsSettingsTable": {
-      "display": "Anzeige",
+      "display": "Anzeigen",
       "displayTip": "Festlegen, ob das Feld unsichtbar sein soll",
       "edit": "Editierbar",
       "editTip": "Aktivieren, wenn das Feld im Attributformular vorhanden sein soll",
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Der resultierende Ausdruck im SQL-Format aus den definierten Kriterien",
       "actions": "Kriterien",
       "actionsTip": "Die Reihenfolge der Regel ändern und die Kriterien für deren Auslösung definieren"
+    },
+    "actions": {
+      "hide": "Ausblenden",
+      "required": "Erforderlich",
+      "disabled": "Deaktiviert"
     }
   },
   "filterPage": {
     "submitHidden": "Attributdaten für dieses Feld auch dann senden, wenn es ausgeblendet ist?",
-    "title": "Klausel für die ${action}-Regel konfigurieren",
+    "title": "Ausdruck für die ${action}-Regel konfigurieren",
     "filterBuilder": "Aktion für das Feld festlegen, wenn der Datensatz mit ${any_or_all} der folgenden Ausdrücke übereinstimmt",
     "noFilterTip": "Definieren Sie mit den folgenden Werkzeugen die Anweisung für den Zeitraum, in dem die Aktion aktiv ist."
   }

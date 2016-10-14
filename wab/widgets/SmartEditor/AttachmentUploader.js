@@ -42,10 +42,12 @@
 
     },
     clear: function () {
-      while (this._attachmentList.firstChild) {
-        this._attachmentList.removeChild(this._attachmentList.firstChild);
+      if (this._attachmentList !== undefined && this._attachmentList !== null) {
+        while (this._attachmentList.firstChild) {
+          this._attachmentList.removeChild(this._attachmentList.firstChild);
+        }
+        this._addInput();
       }
-      this._addInput();
     },
     _deleteAttachment: function (source) {
       source.srcElement.parentNode.parentNode.removeChild(source.srcElement.parentNode);
@@ -124,7 +126,7 @@
           defs.push(featureLayer.addAttachment(oid, this._attachmentList.childNodes[i]));
         }
       }
-      if (defs.length === 0){
+      if (defs.length === 0) {
         return null;
       }
       return defs.map(this._reflect);

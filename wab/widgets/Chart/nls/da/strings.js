@@ -43,5 +43,7 @@ define({
   "yards": "Yards",
   "nauticalMiles": "Sømil",
   "back": "Tilbage",
-  "execute": "Udfør"
+  "execute": "Udfør",
+  "enlarge": "Forstør",
+  "setting": "Indstilling"
 });

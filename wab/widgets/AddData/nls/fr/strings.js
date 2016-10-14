@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "Ajouter les données",
+  "_widgetLabel": "Ajouter des données",
   "search": {
     "featureLayerTitlePattern": "{serviceName} - {layerName}",
     "layerInaccessible": "La couche est inaccessible.",
@@ -11,7 +11,7 @@ define({
       "placeholder": "Rechercher..."
     },
     "bboxOption": {
-      "bbox": "Dans la zone de la carte"
+      "bbox": "Dans l'étendue de la carte"
     },
     "scopeOptions": {
       "anonymousContent": "Contenu",

@@ -1,6 +1,6 @@
 /*global define*/
 define({
-  "_widgetLabel": "在我附近",
+  "_widgetLabel": "周边",
   "searchHeaderText": "在地图上搜索地址或定位",
   "invalidSearchLayerMsg": "未正确配置搜索图层",
   "bufferSliderText": "在 ${BufferDistance} ${BufferUnit} 内显示结果",

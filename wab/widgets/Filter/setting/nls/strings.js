@@ -1,6 +1,7 @@
 define({
   root: ({
     addTaskTip: "Add one or more filters to the widget and configure parameters for each of them.",
+    enableMapFilter: "Remove the preset layer filter from the map.",
     newFilter: "New Filter",
     filterExpression: "Filter expression",
     layerDefaultSymbolTip: "Use layer's default symbol",

@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "속성 기준",
   "spatialFilter": "공간 필터",
   "value": "값",
-  "noAttributeSpatialFilterTip": "필터가 정의되지 않았습니다. 모든 피처가 반환됩니다."
+  "noAttributeSpatialFilterTip": "필터가 정의되지 않았습니다. 모든 피처가 반환됩니다.",
+  "showAllRelatedRecords": "릴레이트된 모든 레코드 보기"
 });

@@ -3,7 +3,7 @@ define({
     layersPage: {
       title: "Select a template to create features",
       generalSettings: "General Settings",
-      layerSettings:"Layer Settings",
+      layerSettings: "Layer Settings",
       editDescription: "Provide display text for the edit panel",
       editDescriptionTip: "This text is displayed above the Template picker, leave blank for no text.",
       promptOnSave: "Prompt to save unsaved edits when form is closed or switched to the next record.",
@@ -14,6 +14,10 @@ define({
       removeOnSaveTip: "Option to remove the feature from the selection set when the record is saved.  If it is the only selected record, the panel is switched back to the template page.",
       useFilterEditor: "Use feature template filter",
       useFilterEditorTip: "Option to use the Filter Template picker which provides the ability to view one layers templates or search for templates by name.",
+      listenToGroupFilter: "Apply filter values from Group Filter widget to Preset fields",
+      listenToGroupFilterTip: "When a filter is applied in the Group Filter widget, apply the value to a matching field in the Preset value list.",
+      keepTemplateActive: "Keep selected template active",
+      keepTemplateActiveTip: "When the template picker is shown, if a template was previously selected, reselect it.",
       layerSettingsTable: {
         allowDelete: "Allow Delete",
         allowDeleteTip: "Option to allow the user to delete a feature; disabled if the layer does not support delete",
@@ -28,9 +32,10 @@ define({
         fields: "Fields",
         fieldsTip: "Modify the fields to be edited and define Smart Attributes",
         description: "Description",
-        descriptionTip:"Optionally enter text you want to display on top of the attribute page."
+        descriptionTip: "Option to enter text to display on top of the attribute page."
       },
-      editFieldError:"Field modifications and Smart attributes are not available to layers that are not editable"
+      editFieldError: "Field modifications and Smart attributes are not available to layers that are not editable",
+      noConfigedLayersError: "Smart Editor requires one or more editable layers"
     },
     editDescriptionPage: {
       title: "Define attribute overview text for <b>${layername}</b> "
@@ -57,7 +62,7 @@ define({
     },
     actionPage: {
       title: "Configure the Smart Attribute actions for <b>${fieldname}</b>",
-      description:"The actions are always off unless you specify the criteria on which they will be triggered.  The actions are processed in order and only one action will be triggered per field.  Use the Criteria Edit button to define the criteria.",
+      description: "The actions are always off unless you specify the criteria on which they will be triggered.  The actions are processed in order and only one action will be triggered per field.  Use the Criteria Edit button to define the criteria.",
       actionsSettingsTable: {
         rule: "Action",
         ruleTip: "Action performed when the criteria is satsified",
@@ -65,11 +70,16 @@ define({
         expressionTip: "The resulting expression in SQL format from the defined criteria",
         actions: "Criteria",
         actionsTip: "Change the order of the rule and define the criteria when it is triggered"
+      },
+      actions: {
+        hide: "Hide",
+        required: "Required",
+        disabled: "Disabled"
       }
     },
     filterPage: {
       submitHidden: "Submit attribute data for this field even when hidden?",
-      title: "Configure clause for the ${action} rule",
+      title: "Configure expression for the ${action} rule",
       filterBuilder: "Set action on field when record matches ${any_or_all} of the following expressions",
       noFilterTip: "Using the tools below, define the statement for when the action is active."
     }

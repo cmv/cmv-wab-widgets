@@ -4,6 +4,8 @@ define({
   "format": "פורמט",
   "layout": "תצוגה",
   "settings": "מתקדם",
+  "labels": "תוויות",
+  "showLabels": "הצג תוויות",
   "mapScaleExtent": "תחום/קנה מידה של המפה",
   "preserve": "שמר",
   "mapScale": "קנה מידה של המפה",

@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Μέτρηση ύψους",
   "intialScaleLabel": "Επιλέξτε την αρχική κλίμακα για προβολή πλάγιων λήψεων",
   "smallBuildingLabel": "Αστική περιοχή: Μικρό κτίριο",
-  "buildingLabel": "Αστική περιοχή: Κτίριο"
+  "buildingLabel": "Αστική περιοχή: Κτίριο",
+  "azimuthChangeNotification": "Δεν υπάρχουν δεδομένα στην επιλεγμένη κατεύθυνση."
 });

@@ -24,6 +24,7 @@ define({
   "filterPopup": "Slāņa filtrs",
   "cancel": "Atcelt",
   "noValue": "Nav vērtības",
+  "emptyString": "Tukša virkne",
   "existingValue": "Paturēt esošo vērtību",
   "newDate": "Jauns datums",
   "valueChooser": "Atlasīt/ierakstīt vērtību",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Slānis ${0} ar ID ${1} netika atrasts kartē; iespējams, ka karte ir mainīta pēc logrīka konfigurēšanas",
     "queryNullID": "Elements no ${0} atgrieza nederīgu ID",
     "noSelectedLayers": "Nav atlasītu slāņu ar atjaunināmiem ierakstiem",
-    "inputValueError": "Nederīga vērtība veidlapā"
+    "inputValueError": "Nederīga vērtība veidlapā",
+    "saveError": "Nevar saglabāt ${0} elementu(s), detalizēta informācija ir pievienota konsolei",
+    "requiredValue": "Obligāta vērtība"
   }
 });

@@ -12,6 +12,14 @@ html.hr .jimu-widget-filter-setting .single-setting-content{
   width: 650px;
 }
 
+.jimu-widget-singlefilter-setting{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
 .jimu-widget-singlefilter-setting > table{
   width: 100%;
   table-layout: fixed;
@@ -23,9 +31,9 @@ html.hr .jimu-widget-filter-setting .single-setting-content{
 }
 
 .jimu-widget-singlefilter-setting .jimu-filter .allExpsBox{
-  /*max-height: 330px;*/
+  /*max-height: 300px;*/
   /* el locale */
-  max-height: 300px;
+  max-height: 270px;
   overflow: auto;
 }
 

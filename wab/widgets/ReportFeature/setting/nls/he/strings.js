@@ -12,7 +12,7 @@ define({
   "getUser": "אפשר קבלת קלט מהמשתמש",
   "userName": "הזן שם משתמש",
   "noUserName": "הזן שם משתמש שיוגדר כברירת מחדל.",
-  "noLayers": "אין שכבות פעילות במפת האינטרנט.",
+  "noLayers": "אין שכבות פעילות ב- Map Web.",
   "noSessionName": "בחר מהלך",
   "revTechName": "שם טכנאי Reviewer"
 });

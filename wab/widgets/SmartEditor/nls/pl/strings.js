@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Inteligentny edytor",
+  "noEditPrivileges": "Twoje konto nie ma uprawnień do tworzenia ani modyfikowania danych.",
+  "widgetActive": "Aktywny",
+  "widgetNotActive": "Nieaktywny",
   "pressStr": "Naciśnij ",
   "ctrlStr": " CTRL, ",
   "snapStr": " aby włączyć dociąganie",
@@ -19,5 +22,6 @@ define({
     "all": "Wszystkie",
     "noAvailableTempaltes": "Brak dostępnych szablonów",
     "searchTemplates": "Szablony wyszukiwania"
-  }
+  },
+  "invalidConfiguration": "Widżet nie został skonfigurowany lub warstwy w tej konfiguracji nie znajdują się już na mapie. Otwórz aplikację w trybie kreatora i ponownie skonfiguruj widżet."
 });

@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Smart-redigering",
+  "noEditPrivileges": "Din konto har ikke rettigheder til at oprette eller redigere data.",
+  "widgetActive": "Aktiv",
+  "widgetNotActive": "Ikke aktiv",
   "pressStr": "Tryk ",
   "ctrlStr": " CTRL ",
   "snapStr": " for at aktivere snapping",
@@ -19,5 +22,6 @@ define({
     "all": "Alle",
     "noAvailableTempaltes": "Ingen tilgængelige skabeloner",
     "searchTemplates": "Søgeskabeloner"
-  }
+  },
+  "invalidConfiguration": "Widget'en er enten ikke konfigureret, eller lagene i konfigurationen findes ikke længere i kortet. Åbn app'en i builder-tilstand, og omkonfigurér widget'en."
 });

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ define([
   'dojo/query',
   'dojo/Evented',
   'dojo/_base/lang',
+  'dojo/_base/html',
   'dojo/_base/declare',
   'dijit/_WidgetBase',
   'dijit/_TemplatedMixin',
@@ -27,13 +28,14 @@ define([
   'jimu/utils',
   'jimu/dijit/Filter',
   'jimu/dijit/Message',
+  'jimu/dijit/CheckBox',
   'jimu/dijit/LayerChooserFromMapWithDropbox',
   './CustomFeaturelayerChooserFromMap',
   'jimu/dijit/ImageChooser',
   'dijit/form/ValidationTextBox'
 ],
-function(on, query, Evented, lang, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template,
-  jimuUtils, Filter, Message, LayerChooserFromMapWithDropbox, CustomFeaturelayerChooserFromMap) {
+function(on, query, Evented, lang, html, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template,
+  jimuUtils, Filter, Message, CheckBox, LayerChooserFromMapWithDropbox, CustomFeaturelayerChooserFromMap) {
 
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
     baseClass: 'jimu-widget-singlefilter-setting',
@@ -67,6 +69,12 @@ function(on, query, Evented, lang, declare, _WidgetBase, _TemplatedMixin, _Widge
 
     postCreate: function(){
       this.inherited(arguments);
+      this.cbxRemoveMapFilter = new CheckBox({
+        label: this.nls.enableMapFilter || ""
+      });
+      this.cbxRemoveMapFilter.placeAt(this.tdUseMapFilter);
+      this.cbxRemoveMapFilter.setValue(false);
+
       this._recreateLayerChooserSelect(true);
       this.filter = new Filter({
         enableAskForValues: true,
@@ -75,6 +83,9 @@ function(on, query, Evented, lang, declare, _WidgetBase, _TemplatedMixin, _Widge
       });
       this.filter.placeAt(this.filterDiv);
       this._setDefaultTaskIcon();
+      this.own(on(this.filter, 'filter-number-change', lang.hitch(this, this.calculateExpsBoxMaxHeight)));
+
+      this.calculateExpsBoxMaxHeight();
     },
 
     _recreateLayerChooserSelect: function(bindEvent){
@@ -143,6 +154,9 @@ function(on, query, Evented, lang, declare, _WidgetBase, _TemplatedMixin, _Widge
             this._setDefaultTaskIcon();
           }
 
+          //enableMapFilter
+          this.cbxRemoveMapFilter.setValue(!config.enableMapFilter);
+
           //nameTextBox
           this.nameTextBox.set('value', config.name);
 
@@ -168,7 +182,8 @@ function(on, query, Evented, lang, declare, _WidgetBase, _TemplatedMixin, _Widge
         url: null,
         name: null,
         filter: null,
-        icon: null
+        icon: null,
+        enableMapFilter: !this.cbxRemoveMapFilter.getValue()
       };
 
       var item = this.layerChooserSelect.getSelectedItem();
@@ -204,16 +219,33 @@ function(on, query, Evented, lang, declare, _WidgetBase, _TemplatedMixin, _Widge
       return config;
     },
 
+    calculateExpsBoxMaxHeight: function(){
+      setTimeout(lang.hitch(this, function(){
+        if(this.domNode){
+          var allExpsBox = this.filter.allExpsBox;
+          var box1 = html.position(this.domNode);
+          var box2 = html.position(allExpsBox);
+          var maxHeight = box1.h - (box2.y - box1.y);
+          if(maxHeight > 0){
+            allExpsBox.style.maxHeight = maxHeight + "px";
+          }
+        }
+      }), 100);
+    },
+
     reset: function(){
       //reset UI without layerChooserSet
 
       //reset icon
       this._setDefaultTaskIcon();
 
-      //set name
+      //reset enableMapFilter
+      this.cbxRemoveMapFilter.setValue(false);
+
+      //reset name
       this.nameTextBox.set('value', '');
 
-      //set filter
+      //reset filter
       this.filter.reset();
     },
 
@@ -258,13 +290,19 @@ function(on, query, Evented, lang, declare, _WidgetBase, _TemplatedMixin, _Widge
     },
 
     _getLayerDefinitionForFilterDijit: function(layer){
-      var layerDefinition = jimuUtils.getFeatureLayerDefinition(layer);
+      var layerDefinition = null;
+
+      if(layer.declaredClass === 'esri.layers.FeatureLayer'){
+        layerDefinition = jimuUtils.getFeatureLayerDefinition(layer);
+      }
+
       if (!layerDefinition) {
         layerDefinition = {
           currentVersion: layer.currentVersion,
           fields: lang.clone(layer.fields)
         };
       }
+
       return layerDefinition;
     },
 

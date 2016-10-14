@@ -43,5 +43,7 @@ define({
   "yards": "Jardid",
   "nauticalMiles": "Meremiilid",
   "back": "Tagasi",
-  "execute": "Käivita"
+  "execute": "Käivita",
+  "enlarge": "Kasvav",
+  "setting": "Seade"
 });

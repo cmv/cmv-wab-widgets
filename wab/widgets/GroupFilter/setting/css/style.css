@@ -121,6 +121,14 @@
 	font-size: 8pt;
 }
 
+.jimu-widget-map-filter .operator-append-select {
+	font-size: 8pt;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
 .jimu-widget-map-filter-preset .picker-cell {
 	padding-bottom: 15px;
 }

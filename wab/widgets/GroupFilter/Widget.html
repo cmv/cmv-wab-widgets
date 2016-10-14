@@ -1,7 +1,7 @@
 <div>
 	<div class="groupContainer" data-dojo-attach-point="widgetIntro">
 		<div class="group-picker">
-			<table width="100%">
+			<table width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td class="groupHeader">${nls.labels.selectGroup}</td>
 					<td class="saveTD" data-dojo-attach-point="optionsIcon" id="saveTD" data-dojo-attach-event="click:toggleSaveFilter"></td>
@@ -40,10 +40,10 @@
 					<td class="tdLabel">${nls.labels.uploadHeading}</td>
 					<td></td>
 				</tr>
-				<tr>
-					<td class="loadProgressHeader" id="tdProgress"></td>
-					<td class="tdUploadData"><input type="file" id="jsonFileInput" data-dojo-attach-point="jsonFileInput" data-dojo-attach-event="change:readJsonToConfig" accept=".json"></td>
+				<tr class="rowHeader">
 					<td></td>
+					<td class="tdData"><input type="file" id="jsonFileInput" data-dojo-attach-point="jsonFileInput" data-dojo-attach-event="change:readJsonToConfig" accept=".json"></td>
+					<td class="loadProgressHeader" id="tdProgress"></td>
 				</tr>
 			</table>
 			<br>
@@ -51,7 +51,7 @@
 				<tr class="rowHeader">
 					<td class="tdLabel">${nls.labels.layerOptionHeading}</td>
 				</tr>
-				<tr>
+				<tr style="height:0px; display:none;">
 					<td class="tdData"><input type="checkbox" data-dojo-type="dijit/form/CheckBox"  data-dojo-attach-point="chkAppendToDef" data-dojo-props="value:true,checked:false"/> ${nls.labels.AppendDefHeading}
 						<select data-dojo-attach-point="slAppendChoice" data-dojo-type="dijit/form/Select">
 						    <option value="OR">${nls.inputs.optionOR}</option>

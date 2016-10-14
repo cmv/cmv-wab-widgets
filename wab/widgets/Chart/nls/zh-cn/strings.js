@@ -30,7 +30,7 @@ define({
   "useCurrentExtentTip": "部分或完全位于当前地图范围内",
   "useDrawGraphicTip": "部分或完全位于在地图上绘制的形状内",
   "useFeaturesTip": "根据其相对于另一图层中要素的位置",
-  "noSpatialLimitTip": "不会在空间上限制结果",
+  "noSpatialLimitTip": "不要空间限制结果",
   "applySearchDistance": "应用搜索距离",
   "spatialRelationship": "空间关系",
   "relatedLayer": "相关图层",
@@ -43,5 +43,7 @@ define({
   "yards": "码",
   "nauticalMiles": "海里",
   "back": "后退",
-  "execute": "执行"
+  "execute": "执行",
+  "enlarge": "最大化",
+  "setting": "设置"
 });

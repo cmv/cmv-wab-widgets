@@ -6,6 +6,7 @@ define({
     "yes": "Sì",
     "no": "No",
     "next": "Avanti",
+    "previous": "Precedente",
     "back": "Indietro",
     "selected": "selezionato",
     "name": "Nome",
@@ -52,7 +53,11 @@ define({
     "view": "Visualizza",
     "newText": "Nuovo",
     "edit": "Modifica",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabella",
+    "zoomIn": "Zoom avanti",
+    "zoomOut": "Zoom indietro",
+    "continue1": "Continua"
   },
   "errorCode": "Codice",
   "errorMessage": "Messaggio",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Maiuscole/minuscole",
     "notSupportCaseSensitiveTip": "I servizi ospitati non supportano query con distinzione tra maiuscole e minuscole.",
-    "setFilterTip": "Impostare il filtro correttamente."
+    "setFilterTip": "Impostare il filtro correttamente.",
+    "cascadeFilterTip": "Mostrare solo valori filtrati in base a espressioni precedenti."
   },
   "featureLayerSource": {
     "layer": "Layer",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Fare clic per ripristinare l'estensione mappa e la visibilità dei layer dove si era rimasti."
   },
   "featureActions": {
+    "featureActions": "Azioni feature",
     "ZoomTo": "Zoom a",
     "PanTo": "Effettua Zoom A",
     "Flash": "Flash",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Aggiungi a selezione",
     "removeSelectionTip": "Rimuovi da selezione",
     "selectFromCurrentSelectionTip": "Seleziona dalla selezione corrente",
-    "unselectAllSelectionTip": "Deseleziona tutte le feature attualmente selezionate"
+    "unselectAllSelectionTip": "Deseleziona tutte le feature attualmente selezionate",
+    "selectByPolygon": "Seleziona per poligono",
+    "selectByCircle": "Seleziona per cerchio",
+    "selectByLine": "Seleziona per linea",
+    "chooseSelectingTools": "Scegli strumenti di selezione",
+    "darw": "Disegna",
+    "drawShap": "Disegnare una forma"
   },
   "widgetManager": {
     "createWidgetError": "Errore di creazione del widget",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Le app Web 3D non sono supportate nel browser."
+  },
+  "map": {
+    "basemapNotAvailable": "La mappa di base non è disponibile.",
+    "displayDefaultBasemap": "Visualizzare invece la mappa di base predefinita."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Ci sono troppe feature all'interno dell'area selezionata. Il recupero di tutti i dati potrebbe richiedere molto tempo.",
+    "askForContinue": "Continuare?"
   }
 });

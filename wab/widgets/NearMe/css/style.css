@@ -42,15 +42,38 @@
 }
 
 /*---------------------Override Direction dijit css------------------------*/
-
-.jimu-widget-nearme .simpleDirections .esriStopsContainer
+.jimu-widget-nearme .simpleDirections .esriSearchSourceContainer
 {
     display: none;
 }
 
-.jimu-widget-nearme .simpleDirections .esriResultsPrint
+.jimu-widget-nearme .simpleDirections .esriStopsContainer
 {
-    margin-top: 5px;
+    height: 0px;
+    margin: 0px;
+}
+
+.jimu-widget-nearme .getDirectionsBtnContainer
+{
+    display: none;
+}
+
+.jimu-widget-nearme .esriStopsTableContainer
+{
+    display: none;
+}
+
+.jimu-widget-nearme .esriStopsButtons
+{
+    display: none;
+}
+
+.jimu-widget-nearme .simpleDirections .savePrintBtnContainer
+{
+    position: relative;
+    top: 42px;
+    left: 90%;
+    margin: 0px;
 }
 
 .jimu-widget-nearme .simpleDirections .esriResultsLoading .esriResultsContainer
@@ -295,6 +318,7 @@
 {
     font-weight: bold;
     padding-left: 20px;
+    padding-right: 20px;
 }
 
 .esriCTDirectionInfoPanel .esriCTItemlList
@@ -352,18 +376,24 @@
 .jimu-widget-nearme .jimu-tab > .jimu-viewstack
 {
     position: relative;
-    top: 10px;
+    top: 0px;
     height: 100%;
 }
 
 .jimu-widget-nearme .dijitContentPane
 {
     overflow: auto;
+    padding: 0px 20px;
+}
+
+.jimu-widget-nearme .esriCTPopupInfo
+{
+    padding: 20px 0px !important;
 }
 
 .jimu-widget-nearme .jimu-tab
 {
-    height: calc(100% - 66px);
+    height: calc(100% - 56px);
     min-height: 80px;
     -webkit-overflow-scrolling: touch;
 }
@@ -487,5 +517,11 @@
 .esriRtl .jimu-widget-nearme .esriCTItemLeftArrow
 {
     background-image: url('../images/right-arrow.png');
-    margin: 7px 20px 0px 10px;
+    margin: 7px 0px 0px 10px;
+}
+
+.esriRtl .jimu-widget-nearme .simpleDirections .savePrintBtnContainer
+{
+    left: 0px;
+    right: 90%;
 }

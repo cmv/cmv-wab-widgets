@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -181,6 +181,10 @@ function (declare, lang, array, html, dojoConfig, cookie,
         }
       }), lang.hitch(this, function(err){
         this.showError(err);
+        //we still return a rejected deferred
+        var def = new Deferred();
+        def.reject(err);
+        return def;
       }));
     },
 
@@ -251,7 +255,6 @@ function (declare, lang, array, html, dojoConfig, cookie,
     addNeedValues: function(appConfig){
       this._processNoUriWidgets(appConfig);
       this._addElementId(appConfig);
-      this._processWidgetJsons(appConfig);
     },
 
     showError: function(err){
@@ -277,6 +280,9 @@ function (declare, lang, array, html, dojoConfig, cookie,
           }
         }).then(lang.hitch(this, function(appConfig){
           tokenUtils.setPortalUrl(appConfig.portalUrl);
+          if(appConfig.portalUrl){
+            window.portalUrl = appConfig.portalUrl;
+          }
 
           if(this.urlParams.token){
             return tokenUtils.registerToken(this.urlParams.token).then(function(){
@@ -292,6 +298,7 @@ function (declare, lang, array, html, dojoConfig, cookie,
         var portalUrl = portalUrlUtils.getPortalUrlFromLocation();
         var def = new Deferred();
         tokenUtils.setPortalUrl(portalUrl);
+        window.portalUrl = portalUrl;
         arcgisUtils.arcgisUrl = portalUrlUtils.getBaseItemUrl(portalUrl);
 
         var tokenDef;
@@ -335,7 +342,9 @@ function (declare, lang, array, html, dojoConfig, cookie,
         this.configFile = "config.json";
         return xhr(this.configFile, {handleAs: 'json'}).then(lang.hitch(this, function(appConfig){
           tokenUtils.setPortalUrl(appConfig.portalUrl);
-
+          if(appConfig.portalUrl){
+            window.portalUrl = appConfig.portalUrl;
+          }
           if(this.urlParams.token){
             return tokenUtils.registerToken(this.urlParams.token).then(function(){
               return appConfig;
@@ -667,7 +676,7 @@ function (declare, lang, array, html, dojoConfig, cookie,
         }));
       }else{
         if (!tokenUtils.isInBuilderWindow() && !tokenUtils.isInConfigOrPreviewWindow() &&
-          this.portalSelf.supportsOAuth && this.rawAppConfig.appId && !isWebTier) {
+          this.portalSelf.supportsOAuth && this.rawAppConfig && this.rawAppConfig.appId && !isWebTier) {
           tokenUtils.registerOAuthInfo(portalUrl, this.rawAppConfig.appId);
         }
         //we call checkSignInStatus here because this is the first place where we can get portal url
@@ -786,7 +795,7 @@ function (declare, lang, array, html, dojoConfig, cookie,
           sharedUtils.visitElement(config, lang.hitch(this, function(e){
             if(!e.widgets && e.uri){
               if(manifests[e.uri]){
-                this._addNeedValuesForManifest(manifests[e.uri]);
+                this._addNeedValuesForManifest(manifests[e.uri], e.uri);
                 jimuUtils.widgetJson.addManifest2WidgetJson(e, manifests[e.uri]);
               }else{
                 defs.push(this.widgetManager.loadWidgetManifest(e));
@@ -844,7 +853,9 @@ function (declare, lang, array, html, dojoConfig, cookie,
       return def;
     },
 
-    _addNeedValuesForManifest: function(manifest){
+    _addNeedValuesForManifest: function(manifest, uri){
+      lang.mixin(manifest, jimuUtils.getUriInfo(uri));
+
       jimuUtils.manifest.addManifestProperies(manifest);
       jimuUtils.manifest.processManifestLabel(manifest, dojoConfig.locale);
     },

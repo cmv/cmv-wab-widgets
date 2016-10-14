@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "Info Summary",
-  "title": "InfoSummary valdiklis",
-  "helpText": "InfoSummary pagalbos tekstas"
+  "_widgetLabel": "Informacijos suvestinė",
+  "title": "Informacijos suvestinės valdiklis",
+  "helpText": "Informacijos suvestinės pagalbos tekstas"
 });

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,8 +25,7 @@ define([
     'jimu/dijit/Message',
     'dojo/touch'
   ],
-  function(
-    declare, BaseWidget, LocateButton, html, on, lang, jimuUtils) {
+  function(declare, BaseWidget, LocateButton, html, on, lang, jimuUtils) {
     var clazz = declare([BaseWidget], {
 
       name: 'MyLocation',
@@ -47,6 +46,7 @@ define([
           html.setAttr(this.placehoder, 'title', this.nls.httpNotSupportError);
         } else if (window.navigator.geolocation) {
           this.own(on(this.placehoder, 'click', lang.hitch(this, this.onLocationClick)));
+          this.own(on(this.map, 'extent-change', lang.hitch(this, this._scaleChangeHandler)));
         } else {
           html.setAttr(this.placehoder, 'title', this.nls.browserError);
         }
@@ -60,8 +60,15 @@ define([
           this._destroyGeoLocate();
         } else {
           this._createGeoLocate();
+          this._scaleChangeHandler();
           this.geoLocate.locate();
           html.addClass(this.placehoder, "locating");
+        }
+      },
+      _scaleChangeHandler: function() {
+        var scale = this.map.getScale();
+        if (scale && this.geoLocate) {
+          this.geoLocate.scale = scale;
         }
       },
 
@@ -89,6 +96,7 @@ define([
           json.useTracking = true;
         }
         json.centerAt = true;
+        json.setScale = true;
         this.geoLocate = new LocateButton(json);
         this.geoLocate.startup();
 

@@ -33,15 +33,12 @@
 .jimu-widget-map-filter .save-block {
 	position: absolute;
 	left: 5px;
-	top: 5px;
 }
 
 .jimu-widget-map-filter .close-save {
 	position:relative;
 	float: right;
 	content: url("../images/setting_default.png");
-	padding-right: 5px;
-	padding-bottom: 10px;
     cursor: hand;
     cursor: pointer;
 }
@@ -50,8 +47,6 @@
 	position:relative;
 	float: right;
 	content: url("../images/setting_default.png");
-	padding-right: 5px;
-	padding-bottom: 10px;
     cursor: hand;
     cursor: pointer;
 }
@@ -108,12 +103,11 @@
 
 .jimu-widget-map-filter .tableFormat {
 	table-layout: fixed;
-	width:99%;
+	width:100%;
 }
 
 .jimu-widget-map-filter .rowHeader {
 	color: #000000;
-	font-weight:bold;
 }
 
 .jimu-widget-map-filter .saveFunction {

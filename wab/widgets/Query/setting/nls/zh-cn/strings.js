@@ -122,5 +122,6 @@ define({
   "uploadImage": "上传图像",
   "attributeCriteira": "属性条件",
   "specifyFilterAtRuntimeTip": "用户需要指定此表达式的参数。",
-  "value": "值"
+  "value": "值",
+  "hideLayersTip": "请在关闭微件时关闭查询结果图层。"
 });

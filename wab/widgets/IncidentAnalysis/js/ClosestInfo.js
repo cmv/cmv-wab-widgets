@@ -132,8 +132,8 @@ define([
           }
           graphics.sort(this._compareDistance);
           results.push(graphics[0]);
-          this._processResults(results);
         }
+        this._processResults(results);
       }), lang.hitch(this, this._processError));
     },
 

@@ -109,7 +109,7 @@ define({
   "icon": "Ikona",
   "newTask": "Nowe zadanie",
   "addTaskTip": "Dodaj do widżetu jedno zapytanie lub ich większą liczbę, aby skonfigurować parametry dla każdego z nich.",
-  "webMapPopupTip": "Użyj konfiguracji z okna podręcznego warstw na mapie internetowej",
+  "webMapPopupTip": "Użyj konfiguracji z okna podręcznego warstwy na mapie internetowej",
   "customPopupTip": "Skonfiguruj zasoby niestandardowe",
   "showResultsSetActions": "Pokaż czynności dla zestawu wyników",
   "zoomTo": "Powiększ do",
@@ -122,5 +122,6 @@ define({
   "uploadImage": "Prześlij obraz",
   "attributeCriteira": "Kryteria atrybutowe",
   "specifyFilterAtRuntimeTip": "Użytkownicy muszą określić parametry dla tego wyrażenia.",
-  "value": "WARTOŚĆ"
+  "value": "WARTOŚĆ",
+  "hideLayersTip": "Wyłącz warstwy wyników zapytania po zamknięciu widżetu."
 });

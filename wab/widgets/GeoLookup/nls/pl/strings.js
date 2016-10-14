@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoWyszukiwanie",
+  "_widgetLabel": "Geowyszukiwanie",
   "description": "Znajdź lub przeciągnij tutaj <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'>arkusz kalkulacyjny</a>, aby dokonać wizualizacji oraz dodać do niego dane mapy.",
   "selectCSV": "Wybierz plik CSV",
   "loadingCSV": "Wczytywanie pliku CSV",

@@ -4,6 +4,8 @@ define({
   "format": "Biçim",
   "layout": "Düzen",
   "settings": "Gelişmiş",
+  "labels": "Etiketler",
+  "showLabels": "Etiketleri göster",
   "mapScaleExtent": "Harita ölçeği/yayılımı",
   "preserve": "Koru",
   "mapScale": "harita ölçeği",

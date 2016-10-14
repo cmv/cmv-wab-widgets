@@ -1,7 +1,6 @@
 
 .jimu-widget-layerList{
   position: relative;
-  font-family: "Avenir-Medium";
 }
 
 .jimu-widget-layerList .jimu-hr{
@@ -27,7 +26,7 @@
   margin-top: 14px;*/
   color: #000000;
   margin-bottom: 14px;
-  font-family: "Avenir-Heavy";
+  font-family: "Avenir Heavy";
   margin-left: 8px;
   margin-right: 8px;
 }
@@ -456,7 +455,6 @@
   background-color: #ffffff;
   box-shadow: 0px 0px 4px 2px rgba(177, 177, 177, 0.5);
   outline-style: none;
-  font-family: "Avenir-Light";
 }
 
 .jimu-widget-layerList .jimu-dropmenu .drop-menu hr{
@@ -490,7 +488,7 @@
   color: #000000;
   text-decoration: initial;
   background-color: #f3f3f3;
-  font-family: "Avenir-Medium";
+  font-family: "Avenir Medium";
 
 }
 

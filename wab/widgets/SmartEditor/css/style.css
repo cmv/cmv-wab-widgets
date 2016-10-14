@@ -21,6 +21,52 @@
     position: relative;
 }
 
+   .widgetIndicator {
+        height: 4px;
+        position:absolute;
+        top:0;
+        z-index:1;
+        width:100%;
+        overflow:hidden;
+        overflow-x: hidden;
+        /*width: 94%;
+        border-radius: 3px;
+        padding-left: 3px;
+        padding-right: 3px;
+        margin-left: 3%;
+        margin-right: 3%;*/
+        
+    }
+
+        .widgetActive {
+            background: #73AD21;
+        }
+
+        .widgetNotActive {
+            background: red;
+        }
+    /*.jimu-widget-smartEditor .widgetActive {
+        width: 22px;
+        height: 22px;
+        background-position: center center;
+        background-image: url(../images/widgetActive.png);
+        background-repeat: no-repeat;
+        position: absolute;
+        left: 1px;
+        top: 1px;
+    }
+
+    .jimu-widget-smartEditor .widgetNotActive {
+        width: 22px;
+        height: 22px;
+        background-position: center center;
+        background-image: url(../images/widgetNotActive.png);
+        background-repeat: no-repeat;
+        position: absolute;
+        left: 1px;
+        top: 1px;
+    }*/
+
     .jimu-widget-smartEditor .hideField {
         display: none;
     }
@@ -28,7 +74,7 @@
 
     .jimu-widget-smartEditor .templatePicker {
         position: relative;
-        height: 300px;
+        height: 296px;
     }
 
     .jimu-widget-smartEditor .grid {
@@ -135,7 +181,10 @@
     float: right;
     display: inline;
 }
-
+.jimu-rtl .jimu-widget-smartEditor .esriAttributeInspector .saveButton {
+    float: left;
+    display: inline;
+}
     .jimu-widget-smartEditor .esriAttributeInspector .saveButton.hide {
         display: none;
     }
@@ -143,6 +192,10 @@
 .jimu-widget-smartEditor .esriAttributeInspector .deleteButton {
     float: right;
     margin-right: 20px;
+}
+.jimu-rtl .jimu-widget-smartEditor .esriAttributeInspector .deleteButton {
+    float: left;
+    margin-left: 20px;
 }
 /*********about preset values table*********/
 
@@ -201,7 +254,20 @@
 .jimu-widget-smartEditor .ee-inputField {
     width: 100%;
 }
-
+.jimu-widget-smartEditor .ee-inputFieldTextArea {
+    width: 100%!important;
+    resize: vertical;
+    overflow: auto;
+    font-family: inherit;
+    line-height: 20px !important;
+    font-size: 14px;
+    min-height: 70px;
+}
+.jimu-widget-smartEditor .ee-inputFieldRichText {
+    width: 100%!important;
+    margin: 5px auto;    
+  
+}
 .jimu-widget-smartEditor .spacer {
     height: 12px;
 }
@@ -219,12 +285,21 @@
 }
 
 .jimu-widget-smartEditor .esriAttributeInspector .dijitTextBox {
-    width: 100%;
+    width: 100%!important;
 }
-
-.jimu-widget-smartEditor .dijitTextBox {
+.jimu-widget-smartEditor .esriAttributeInspector .dijitTextArea {
+    
+    width: 100%!important;
+    min-height: 70px;
+    resize: vertical;
+    overflow: auto;
+    font-family: inherit;
+    line-height: 20px !important;
+    font-size: 14px;
+}
+/*.jimu-widget-smartEditor .dijitTextBox {
     height: 28px !important;
-}
+}*/
 
 .jimu-widget-smartEditor div.atiAttributes table {
     width: 98%;

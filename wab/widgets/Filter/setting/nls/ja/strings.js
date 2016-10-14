@@ -1,5 +1,6 @@
 define({
   "addTaskTip": "1 つ以上のフィルターをウィジェットに追加して、各フィルターのパラメーターを構成します。",
+  "enableMapFilter": "プリセット レイヤー フィルターをマップから削除します。",
   "newFilter": "新しいフィルター",
   "filterExpression": "フィルターの条件式",
   "layerDefaultSymbolTip": "レイヤーのデフォルト シンボルの使用",

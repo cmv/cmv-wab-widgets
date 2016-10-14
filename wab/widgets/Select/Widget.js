@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ define(['dojo/_base/declare',
   'esri/symbols/jsonUtils',
   'esri/Color',
   'jimu/BaseWidget',
+  'jimu/WidgetManager',
   'jimu/dijit/ViewStack',
   'jimu/dijit/FeatureSetChooserForMultipleLayers',
   'jimu/LayerInfos/LayerInfos',
@@ -38,7 +39,7 @@ define(['dojo/_base/declare',
   'jimu/dijit/LoadingShelter'
 ],
 function(declare, lang, html, array, on, all, Deferred, _WidgetsInTemplateMixin, SimpleMarkerSymbol,
-SimpleLineSymbol, SimpleFillSymbol, SymbolJsonUtils, Color, BaseWidget, ViewStack,
+SimpleLineSymbol, SimpleFillSymbol, SymbolJsonUtils, Color, BaseWidget, WidgetManager, ViewStack,
 FeatureSetChooserForMultipleLayers, LayerInfos, SelectionManager, layerUtil,
 SelectableLayerItem, FeatureItem) {
   return declare([BaseWidget, _WidgetsInTemplateMixin], {
@@ -63,14 +64,15 @@ SelectableLayerItem, FeatureItem) {
        * Helper object to keep which layer is selectable.
        */
       this.layerMapper = {};
-      this.layerInfoArray = [];
+      this.layerObjectArray = [];
       this.layerItems = [];
 
       // create select dijit
       this.selectDijit = new FeatureSetChooserForMultipleLayers({
         map: this.map,
         updateSelection: true,
-        fullyWithin: this.config.selectionMode === 'wholly'
+        fullyWithin: this.config.selectionMode === 'wholly',
+        geoTypes: this.config.geometryTypes || ['EXTENT']
       });
 
       html.place(this.selectDijit.domNode, this.selectDijitNode);
@@ -91,9 +93,13 @@ SelectableLayerItem, FeatureItem) {
       html.place(this.viewStack.domNode, this.domNode);
 
       this.own(on(this.switchBackBtn, 'click', lang.hitch(this, this._switchToLayerList)));
+      if(window.isRTL) {
+        html.addClass(this.switchBackIcon, 'icon-arrow-forward');
+      }else{
+        html.addClass(this.switchBackIcon, 'icon-arrow-back');
+      }
 
       this._switchToLayerList();
-      this.shelter.show();
 
       var layerInfosObject = LayerInfos.getInstanceSync();
 
@@ -118,76 +124,85 @@ SelectableLayerItem, FeatureItem) {
     },
 
     onDeActive: function(){
-      this.selectDijit.deactivate();
+      if (this.selectDijit.isActive()) {
+        this.selectDijit.deactivate();
+      }
       this._restoreSelectionSymbol();
     },
 
     onActive: function(){
       this._setSelectionSymbol();
+      if (!this.selectDijit.isActive()) {
+        this.selectDijit.activate();
+      }
+    },
+
+    onOpen: function() {
+      WidgetManager.getInstance().activateWidget(this);
     },
 
     onDestroy: function() {
+      if (this.selectDijit.isActive()) {
+        this.selectDijit.deactivate();
+      }
       this._clearAllSelections();
     },
 
     _initLayers: function(layerInfoArray) {
-      this.layerInfoArray = layerInfoArray;
+      this.layerObjectArray = [];
       this.layerItems = [];
       this.selectionSymbols = {};
 
       html.empty(this.layerItemsNode);
+      this.shelter.show();
 
-      array.forEach(layerInfoArray, lang.hitch(this, function(layerInfo) {
-        var visible = layerInfo.isShowInMap() && layerInfo.isInScale();
+      all(this._obtainLayerObjects(layerInfoArray)).then(lang.hitch(this, function(layerObjects) {
+        array.forEach(layerObjects, lang.hitch(this, function(layerObject, index) {
+          // hide from the layer list if layerobject is undefined or there is no objectIdField
+          if(layerObject && layerObject.objectIdField) {
+            var layerInfo = layerInfoArray[index];
+            var visible = layerInfo.isShowInMap() && layerInfo.isInScale();
 
-        var item = new SelectableLayerItem({
-          layerInfo: layerInfo,
-          checked: visible,
-          layerVisible: visible,
-          folderUrl: this.folderUrl,
-          allowExport: this.config ? this.config.allowExport : false,
-          map: this.map,
-          nls: this.nls
-        });
-        this.own(on(item, 'switchToDetails', lang.hitch(this, this._switchToDetails)));
-        this.own(on(item, 'stateChange', lang.hitch(this, function() {
-          this.shelter.show();
-          this._getSelectableLayers().then(lang.hitch(this, function(layerObjects){
-            this.selectDijit.setFeatureLayers(layerObjects);
-            this.shelter.hide();
-          }));
-        })));
-        html.place(item.domNode, this.layerItemsNode);
-        item.startup();
+            var item = new SelectableLayerItem({
+              layerInfo: layerInfo,
+              checked: visible,
+              layerVisible: visible,
+              folderUrl: this.folderUrl,
+              allowExport: this.config ? this.config.allowExport : false,
+              map: this.map,
+              nls: this.nls
+            });
+            this.own(on(item, 'switchToDetails', lang.hitch(this, this._switchToDetails)));
+            this.own(on(item, 'stateChange', lang.hitch(this, function() {
+              this.shelter.show();
+              this.selectDijit.setFeatureLayers(this._getSelectableLayers());
+              this.shelter.hide();
+            })));
+            item.init(layerObject);
+            html.place(item.domNode, this.layerItemsNode);
+            item.startup();
 
-        this.layerItems.push(item);
-      }));
+            this.layerItems.push(item);
+            this.layerObjectArray.push(layerObject);
 
-      this._getSelectableLayers().then(lang.hitch(this, function(layerObjects){
-        this.selectDijit.setFeatureLayers(layerObjects);
-        this.shelter.hide();
-      }));
+            if(!layerObject.getSelectionSymbol()){
+              this._setDefaultSymbol(layerObject);
+            }
 
-      this._getLayerObjects().then(lang.hitch(this, function(layerObjects) {
-        array.forEach(layerObjects, function(layerObject) {
-          if(!layerObject.getSelectionSymbol()){
-            this._setDefaultSymbol(layerObject);
+            var symbol = layerObject.getSelectionSymbol();
+            this.selectionSymbols[layerObject.id] = symbol.toJson();
           }
-
-          var symbol = layerObject.getSelectionSymbol();
-          this.selectionSymbols[layerObject.id] = symbol.toJson();
-        }, this);
-
+        }));
+        this.selectDijit.setFeatureLayers(this._getSelectableLayers());
         this._setSelectionSymbol();
+        this.shelter.hide();
       }));
     },
 
     _setSelectionSymbol: function(){
-      this._getLayerObjects().then(lang.hitch(this, function(layerObjects) {
-        array.forEach(layerObjects, function(layerObject) {
-          this._setDefaultSymbol(layerObject);
-        }, this);
-      }));
+      array.forEach(this.layerObjectArray, function(layerObject) {
+        this._setDefaultSymbol(layerObject);
+      }, this);
     },
 
     _setDefaultSymbol: function(layerObject) {
@@ -204,14 +219,12 @@ SelectableLayerItem, FeatureItem) {
     },
 
     _restoreSelectionSymbol: function() {
-      this._getLayerObjects().then(lang.hitch(this, function(layerObjects) {
-        array.forEach(layerObjects, function(layerObject) {
-          var symbolJson = this.selectionSymbols[layerObject.id];
-          if(symbolJson) {
-            layerObject.setSelectionSymbol(SymbolJsonUtils.fromJson(symbolJson));
-          }
-        }, this);
-      }));
+      array.forEach(this.layerObjectArray, function(layerObject) {
+        var symbolJson = this.selectionSymbols[layerObject.id];
+        if(symbolJson) {
+          layerObject.setSelectionSymbol(SymbolJsonUtils.fromJson(symbolJson));
+        }
+      }, this);
     },
 
     _layerVisibilityChanged: function() {
@@ -221,53 +234,34 @@ SelectableLayerItem, FeatureItem) {
     },
 
     _getSelectableLayers: function() {
-      var retDef = new Deferred();
-
-      var selectedLayerInfo = [];
+      var layers = [];
       array.forEach(this.layerItems, function(layerItem) {
         if(layerItem.isLayerVisible() && layerItem.isChecked()) {
-          selectedLayerInfo.push(layerItem.layerInfo);
+          layers.push(layerItem.featureLayer);
         }
       }, this);
 
-      this._getLayerObjects(selectedLayerInfo).then(function(layerObjects){
-        retDef.resolve(layerObjects);
-      });
-
-      return retDef;
+      return layers;
     },
 
     _clearAllSelections: function() {
       var selectionMgr = SelectionManager.getInstance();
-      this._getLayerObjects().then(function(layerObjects){
-        array.forEach(layerObjects, function(layerObject) {
-          selectionMgr.clearSelection(layerObject);
-        });
+      array.forEach(this.layerObjectArray, function(layerObject) {
+        selectionMgr.clearSelection(layerObject);
       });
     },
 
-    _getLayerObjects: function(layerInfoArray) {
-      var retDef = new Deferred();
-
-      if(!layerInfoArray) {
-        layerInfoArray = this.layerInfoArray;
-      }
-
-      var defs = array.map(layerInfoArray, function(layerInfo){
+    _obtainLayerObjects: function(layerInfoArray) {
+      return array.map(layerInfoArray, function(layerInfo) {
         return layerInfo.getLayerObject();
       });
-
-      all(defs).then(function(layerObjects){
-        retDef.resolve(layerObjects);
-      });
-
-      return retDef;
     },
 
     _switchToDetails: function(layerItem) {
       html.empty(this.featureContent);
       this.viewStack.switchView(1);
       this.selectedLayerName.innerHTML = layerItem.layerName;
+      this.selectedLayerName.title = layerItem.layerName;
 
       layerItem.layerInfo.getLayerObject().then(lang.hitch(this, function(layerObject) {
         var selectedFeatures = layerObject.getSelectedFeatures();

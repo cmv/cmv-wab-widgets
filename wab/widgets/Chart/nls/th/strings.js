@@ -43,5 +43,7 @@ define({
   "yards": "หลา",
   "nauticalMiles": "ไมล์ทะเล",
   "back": "กลับ",
-  "execute": "ปฏิบัติ"
+  "execute": "ปฏิบัติ",
+  "enlarge": "ขยาย",
+  "setting": "การตั้งค่า"
 });

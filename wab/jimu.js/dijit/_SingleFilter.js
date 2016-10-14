@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,10 +23,8 @@ define([
   'dojo/_base/lang',
   'dojo/_base/html',
   'dojo/_base/array',
-  'dojo/json',
   'dojo/on',
   'dojo/store/Memory',
-  'esri/request',
   'jimu/utils',
   'jimu/dijit/CheckBox',
   'dijit/form/Select',
@@ -36,7 +34,7 @@ define([
   'dijit/form/NumberTextBox'
 ],
 function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, lang,
-  html, array, json, on, Memory, esriRequest, jimuUtils) {
+  html, array, on, Memory, jimuUtils) {
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
     templateString:template,
     baseClass: 'jimu-single-filter',
@@ -91,8 +89,12 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
         }
         part.interactiveObj = {
           prompt: this.promptTB.get('value'),
-          hint: this.hintTB.get('value')
+          hint: this.hintTB.get('value'),
+          cascade: false
         };
+        if(this.uniqueRadio && this.uniqueRadio.checked && this.cbxCascade.getValue()){
+          part.interactiveObj.cascade = true;
+        }
       }
       part.fieldObj = {
         name:fieldInfo.name,
@@ -359,11 +361,11 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
         version = parseFloat(this.layerInfo.currentVersion);
       }
 
-      //StreamServer doesn't provide API interface to get unique values
-      if (version < 10.1 || this._isStreamServer(this.url)) {
+      if(!this._isServiceSupportDistinctValues(this.url, this.layerInfo)){
         html.destroy(this.uniqueTd);
         this.uniqueRadio = null;
       }
+
       var fields = this.layerInfo.fields;
       if (fields && fields.length > 0) {
         fields = array.filter(fields, lang.hitch(this, function(fieldInfo) {
@@ -372,12 +374,36 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
         this._enableRadios();
         this._initFieldsSelect(fields);
       }
+
+      this.cbxCascade.setLabel(window.jimuNls.filterBuilder.cascadeFilterTip);
+
+      html.addClass(this.cbxCascade.domNode, 'cascade-checkbox');
+    },
+
+    _isServiceSupportDistinctValues: function(url, layerDefinition){
+      //StreamServer doesn't provide API interface to get unique values
+      if(this._isStreamServer(url)){
+        return false;
+      }
+      // if(this._isImageServer(url)){
+      // return layerDefinition.advancedQueryCapabilities && layerDefinition.advancedQueryCapabilities.supportsDistinct;
+      // }
+      //MapServer or FeatureServer
+      var version = parseFloat(layerDefinition.currentVersion);
+      return version >= 10.1;
     },
 
     _isStreamServer: function(url){
       url = url || "";
       url = url.replace(/\/*$/g, '');
       var reg = /\/StreamServer$/gi;
+      return reg.test(url);
+    },
+
+    _isImageServer: function(url){
+      url = url || "";
+      url = url.replace(/\/*$/g, '');
+      var reg = /\/ImageServer$/gi;
       return reg.test(url);
     },
 
@@ -591,6 +617,11 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
             this._updatePrompt();
             this.promptTB.set('value', interactiveObj.prompt || '');
             this.hintTB.set('value', interactiveObj.hint || '');
+            if(this.part.valueObj.type === 'unique' && interactiveObj.cascade){
+              this.cbxCascade.check();
+            }else{
+              this.cbxCascade.uncheck();
+            }
           }
         }), 100);
 
@@ -672,6 +703,22 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
       }
 
       this._resetByFieldAndOperation();
+    },
+
+    _updateValueTypeClass: function(){
+      html.removeClass(this.domNode, 'value-type');
+      html.removeClass(this.domNode, 'field-type');
+      html.removeClass(this.domNode, 'unique-type');
+      if(this.valueRadio.checked){
+        html.addClass(this.domNode, 'value-type');
+        this.cbxCascade.uncheck();
+      }else if(this.fieldRadio.checked){
+        html.addClass(this.domNode, 'field-type');
+        this.cbxCascade.uncheck();
+      }else{
+        html.addClass(this.domNode, 'unique-type');
+        this.cbxCascade.check();
+      }
     },
 
     _enableRadios:function(){
@@ -764,6 +811,8 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
       }
 
       this._updateUIOfAttrValueContainer(fieldInfo, operator, valueObj);
+
+      this._updateValueTypeClass();
     },
 
     _updateUIOfAttrValueContainer:function(fieldInfo, operator,/* optional */ valueObj){
@@ -1022,39 +1071,24 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
           var item = this._getSelectedFilteringItem(this.fieldsSelect);
           if(item){
             //http://jonq/arcgis/rest/services/BugFolder/BUG_000087622_CodedValue/FeatureServer/0
-            var url = this.url + "/generateRenderer";
-            var classificationDef = {
-              "type": "uniqueValueDef",
-              "uniqueValueFields": [item.name]
-            };
-            var str = json.stringify(classificationDef);
-            esriRequest({
-              url:url,
-              content:{
-                classificationDef:str,
-                f:'json'
-              },
-              handleAs:'json',
-              callbackParamName:'callback',
-              timeout:15000
-            }).then(lang.hitch(this, function(response){
+            var valuesDef = jimuUtils.getUniqueValues(this.url, item.name, null);
+            valuesDef.then(lang.hitch(this, function(values){
               if(!this.domNode){
                 return;
               }
-              var uniqueValueInfos = response && response.uniqueValueInfos;
+
               var fieldInfo = this._getSelectedFilteringItem(this.fieldsSelect);
-              if(uniqueValueInfos && fieldInfo && item.id === fieldInfo.id){
+              if(values && fieldInfo && item.id === fieldInfo.id){
                 this.uniqueValuesSelect.store.setData([]);
                 var selectedId = -1;
                 //don't select the first value by default, issue #2477
-                /*if(uniqueValueInfos.length > 0){
+                /*if(values.length > 0){
                   selectedId = 0;
                 }*/
 
                 var hasCodedValues = this._hasCodedValues(fieldInfo);
 
-                var data = array.map(uniqueValueInfos, lang.hitch(this, function(info, index){
-                  var value = info.value;
+                var data = array.map(values, lang.hitch(this, function(value, index){
                   var label = value;
                   if(fieldInfo.shortType === 'number'){
                     value = parseFloat(value);

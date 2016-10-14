@@ -9,7 +9,7 @@ define({
   "fieldNames": "字段名称",
   "lifecyclePhaseFieldName": "LIFECYCLEPHASE",
   "setSource": "设置",
-  "defaultFieldName": "severity",
+  "defaultFieldName": "严重性",
   "warning": "输入不正确",
   "includeDefaultFieldName": "必须选择默认字段名称",
   "selectFieldWarning": "应至少存在一个可见字段",

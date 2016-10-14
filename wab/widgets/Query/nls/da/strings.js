@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Attributkriterier",
   "spatialFilter": "Spatialt filter",
   "value": "VÆRDI",
-  "noAttributeSpatialFilterTip": "Ingen filtre defineret. Alle objekter vil blive returneret."
+  "noAttributeSpatialFilterTip": "Ingen filtre defineret. Alle objekter vil blive returneret.",
+  "showAllRelatedRecords": "Vis alle relaterede poster"
 });

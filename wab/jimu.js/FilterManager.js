@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@
 define(['dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/topic',
+    'esri/lang',
     './LayerInfos/LayerInfos'
   ],
-  function(declare, lang, topic,
+  function(declare, lang, topic, esriLnag,
     LayerInfos) {
     var instance = null;
 
@@ -29,8 +30,11 @@ define(['dojo/_base/declare',
        *   layerId: {
        *     definitionExpression: //layer's definitionExpression
        *     filterExprs: {
-       *       widgetId: exp
-       *     }
+       *        // widgetId: filterExpr
+       *      },
+       *      mapFilterControls: {
+       *        // widgetId: {enable, useAND, priority}
+       *      }
        *   }
        * }
        * @type {[type]}
@@ -52,14 +56,24 @@ define(['dojo/_base/declare',
         topic.subscribe('widgetDestroyed', lang.hitch(this, this._onWidgetDestroyed));
       },
 
+      /**
+       * deprecated
+       */
       getWidgetFilter: function(layerId, widgetId) {
         var prop = layerId + '.filterExprs.' + widgetId;
         return lang.getObject(prop, false, this._filters);
       },
 
-      applyWidgetFilter: function(layerId, widgetId, expression) {
-        var prop = layerId + '.filterExprs.' + widgetId;
-        lang.setObject(prop, expression, this._filters);
+      /**
+       * apply Filter expression to a layer
+       * @param  {[type]} layerId         [description]
+       * @param  {[type]} widgetId        [description]
+       * @param  {[type]} expression      [description]
+       * @param  {[type]} enableMapFilter [true/false or null or undefined]
+       * @param  {[type]} useAND [true/false or null or undefined]
+       */
+      applyWidgetFilter: function(layerId, widgetId, expression, enableMapFilter, useAND) {
+        this._setFilterExp(layerId, widgetId, expression, enableMapFilter, useAND);
 
         var layerInfo = this.layerInfos.getLayerInfoById(layerId);
         var filterExp = this._getFilterExp(layerId);
@@ -83,12 +97,15 @@ define(['dojo/_base/declare',
       _onWidgetDestroyed: function(w) {
         for (var layerId in this._filters) {
           if (this._filters[layerId]) {
-            var filterExprs = this._filters[layerId];
-            if (filterExprs) {
-              for (var widgetId in filterExprs) {
-                if (widgetId === w.id) {
-                  delete filterExprs[widgetId];
-                }
+            var filterObj = this._filters[layerId];
+            if (filterObj) {
+              var filterExprs = filterObj.filterExprs;
+              var mapFilterControls = filterObj.mapFilterControls;
+              if (filterExprs) {
+                delete filterExprs[w];
+              }
+              if (mapFilterControls) {
+                delete mapFilterControls[w];
               }
             }
           }
@@ -102,10 +119,67 @@ define(['dojo/_base/declare',
               definitionExpression: layerInfo.getFilter(),
               filterExprs: {
                 // widgetId: filterExpr
+              },
+              mapFilterControls: {
+                // widgetId: {enable, useAND, priority}
               }
             };
           }
         }));
+      },
+
+      _getPriorityOfMapFilter: function(layerId) {
+        var mapFilterControls = lang.getObject(layerId + '.mapFilterControls',
+          false, this._filters);
+        var count = 0;
+        for (var p in mapFilterControls) {
+          var control = mapFilterControls[p];
+          if (control.priority > count) {
+            count = control.priority;
+          }
+        }
+
+        return count;
+      },
+
+      _getMapFilterControl: function(layerId) {
+        var mapFilterControls = lang.getObject(layerId + '.mapFilterControls',
+          false, this._filters);
+        var count = 0;
+        var priorityControl = null;
+        for (var p in mapFilterControls) {
+          var control = mapFilterControls[p];
+          if (control.priority > count) {
+            priorityControl = control;
+          }
+        }
+
+        return priorityControl;
+      },
+
+      _setFilterExp: function(layerId, widgetId, expression, enableMapFilter, useAND) {
+        var prop = layerId + '.filterExprs.' + widgetId;
+        var mapFilterControl = layerId + '.mapFilterControls.' + widgetId;
+        if (!expression) {
+          if (lang.getObject(prop, false, this._filters)) {
+            delete this._filters[layerId].filterExprs[widgetId];
+          }
+          if (lang.getObject(mapFilterControl, false, this._filters)) {
+            delete this._filters[layerId].mapFilterControls[widgetId];
+          }
+          return;
+        }
+
+        lang.setObject(prop, expression, this._filters);
+
+        if (esriLnag.isDefined(enableMapFilter)) {
+          var priority = this._getPriorityOfMapFilter(layerId);
+          lang.setObject(mapFilterControl, {
+            enable: enableMapFilter,
+            useAND: useAND,
+            priority: priority + 1
+          }, this._filters);
+        }
       },
 
       _getFilterExp: function(layerId) {
@@ -116,9 +190,7 @@ define(['dojo/_base/declare',
         var parts = [];
         var dexp = this._filters[layerId].definitionExpression;
         var filterExprs = this._filters[layerId].filterExprs;
-        if (dexp) {
-          parts.push(dexp);
-        }
+        var mfControl = this._getMapFilterControl(layerId);
 
         for (var p in filterExprs) {
           var expr = filterExprs[p];
@@ -127,7 +199,18 @@ define(['dojo/_base/declare',
           }
         }
 
-        return parts.join(' AND ');
+        var widgetFilter = parts.join(' AND ');
+        if ((dexp && mfControl && mfControl.enable) || (dexp && mfControl === null)) {
+          if (!widgetFilter) {
+            return dexp;
+          } else if (mfControl && mfControl.useAND === false) {
+            return '(' + dexp + ') OR ' + widgetFilter;
+          } else {
+            return '(' + dexp + ') AND ' + widgetFilter;
+          }
+        } else {
+          return widgetFilter;
+        }
       }
     });
 

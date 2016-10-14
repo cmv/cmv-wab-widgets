@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -395,7 +395,7 @@ SpatialReference, webMercatorUtils) {
       if (this.layerObject) {
         def.resolve(this.layerObject);
       } else {
-        def.reject("layerObject is null");
+        def.resolve(null);
       }
       return def;
     },
@@ -576,7 +576,13 @@ SpatialReference, webMercatorUtils) {
       return def;
     },
 
-    getRelatedTableInfoArray: function() {
+    // summary:
+    //   get related tableInfo array
+    // parameters:
+    //   relationshipRole: optional
+    //       "esriRelRoleOrigin"
+    //       "esriRelRoleDestination"
+    getRelatedTableInfoArray: function(relationshipRole) {
       var def = new Deferred();
       def.resolve([]);
       return def;
@@ -678,6 +684,21 @@ SpatialReference, webMercatorUtils) {
       // implemented by sub class.
     },
 
+    isPopupEnabled: function() {
+      // implemented by sub class.
+      // default reture false;
+      return false;
+    },
+
+
+    // summary:
+    //   get capabilities that defined in the webmap
+    // descriptors:
+    //   return null if no capabilities.
+    getCapabilitiesOfWebMap: function() {
+      return this.originOperLayer.capabilities;
+    },
+
     /****************
      * Event
      ***************/
@@ -695,7 +716,7 @@ SpatialReference, webMercatorUtils) {
                                lang.hitch(this, this._onFilterChanged));
         this._eventHandles.push(handle);
 
-        // temporary code for bind setRenderer event, just for featureLayer currentlly.
+        // setRenderer event, just for the layer that has 'setRenderer' method.
         handle = aspect.after(this.layerObject,
                               'setRenderer',
                               lang.hitch(this, this._onRendererChanged));

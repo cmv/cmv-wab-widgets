@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Kayıt kaydedildiğinde detayın seçim kümesinden kaldırılması seçeneği. Bu, seçilen tek kayıt ise panel yeniden şablon sayfasına döndürülür.",
     "useFilterEditor": "Detay şablonu filtresini kullan",
     "useFilterEditorTip": "Bir katmanın şablonlarını görüntüleme veya şablonları ada göre arama özelliğini sağlayan Filtre Şablonu seçiciyi kullanma seçeneği.",
+    "listenToGroupFilter": "Grup Filtresi aracından alınan filtre değerlerini Ön Ayarlı alanlara uygulama",
+    "listenToGroupFilterTip": "Grup Filtresi aracında bir filtre uygulandığında, değeri Ön Ayarlı değer listesindeki eşleşen bir alana uygulayın.",
+    "keepTemplateActive": "Seçilen şablonu etkin tutma",
+    "keepTemplateActiveTip": "Şablon seçici gösterildiğinde, daha önceden seçilmiş bir şablon varsa, bunu yeniden seçin.",
     "layerSettingsTable": {
       "allowDelete": "Silmeye İzin Ver",
       "allowDeleteTip": "Kullanıcının bir detayı silmesine izin veren seçenektir; katman silmeyi desteklemiyorsa devre dışı bırakılır",
@@ -27,9 +31,10 @@ define({
       "fields": "Alanlar",
       "fieldsTip": "Düzenlenecek alanları değiştirin ve Akıllı Öznitelikleri tanımlayın",
       "description": "Açıklama",
-      "descriptionTip": "İsteğe bağlı olarak öznitelik sayfasının en üstünde görüntülemek istediğiniz metni girin."
+      "descriptionTip": "Öznitelik sayfasının en üstünde görüntülemek üzere metin girme seçeneği."
     },
-    "editFieldError": "Alan değişiklikleri ve Akıllı öznitelikler düzenlenemeyen katmanlarda kullanılamaz"
+    "editFieldError": "Alan değişiklikleri ve Akıllı öznitelikler düzenlenemeyen katmanlarda kullanılamaz",
+    "noConfigedLayersError": "Akıllı Düzenleyici için bir veya birkaç düzenlenebilir katman gerekir"
   },
   "editDescriptionPage": {
     "title": "<b>${layername}</b> için öznitelik genel görünüm metnini tanımlayın "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Tanımlı ölçütlerden gelen SQL biçimindeki sonuç ifadesi",
       "actions": "Kriterler",
       "actionsTip": "Kural sırasını değiştirin ve tetiklenme ölçütlerini tanımlayın"
+    },
+    "actions": {
+      "hide": "Gizle",
+      "required": "Gerekli",
+      "disabled": "Pasifleştir"
     }
   },
   "filterPage": {
     "submitHidden": "Gizli olduğunda bile bu alan için öznitelik verileri gönderilsin mi?",
-    "title": "${action} kuralı için ifade yapılandırın",
+    "title": "${action} kuralı için ifade yapılandırma",
     "filterBuilder": "Kayıt aşağıdaki deyimlerin ${any_or_all} tanesiyle eşleştiğinde alan üzerinde eylemi gerçekleştir",
     "noFilterTip": "Aşağıdaki araçları kullanarak eylemin etkin olduğu deyimi tanımlayın."
   }

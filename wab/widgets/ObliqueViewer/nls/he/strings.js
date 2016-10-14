@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "מדוד גובה",
   "intialScaleLabel": "בחר קנה מידה התחלתי עבור תמונות אלכסוניות",
   "smallBuildingLabel": "שטח בנוי: בניין קטן",
-  "buildingLabel": "שטח בנוי: בניין"
+  "buildingLabel": "שטח בנוי: בניין",
+  "azimuthChangeNotification": "אין מידע בכיוון שנבחר."
 });

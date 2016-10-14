@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Matuoti aukštį",
   "intialScaleLabel": "Pasirinkti aerofotonuotraukų pradinį mastelį",
   "smallBuildingLabel": "Miesto teritorija: mažas pastatas",
-  "buildingLabel": "Miesto teritorija: pastatas"
+  "buildingLabel": "Miesto teritorija: pastatas",
+  "azimuthChangeNotification": "Pasirinktoje kryptyje nėra duomenų."
 });

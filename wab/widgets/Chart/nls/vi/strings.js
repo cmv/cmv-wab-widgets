@@ -43,5 +43,7 @@ define({
   "yards": "Thước",
   "nauticalMiles": "Hải lý",
   "back": "Quay lại",
-  "execute": "Thực hiện"
+  "execute": "Thực hiện",
+  "enlarge": "Phóng to",
+  "setting": "Thiết lập"
 });

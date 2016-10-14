@@ -1,15 +1,40 @@
-<div style="width:100%;height:100%;overflow-y:auto">
+<div style="width:100%;height:100%;overflow-y:auto;">
 
    <!-- <div data-dojo-type="dijit/layout/ContentPane" style="height:100%;width:100%"> -->
         <div class="widgetDescription" data-dojo-attach-point="widgetDescription"></div>
         <form data-dojo-attach-point="inputForm">
         <div class="divCheckPlot">
+        	<table>
+        		<tr>
+        			<td class="optionStyle"><input type="checkbox" id="chkboxPlotOnly" data-dojo-attach-point="chkboxPlotOnly"><label>${nls.plotOnly}</label></td>
+        		</tr>
+        		<tr>
+        			<td class="optionStyle">
+		        		<label class="labelPad">${nls.projectionChoice}</label>
+		        		<input type="radio" name="rdProjection" id="rdProjectionLat" data-dojo-attach-point="rdProjection" value="latlon" checked><label class="labelPad">${nls.projectionLat}</label>
+		        		<input type="radio" name="rdProjection" id="rdProjectionMap" data-dojo-attach-point="rdProjection" value="map"><label>${nls.projectionMap}</label>
+        			</td>
+        		</tr>
+				<tr>
+					<td>
+						<table width="50%" border=0>
+							<tr>
+								<td width="50%" class="tdClearButton"><div class="clear-CSVresult" data-dojo-attach-point="clearResultsBtn" data-dojo-attach-event="click:clearCSVResults">${nls.clearResults}</div></td>
+					        	<td width="50%" class="tdDownloadButton"><div class="download-CSVresult" data-dojo-attach-point="downloadResultsBtn" data-dojo-attach-event="click:downloadCSVResults">${nls.downloadResults}</div></td>
+							</tr>
+						</table>
+					</td>
+
+		        </tr>
+        	</table>
+<!--
         	<div class="plotChoice"><input type="checkbox" id="chkboxPlotOnly" data-dojo-attach-point="chkboxPlotOnly"><label>${nls.plotOnly}</label></div>
         	<div class="projectionChoice">
         		<label class="labelPad">${nls.projectionChoice}</label>
         		<input type="radio" name="rdProjection" id="rdProjectionLat" data-dojo-attach-point="rdProjection" value="latlon" checked><label class="labelPad">${nls.projectionLat}</label>
         		<input type="radio" name="rdProjection" id="rdProjectionMap" data-dojo-attach-point="rdProjection" value="map"><label>${nls.projectionMap}</label>
         	</div>
+-->
         </div>
         <table data-dojo-attach-point="actionButtonsContainer" cellspacing="0" class="tblActionContainer">
         <tr>
@@ -17,9 +42,7 @@
         		<input type="file" id="csvFileInput" data-dojo-attach-point="csvFileInput" data-dojo-attach-event="change:fileSelected" accept=".csv">
 				<div class="jimu-btn hide" data-dojo-attach-point="showFileDialogBtn" data-dojo-attach-event="click:showFileDialog">${nls.selectCSV}</div>
 			</td>
-        	<td width="25%" class="tdDownloadButton"><div class="download-CSVresult" data-dojo-attach-point="downloadResultsBtn" data-dojo-attach-event="click:downloadCSVResults">${nls.downloadResults}</div></td>
-        	<td width="25%" class="tdClearButton"><div class="clear-CSVresult" data-dojo-attach-point="clearResultsBtn" data-dojo-attach-event="click:clearCSVResults">${nls.clearResults}</div></td>
-        </tr>
+		</tr>
         </table>
         </form>
         <div data-dojo-attach-point="results" class="hide">

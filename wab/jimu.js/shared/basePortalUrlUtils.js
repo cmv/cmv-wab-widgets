@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -308,6 +308,15 @@ define(function() {
       var itemUrl = mo.getItemUrl(_portalUrl, _itemId);
       if(itemUrl){
         itemDataUrl = itemUrl + '/data';
+      }
+      return itemDataUrl;
+    };
+
+    mo.getItemGroupsUrl = function(_portalUrl, _itemId){
+      var itemDataUrl = '';
+      var itemUrl = mo.getItemUrl(_portalUrl, _itemId);
+      if(itemUrl){
+        itemDataUrl = itemUrl + '/groups';
       }
       return itemDataUrl;
     };

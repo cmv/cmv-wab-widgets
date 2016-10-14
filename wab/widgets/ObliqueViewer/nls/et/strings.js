@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Mõõda kõrgust",
   "intialScaleLabel": "Vali kaldpiltide algne mõõtkava",
   "smallBuildingLabel": "Linnapiirkond: väike hoone",
-  "buildingLabel": "Linnapiirkond: hoone"
+  "buildingLabel": "Linnapiirkond: hoone",
+  "azimuthChangeNotification": "Valitud juhises pole andmeid."
 });

@@ -11,3 +11,12 @@
     margin-left: -120px!important;
     
 }
+.widgetIndicator {
+     top:-6px !important;
+}
+.jimu-widget-smartEditor .esriAttributeInspector .dijitTextBox {
+    height: 30px!important;
+}
+.jimu-widget-smartEditor .dijitTextBox {
+    height: 30px!important;
+}

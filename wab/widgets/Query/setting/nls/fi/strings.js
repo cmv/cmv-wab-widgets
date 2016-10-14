@@ -122,5 +122,6 @@ define({
   "uploadImage": "Lataa kuva",
   "attributeCriteira": "Ominaisuusehdot",
   "specifyFilterAtRuntimeTip": "Käyttäjien pitää määrittää parametrit tälle lausekkeelle.",
-  "value": "ARVO"
+  "value": "ARVO",
+  "hideLayersTip": "Poista kyselytulosten karttatasot käytöstä, kun pienoisohjelma on suljettuna."
 });

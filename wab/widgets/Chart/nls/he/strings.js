@@ -43,5 +43,7 @@ define({
   "yards": "יארד",
   "nauticalMiles": "מיילים ימיים",
   "back": "אחורה",
-  "execute": "בצע"
+  "execute": "בצע",
+  "enlarge": "הגדל",
+  "setting": "הגדרה"
 });

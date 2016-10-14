@@ -16,7 +16,7 @@ define({
   "editpageVisible": "Matoma",
   "editpageEditable": "Redaguojama",
   "noLayers": "Galimų redaguoti elementų sluoksnių nėra",
-  "configureFields": "Konfigūruoti sluoksnio laukus",
+  "configureFields": "Konfigūruoti laukus",
   "useFilterEdit": "Naudoti elementų šablonų filtrą",
   "display": "Rodyti",
   "autoApplyEditWhenGeometryIsMoved": "Įrašyti automatiškai, kai geometrija perkeliama",

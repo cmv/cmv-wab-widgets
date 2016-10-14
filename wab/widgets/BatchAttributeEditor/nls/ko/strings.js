@@ -24,6 +24,7 @@ define({
   "filterPopup": "레이어 필터",
   "cancel": "취소",
   "noValue": "값 없음",
+  "emptyString": "빈 문자열",
   "existingValue": "기존 값 유지",
   "newDate": "최신 날짜",
   "valueChooser": "값 선택/입력",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "ID가 ${1}인 ${0} 레이어를 이 맵에서 찾을 수 없습니다. 위젯 구성 후 맵이 변경된 것 같습니다.",
     "queryNullID": "${0}의 피처가 잘못된 ID를 반환했습니다.",
     "noSelectedLayers": "업데이트할 레코드와 함께 선택된 레이어가 없습니다.",
-    "inputValueError": "양식의 값이 잘못되었습니다."
+    "inputValueError": "양식의 값이 잘못되었습니다.",
+    "saveError": "세부정보가 콘솔에 추가된 ${0} 피처를 저장할 수 없음",
+    "requiredValue": "필수 값"
   }
 });

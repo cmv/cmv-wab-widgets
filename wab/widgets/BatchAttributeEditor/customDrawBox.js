@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -213,14 +213,21 @@ function (declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
     _onItemClick : function(event) {
       var target = event.target || event.srcElement;
       var items = query('.draw-item', this.domNode);
-      items.removeClass('selected');
-      html.addClass(target, 'selected');
-      var geotype = target.getAttribute('data-geotype');
-      var commontype = target.getAttribute('data-commontype');
-      var tool = Draw[geotype];
-      this.disableWebMapPopup();
-      this.drawToolBar.activate(tool);
-      this.onIconSelected(target, geotype, commontype);
+      if (html.hasClass(target, 'selected')) {
+        this.deactivate();
+      }
+      else {
+
+        items.removeClass('selected');
+        html.addClass(target, 'selected');
+        var geotype = target.getAttribute('data-geotype');
+        var commontype = target.getAttribute('data-commontype');
+        var tool = Draw[geotype];
+        this.disableWebMapPopup();
+        this.drawToolBar.activate(tool);
+        this.onIconSelected(target, geotype, commontype);
+      }
+
     },
 
     _onDrawEnd : function(event) {

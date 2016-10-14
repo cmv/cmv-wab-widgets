@@ -30,7 +30,7 @@ define({
   "Default": "Standard",
   "Inches": "Zoll",
   "Foot": "Fuß",
-  "Yards": "Yards",
+  "Yards": "Yard",
   "Miles": "Meilen",
   "Nautical_Miles": "Seemeilen",
   "Millimeters": "Millimeter",

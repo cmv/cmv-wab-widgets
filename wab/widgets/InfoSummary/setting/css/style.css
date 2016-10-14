@@ -82,7 +82,7 @@
 }
 
 .jimu-widget-InfoSummary-setting .instruction2{
-  padding-top: 200px;
+  padding-top: 140px;
 }
 
 .jimu-widget-InfoSummary-setting .instruction2 span{
@@ -92,13 +92,13 @@
 .jimu-widget-InfoSummary-setting .panelContent {
   position: relative;
   width: 340px;
-  height: 220px;
+  height: 150px;
 }
 
 .jimu-widget-InfoSummary-setting .page {
   position: relative;
   width: 340px;
-  height: 220px;
+  height: 150px;
   display: block;
   background-color: rgba(0,0,0,0.15);
 }
@@ -115,6 +115,34 @@
 .jimu-rtl .jimu-widget-InfoSummary-setting .mainPanelPreviewContainer {
   height: 270px;
   float: right;
+}
+
+.jimu-widget-InfoSummary-setting .hidePanelContainer {
+  height: auto;
+  float: left;
+  display: block;
+  padding-bottom: 10px;
+}
+
+.jimu-rtl .jimu-widget-InfoSummary-setting .hidePanelContainer {
+  height: auto;
+  float: right;
+  display: block;
+  padding-bottom: 10px;
+}
+
+.jimu-widget-InfoSummary-setting .displayOptionsContainer {
+  height: auto;
+  float: left;
+  display: block;
+  padding-bottom: 10px;
+}
+
+.jimu-rtl .jimu-widget-InfoSummary-setting .displayOptionsContainer {
+  height: auto;
+  float: right;
+  display: block;
+  padding-bottom: 10px;
 }
 
 .jimu-widget-InfoSummary-setting .marginLR20 {
@@ -137,10 +165,20 @@
   margin-right: 30px;
 }
 
+.jimu-widget-InfoSummary-setting .continuousContainer {
+  float: left; 
+  clear: left;
+}
+
+.jimu-rtl .jimu-widget-InfoSummary-setting .continuousContainer {
+  float: right;
+  clear: right;
+}
+
 .jimu-widget-InfoSummary-setting .rightContainer {
   float: left;
   position: relative;
-  height: 270px;
+  height: 210px;
 }
 
 .jimu-rtl .jimu-widget-InfoSummary-setting .rightContainer {
@@ -151,7 +189,7 @@
   float: left; 
   padding-right: 20px;
   position: relative;
-  height: 270px;
+  height: 210px;
 }
 
 .jimu-rtl .jimu-widget-InfoSummary-setting .leftContainer {
@@ -456,6 +494,7 @@
 
 .jimu-widget-InfoSummary-setting .refreshOptions{
   float:right;
+  padding-bottom: 10px;
 }
 
 .jimu-widget-InfoSummary-setting .refreshIntervalTitle{
@@ -509,7 +548,7 @@
 .jimu-widget-InfoSummary-setting .innerMainPanelIcon {
   background-size: contain; 
   width: 310px; 
-  height:220px; 
+  height: 150px; 
   background-repeat: no-repeat; 
   background-position: 50% 50%; 
   margin-left: 15px;
@@ -541,4 +580,25 @@
   background-color: aliceblue;
 }
 
+.jimu-widget-InfoSummary-setting .text-disabled {
+  color: #a0acbf;
+}
+
+.jimu-widget-InfoSummary-setting .note-help {
+  padding-left: 10px;
+  font-style: italic;
+}
+
+.jimu-rtl .jimu-widget-InfoSummary-setting .note-help {
+  padding-right: 10px;
+  font-style: italic;
+}
+
+.jimu-widget-InfoSummary-setting .help-on {
+  display: block;
+}
+
+.jimu-widget-InfoSummary-setting .help-off {
+  display: none;
+}
 

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -245,7 +245,7 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
       }
 
       //options
-      config.keepResultsOnMapAfterCloseWidget = this.cbxKeepResults.getValue();
+      //config.keepResultsOnMapAfterCloseWidget = this.cbxKeepResults.getValue();
       config.singleResultLayer = this.radioOneLayerPerTask.checked;
       config.enableExport = this.cbxExport.getValue();
 
@@ -454,10 +454,10 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
 
     _initOptionsTab: function(){
       //init checkboxes
-      this.cbxKeepResults = new CheckBox({
+      /*this.cbxKeepResults = new CheckBox({
         label: this.nls.keepResultsTip
       });
-      this.cbxKeepResults.placeAt(this.cbxKeepResultsDiv);
+      this.cbxKeepResults.placeAt(this.cbxKeepResultsDiv);*/
 
       this.cbxExport = new CheckBox({label: this.nls.exportTip});
       this.cbxExport.placeAt(this.exportSection);
@@ -504,7 +504,7 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
       this.layerSymbolPicker.reset();
 
       //reset options tab
-      this.cbxKeepResults.uncheck();
+      //this.cbxKeepResults.uncheck();
       this.radioOneLayerPerTask.checked = true;
       this.cbxExport.uncheck();
     },
@@ -715,7 +715,7 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
       }
 
       //reset options
-      this.cbxKeepResults.setValue(config.keepResultsOnMapAfterCloseWidget);
+      //this.cbxKeepResults.setValue(config.keepResultsOnMapAfterCloseWidget);
       if(config.singleResultLayer){
         this.radioOneLayerPerTask.checked = true;
       }else{

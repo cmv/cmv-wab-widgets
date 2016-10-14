@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Pametni uređivač",
+  "noEditPrivileges": "Vaš nalog nema dozvolu za kreiranje ili izmenu podataka.",
+  "widgetActive": "Aktivno",
+  "widgetNotActive": "Nije aktivno",
   "pressStr": "Pritisnite ",
   "ctrlStr": " CTRL ",
   "snapStr": " da biste omogućili snapovanje",
@@ -19,5 +22,6 @@ define({
     "all": "Sve",
     "noAvailableTempaltes": "Nema dostupnih šablona",
     "searchTemplates": "Pretraži šablone"
-  }
+  },
+  "invalidConfiguration": "Vidžet nije konfigurisan ili slojevi u konfiguraciji više nisu na mapi. Otvorite aplikaciju u graditeljskom režimu i ponovo konfigurišite vidžet."
 });

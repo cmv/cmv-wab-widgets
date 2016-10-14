@@ -4,6 +4,8 @@ define({
   "format": "書式設定",
   "layout": "レイアウト",
   "settings": "高度",
+  "labels": "ラベル",
+  "showLabels": "ラベルを表示",
   "mapScaleExtent": "マップ縮尺/範囲",
   "preserve": "マップの状態を維持",
   "mapScale": "縮尺",

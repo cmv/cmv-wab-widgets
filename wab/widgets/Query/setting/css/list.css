@@ -12,7 +12,7 @@
   display: none;
 }
 
-.jimu-widget-query-setting .content{
+.jimu-widget-query-setting > .content{
   position: absolute;
   left: 0;
   right: 0;
@@ -20,7 +20,7 @@
   bottom: 0;
 }
 
-.jimu-widget-query-setting .content > div{
+.jimu-widget-query-setting > .content > div{
   position: absolute;
   top: 0;
   bottom: 0;

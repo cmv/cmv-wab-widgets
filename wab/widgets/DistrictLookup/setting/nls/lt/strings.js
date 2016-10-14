@@ -23,7 +23,7 @@ define({
   },
   "layerSetting": {
     "layerSettingTabTitle": "Paieškos nuostatos",
-    "buttonSet": "Grupė",
+    "buttonSet": "Nustatyti",
     "selectLayersLabel": "Pasirinkite sluoksnį",
     "selectLayersHintText": "Pastaba: naudojama plotų sluoksniui ir jo susijusių taškų sluoksniui pasirinkti.",
     "selectPrecinctSymbolLabel": "Pasirinkti poligono paryškinimo simbolį",
@@ -45,7 +45,7 @@ define({
   "routeSetting": {
     "routeSettingTabTitle": "Krypčių nustatymai",
     "routeServiceUrl": "Maršruto paslauga",
-    "buttonSet": "Grupė",
+    "buttonSet": "Nustatyti",
     "routeServiceUrlHintText": "Patarimas: spustelėkite „Nustatyti“, jei norite naršyti ir pasirinkti tinklo analizės maršruto paslaugą",
     "directionLengthUnit": "Krypties ilgio vienetai",
     "unitsForRouteHintText": "Patarimas: naudojama maršruto nurodytiems vienetams rodyti",

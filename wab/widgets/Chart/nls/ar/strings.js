@@ -43,5 +43,7 @@ define({
   "yards": "ياردة",
   "nauticalMiles": "الأميال البحرية",
   "back": "الخلف",
-  "execute": "تنفيذ"
+  "execute": "تنفيذ",
+  "enlarge": "توسيع",
+  "setting": "إعداد"
 });

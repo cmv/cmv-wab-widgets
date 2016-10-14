@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -87,31 +87,36 @@ define([
 
       createFieldSelection: function(pLayer) {
         var ctlfieldList = [];
+        var restricted = "esriFieldTypeBlob,esriFieldTypeOID";
         array.forEach(this.layerList, lang.hitch(this, function(layer) {
           if(layer.children.length > 0) {
             array.forEach(layer.children, lang.hitch(this, function(child) {
               if(child.id === pLayer) {
                 array.forEach(child.children, lang.hitch(this, function(field) {
-                  var fieldObject = {};
-                  fieldObject.value = field.name;
-                  fieldObject.label = field.label;
-                  fieldObject.selected = false;
-                  ctlfieldList.push(fieldObject);
+                  if(restricted.indexOf(field.fieldType) === -1) {
+                    var fieldObject = {};
+                    fieldObject.value = field.name;
+                    fieldObject.label = field.label;
+                    fieldObject.selected = false;
+                    ctlfieldList.push(fieldObject);
+                  }
                 }));
               }
             }));
           } else {
             if(layer.id === pLayer) {
               array.forEach(layer.layer.fields, lang.hitch(this, function(field) {
-                var fieldObject = {};
-                fieldObject.value = field.name;
-                if(field.alias === "") {
-                  fieldObject.label = field.name;
-                } else {
-                  fieldObject.label = field.alias;
+                if(restricted.indexOf(field.type) === -1) {
+                  var fieldObject = {};
+                  fieldObject.value = field.name;
+                  if(field.alias === "") {
+                    fieldObject.label = field.name;
+                  } else {
+                    fieldObject.label = field.alias;
+                  }
+                  fieldObject.selected = false;
+                  ctlfieldList.push(fieldObject);
                 }
-                fieldObject.selected = false;
-                ctlfieldList.push(fieldObject);
               }));
             }
           }
@@ -140,7 +145,9 @@ define([
         setTimeout(function() {
           var node = query(".jimu-single-filter-parameter");
           var hintNode = query("colgroup", node[0]);
-          domAttr.set(hintNode[0].childNodes[1], "width", "0px");
+          if(hintNode.length > 0) {
+            domAttr.set(hintNode[0].childNodes[1], "width", "0px");
+          }
         }, 200);
 
         array.forEach(this.layerList, lang.hitch(this, function(layer) {
@@ -175,7 +182,9 @@ define([
 
                   var node = query(".jimu-single-filter-parameter");
                   var hintNode = query("colgroup", node[0]);
-                  domAttr.set(hintNode[0].childNodes[1], "width", "0px");
+                  if(hintNode.length > 0) {
+                    domAttr.set(hintNode[0].childNodes[1], "width", "0px");
+                  }
                 }
               }));
             }

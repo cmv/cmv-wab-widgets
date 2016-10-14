@@ -6,6 +6,7 @@ define({
     "yes": "ใช่",
     "no": "ไม่",
     "next": "ถัดไป",
+    "previous": "ก่อนหน้า",
     "back": "กลับ",
     "selected": "เลือก",
     "name": "ชื่อ",
@@ -52,7 +53,11 @@ define({
     "view": "วิว",
     "newText": "ใหม่",
     "edit": "แก้ไข",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "ตาราง",
+    "zoomIn": "ขยายภาพ",
+    "zoomOut": "ย่อภาพ",
+    "continue1": "ต่อไป"
   },
   "errorCode": "รหัส",
   "errorMessage": "ข้อความ",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "ตัวอักษรใหญ่หรือเล็กมีความสำคัญ",
     "notSupportCaseSensitiveTip": "บริการโฮสต์ข้อมูลไม่สนับสนุนการสอบถามเป็นกรณี ๆ",
-    "setFilterTip": "โปรดตั้งค่าตัวกรองให้ถูกต้อง"
+    "setFilterTip": "โปรดตั้งค่าตัวกรองให้ถูกต้อง",
+    "cascadeFilterTip": "แสดงเฉพาะค่าที่กรอง ด้วยสมการก่อนหน้านี้"
   },
   "featureLayerSource": {
     "layer": "ชั้นข้อมูล",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "คลิกเพื่อเรียกขอบเขตแผนที่และชั้นข้อมูลในการมองเห็น เมื่อคุณไม่ได้อยู่ที่หน้าต่างการทำงาน"
   },
   "featureActions": {
+    "featureActions": "ฟีเจอร์ที่ใช้งาน",
     "ZoomTo": "ขยายไปยัง",
     "PanTo": "เลื่อนไปที่",
     "Flash": "แฟลช",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "เพิ่มการเลือก",
     "removeSelectionTip": "นำที่เลือกออก",
     "selectFromCurrentSelectionTip": "เลือกจากที่เลือกไว้แล้ว",
-    "unselectAllSelectionTip": "ยกเลิกการเลือกข้อมูลที่เลือกอยู่ในปัจจุบันทั้งหมด"
+    "unselectAllSelectionTip": "ยกเลิกการเลือกข้อมูลที่เลือกอยู่ในปัจจุบันทั้งหมด",
+    "selectByPolygon": "เลือกข้อมูลด้วยพื้นที่รูปปิด",
+    "selectByCircle": "เลือกข้อมูลด้วยวงกลม",
+    "selectByLine": "เลือกข้อมูลด้วยเส้น",
+    "chooseSelectingTools": "เลือกเครื่องมือที่ใช้เลือกข้อมูล",
+    "darw": "วาด",
+    "drawShap": "วาด"
   },
   "widgetManager": {
     "createWidgetError": "การสร้างวิดเจ็ตมีข้อผิดพลาด",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "เว็บแอป 3 มิติ ไม่ได้รับการสนับสนุนในเบราว์เซอร์ของคุณ"
+  },
+  "map": {
+    "basemapNotAvailable": "ไม่มีแผนที่ฐานให้ใช้งาน",
+    "displayDefaultBasemap": "แสดงแผนที่ฐานเริ่มต้นแทน"
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "มีจำนวนฟีเจอร์ในพื้นที่ที่เลือกไว้บนแผนที่ ซึ่งจะทำให้เสียเวลาในการแสดงข้อมูลทั้งหมด",
+    "askForContinue": "คุณต้องการที่จะทำต่อหรือไม่?"
   }
 });

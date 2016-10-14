@@ -243,6 +243,37 @@ define([
       }, this.layerSwipe);
       this.swipeDijit.startup();
       html.place(this.swipeDijit.domNode, this.map.root, 'before');
+      var hideInfoWindow = this._shouldHideInfoWindow(layerParams);
+      if (hideInfoWindow) {
+        this.map.infoWindow.hide();
+      }
+      this.swipeDijit.on('swipe', lang.hitch(this, function(evt) {
+        var swipeLayers = array.map(evt.layers, function(l) {
+          return l.layer;
+        });
+        var inSwipeLayers = this._shouldHideInfoWindow(swipeLayers);
+        if (inSwipeLayers) {
+          this.map.infoWindow.hide();
+        }
+      }));
+    },
+
+    _shouldHideInfoWindow: function(swipeLayers) {
+      if (!this.map.infoWindow.isShowing) {
+        return false;
+      }
+      var sf = this.map.infoWindow.getSelectedFeature();
+      var inSwipeLayers = swipeLayers && array.some(swipeLayers, function(l) {
+        var sfLayer = sf && sf.getLayer && sf.getLayer();
+        var layerInfo = this.layerInfosObj.getLayerInfoById(l.id);
+        var isSubLayer = sfLayer && layerInfo &&
+          layerInfo.traversal(function(linfo) {
+            return linfo.id === sfLayer.id;
+          });
+        return sfLayer === l || isSubLayer;
+      }, this);
+
+      return inSwipeLayers;
     },
 
     _getLayerParams: function(layerId, isBasemap) {

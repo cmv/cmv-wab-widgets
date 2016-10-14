@@ -9,5 +9,8 @@ define({
   "featureLayers": "Vektorlag",
   "searchTemplates": "Søgeskabeloner",
   "noAvailableTempaltes": "Ingen tilgængelige skabeloner",
-  "noCanCreateLayerAreCurrentlyVisible": "Ingen lag, der kan oprettes, er synlige på nuværende tidspunkt."
+  "noCanCreateLayerAreCurrentlyVisible": "Ingen lag, der kan oprettes, er synlige på nuværende tidspunkt.",
+  "relatedTables": "Relatereder tabeller:",
+  "relatedRecords": "Relaterede poster:",
+  "noRelatedRecotds": "Ingen relaterede poster fundet"
 });

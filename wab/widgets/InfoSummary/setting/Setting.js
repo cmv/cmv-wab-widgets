@@ -17,6 +17,7 @@
 define([
     'dojo/query',
     'dojo/dom-construct',
+    'dojo/dom-class',
     'dojo/_base/declare',
     'dojo/_base/xhr',
     'dojo/_base/Color',
@@ -43,6 +44,7 @@ define([
   function (
     query,
     domConstruct,
+    domClass,
     declare,
     xhr,
     dojoColor,
@@ -82,6 +84,7 @@ define([
         if (opLayers.length === 0) {
           domStyle.set(this.btnAddLayer, "display", "none");
           domStyle.set(this.optionsContainer, "display", "none");
+          domStyle.set(this.displayOptionsContainer, "display", "none");
           this._disableOk();
           new Message({
             message: this.nls.missingLayerInWebMap
@@ -92,6 +95,41 @@ define([
         this.setupRefreshInterval();
         this._getAllLayers();
         this.own(on(this.btnAddLayer, 'click', lang.hitch(this, this._addLayerRow)));
+        this.own(on(this.hidePanelOptions, 'change', lang.hitch(this, function (v) {
+          this.hidePanel = v;
+          this.panelCountOptions.set('disabled', v);
+          this.panelIconOptions.set('disabled', v);
+          var previewContainer;
+          if (v) {
+            html.addClass(this.panelIconOptionsLabel, 'text-disabled');
+            html.addClass(this.panelCountOptionsLabel, 'text-disabled');
+            this.displayPanelIcon = false;
+            previewContainer = query('.mainPanelPreviewContainerOn', this.mainPanelPreviewContainer.domNode)[0];
+            if (previewContainer) {
+              html.removeClass(previewContainer, "mainPanelPreviewContainerOn");
+              html.addClass(previewContainer, "mainPanelPreviewContainerOff");
+            }
+            if (domClass.contains(this.hidePanelHelpText, 'help-off')) {
+              html.removeClass(this.hidePanelHelpText, 'help-off');
+            }
+            html.addClass(this.hidePanelHelpText, 'help-on');
+          } else {
+            html.removeClass(this.panelIconOptionsLabel, 'text-disabled');
+            html.removeClass(this.panelCountOptionsLabel, 'text-disabled');
+            if (this.panelIconOptions.checked) {
+              this.displayPanelIcon = true;
+              previewContainer = query('.mainPanelPreviewContainerOff', this.mainPanelPreviewContainer.domNode)[0];
+              if (previewContainer) {
+                html.removeClass(previewContainer, "mainPanelPreviewContainerOff");
+                html.addClass(previewContainer, "mainPanelPreviewContainerOn");
+              }
+            }
+            if (domClass.contains(this.hidePanelHelpText, 'help-on')) {
+              html.removeClass(this.hidePanelHelpText, 'help-on');
+            }
+            html.addClass(this.hidePanelHelpText, 'help-off');
+          }
+        })));
         this.own(on(this.panelCountOptions, 'change', lang.hitch(this, function (v) {
           this.countEnabled = v;
         })));
@@ -358,6 +396,31 @@ define([
             this.panelCountOptions.set('checked', this.config.countEnabled);
           }
 
+          if (typeof (this.config.hidePanel) !== 'undefined') {
+            this.hidePanel = this.config.hidePanel;
+          } else {
+            this.hidePanel = false;
+          }
+          this.hidePanelOptions.set('checked', this.hidePanel);
+          this.panelCountOptions.set('disabled', this.hidePanel);
+          this.panelIconOptions.set('disabled', this.hidePanel);
+
+          if (this.hidePanel) {
+            html.addClass(this.panelIconOptionsLabel, 'text-disabled');
+            html.addClass(this.panelCountOptionsLabel, 'text-disabled');
+            if (domClass.contains(this.hidePanelHelpText, 'help-off')) {
+              html.removeClass(this.hidePanelHelpText, 'help-off');
+            }
+            html.addClass(this.hidePanelHelpText, 'help-on');
+          } else {
+            html.removeClass(this.panelIconOptionsLabel, 'text-disabled');
+            html.removeClass(this.panelCountOptionsLabel, 'text-disabled');
+            if (domClass.contains(this.hidePanelHelpText, 'help-on')) {
+              html.removeClass(this.hidePanelHelpText, 'help-on');
+            }
+            html.addClass(this.hidePanelHelpText, 'help-off');
+          }
+
           if (this.config.displayPanelIcon) {
             this.panelIconOptions.set('checked', this.config.displayPanelIcon);
           }
@@ -491,8 +554,6 @@ define([
       _addLayerRow: function () {
         this.isInitalLoad = false;
         if (this.displayLayerTable.getRows().length >= this.layer_options.length) {
-          html.removeClass(this.btnAddLayer, "btn-add-section enable");
-          html.addClass(this.btnAddLayer, "btn-add-section-disabled");
           return;
         }
         var result = this.displayLayerTable.addRow({});
@@ -506,6 +567,11 @@ define([
         }
         this._updateLayerLists();
         this._updateLayerListRows(false);
+        if (this.displayLayerTable.getRows().length >= this.layer_options.length) {
+          html.removeClass(this.btnAddLayer, "btn-add-section enable");
+          html.addClass(this.btnAddLayer, "btn-add-section-disabled");
+          return;
+        }
       },
 
       _populateLayerRow: function (lyrInfo, i) {
@@ -772,7 +838,8 @@ define([
               value: selectLayersValue,
               symbolInfo: hasSymbolData ? this.curRow.symbolData : lo.symbolData,
               map: this.map,
-              ac: this.appConfig
+              ac: this.appConfig,
+              hidePanel: this.hidePanel
             };
             var sourceDijit = new SymbolPicker(options);
             sourceDijit._setSymbol();
@@ -890,7 +957,8 @@ define([
           value: selectLayersValue,
           symbolInfo: typeof (this.curRow.symbolData) !== 'undefined' ? this.curRow.symbolData : lo.symbolData,
           map: this.map,
-          ac: this.appConfig
+          ac: this.appConfig,
+          hidePanel: this.hidePanel
         };
         var sourceDijit = new SymbolPicker(options);
 
@@ -1042,6 +1110,8 @@ define([
         this.config.refreshEnabled = this.refreshLayers.length > 0 ? true : false;
         this.config.countEnabled = this.countEnabled;
         this.config.displayPanelIcon = this.displayPanelIcon;
+        this.config.hidePanel = this.hidePanel;
+        this.config.continuousRefreshEnabled = this.hidePanel;
 
         return this.config;
       },

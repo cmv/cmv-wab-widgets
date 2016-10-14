@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ define([
   'dojo/_base/lang',
   'dojo/Deferred',
   'jimu/dijit/LayerChooserFromMap',
-  'jimu/dijit/FeaturelayerChooserFromMap'
+  'jimu/dijit/QueryableLayerChooserFromMap'
 ],
-function(declare, lang, Deferred, LayerChooserFromMap, FeaturelayerChooserFromMap) {
+function(declare, lang, Deferred, LayerChooserFromMap, QueryableLayerChooserFromMap) {
 
-  return declare([FeaturelayerChooserFromMap], {
+  return declare([QueryableLayerChooserFromMap], {
 
     //public methods:
     //getSelectedItems return [{name, url, layerInfo}]
@@ -38,57 +38,26 @@ function(declare, lang, Deferred, LayerChooserFromMap, FeaturelayerChooserFromMa
 
     _customFilter: function(layerInfo){
       var def = new Deferred();
-      layerInfo.getLayerObject().then(lang.hitch(this, function(layer) {
-        if (layer.declaredClass === 'esri.layers.FeatureLayer') {
-          def.resolve(true);
-        } else if (layer.declaredClass === 'esri.layers.ArcGISDynamicMapServiceLayer') {
-          //https://developers.arcgis.com/javascript/3/jsapi/arcgisdynamicmapservicelayer-amd.html#layerdefinitions
-          def.resolve(layer.version >= 10);
-        } else {
-          def.resolve(false);
-        }
-      }), lang.hitch(this, function(err) {
-        console.error(err);
+      if(layerInfo.isTable){
         def.resolve(false);
-      }));
-      return def;
-    },
-
-    _customFilter2: function(layerInfo){
-      var def = new Deferred();
-      if(layerInfo.parentLayerInfo){
-        var ancestorLayerInfo = this._getAncestorLayerInfo(layerInfo);
-        ancestorLayerInfo.getLayerObject().then(lang.hitch(this, function(ancestorLayer){
-          def.resolve(ancestorLayer.declaredClass === 'esri.layers.ArcGISDynamicMapServiceLayer');
-        }), lang.hitch(this, function(err){
+      }else{
+        layerInfo.getLayerObject().then(lang.hitch(this, function(layer) {
+          if (layer.declaredClass === 'esri.layers.ArcGISDynamicMapServiceLayer') {
+            //https://developers.arcgis.com/javascript/3/jsapi/arcgisdynamicmapservicelayer-amd.html#layerdefinitions
+            def.resolve(layer.version >= 10);
+          }else if(layer.declaredClass === 'esri.layers.ArcGISTiledMapServiceLayer'){
+            //Can't set filter for ArcGISTiledMapServiceLayer no matter it supports query or not.
+            def.resolve(false);
+          } else {
+            def.resolve(true);
+          }
+        }), lang.hitch(this, function(err) {
           console.error(err);
           def.resolve(false);
         }));
-      }else{
-        if(layerInfo.declaredClass === 'esri.layers.FeatureLayer'){
-          def.resolve(true);
-        }else if(layerInfo.declaredClass === 'esri.layers.ArcGISDynamicMapServiceLayer'){
-          layerInfo.getLayerObject().then(lang.hitch(this, function(layer){
-            //https://developers.arcgis.com/javascript/3/jsapi/arcgisdynamicmapservicelayer-amd.html#layerdefinitions
-            def.resolve(layer.version >= 10);
-          }), lang.hitch(this, function(err){
-            console.error(err);
-            def.resolve(false);
-          }));
-          def.resolve(true);
-        }else{
-          def.resolve(false);
-        }
       }
 
       return def;
-    },
-
-    _getAncestorLayerInfo: function(layerInfo){
-      while(layerInfo.parentLayerInfo){
-        layerInfo = layerInfo.parentLayerInfo;
-      }
-      return layerInfo;
     }
 
   });

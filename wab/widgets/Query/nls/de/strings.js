@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Attributkriterien",
   "spatialFilter": "Räumlicher Filter",
   "value": "WERT",
-  "noAttributeSpatialFilterTip": "Keine Filter definiert. Alle Features werden zurückgegeben."
+  "noAttributeSpatialFilterTip": "Keine Filter definiert. Alle Features werden zurückgegeben.",
+  "showAllRelatedRecords": "Alle zugehörige Datensätze anzeigen"
 });

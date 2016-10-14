@@ -201,15 +201,45 @@
 {
     display: none;
 }
+
 .jimu-widget-districtlookup .simpleDirections .esriStopsContainer
+{
+    height: 0px;
+    margin: 0px;
+}
+
+.jimu-widget-districtlookup .simpleDirections .esriSearchSourceContainer
 {
     display: none;
 }
-.jimu-widget-districtlookup .simpleDirections .esriResultsPrint
+
+.jimu-widget-districtlookup .getDirectionsBtnContainer
 {
-    margin-top: 5px;
+    display: none;
 }
 
+.jimu-widget-districtlookup .esriStopsTableContainer
+{
+    display: none;
+}
+
+.jimu-widget-districtlookup .esriStopsButtons
+{
+    display: none;
+}
+
+.jimu-widget-districtlookup .simpleDirections .savePrintBtnContainer
+{
+    position: relative;
+    top: 42px;
+    left: 90%;
+    margin: 0px;
+}
+
+.jimu-widget-districtlookup .simpleDirections .esriResultsLoading .esriResultsContainer
+{
+    display: none;
+}
 /*---------------End of styles to override Direction dijit css-------------*/
 
 /*-------------------Styles for popup attachments---------------------------*/
@@ -293,5 +323,10 @@
     float: right;
 }
 
+.esriRtl .jimu-widget-districtlookup .simpleDirections .savePrintBtnContainer
+{
+    left: 0px;
+    right: 90%;
+}
 /*-------------------------------RTL Ends----------------------------------------*/
 

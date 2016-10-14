@@ -36,6 +36,7 @@ define(['jimu/BaseWidget',
 'esri/graphic',
 'esri/geometry/Point',
 'esri/symbols/SimpleMarkerSymbol',
+'esri/symbols/PictureMarkerSymbol',
 'esri/symbols/SimpleLineSymbol',
 'esri/symbols/SimpleFillSymbol',
 'esri/Color',
@@ -48,7 +49,6 @@ define(['jimu/BaseWidget',
 "esri/renderers/jsonUtils",
 './js/ClusterLayer',
 './js/ThemeColorManager',
-'./js/LayerVisibilityManager',
 'esri/layers/LayerDrawingOptions'
 ],
 function (BaseWidget,
@@ -73,6 +73,7 @@ function (BaseWidget,
   Graphic,
   Point,
   SimpleMarkerSymbol,
+  PictureMarkerSymbol,
   SimpleLineSymbol,
   SimpleFillSymbol,
   Color,
@@ -85,7 +86,6 @@ function (BaseWidget,
   jsonUtil,
   ClusterLayer,
   ThemeColorManager,
-  LayerVisibilityManager,
   LayerDrawingOptions
   ) {
   return declare([BaseWidget, _WidgetsInTemplateMixin], {
@@ -97,11 +97,9 @@ function (BaseWidget,
     layerList: {},
     UNIQUE_APPEND_VAL_CL: "_CL",
     widgetChange: false,
-    layerVisibilityManager: null,
     refreshInterval: 0,
     refreshIntervalValue: 0,
     configLayerInfos: [],
-    queryLookupList: [],
     legendNodes: [],
     currentQueryList: [],
     symbols: [],
@@ -109,49 +107,33 @@ function (BaseWidget,
     postCreate: function () {
       this.inherited(arguments);
       this.configLayerInfos = this.config.layerInfos;
-      this.queryLookupList = [];
       this.layerList = {};
-      this.initialLoad = true;
       //populates this.opLayers from this.map and creates the panel
       this._initWidget();
     },
 
     startup: function () {
       this.inherited(arguments);
-      this.mapExtentChangedHandler = this.map.on("extent-change", lang.hitch(this, this._mapExtentChange));
-      this._mapExtentChange();
+      if (!this.hidePanel) {
+        this.mapExtentChangedHandler = this.map.on("extent-change", lang.hitch(this, this._mapExtentChange));
+        this._mapExtentChange();
+      }
     },
 
     onOpen: function () {
       this.widgetChange = false;
 
-      this._updatePanelHeader();
+      if (!this.hidePanel) {
+        this._updatePanelHeader();
+      }
 
       if (this.appConfig.theme.styles && this.appConfig.theme.styles[0]) {
         this._updateStyleColor(this.appConfig.theme.styles[0]);
       }
 
-      if (typeof (this.mapExtentChangedHandler) === 'undefined') {
-        this.mapExtentChangedHandler = this.map.on("extent-change", lang.hitch(this, this._mapExtentChange));
-        this._mapExtentChange();
-      }
-
-      ////helps turn on/off layers when the widget is opened and closed
-      this.layerVisibilityManager = new LayerVisibilityManager({
-        map: this.map,
-        configLayerList: this.layerList,
-        parent: this
-      });
-
-      //if refresh is enabled set refereshInterval on any widget source layers with refresh set to true
-      //and call setInterval to refresh the static graphics
-      if (this.config.refreshEnabled) {
-        this.enableRefresh();
-      }
-
-      this.map.infoWindow.highlight = true;
-
+      var visibleSubLayers = [];
       //update the renderer for the layer in the layer list if a new one has been defined
+      layerLoop:
       for (var key in this.layerList) {
         var layerListLayer = this.layerList[key];
         var li = layerListLayer.li;
@@ -171,16 +153,164 @@ function (BaseWidget,
           lo.refresh();
         }
 
-        if (lo) {
-          if (typeof (lo.visible) !== 'undefined') {
-            if (!lo.visible) {
-              if (domClass.contains("recIcon_" + key, "active")) {
-                domClass.remove("recIcon_" + key, "active");
+        var _Pl;
+        if (lo && lo.layerInfos) {
+          _Pl = lo;
+        } else if (li && typeof (li.parentLayerID) !== 'undefined') {
+          _Pl = this.map.getLayer(li.parentLayerID);
+        }
+
+        var l;
+        if (_Pl && _Pl.visibleLayers) {
+          var _foundIt = false;
+          sub_layers_id_loop:
+          for (var ii = 0; ii < visibleSubLayers.length; ii++) {
+            var subVizLyrId = visibleSubLayers[ii].id;
+            if (subVizLyrId === _Pl.id) {
+              _foundIt = true;
+              break sub_layers_id_loop;
+            }
+          }
+          if (visibleSubLayers.length === 0 || !_foundIt) {
+            visibleSubLayers.push({
+              id: _Pl.id,
+              layers: _Pl.visibleLayers
+            });
+          }
+          var x = 0;
+          subLayerLoop:
+          for (x; x < visibleSubLayers.length; x++) {
+            var o = visibleSubLayers[x];
+            if (o.id === _Pl.id) {
+              break subLayerLoop;
+            }
+          }
+          var visLayers = visibleSubLayers[x].layers;
+          if (_Pl.layerInfos) {
+            //Handle MapService layers
+            if (_Pl.layerInfos.length > 0) {
+              if (li && typeof (li.subLayerId) !== 'undefined') {
+                var inVisLayers = visLayers.indexOf(li.subLayerId) > -1;
+                var plVis = layerListLayer.parentLayerVisible;
+                var loPlVis = layerListLayer.layerObject.parentLayerVisible;
+                if (layerListLayer.type === "ClusterLayer" && (inVisLayers || plVis || loPlVis)) {
+                  layerListLayer.parentLayerVisible = true;
+                  layerListLayer.layerObject.parentLayerVisible = true;
+                  layerListLayer.visible = true;
+                  if (inVisLayers) {
+                    visLayers.splice(visLayers.indexOf(li.subLayerId), 1);
+                  }
+                } else if (inVisLayers || plVis) {
+                  layerListLayer.parentLayerVisible = true;
+                  layerListLayer.visible = true;
+                  if (visLayers.indexOf(li.subLayerId) === -1) {
+                    visLayers.push(li.subLayerId);
+                  }
+                }else {
+                  layerListLayer.parentLayerVisible = false;
+                  layerListLayer.visible = false;
+                  if (inVisLayers) {
+                    visLayers.splice(visLayers.indexOf(li.subLayerId), 1);
+                  }
+                  if (layerListLayer.type === "ClusterLayer") {
+                    layerListLayer.layerObject.parentLayerVisible = false;
+                    if (this.map.graphicsLayerIds.indexOf(layerListLayer.id) > -1) {
+                      l = this.map.getLayer(layerListLayer.id);
+                      l.setVisibility(false);
+                    }
+                  }
+                }
               }
-            } else {
-              if (!domClass.contains("recIcon_" + key, "active")) {
-                domClass.add("recIcon_" + key, "active");
+            }
+            visibleSubLayers[x].layers = visLayers;
+          }
+          this.updatePanelVisibility(layerListLayer, key, layerListLayer);
+        } else if (lo) {
+          //Handle non MapService layers
+          if (layerListLayer.type === "ClusterLayer") {
+            if (lo._parentLayer) {
+              if (this.map.graphicsLayerIds.indexOf(layerListLayer.id) > -1) {
+                l = this.map.getLayer(layerListLayer.id);
+                if (typeof (layerListLayer.layerObject.parentLayerVisible) === 'undefined') {
+                  layerListLayer.parentLayerVisible = lo._parentLayer.visible;
+                  layerListLayer.layerObject.parentLayerVisible = lo._parentLayer.visible;
+                }
+                l.setVisibility(layerListLayer.layerObject.parentLayerVisible);
               }
+              if (lo._parentLayer.setVisibility) {
+                lo._parentLayer.setVisibility(false);
+              }
+            }
+          }
+          this.updatePanelVisibility(lo, key, layerListLayer);
+        }
+      }
+
+      for (var i = 0; i < visibleSubLayers.length; i++) {
+        var parentLayer = this.map.getLayer(visibleSubLayers[i].id);
+        if (parentLayer) {
+          parentLayer.setVisibleLayers(visibleSubLayers[i].layers);
+        }
+      }
+
+      if (!this.hidePanel) {
+        if (typeof (this.mapExtentChangedHandler) === 'undefined') {
+          this.mapExtentChangedHandler = this.map.on("extent-change", lang.hitch(this, this._mapExtentChange));
+          this._mapExtentChange();
+        }
+      }
+
+      //if refresh is enabled set refereshInterval on any widget source layers with refresh set to true
+      //and call setInterval to refresh the static graphics
+      if (this.config.refreshEnabled) {
+        this.enableRefresh();
+      }
+
+      this.map.infoWindow.highlight = true;
+    },
+
+    updatePanelVisibility: function (lo, key, layerListLayer) {
+      if (!this.hidePanel) {
+        if (typeof (lo.visible) !== 'undefined') {
+          var c = dom.byId("recLabel_" + key);
+          if (!lo.visible) {
+            if (domClass.contains("recIcon_" + key, "active")) {
+              domClass.remove("recIcon_" + key, "active");
+            }
+            if (this.config.countEnabled) {
+              if (domClass.contains("recNum_" + key, "recNum")) {
+                domClass.remove("recNum_" + key, "recNum");
+                domClass.add("recNum_" + key, "recNumInActive");
+              }
+            }
+            if (c && c.firstChild) {
+              domClass.add(c.firstChild, "inActive");
+            }
+            if (!domClass.contains("exp_" + key, "expandInActive")) {
+              domClass.add("exp_" + key, "expandInActive");
+            }
+            layerListLayer.toggleLegend.remove();
+            if (domClass.contains("rec_" + key, "rec")) {
+              domClass.add("rec_" + key, "recDefault");
+            }
+          } else {
+            if (!domClass.contains("recIcon_" + key, "active")) {
+              domClass.add("recIcon_" + key, "active");
+            }
+            if (this.config.countEnabled) {
+              if (domClass.contains("recNum_" + key, "recNumInActive")) {
+                domClass.remove("recNum_" + key, "recNumInActive");
+                domClass.add("recNum_" + key, "recNum");
+              }
+            }
+            if (c && c.firstChild) {
+              domClass.remove(c.firstChild, "inActive");
+            }
+            if (domClass.contains("exp_" + key, "expandInActive")) {
+              domClass.remove("exp_" + key, "expandInActive");
+            }
+            if (domClass.contains("rec_" + key, "recDefault")) {
+              domClass.remove("rec_" + key, "recDefault");
             }
           }
         }
@@ -238,16 +368,12 @@ function (BaseWidget,
     },
 
     _updatePanelTime: function (modifiedTime) {
-      var dFormat = {
-        month: '2-digit',
-        day: '2-digit',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      };
-      this.lastUpdated.innerHTML = "<div></div>";
-      this.lastUpdated.innerHTML = new Date(modifiedTime).toLocaleDateString(navigator.language, dFormat);
+      if (!this.hidePanel) {
+        this.lastUpdated.innerHTML = "<div></div>";
+        var _d = new Date(modifiedTime);
+        var _f = { dateFormat: 'shortDateShortTime' };
+        this.lastUpdated.innerHTML = utils.fieldFormatter.getFormattedDate(_d, _f);
+      }
     },
 
     refreshLayers: function () {
@@ -276,7 +402,6 @@ function (BaseWidget,
       }
       if (update) {
         this._updatePanelTime(response.item.modified);
-        console.log(response);
         var featureCollection = response.itemData;
         for (var i = 0; i < featureCollection.layers.length; i++) {
           this._updateLayerItem(featureCollection.layers[i], response.item.modified);
@@ -345,7 +470,7 @@ function (BaseWidget,
           layerListLayer.layerObject.refresh();
           parentLayer.layerObject.refresh();
           parentLayer.featureSet.features = responseFeatureSetFeatures;
-          this.countFeatures(layerListLayer.layerObject, layerListLayer.node);
+          this.countFeatures(layerListLayer);
           if (layerListLayer.layerObject) {
             this._loadList(layerListLayer, true);
           }
@@ -379,6 +504,11 @@ function (BaseWidget,
     },
 
     _initWidget: function () {
+      if (typeof (this.config.hidePanel) !== 'undefined') {
+        this.hidePanel = this.config.hidePanel;
+      }else{
+        this.hidePanel = false;
+      }
       if (this.map.itemId) {
         LayerInfos.getInstance(this.map, this.map.itemInfo)
           .then(lang.hitch(this, function (operLayerInfos) {
@@ -420,17 +550,41 @@ function (BaseWidget,
         if (this.pageHeader) {
           html.removeClass(this.pageHeader, "pageHeaderNoIcon");
           html.removeClass(this.pageHeader, "pageHeaderNoIconRefresh");
-          html.addClass(this.pageHeader, "pageHeader");
+
+          if (this.config.refreshEnabled) {
+            if (this.config.mainPanelText !== "") {
+              html.addClass(this.pageHeader, "pageHeaderRefresh");
+            } else {
+              html.addClass(this.pageHeader, "pageHeaderRefreshNoText");
+            }
+          } else {
+            html.addClass(this.pageHeader, "pageHeader");
+          }
         }
 
         if (this.pageBody) {
           html.removeClass(this.pageBody, "pageBodyNoIcon");
           html.removeClass(this.pageBody, "pageBodyNoIconRefresh");
-          html.addClass(this.pageBody, "pageBody");
+          if (this.config.refreshEnabled) {
+            if (this.config.mainPanelText !== "") {
+              html.addClass(this.pageBody, "pageBodyRefresh");
+            } else {
+              html.addClass(this.pageBody, "pageBodyRefreshNoText");
+            }
+          } else {
+            html.addClass(this.pageBody, "pageBody");
+          }
         }
 
         if (this.pageTitle) {
           html.addClass(this.pageTitle, "pageTitleWidth");
+          if (this.config.refreshEnabled) {
+            html.removeClass(this.pageTitle, "pageTitle");
+            html.addClass(this.pageTitle, "pageTitleRefresh");
+          } else {
+            html.removeClass(this.pageTitle, "pageTitleRefresh");
+            html.addClass(this.pageTitle, "pageTitle");
+          }
         }
 
         panelTitle = this.config.mainPanelText;
@@ -501,11 +655,13 @@ function (BaseWidget,
     _createPanelUI: function (configLayerInfos, jimuLayerInfos) {
       this.numClusterLayers = 0;
 
-      this._updatePanelHeader();
+      if (!this.hidePanel) {
+        this._updatePanelHeader();
+        this._updateUI(null);
+        this._clearChildNodes(this.pageMain);
+        this.updateEnd = [];
+      }
 
-      this._updateUI(null);
-      this._clearChildNodes(this.pageMain);
-      this.updateEnd = [];
       for (var i = 0; i < configLayerInfos.length; i++) {
         var lyrInfo = configLayerInfos[i];
         if (lyrInfo.symbolData.clusterType === 'ThemeCluster') {
@@ -514,14 +670,17 @@ function (BaseWidget,
         var jimuLayerInfo = jimuLayerInfos.getLayerInfoById(lyrInfo.id);
         this._createLayerListItem(lyrInfo, jimuLayerInfo);
       }
-      domConstruct.create("div", {
-        'class': "expandArrow"
-      }, this.pageMain);
 
-      for (var k in this.layerList) {
-        var lyr = this.layerList[k];
-        if (lyr.type !== "ClusterLayer") {
-          this.updateEnd.push(this.own(on(lyr.layerObject, "update-end", lang.hitch(this, this.onUpdateEnd))));
+      if (!this.hidePanel) {
+        domConstruct.create("div", {
+          'class': "expandArrow"
+        }, this.pageMain);
+
+        for (var k in this.layerList) {
+          var lyr = this.layerList[k];
+          if (lyr.type !== "ClusterLayer") {
+            this.updateEnd.push(this.own(on(lyr.layerObject, "update-end", lang.hitch(this, this.onUpdateEnd))));
+          }
         }
       }
 
@@ -536,7 +695,9 @@ function (BaseWidget,
         updateNodes: this.legendNodes,
         layerList: this.layerList,
         theme: this.appConfig.theme,
-        stylename: this.styleName
+        stylename: this.styleName,
+        ph: this.pageHeader,
+        w: window
       });
     },
 
@@ -658,27 +819,28 @@ function (BaseWidget,
       // with a layer that it no longer consumes...if so remove it
       var deleteLayers = [];
       layer_list_loop:
-      for (var l in this.layerList) {
-        var f = false;
-        layer_info_loop:
-        for (var i = 0; i < lInfos.length; i++) {
-          var lo = lInfos[i];
-          var potentialNewClusterID = lo.id + this.UNIQUE_APPEND_VAL_CL;
-          if (potentialNewClusterID === l) {
-            deleteLayers.push(l);
-            f = true;
-            break layer_info_loop;
-          }
-        }
-        if (f) {
-          if (this.map.graphicsLayerIds.indexOf(l) > -1) {
-            this.map.removeLayer(this.layerList[l].layerObject);
-          }
+      for (var id in this.layerList) {
+        var l = this.layerList[id];
+        if (l.type === "ClusterLayer") {
+          layer_info_loop:
+            for (var i = 0; i < lInfos.length; i++) {
+              var lo = lInfos[i];
+              var potentialNewClusterID = lo.id + this.UNIQUE_APPEND_VAL_CL;
+              if (potentialNewClusterID === id) {
+                if (lo.symbolData && !lo.symbolData.clusteringEnabled) {
+                  deleteLayers.push(id);
+                }
+                break layer_info_loop;
+              }
+            }
         }
       }
       if (deleteLayers.length > 0) {
         for (var dl in deleteLayers) {
           if (this.layerList.hasOwnProperty(deleteLayers[dl])) {
+            //  if (this.map.graphicsLayerIds.indexOf(deleteLayers[dl]) > -1) {
+            //    this.map.removeLayer(this.layerList[deleteLayers[dl]].layerObject);
+            //  }
             this.layerList[deleteLayers[dl]].layerObject.destroy();
             delete this.layerList[deleteLayers[dl]];
           }
@@ -690,9 +852,13 @@ function (BaseWidget,
       //var reorderLayers = [];
       var ids = Object.keys(this.layerList).reverse();
       for (var i = 0; i < ids.length; i++) {
-        var l = this.layerList[ids[i]];
+        var id = ids[i];
+        var l = this.layerList[id];
         if (l.type && l.type === "ClusterLayer") {
-          this.map.addLayer(l.layerObject);
+          //if (!(this.map.graphicsLayerIds.indexOf(id) > -1) || !(this.map._layers.indexOf(id) > -1)) {
+          if (this.map.graphicsLayerIds.indexOf(id) === -1) {
+            this.map.addLayer(l.layerObject);
+          }
           //temp = l.layerObject._parentLayer;
           //temp.setVisibility(true);
           //this.own(on(temp, "update-end", lang.hitch(this, this.onUpdateEnd)));
@@ -754,9 +920,11 @@ function (BaseWidget,
             filter: this.supportsFilter && jimuLayerInfo ? jimuLayerInfo.getFilter() : "1=1",
             infoTemplate: infoTemplate
           };
-          this.own(on(l, "update-end", lang.hitch(this, function() {
-            this._loadList(this.layerList[l.id], true);
-          })));
+          if (!this.hidePanel) {
+            this.own(on(l, "update-end", lang.hitch(this, function () {
+              this._loadList(this.layerList[l.id], true);
+            })));
+          }
           this.numClusterLayers += 1;
         } else {
           if (lyr.parentLayerInfo) {
@@ -801,9 +969,11 @@ function (BaseWidget,
             filter: this.supportsFilter && jimuLayerInfo ? jimuLayerInfo.getFilter() : "1=1",
             infoTemplate: infoTemplate
           };
-          this.own(on(l, "update-end", lang.hitch(this, function() {
-            this._loadList(this.layerList[l.id], true);
-          })));
+          if (!this.hidePanel) {
+            this.own(on(l, "update-end", lang.hitch(this, function () {
+              this._loadList(this.layerList[l.id], true);
+            })));
+          }
           this.numClusterLayers += 1;
         } else {
           if (lyr.parentLayerInfo) {
@@ -830,8 +1000,9 @@ function (BaseWidget,
           this.updateRenderer(_id);
         }
       }
-
-      this._addPanelItem(ll ? ll : l ? l : lyr, lyrInfo);
+      if (!this.hidePanel) {
+        this._addPanelItem(ll ? ll : l ? l : lyr, lyrInfo);
+      }
     },
 
     updateRenderer: function (id) {
@@ -862,12 +1033,9 @@ function (BaseWidget,
     },
 
     _addPanelItem: function (layer, lyrInfo) {
-      if (layer.setVisibility) {
-        layer.setVisibility(true);
-      }
-
       var id = layer.visibleLayers ? lyrInfo.id : layer.id;
       var lyrType = this.layerList[id].type;
+      //this.layerList[id].updateList = false;
 
       var rec = domConstruct.create("div", {
         'class': "rec solidBorder",
@@ -884,14 +1052,21 @@ function (BaseWidget,
         id: "recIcon_" + id
       }, rec);
 
+      if (lyrInfo.panelImageData && lyrInfo.panelImageData.toString().indexOf('<img') > -1) {
+        var img = document.createElement('div');
+        img.innerHTML = lyrInfo.panelImageData;
+        var icon = new PictureMarkerSymbol(img.children[0].src, 26, 26);
+        lyrInfo.panelImageData = this._createImageDataDiv(icon, 44, 44, undefined, true).innerHTML;
+      }
       recIcon.innerHTML = lyrInfo.panelImageData;
       domStyle.set(recIcon.firstChild, "border-radius", "41px");
 
       var recLabel;
       var recNum;
-      if(this.config.countEnabled){
+      if (this.config.countEnabled) {
         recLabel = domConstruct.create("div", {
           'class': "recLabel",
+          id: "recLabel_" + id,
           innerHTML: "<p>" + lyrInfo.label + "</p>"
         }, rec);
         html.setStyle(recLabel, "top", "20px");
@@ -903,6 +1078,7 @@ function (BaseWidget,
       } else {
         recLabel = domConstruct.create("div", {
           'class': "recLabelNoCount",
+          id: "recLabel_" + id,
           innerHTML: "<p>" + lyrInfo.label + "</p>"
         }, rec);
       }
@@ -914,7 +1090,8 @@ function (BaseWidget,
         //layer._initFeatures();
       } else if (lyrType === "StreamLayer") {
         this.layerList[id].node = recNum;
-        this.countFeatures(layer, recNum);
+        //this.countFeatures(layer, recNum);
+        this.countFeatures(this.layerList[id]);
         this._addLegend(id, this.layerList[id]);
       }
       else {
@@ -923,11 +1100,11 @@ function (BaseWidget,
       }
 
       on(recIcon, "click", lang.hitch(this, this._toggleLayer, this.layerList[id]));
-      on(rec, "click", lang.hitch(this, this._toggleLegend, this.layerList[id]));
+      this.layerList[id].toggleLegend = on(rec, "click", lang.hitch(this, this._toggleLegend, this.layerList[id]));
 
       if (this.layerList[id].pl) {
         if (!this.layerList[id].pl.featureSet) {
-          this.countFeatures(this.layerList[id].layerObject, recNum);
+          this.countFeatures(this.layerList[id]);
         }
       }
     },
@@ -937,128 +1114,147 @@ function (BaseWidget,
         "class": "legendLayer legendOff",
         "id": "legend_" + id
       }, this.pageMain);
+      if (layerListLayer.type === 'ClusterLayer') {
+        layerListLayer.layerObject.legendNode = layerListLayer.legendNode;
+      }
     },
 
     _loadList: function (lyr, updateCount) {
-      var queries = [];
-      var updateNodes = [];
-      var id = lyr.layerObject.id in this.layerList ? lyr.layerObject.id : lyr.li.id;
-      if (updateCount) {
-        this._addSearching(id);
-      }
-      var popupFields = [];
-      if (lyr.layerObject && lyr.layerObject.infoTemplate) {
-        var fieldInfos = lyr.layerObject.infoTemplate.info.fieldInfos;
-        if (typeof (fieldInfos) !== 'undefined') {
-          for (var i = 0; i < fieldInfos.length; i++) {
-            if (popupFields.length < 4) {
+      if (!this.hidePanel) {
+        var queries = [];
+        var updateNodes = [];
+        var id = lyr.layerObject.id in this.layerList ? lyr.layerObject.id : lyr.li.id;
+        if (updateCount) {
+          this._addSearching(id);
+        }
+        var popupFields = [];
+        var _infoTemp;
+        if (lyr.layerObject && lyr.layerObject.infoTemplate) {
+          _infoTemp = lyr.layerObject.infoTemplate;
+        } else if (lyr.li.infoTemplate) {
+          _infoTemp = lyr.li.infoTemplate;
+        }
+        if (_infoTemp && _infoTemp.info) {
+          var fieldInfos = _infoTemp.info.fieldInfos;
+          if (typeof (fieldInfos) !== 'undefined') {
+            for (var i = 0; i < fieldInfos.length; i++) {
               if (fieldInfos[i].visible) {
                 popupFields.push(fieldInfos[i].fieldName);
               }
             }
           }
         }
-      }
 
-      var displayOptions;
-      if (lyr.li.symbolData) {
-        displayOptions = lyr.li.symbolData.featureDisplayOptions;
-        if (displayOptions) {
-          if (displayOptions.fields) {
-            for (var k = 0; k < displayOptions.fields.length; k++) {
-              if (popupFields.indexOf(displayOptions.fields[k].name) === -1) {
-                popupFields.push(displayOptions.fields[k].name);
+        var displayOptions;
+        if (lyr.li.symbolData) {
+          displayOptions = lyr.li.symbolData.featureDisplayOptions;
+          if (displayOptions) {
+            if (displayOptions.fields) {
+              for (var k = 0; k < displayOptions.fields.length; k++) {
+                if (popupFields.indexOf(displayOptions.fields[k].name) === -1) {
+                  popupFields.push(displayOptions.fields[k].name);
+                }
+              }
+            }
+            if (displayOptions.groupField) {
+              if (popupFields.indexOf(displayOptions.groupField.name) === -1) {
+                popupFields.push(displayOptions.groupField.name);
               }
             }
           }
         }
-      }
 
-      if (popupFields.length === 0) {
-        popupFields = ['*'];
-      }
+        if (popupFields.length === 0 || typeof(_infoTemp) === 'undefined') {
+          popupFields = ['*'];
+        }
 
-      if (popupFields[0] !== '*') {
-        if (lyr.layerObject && lyr.layerObject.objectIdField) {
-          if (popupFields.indexOf(lyr.layerObject.objectIdField) === -1) {
-            popupFields.push(lyr.layerObject.objectIdField);
+        if (popupFields[0] !== '*') {
+          if (lyr.layerObject && lyr.layerObject.objectIdField) {
+            if (popupFields.indexOf(lyr.layerObject.objectIdField) === -1) {
+              popupFields.push(lyr.layerObject.objectIdField);
+            }
           }
         }
-      }
 
-      if (lyr.type === "ClusterLayer") {
-        if (lyr.layerObject.node) {
-          //domClass.add(lyr.layerObject.node.id, 'searching');
-        }
-        var features = [];
-        if (lyr.layerObject.clusterGraphics) {
-          var clusterGraphics = lyr.layerObject.clusterGraphics;
-          for (var z = 0; z < clusterGraphics.length; z++) {
-            var clusterGraphic = clusterGraphics[z];
-            if (clusterGraphic.graphics && clusterGraphic.graphics.length > 0) {
-              for (var f = 0; f < clusterGraphic.graphics.length; f++) {
-                features.push(clusterGraphic.graphics[f]);
+        if (lyr.type === "ClusterLayer") {
+          if (lyr.layerObject.node) {
+            //domClass.add(lyr.layerObject.node.id, 'searching');
+          }
+          var features = [];
+          if (lyr.layerObject.clusterGraphics) {
+            var clusterGraphics = lyr.layerObject.clusterGraphics;
+            for (var z = 0; z < clusterGraphics.length; z++) {
+              var clusterGraphic = clusterGraphics[z];
+              if (clusterGraphic.graphics && clusterGraphic.graphics.length > 0) {
+                for (var f = 0; f < clusterGraphic.graphics.length; f++) {
+                  //Changed for a Sept fix...but it made upgrade not work
+                  // need to verify the new switch will work for the other issue
+                  //var g = new Graphic(clusterGraphic.graphics[f].toJson());
+                  var g = clusterGraphic.graphics[f];
+                  //g.setSymbol(lyr.layerObject._getSym(g));
+                  features.push(g);
+                }
               }
             }
+            setTimeout(lang.hitch(this, function () {
+              this._updateList(features, lyr.legendNode, lyr.layerObject.node, popupFields, updateCount, lyr);
+            }), 100);
+          } else {
+            this._removeSearching(id, true);
           }
-          setTimeout(lang.hitch(this, function () {
-            this._updateList(features, lyr.legendNode, lyr.layerObject.node, popupFields, updateCount, lyr);
-          }), 8);
-        } else {
-          this._removeSearching(id, true);
         }
-      }
 
-      var countLayerTypes = ["StreamLayer", "GeoRSS", "KML", "Feature Layer"];
-      if (lyr.type !== 'ClusterLayer') {
-        if (lyr.pl && lyr.pl.featureSet) {
-          this.getFeatures(lyr, popupFields, updateCount);
-          return;
+        var countLayerTypes = ["StreamLayer", "GeoRSS", "KML", "Feature Layer"];
+        if (lyr.type !== 'ClusterLayer') {
+          if (lyr.pl && lyr.pl.featureSet) {
+            this.getFeatures(lyr, popupFields, updateCount);
+            return;
+          }
+          else if (countLayerTypes.indexOf(lyr.type) > -1 || lyr.pl.type === "CSV") {
+            this.getFeatures(lyr, popupFields, updateCount);
+            return;
+          }
         }
-        else if (countLayerTypes.indexOf(lyr.type) > -1 || lyr.pl.type === "CSV") {
-          this.getFeatures(lyr, popupFields, updateCount);
-          return;
-        }
-      }
 
-      if (lyr.li) {
-        if (lyr.li.url && lyr.type !== "ClusterLayer" && typeof (lyr.queryFeatures) === 'undefined') {
-          var url = lyr.li.url;
-          if (url.indexOf("MapServer") > -1 || url.indexOf("FeatureServer") > -1) {
-            if (this.promises) {
-              this.promises.cancel('redundant', false);
-              this.promises = undefined;
+        if (lyr.li) {
+          if (lyr.li.url && lyr.type !== "ClusterLayer" && typeof (lyr.queryFeatures) === 'undefined') {
+            var url = lyr.li.url;
+            if (url.indexOf("MapServer") > -1 || url.indexOf("FeatureServer") > -1) {
+              if (this.promises) {
+                this.promises.cancel('redundant', false);
+                this.promises = undefined;
+              }
+              var q = new Query();
+              q.where = lyr.filter ? lyr.filter : "1=1";
+              q.geometry = this.map.extent;
+              q.returnGeometry = true;
+              q.outFields = popupFields;
+              var qt = new QueryTask(url);
+              queries.push(qt.execute(q));
+              updateNodes.push({
+                node: lyr.node,
+                legendNode: lyr.legendNode,
+                fields: popupFields,
+                updateCount: updateCount,
+                li: lyr.li
+              });
             }
-            var q = new Query();
-            q.where = lyr.filter ? lyr.filter : "1=1";
-            q.geometry = this.map.extent;
-            q.returnGeometry = true;
-            q.outFields = popupFields;
-            var qt = new QueryTask(url);
-            queries.push(qt.execute(q));
-            updateNodes.push({
-              node: lyr.node,
-              legendNode: lyr.legendNode,
-              fields: popupFields,
-              updateCount: updateCount,
-              li: lyr.li
-            });
           }
         }
-      }
-      if (queries.length > 0) {
-        var promises = all(queries);
-        this.promises = promises.then(lang.hitch(this, function (results) {
-          this.promises = undefined;
-          if (results) {
-            for (var i = 0; i < results.length; i++) {
-              if (results[i]) {
-                var un = updateNodes[i];
-                this._updateList(results[i].features, un.legendNode, un.node, un.fields, un.updateCount, un.li);
+        if (queries.length > 0) {
+          var promises = all(queries);
+          this.promises = promises.then(lang.hitch(this, function (results) {
+            this.promises = undefined;
+            if (results) {
+              for (var i = 0; i < results.length; i++) {
+                if (results[i]) {
+                  var un = updateNodes[i];
+                  this._updateList(results[i].features, un.legendNode, un.node, un.fields, un.updateCount, un.li);
+                }
               }
             }
-          }
-        }));
+          }));
+        }
       }
     },
 
@@ -1088,7 +1284,7 @@ function (BaseWidget,
       var n;
       var potentialNewID = lyrInfo.id + this.UNIQUE_APPEND_VAL_CL;
 
-      if (this.map.graphicsLayerIds.indexOf(potentialNewID) > -1) {
+      if (this.map.graphicsLayerIds.indexOf(potentialNewID) > -1 || this.map._layers.indexOf(potentialNewID) > -1) {
         clusterLayer = this.map.getLayer(potentialNewID);
 
         var reloadData = false;
@@ -1121,6 +1317,7 @@ function (BaseWidget,
         }
 
         clusterLayer.countEnabled = this.config.countEnabled;
+        clusterLayer.hidePanel = this.hidePanel;
 
         if (reloadData) {
           clusterLayer.refreshFeatures(clusterLayer.url);
@@ -1133,6 +1330,7 @@ function (BaseWidget,
           id: potentialNewID,
           map: this.map,
           node: dom.byId("recNum_" + potentialNewID),
+          legendNode: dom.byId("legend_" + potentialNewID),
           infoTemplate: typeof (lyr.infoTemplate) !== 'undefined' ? lyr.infoTemplate : infoTemplate,
           refreshInterval: this.config.refreshInterval,
           refreshEnabled: this.config.refreshEnabled,
@@ -1142,13 +1340,14 @@ function (BaseWidget,
           _styleColor: this._styleColor,
           originOperLayer: originOperLayer,
           countEnabled: this.config.countEnabled,
+          hidePanel: this.hidePanel,
           filter: this.supportsFilter && jimuLayerInfo ? jimuLayerInfo.getFilter() : "1=1"
         });
       }
       return clusterLayer;
     },
 
-    _createImageDataDiv: function (sym, w, h, parent) {
+    _createImageDataDiv: function (sym, w, h, parent, isCustom) {
       var a;
       var symbol = sym;
       if (symbol) {
@@ -1168,8 +1367,8 @@ function (BaseWidget,
         }
         if (typeof (symbol.setWidth) !== 'undefined') {
           if (typeof (symbol.setHeight) !== 'undefined') {
-            symbol.setWidth(width);
-            symbol.setHeight(height);
+            symbol.setWidth(isCustom ? width - (width * 0.25) : width);
+            symbol.setHeight(isCustom ? height - (height * 0.25) : height);
           } else {
             symbol.setWidth(2);
           }
@@ -1196,7 +1395,9 @@ function (BaseWidget,
           updateNodes: this.legendNodes,
           layerList: this.layerList,
           theme: this.appConfig.theme,
-          stylename: styleName
+          stylename: styleName,
+          ph: this.pageHeader,
+          w: window
         });
       }
     },
@@ -1219,6 +1420,10 @@ function (BaseWidget,
       }
 
       if (lyr) {
+        var visScalRange = true;
+        if (lyr.layerObject.hasOwnProperty('visibleAtMapScale')) {
+          visScalRange = lyr.layerObject.visibleAtMapScale;
+        }
         var hasSubLayerId = false;
         if (lyr.li) {
           if (lyr.li.hasOwnProperty("subLayerId")) {
@@ -1227,6 +1432,8 @@ function (BaseWidget,
         }
         var visLayers;
         var l;
+        var c = dom.byId("recLabel_" + id);
+
         if (domClass.contains("recIcon_" + id, "active")) {
           domClass.remove("recIcon_" + id, "active");
           if (hasSubLayerId && lyr.type !== 'ClusterLayer') {
@@ -1239,7 +1446,6 @@ function (BaseWidget,
             lyr.layerObject.setVisibility(true);
           } else if (lyr) {
             lyr.layerObject.setVisibility(false);
-            this.layerList[id].visible = false;
             if (typeof (lyr.pl) !== 'undefined') {
               lyr.pl.visibility = false;
               if (this.map.graphicsLayerIds.indexOf(id) > -1) {
@@ -1248,6 +1454,43 @@ function (BaseWidget,
               }
             }
           }
+          this.layerList[id].visible = false;
+          this.layerList[id].parentLayerVisible = false;
+          if (this.layerList[id].type === 'ClusterLayer') {
+            this.layerList[id].layerObject.parentLayerVisible = false;
+          }
+          this._clearList(this.layerList[id]);
+          //TODO need to call updateExpand here for the appropriate parts
+          if (this.config.countEnabled) {
+            if (domClass.contains("recNum_" + id, "recNum")) {
+              domClass.remove("recNum_" + id, "recNum");
+              domClass.add("recNum_" + id, "recNumInActive");
+            }
+          }
+          if (c && c.firstChild) {
+            domClass.add(c.firstChild, "inActive");
+          }
+          if (!domClass.contains("exp_" + id, "expandInActive")) {
+            domClass.add("exp_" + id, "expandInActive");
+          }
+          if (lyr.legendOpen) {
+            if (domClass.contains("legend_" + id, "legendOn")) {
+              this.layerList[id].legendOpen = false;
+              domClass.remove("legend_" + id, "legendOn");
+              domClass.add("legend_" + id, "legendOff");
+              if (domClass.contains("exp_" + id, "expandUp")) {
+                domClass.remove("exp_" + id, "expandUp");
+                domClass.add("exp_" + id, "expandDown");
+              }
+            }
+          }
+          if (lyr.toggleLegend) {
+            lyr.toggleLegend.remove();
+          }
+          if (domClass.contains("rec_" + id, "rec")) {
+            domClass.add("rec_" + id, "recDefault");
+          }
+          //this.layerList[id].updateList = false;
         } else {
           domClass.add("recIcon_" + id, "active");
           if (hasSubLayerId && lyr.type !== 'ClusterLayer') {
@@ -1258,9 +1501,11 @@ function (BaseWidget,
           } else if (lyr) {
             lyr.layerObject.setVisibility(true);
             if (lyr.type === 'ClusterLayer') {
+              lyr.layerObject.handleMapExtentChange({ levelChange: true });
               lyr.layerObject.flashFeatures();
             }
             this.layerList[id].visible = true;
+            this.layerList[id].parentLayerVisible = true;
             if (typeof (lyr.pl) !== 'undefined') {
               lyr.pl.visibility = true;
               if (this.map.graphicsLayerIds.indexOf(id) > -1) {
@@ -1268,6 +1513,35 @@ function (BaseWidget,
                 l.setVisibility(true);
               }
             }
+          }
+          this.layerList[id].visible = true;
+          this.layerList[id].parentLayerVisible = true;
+          if (lyr.type === 'ClusterLayer') {
+            this.layerList[id].layerObject.parentLayerVisible = true;
+          }
+          this._loadList(lyr, true);
+          if (this.config.countEnabled) {
+            if (domClass.contains("recNum_" + id, "recNumInActive")) {
+              domClass.remove("recNum_" + id, "recNumInActive");
+              domClass.add("recNum_" + id, "recNum");
+            }
+          }
+          if (c && c.firstChild) {
+            domClass.remove(c.firstChild, "inActive");
+          }
+          if (domClass.contains("exp_" + id, "expandInActive") && visScalRange) {
+            domClass.remove("exp_" + id, "expandInActive");
+          }
+          if (lyr.toggleLegend) {
+            lyr.toggleLegend.remove();
+          }
+          var rec = dom.byId('rec_' + id);
+          if (rec) {
+            lyr.toggleLegend = on(rec, "click", lang.hitch(this, this._toggleLegend, lyr));
+          }
+
+          if (domClass.contains("rec_" + id, "recDefault")) {
+            domClass.remove("rec_" + id, "recDefault");
           }
         }
       }
@@ -1278,30 +1552,30 @@ function (BaseWidget,
       if (evt.currentTarget.className !== 'thumb2' && evt.currentTarget.className !== 'recIcon') {
         var id = obj.layerObject.id in this.layerList ? obj.layerObject.id : obj.li.id;
         if (domClass.contains("legend_" + id, "legendOff")) {
-          domClass.remove("legend_" + id, "legendOff");
-          domClass.add("legend_" + id, "legendOn");
-          if (domClass.contains("exp_" + id, "expandDown")) {
-            domClass.remove("exp_" + id, "expandDown");
-            domClass.add("exp_" + id, "expandSearching");
-          }
+          this._addSearching(id);
           this.layerList[id].legendOpen = true;
           if (typeof (this.layerList[id].li.layerListExtentChanged) === 'undefined') {
             this.layerList[id].li.layerListExtentChanged = true;
           }
           if (this.layerList[id].li.layerListExtentChanged) {
-            this._loadList(obj, false);
+            setTimeout(lang.hitch(this, function () {
+              this._loadList(obj, false);
+            }), 500);
           } else {
             this._removeSearching(id, true);
           }
+          domClass.remove("legend_" + id, "legendOff");
+          domClass.add("legend_" + id, "legendOn");
         } else {
           if (domClass.contains("legend_" + id, "legendOn")) {
             this.layerList[id].legendOpen = false;
-            domClass.remove("legend_" + id, "legendOn");
-            domClass.add("legend_" + id, "legendOff");
+            //this.layerList[id].updateList = false;
             if (domClass.contains("exp_" + id, "expandUp")) {
               domClass.remove("exp_" + id, "expandUp");
               domClass.add("exp_" + id, "expandDown");
             }
+            domClass.remove("legend_" + id, "legendOn");
+            domClass.add("legend_" + id, "legendOff");
           }
         }
       }
@@ -1340,9 +1614,9 @@ function (BaseWidget,
           domClass.add(id, "groupOn");
           this.layerList[lId].groupOpen = true;
 
-          if (node.childNodes[0].childNodes[2].className.indexOf("groupItemImage") > -1) {
-            html.removeClass(node.childNodes[0].childNodes[2], "groupItemImageDown");
-            html.addClass(node.childNodes[0].childNodes[2], "groupItemImageUp");
+          if (node.childNodes[0].childNodes[2].childNodes[0].className.indexOf("groupItemImage") > -1) {
+            html.removeClass(node.childNodes[0].childNodes[2].childNodes[0], "groupItemImageDown");
+            html.addClass(node.childNodes[0].childNodes[2].childNodes[0], "groupItemImageUp");
           }
         } else {
           if (domClass.contains(id, "groupOn")) {
@@ -1360,9 +1634,9 @@ function (BaseWidget,
             } else {
               this.layerList[lId].groupOpen = false;
             }
-            if (node.childNodes[0].childNodes[2].className.indexOf("groupItemImage") > -1) {
-              html.removeClass(node.childNodes[0].childNodes[2], "groupItemImageUp");
-              html.addClass(e.currentTarget.childNodes[0].childNodes[2], "groupItemImageDown");
+            if (node.childNodes[0].childNodes[2].childNodes[0].className.indexOf("groupItemImage") > -1) {
+              html.removeClass(node.childNodes[0].childNodes[2].childNodes[0], "groupItemImageUp");
+              html.addClass(e.currentTarget.childNodes[0].childNodes[2].childNodes[0], "groupItemImageDown");
             }
           }
         }
@@ -1377,7 +1651,9 @@ function (BaseWidget,
           this.destroy();
           break;
         case 'styleChange':
-          this._updateUI(changedData);
+          if (!this.hidePanel) {
+            this._updateUI(changedData);
+          }
           this._updateStyleColor(changedData);
           break;
         case 'widgetChange':
@@ -1391,40 +1667,17 @@ function (BaseWidget,
       }
     },
 
-    _updateStyleColor: function(changedData){
-      var tName = this.appConfig.theme.name;
-      var sName = changedData;
-      var url = "./themes/" + tName + "/manifest.json";
-      xhr.get({
-        url: url,
-        handleAs: "json",
-        sync: this.initialLoad,
-        load: lang.hitch(this, function (data) {
-          this.initialLoad = false;
-          var styles = data.styles;
-          style_loop:
-          for (var i = 0; i < styles.length; i++) {
-            var bc;
-            array.forEach(document.styleSheets, function (ss) {
-              var rules = ss.rules ? ss.rules : ss.cssRules;
-              if (rules) {
-                array.forEach(rules, function (r) {
-                  if (r.selectorText === ".jimu-main-background") {
-                    bc = r.style.getPropertyValue('background-color');
-                  }
-                });
-              }
-            });
-            this._styleColor = Color.fromRgb(bc).toHex();
-            for (var k in this.layerList) {
-              var l = this.layerList[k];
-              if (l.type === "ClusterLayer") {
-                l.layerObject.setStyleColor(this._styleColor);
-              }
-            }
+    _updateStyleColor: function (changedData) {
+      setTimeout(lang.hitch(this, function () {
+        var bc = window.getComputedStyle(this.pageHeader, null).getPropertyValue('background-color');
+        this._styleColor = Color.fromRgb(bc).toHex();
+        for (var k in this.layerList) {
+          var l = this.layerList[k];
+          if (l.type === "ClusterLayer") {
+            l.layerObject.setStyleColor(this._styleColor);
           }
-        })
-      });
+        }
+      }), 500);
     },
 
     _clearMap: function () {
@@ -1432,8 +1685,14 @@ function (BaseWidget,
         for (var k in this.layerList) {
           var l = this.layerList[k];
           if (l.type === "ClusterLayer") {
-            l.layerObject._clear();
-            this.map.removeLayer(l.layerObject);
+            var _clear = true;
+            if (typeof (this.continuousRefreshEnabled) !== 'undefined') {
+              _clear = !this.continuousRefreshEnabled;
+            }
+            if (_clear) {
+              l.layerObject._clear();
+              this.map.removeLayer(l.layerObject);
+            }
           }
         }
         this.layerList = {};
@@ -1441,86 +1700,109 @@ function (BaseWidget,
     },
 
     setPosition: function (position, containerNode) {
-      //TODO still need to investigate how to fully fit into the Box, Dart, and Launchpad themes
-      //This would still allow the widget to function somewhat but not fully be a part of the theme
-      // may be better to just not support these themes until we work out the details
       var pos;
       var style;
-      if (this.appConfig.theme.name === "BoxTheme") {
-        this.inherited(arguments);
-        pos = {
-          right: "0px",
-          bottom: "0px",
-          top: "0px",
-          height: "auto",
-          'z-index': "auto"
-        };
-        this.position = pos;
-        style = utils.getPositionStyle(this.position);
-        style.position = 'absolute';
-        containerNode = this.map.id;
-        html.place(this.domNode, containerNode);
-        html.setStyle(this.domNode, style);
-
-        domStyle.set(this.pageContent, "bottom", "60px");
-      } else if (this.appConfig.theme.name === "DartTheme") {
-        this.inherited(arguments);
-        pos = {
-          right: "0px",
-          bottom: "80px",
-          top: "0px",
-          height: "auto",
-          'z-index': "auto"
-        };
-        this.position = pos;
-        style = utils.getPositionStyle(this.position);
-        style.position = 'absolute';
-        containerNode = this.map.id;
-        html.place(this.domNode, containerNode);
-        html.setStyle(this.domNode, style);
-      } else if (this.appConfig.theme.name === "LaunchpadTheme") {
-        this.inherited(arguments);
-        pos = {
-          right: "0px",
-          bottom: "130px",
-          top: "70px",
-          height: "auto",
-          'z-index': "auto"
-        };
-        this.position = pos;
-        style = utils.getPositionStyle(this.position);
-        style.position = 'absolute';
-        containerNode = this.map.id;
-        html.place(this.domNode, containerNode);
-        html.setStyle(this.domNode, style);
-      } else {
-        if (window.innerWidth <= 470) {
+      if (!this.hidePanel) {
+        //TODO still need to investigate how to fully fit into the Box, Dart, and Launchpad themes
+        //This would still allow the widget to function somewhat but not fully be a part of the theme
+        // may be better to just not support these themes until we work out the details
+        if (this.appConfig.theme.name === "BoxTheme") {
+          this.inherited(arguments);
           pos = {
             right: "0px",
             bottom: "0px",
-            height: "none",
-            'z-index': "auto",
-            relativeTo: "browser"
-          };
-          this.position = pos;
-          style = utils.getPositionStyle(this.position);
-          style.position = 'absolute';
-          html.place(this.domNode, window.jimuConfig.layoutId);
-
-          var m = dom.byId('map');
-          m.style.bottom = window.innerHeight / 2 + "px";
-        } else {
-          pos = {
-            right: "0px",
-            bottom: "0px",
-            height: "none",
+            top: "0px",
+            height: "auto",
             'z-index': "auto"
           };
           this.position = pos;
           style = utils.getPositionStyle(this.position);
           style.position = 'absolute';
-          html.place(this.domNode, this.map.id);
+          containerNode = this.map.id;
+          html.place(this.domNode, containerNode);
+          style.width = '';
+          html.setStyle(this.domNode, style);
+
+          domStyle.set(this.pageContent, "bottom", "60px");
+        } else if (this.appConfig.theme.name === "DartTheme") {
+          this.inherited(arguments);
+          pos = {
+            right: "0px",
+            bottom: "80px",
+            top: "0px",
+            height: "auto",
+            'z-index': "auto"
+          };
+          this.position = pos;
+          style = utils.getPositionStyle(this.position);
+          style.position = 'absolute';
+          style.width = '';
+          containerNode = this.map.id;
+          html.place(this.domNode, containerNode);
+          html.setStyle(this.domNode, style);
+        } else if (this.appConfig.theme.name === "LaunchpadTheme") {
+          this.inherited(arguments);
+          pos = {
+            right: "0px",
+            bottom: "130px",
+            top: "70px",
+            height: "auto",
+            'z-index': "auto"
+          };
+          this.position = pos;
+          style = utils.getPositionStyle(this.position);
+          style.position = 'absolute';
+          style.width = '';
+          containerNode = this.map.id;
+          html.place(this.domNode, containerNode);
+          html.setStyle(this.domNode, style);
+        } else {
+          if (window.innerWidth <= 470) {
+            pos = {
+              right: "0px",
+              bottom: "0px",
+              height: "none",
+              'z-index': "auto",
+              relativeTo: "browser"
+            };
+            this.position = pos;
+            style = utils.getPositionStyle(this.position);
+            style.position = 'absolute';
+            style.width = '';
+            html.place(this.domNode, window.jimuConfig.layoutId);
+
+            var m = dom.byId('map');
+            m.style.bottom = window.innerHeight / 2 + "px";
+          } else {
+            pos = {
+              right: "0px",
+              bottom: "0px",
+              height: "none",
+              'z-index': "auto"
+            };
+            this.position = pos;
+            style = utils.getPositionStyle(this.position);
+            style.position = 'absolute';
+            style.width = '';
+            html.place(this.domNode, this.map.id);
+          }
+          html.setStyle(this.domNode, style);
         }
+      } else {
+        this.inherited(arguments);
+        pos = {
+          right: "0px",
+          bottom: "0px",
+          top: "0px",
+          height: "0px",
+          'z-index': "auto"
+        };
+        this.position = pos;
+        style = utils.getPositionStyle(this.position);
+        style.position = 'absolute';
+        style.width = '';
+        containerNode = this.map.id;
+        html.place(this.domNode, containerNode);
         html.setStyle(this.domNode, style);
       }
     },
@@ -1531,16 +1813,6 @@ function (BaseWidget,
 
     onClose: function () {
       this.inherited(arguments);
-
-      if (this.queryList) {
-        this.queryList.cancel();
-        this.queryLookupList = [];
-      }
-
-      if (this.layerVisibilityManager) {
-        this.layerVisibilityManager.resetLayerVisibility();
-        this.layerVisibilityManager = null;
-      }
 
       for (var key in this.layerList) {
         var layerListLayer = this.layerList[key];
@@ -1558,14 +1830,24 @@ function (BaseWidget,
         }
       }
 
-      if (this.refreshInterval !== 0) {
-        this.refreshIntervalValue = 0;
-        clearInterval(this.refreshInterval);
-        this.refreshInterval = 0;
+      var disableRefresh = true;
+      if (typeof (this.config.continuousRefreshEnabled) !== 'undefined') {
+        disableRefresh = !this.config.continuousRefreshEnabled;
+      }
+      if (disableRefresh) {
+        if (this.refreshInterval !== 0) {
+          this.refreshIntervalValue = 0;
+          clearInterval(this.refreshInterval);
+          this.refreshInterval = 0;
+        }
       }
 
-      this.mapExtentChangedHandler.remove();
-      this.mapExtentChangedHandler = undefined;
+      if (!this.hidePanel) {
+        if (typeof (this.mapExtentChangedHandler) !== 'undefined') {
+          this.mapExtentChangedHandler.remove();
+          this.mapExtentChangedHandler = undefined;
+        }
+      }
 
       this._resetMapDiv();
     },
@@ -1584,32 +1866,40 @@ function (BaseWidget,
     onUpdateEnd: function (results) {
       var lid = this.layerList.hasOwnProperty(results.target.id) ? results.target.id :  results.target.id + "_CL";
       var lyr = this.layerList[lid];
-      if (lyr) {
+      if (lyr && lyr.visible) {
         if (lyr.updateList) {
           this._loadList(lyr, lyr.updateList);
         } else {
           if (this.config.countEnabled) {
-            this.countFeatures(lyr.layerObject, lyr.node);
+            this.countFeatures(lyr);
             //add call to extent change to trigger getting item list
             //instead of just updating header count.
             //this._mapExtentChange();
           }
+          //TODO need to look at this closer...we should only need to update the list if it's expanded
+          // may need to add another arg to the load list function to support whatever this was working around
+          // I believe this was changed due the issues Previn was helping with just before the last release
           this._loadList(lyr, true);
         }
       }
     },
 
     _mapExtentChange: function () {
+      var countEnabled = this.config.countEnabled;
       var queries = [];
       var updateNodes = [];
       for (var key in this.layerList) {
         var lyr = this.layerList[key];
+        var visScalRange = true;
+        if (lyr.layerObject.hasOwnProperty('visibleAtMapScale')) {
+          visScalRange = lyr.layerObject.visibleAtMapScale;
+        }
         if (!lyr.legendOpen || (lyr.groupEnabled && !lyr.groupOpen)) {
           this._clearList(lyr);
           if (lyr.li) {
             lyr.li.layerListExtentChanged = true;
           }
-          if (this.config.countEnabled) {
+          if (lyr.visible && visScalRange) {
             if (lyr.li) {
               if (lyr.li.url && lyr.type !== "ClusterLayer" && typeof (lyr.layerObject.queryCount) === 'undefined') {
                 var url = lyr.li.url;
@@ -1625,35 +1915,45 @@ function (BaseWidget,
 
                   var qt = new QueryTask(url);
                   queries.push(qt.executeForIds(q));
-                  updateNodes.push(lyr.node);
-                  //domClass.add(lyr.node.id, "searching");
+                  if (countEnabled) {
+                    updateNodes.push(lyr.node);
+                  } else {
+                    updateNodes.push(lyr.legendNode);
+                  }
                 }
               }
             }
-            if (lyr.type === "ClusterLayer" && lyr.layerObject.initalLoad) {
+            if (lyr.type === "ClusterLayer" && lyr.layerObject.initalLoad && this.config.countEnabled) {
               lyr.layerObject._updateNode(lyr.layerObject.node.innerHTML);
             }
 
             var countLayerTypes = ["StreamLayer", "GeoRSS", "KML"];
             if (lyr.type !== 'ClusterLayer') {
+              var uNode = this.config.countEnabled ? lyr.node : lyr.legendNode;
               if (typeof (lyr.layerObject) === 'undefined') {
                 console.log("layer object not known");
               } else if (lyr.pl && lyr.pl.featureSet) {
-                this.countFeatures(lyr.layerObject, lyr.node);
+                this.countFeatures(lyr);
               }
               else if (countLayerTypes.indexOf(lyr.type) > -1 || lyr.pl.type === "CSV") {
-                this.countFeatures(lyr.layerObject, lyr.node);
+                this.countFeatures(lyr);
               } else if (lyr.layerObject._autoSnapshot) {
-                this.countFeatures(lyr.layerObject, lyr.node);
+                this.countFeatures(lyr);
               }
             }
+          } else if (!visScalRange) {
+            this._updateList([], lyr.legendNode, lyr.node, [], true, lyr);
           }
         } else {
-          lyr.updateList = true;
-          if (lyr.layerObject._autoSnapshot) {
-            this._loadList(lyr, lyr.updateList);
+          if (lyr.visible && visScalRange) {
+            lyr.updateList = true;
+            if (lyr.layerObject._autoSnapshot) {
+              this._loadList(lyr, lyr.updateList);
+            } else {
+              this._loadList(lyr, lyr.updateList);
+            }
           } else {
-            this._loadList(lyr, lyr.updateList);
+            this._updateList([], lyr.legendNode, lyr.node, [], true, lyr);
           }
         }
       }
@@ -1663,13 +1963,46 @@ function (BaseWidget,
           this.promises = undefined;
           if (results) {
             for (var i = 0; i < results.length; i++) {
+              var r;
               if (results[i]) {
                 if (domClass.contains(updateNodes[i].id, 'searching')) {
                   domClass.remove(updateNodes[i].id, 'searching');
                 }
-                updateNodes[i].innerHTML = results[i].length.toLocaleString();
+                r = results[i].length;
               } else {
-                updateNodes[i].innerHTML = 0;
+                r = 0;
+              }
+
+              var parent;
+              if (countEnabled) {
+                updateNodes[i].innerHTML = utils.localizeNumber(r);
+                parent = updateNodes[i].parentNode;
+              }else{
+                parent = updateNodes[i].previousSibling;
+              }
+
+              var id;
+              var en;
+              if (parent.id.indexOf('rec_') > -1) {
+                id = parent.id.replace('rec_', '');
+                en = dom.byId("exp_" + id);
+              }
+              if (r === 0) {
+                if (parent) {
+                  html.addClass(parent, "recDefault");
+                  html.addClass(parent, "inActive");
+                }
+                if (en) {
+                  html.addClass(en, "expandInActive");
+                }
+              } else {
+                if (parent) {
+                  html.removeClass(parent, "recDefault");
+                  html.removeClass(parent, "inActive");
+                }
+                if (en) {
+                  html.removeClass(en, "expandInActive");
+                }
               }
             }
           }
@@ -1681,21 +2014,30 @@ function (BaseWidget,
       var lyr = lyrInfo.layerObject;
       var legendNode = lyrInfo.legendNode;
       var node = lyrInfo.node;
-
+      var _needsGeom = true; //typeof (lyrInfo.legendOpen) !== 'undefined' && lyrInfo.legendOpen;
+      var visScalRange = true;
+      if (lyr.hasOwnProperty('visibleAtMapScale')) {
+        visScalRange = lyr.visibleAtMapScale;
+      }
       var queries = [];
       var q = new Query();
       q.geometry = this.map.extent;
       q.outFields = fields;
-      q.returnGeometry = true;
-      if (lyr.queryFeatures) {
-        queries.push(lyr.queryFeatures(q));
-      } else {
-        var url = lyrInfo.li.url;
-        if (url.indexOf("MapServer") > -1 || url.indexOf("FeatureServer") > -1) {
-          var qt = new QueryTask(url);
-          q.where = lyrInfo.filter ? lyrInfo.filter : "1=1";
-          queries.push(qt.execute(q));
+      q.returnGeometry = _needsGeom;
+      if (lyrInfo.visible && visScalRange) {
+        if (lyr.queryFeatures) {
+          queries.push(lyr.queryFeatures(q));
+        } else {
+          var url = lyrInfo.li.url;
+          if (url.indexOf("MapServer") > -1 || url.indexOf("FeatureServer") > -1) {
+            var qt = new QueryTask(url);
+            q.where = lyrInfo.filter ? lyrInfo.filter : "1=1";
+            queries.push(qt.execute(q));
+            queries.push(qt.executeForIds(q));
+          }
         }
+      } else {
+        this._updateList([], lyrInfo.legendNode, lyrInfo.node, [], true, lyrInfo);
       }
       if (queries.length > 0) {
         if (this.featurePromises) {
@@ -1704,11 +2046,37 @@ function (BaseWidget,
         }
         var featurePromises = all(queries);
         featurePromises.then(lang.hitch(this, function (results) {
-          if (results[0].features) {
-            setTimeout(lang.hitch(this, function () {
-              this._updateList(results[0].features, legendNode, node, fields, updateCount, lyrInfo);
-            }), 8);
+          var updateNode;
+          if (node) {
+            if (this.config.countEnabled) {
+              updateNode = node.parentNode;
+            } else {
+              updateNode = node.previousSibling;
+            }
           }
+          if (results && results[0]) {
+            if (results[0].features) {
+              setTimeout(lang.hitch(this, function () {
+                this._updateList(results[0].features, legendNode, node, fields, updateCount, lyrInfo);
+                if (this.config.countEnabled && results.length > 1) {
+                  if (results[1].length > 1000) {
+                    node.innerHTML = utils.localizeNumber(results[1].length);
+                  }
+                }
+              }), 100);
+            } else if (results[0].length > 0 && visScalRange) {
+              this._updateList(results[0], lyrInfo.legendNode, lyrInfo.node, [], true, lyrInfo, true);
+            } else {
+              this._updateList([], lyrInfo.legendNode, lyrInfo.node, [], true, lyrInfo);
+            }
+          } else {
+            if (this.config.countEnabled) {
+              node.innerHTML = utils.localizeNumber(0);
+            }
+            this.updateExpand(updateNode, true);
+          }
+          var s_id = lyrInfo.layerObject.id in this.layerList ? lyrInfo.layerObject.id : lyrInfo.li.id;
+          this._removeSearching(s_id, lyrInfo.legendOpen);
         }));
       }
     },
@@ -1747,7 +2115,7 @@ function (BaseWidget,
       }
     },
 
-    _updateList: function (features, legendNode, node, fields, updateCount, lyrInfo) {
+    _updateList: function (features, legendNode, node, fields, updateCount, lyrInfo, countOnly) {
       if (lyrInfo.type === 'ClusterLayer') {
         if (lyrInfo.layerObject.node) {
           if (domClass.contains(lyrInfo.layerObject.node.id, 'searching')) {
@@ -1765,15 +2133,19 @@ function (BaseWidget,
       var displayOptions = lyrInfo.li.symbolData.featureDisplayOptions;
       legendNode.innerHTML = '';
       if (updateCount && node && this.config.countEnabled) {
-        node.innerHTML = features.length.toLocaleString();
+        node.innerHTML = utils.localizeNumber(features.length);
       }
-
+      var updateNode = this.config.countEnabled ? node.parentNode : legendNode.previousSibling;
+      this.updateExpand(updateNode, features.length === 0);
+      if (countOnly) {
+        return;
+      }
       if (features.length > 0) {
         var renderer;
-        if (features[0]._graphicsLayer) {
-          renderer = features[0]._graphicsLayer.renderer;
-        } else if (lyrInfo.type === "ClusterLayer") {
+        if (lyrInfo.type === "ClusterLayer") {
           renderer = lyrInfo.layerObject.renderer;
+        } else if (features[0]._graphicsLayer) {
+          renderer = features[0]._graphicsLayer.renderer;
         } else if (lyrInfo.li.renderer) {
           renderer = jsonUtil.fromJson(lyrInfo.li.renderer);
         }
@@ -1814,6 +2186,7 @@ function (BaseWidget,
           var groupField;
           var groupNode;
           var groupContainer;
+          var displayValue;
           if (displayOptions.groupEnabled) {
             groupField = displayOptions.groupField;
             var gId = 'group_' + lyrInfo.li.id + "_" + groupField.name + "_" + feature.attributes[groupField.name];
@@ -1852,10 +2225,21 @@ function (BaseWidget,
                 label = "";
                 title = "";
               }
+
+              var featureValue = feature.attributes[groupField.name];
+              displayValue = featureValue;
+              if (this._checkDateField(lyrInfo, groupField.name)) {
+                displayValue = this.formatDateValue(featureValue, groupField.name, lyrInfo);
+              }
+              var domainField = this._checkDomainField(lyrInfo, groupField.name);
+              if (domainField) {
+                displayValue = this.formatDomainValue(featureValue, domainField);
+              }
+
               domConstruct.create('div', {
                 'class': 'groupField',
-                innerHTML: label + feature.attributes[groupField.name],
-                title: title + feature.attributes[groupField.name]
+                innerHTML: label + displayValue,
+                title: title + displayValue
               }, groupTitle);
 
               var inGrpList = false;
@@ -1889,14 +2273,14 @@ function (BaseWidget,
               }, groupContainer);
 
               groupNodes.push({
-                id: 'group_' + lyrInfo.li.id + "_" + groupField.name + "_" + feature.attributes[groupField.name],
+                id: 'group_' + lyrInfo.li.id + "_" + groupField.name + "_" + featureValue,
                 node: groupNode,
                 parent: groupContainer,
-                value: feature.attributes[groupField.name]
+                value: featureValue
               });
 
               finalGroupNodes.push({
-                value: feature.attributes[groupField.name],
+                value: featureValue,
                 node: groupContainer,
                 countNode: groupCountNode,
                 count: 1
@@ -1925,7 +2309,12 @@ function (BaseWidget,
           //} else if (lyrInfo.li.infoTemplate) {
           //  feature.infoTemplate = lyrInfo.li.infoTemplate;
           //}
-          on(featureItem, "click", lang.hitch(this, this._panToFeature, feature));
+
+          var isCustom = false;
+          if (lyrInfo.li && lyrInfo.li.symbolData) {
+            isCustom = lyrInfo.li.symbolData.symbolType === "CustomSymbol";
+          }
+          var symbol;
           if (renderer && renderer.getSymbol) {
             //TODO explore this pattern more with HTML and innerHTML
             //var s = renderer.getSymbol(feature);
@@ -1945,14 +2334,28 @@ function (BaseWidget,
             //    a.appendChild(hasSym.div.firstChild);
             //  }
             //}
-
-            this._createImageDataDiv(lang.clone(renderer.getSymbol(feature)), 30, 30, featureItem);
+            symbol = renderer.getSymbol(feature);
+          } else if (feature.symbol) {
+            symbol = jsonUtils.fromJson(feature.symbol);
           }
+          if (symbol) {
+            this._createImageDataDiv(lang.clone(symbol), 30, 30, featureItem, isCustom);
+          }
+
+          feature = this.updateDomainValues(feature, isNames, flds, lyrInfo);
+          on(featureItem, "click", lang.hitch(this, this._panToFeature, feature));
+
           if (displayString.indexOf(" - ") > -1) {
             displayString = displayString.slice(0, -3);
           }
+          var _s;
+          if (window.isRTL) {
+            _s = "padding: 7px 45px 5px 5px; text-align: right;";
+          } else {
+            _s = "padding: 7px 5px 5px 45px; text-align: left;";
+          }
           domConstruct.create('div', {
-            style: "padding: 7px 5px 5px 45px; text-align: left;",
+            style: _s,
             innerHTML: displayString,
             title: displayString
           }, featureItem);
@@ -1980,7 +2383,7 @@ function (BaseWidget,
           var cE = this.config.countEnabled;
           array.forEach(nodes, function (n) {
             if (cE) {
-              n.countNode.innerHTML = n.count.toLocaleString();
+              n.countNode.innerHTML = utils.localizeNumber(n.count);
             }
             legendNode.appendChild(n.node);
           });
@@ -1990,26 +2393,75 @@ function (BaseWidget,
           array.forEach(finalDomNodes, function (fdn) {
             domConstruct.place(fdn.node, fdn.updateNode);
           });
-
         }
       }
-
       lyrInfo.li.layerListExtentChanged = false;
 
       var s_id = lyrInfo.layerObject.id in this.layerList ? lyrInfo.layerObject.id : lyrInfo.li.id;
       this._removeSearching(s_id, lyrInfo.legendOpen);
     },
 
-    getDisplayString: function (feature, lyrInfo, fields, displayOptions, oidName, isNames) {
+    updateDomainValues: function (feature, isNames, fields, lyrInfo) {
       var includeField;
       var dateField;
+      var domainField;
       var displayString = "";
       var append;
       var featureValue;
       var fieldName;
       for (var a in fields) {
         fieldName = isNames ? fields[a] : a;
+        domainField = this._checkDomainField(lyrInfo, fieldName);
+        featureValue = feature.attributes[fieldName];
+        if (domainField) {
+          feature.attributes[fieldName] = this.formatDomainValue(featureValue, domainField);
+        }
+      }
+      return feature;
+    },
+
+    updateExpand: function (node, hide) {
+      if (typeof (node) !== 'undefined') {
+        var id;
+        var en;
+        if (node.id.indexOf('rec_') > -1) {
+          id = node.id.replace('rec_', '');
+          en = dom.byId("exp_" + id);
+        }
+        if (hide) {
+          if (node) {
+            html.addClass(node, "recDefault");
+            html.addClass(node, "inActive");
+          }
+          if (en) {
+            html.addClass(en, "expandInActive");
+          }
+        } else {
+          if (node) {
+            html.removeClass(node, "recDefault");
+            html.removeClass(node, "inActive");
+          }
+          if (en) {
+            html.removeClass(en, "expandInActive");
+          }
+        }
+      }
+    },
+
+    getDisplayString: function (feature, lyrInfo, fields, displayOptions, oidName, isNames) {
+      var includeField;
+      var dateField;
+      var domainField;
+      var displayString = "";
+      var append;
+      var featureValue;
+      var fieldName;
+      var aliasName;
+      for (var a in fields) {
+        fieldName = isNames ? fields[a] : a;
         dateField = this._checkDateField(lyrInfo, fieldName);
+        domainField = this._checkDomainField(lyrInfo, fieldName);
+        aliasName = this._checkAliasName(lyrInfo, fieldName);
         includeField = true;
         if (displayOptions.fields && displayOptions.fields.length > 0) {
           includeField = this._checkDisplayField(displayOptions.fields, fieldName);
@@ -2018,6 +2470,12 @@ function (BaseWidget,
         featureValue = feature.attributes[fieldName];
         if (dateField) {
           featureValue = this.formatDateValue(featureValue, fieldName, lyrInfo);
+        }
+        if (domainField) {
+          featureValue = this.formatDomainValue(featureValue, domainField);
+        }
+        if (aliasName) {
+          fieldName = aliasName;
         }
         if (includeField && displayOptions.fields && displayOptions.fields.length > 0) {
           displayString += includeField.label + append + featureValue + " - ";
@@ -2034,33 +2492,75 @@ function (BaseWidget,
       return displayString;
     },
 
-    formatDateValue: function (v, fieldName, lyrInfo) {
-      var options;
-      var infoTemplate;
-      if (lyrInfo.layerObject && lyrInfo.layerObject.infoTemplate) {
-        infoTemplate = lyrInfo.layerObject.infoTemplate;
-      } else if (lyrInfo.li && lyrInfo.li.infoTemplate) {
-        infoTemplate = lyrInfo.li.infoTemplate;
-      }
-      if (infoTemplate) {
-        var fieldsMap = infoTemplate._fieldsMap;
-        if (fieldsMap) {
-          for (var k in fieldsMap) {
-            if (fieldsMap[k].fieldName === fieldName) {
-              options = this._getDateFormat(fieldsMap[k].format.dateFormat);
-            }
+    formatDomainValue: function (v, domain) {
+      if (domain && domain.codedValues) {
+        var cvs = domain.codedValues;
+        for (var i = 0; i < cvs.length; i++) {
+          var cv = cvs[i];
+          if (cv.code === v) {
+            return cv.name;
           }
         }
       }
-      if (typeof (options) === 'undefined') {
-        //December 21,1997
-        options = {
-          month: 'long',
-          day: '2-digit',
-          year: 'numeric'
-        };
+      return undefined;
+    },
+
+    formatDateValue: function (v, fieldName, lyrInfo) {
+      if (v) {
+        var options;
+        var infoTemplate;
+        if (lyrInfo.layerObject && lyrInfo.layerObject.infoTemplate) {
+          infoTemplate = lyrInfo.layerObject.infoTemplate;
+        } else if (lyrInfo.li && lyrInfo.li.infoTemplate) {
+          infoTemplate = lyrInfo.li.infoTemplate;
+        }
+        if (infoTemplate) {
+          var fieldsMap = infoTemplate._fieldsMap;
+          if (fieldsMap) {
+            for (var k in fieldsMap) {
+              if (fieldsMap[k].fieldName === fieldName) {
+                options = fieldsMap[k].format;
+                break;
+              }
+            }
+          }
+        }
+        if (typeof (options) === 'undefined') {
+          //December 21,1997
+          options = {
+            dateFormat: 'shortDate'
+          };
+        }
+        return utils.fieldFormatter.getFormattedDate(new Date(v), options);
+      } else {
+        return "";
       }
-      return new Date(v).toLocaleDateString(navigator.language, options);
+    },
+
+    _checkAliasName: function (lyrInfo, fieldName) {
+      var fields = lyrInfo.li.fields;
+      if (fields) {
+        for (var i = 0; i < fields.length; i++) {
+          var field = fields[i];
+          if (field.name === fieldName) {
+            return typeof (field.alias) !== 'undefined' ? field.alias : false;
+          }
+        }
+        return false;
+      }
+    },
+
+    _checkDomainField: function (lyrInfo, fieldName) {
+      var fields = lyrInfo.li.fields;
+      if (fields) {
+        for (var i = 0; i < fields.length; i++) {
+          var field = fields[i];
+          if (field.name === fieldName) {
+            return typeof (field.domain) !== 'undefined' ? field.domain : false;
+          }
+        }
+        return false;
+      }
     },
 
     _checkDateField: function(lyrInfo, fieldName){
@@ -2080,143 +2580,6 @@ function (BaseWidget,
       }
     },
 
-    _getDateFormat: function (dFormat) {
-      //default is Month Day Year
-      var options;
-      switch (dFormat) {
-        case "shortDate":
-          //12/21/1997
-          options = {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric'
-          };
-          break;
-        case "shortDateLE":
-          //21/12/1997
-          options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          };
-          break;
-        case "longMonthDayYear":
-          //December 21,1997
-          options = {
-            month: 'long',
-            day: '2-digit',
-            year: 'numeric'
-          };
-          break;
-        case "dayShortMonthYear":
-          //21 Dec 1997
-          options = {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-          };
-          break;
-        case "longDate":
-          //Sunday, December 21, 1997
-          options = {
-            weekday: 'long',
-            month: 'long',
-            day: '2-digit',
-            year: 'numeric'
-          };
-          break;
-        case "shortDateLongTime":
-          //12/21/1997 6:00:00 PM
-          options = {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-          };
-          break;
-        case "shortDateLELongTime":
-          //21/12/1997 6:00:00 PM
-          options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-          };
-          break;
-        case "shortDateShortTime":
-          //12/21/1997 6:00 PM
-          options = {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-          };
-          break;
-        case "shortDateLEShortTime":
-          //21/12/1997 6:00 PM
-          options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-          };
-          break;
-        case "shortDateShortTime24":
-          //12/21/1997 18:00
-          options = {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: false
-          };
-          break;
-        case "shortDateLEShortTime24":
-          //21/12/1997 18:00
-          options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: false
-          };
-          break;
-        case "longMonthYear":
-          //December 1997
-          options = {
-            month: 'long',
-            year: 'numeric'
-          };
-          break;
-        case "shortMonthYear":
-          //Dec 1997
-          options = {
-            month: 'short',
-            year: 'numeric'
-          };
-          break;
-        case "year":
-          //1997
-          options = {
-            year: 'numeric'
-          };
-          break;
-      }
-      return options;
-    },
-
     _checkDisplayField: function(displayFields, featureField){
       var includeField = true;
       if (displayFields) {
@@ -2229,6 +2592,13 @@ function (BaseWidget,
         }
       }
       return includeField;
+    },
+
+    flashGraphics: function (graphics) {
+      for (var i = 0; i < graphics.length; i++) {
+        var g = graphics[i];
+        this._flashFeature(g);
+      }
     },
 
     _flashFeature: function (feature) {
@@ -2297,21 +2667,33 @@ function (BaseWidget,
           geom = geom.getExtent().getCenter();
         }
         //this.map.centerAt(geom);
+
         this._flashFeature(feature);
-        this.map.infoWindow.setFeatures([feature]);
-        this.map.infoWindow.select(0);
-        this.map.infoWindow.show(geom);
+        if ((feature._layer && feature._layer.infoTemplate) || feature.infoTemplate) {
+          this.map.infoWindow.setFeatures([feature]);
+          this.map.infoWindow.select(0);
+          this.map.infoWindow.show(geom);
+        }
       }
     },
 
-    countFeatures: function (lyr, node) {
+    countFeatures: function (layerListLayer) {
+      var lyr = layerListLayer.layerObject;
+      var node = this.config.countEnabled ? layerListLayer.node : layerListLayer.legendNode;
       //Query the features based on map extent for supported layer types
       var q = new Query();
       q.geometry = this.map.extent;
-      if (lyr.queryCount && this.config.countEnabled) {
+      if (lyr.queryCount && lyr.visible) {
         lyr.queryCount(q, lang.hitch(this, function (r) {
           if (node) {
-            node.innerHTML = r.toLocaleString();
+            var updateNode;
+            if (this.config.countEnabled) {
+              node.innerHTML = utils.localizeNumber(r);
+              updateNode = node.parentNode;
+            } else {
+              updateNode = node.previousSibling;
+            }
+            this.updateExpand(updateNode, r === 0);
           }
         }));
       }

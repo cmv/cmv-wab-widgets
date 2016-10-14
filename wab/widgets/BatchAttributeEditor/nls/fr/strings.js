@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtrer la couche",
   "cancel": "Annuler",
   "noValue": "Aucune valeur",
+  "emptyString": "Chaîne vide",
   "existingValue": "Conserver la valeur existante",
   "newDate": "Nouvelle date",
   "valueChooser": "Sélectionnez/Saisissez une valeur",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "La couche ${0} portant l'ID ${1} est introuvable sur la carte. Elle a peut-être changé depuis la configuration des widgets",
     "queryNullID": "L'entité de ${0} a renvoyé un ID non valide",
     "noSelectedLayers": "Aucune couche sélectionnée avec des enregistrements à mettre à jour",
-    "inputValueError": "Valeur non valide dans le formulaire"
+    "inputValueError": "Valeur non valide dans le formulaire",
+    "saveError": "Impossible d'enregistrer ${0} entités. Détails ajoutés dans la console",
+    "requiredValue": "Valeur requise"
   }
 });

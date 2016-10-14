@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -1312,7 +1312,7 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
       this.tab.showShelter();
       this.showBigShelter();
 
-      this._queryFeatures(queryParams, config.url).then(lang.hitch(this, function(featureSet) {
+      this._queryFeatures(queryParams, config.url).then(lang.hitch(this, function(features) {
         if(!this.domNode){
           return;
         }
@@ -1323,7 +1323,7 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
 
         var args = {
           config: config,
-          featureSet: featureSet,
+          features: features,
           layerDefinition: this._layerDefinition,
           resultLayer: null
         };
@@ -1345,7 +1345,8 @@ function(declare, lang, array, html, query, Color, on, Evented, Deferred, _Widge
       var def = new Deferred();
       var queryTask = new QueryTask(url);
       queryTask.execute(queryParams).then(lang.hitch(this, function(featureSet){
-        def.resolve(featureSet);
+        var features = featureSet.features || [];
+        def.resolve(features);
       }), lang.hitch(this, function(err){
         //maybe a joined layer
         if(err && err.code === 400){

@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Opción para eliminar la entidad del conjunto de selección al guardar el registro. Si es el único registro seleccionado, el panel vuelve a cambiar a la página de plantilla.",
     "useFilterEditor": "Usar filtro de plantilla de entidad",
     "useFilterEditorTip": "Opción para usar el selector de plantillas de filtro que permite ver una plantilla de capa o buscar plantillas por nombre.",
+    "listenToGroupFilter": "Aplicar valores de filtro del widget Filtro de grupo a los campos predefinidos",
+    "listenToGroupFilterTip": "Cuando se aplica un filtro en el widget Filtro de grupo, aplica el valor a un campo coincidente de la lista de valores predefinidos.",
+    "keepTemplateActive": "Mantener plantilla seleccionada activa",
+    "keepTemplateActiveTip": "Cuando se muestra el selector de plantillas, si se seleccionó una plantilla previamente, vuelve a seleccionarla.",
     "layerSettingsTable": {
       "allowDelete": "Permitir eliminación",
       "allowDeleteTip": "Opción que permite al usuario eliminar una entidad; estará deshabilitada si la capa no admite eliminaciones.",
@@ -27,9 +31,10 @@ define({
       "fields": "Campos",
       "fieldsTip": "Modifique los campos que se van a editar y defina atributos inteligentes",
       "description": "Descripción",
-      "descriptionTip": "Si lo desea, introduzca el texto que quiera visualizar en la parte superior de la página de atributos."
+      "descriptionTip": "Opción que permite introducir texto para que se muestre en la parte superior de la página de atributos."
     },
-    "editFieldError": "Las modificaciones de campos y los atributos inteligentes no están disponibles para las capas que no son editables"
+    "editFieldError": "Las modificaciones de campos y los atributos inteligentes no están disponibles para las capas que no son editables",
+    "noConfigedLayersError": "El Editor inteligente requiere una o varias capas editables"
   },
   "editDescriptionPage": {
     "title": "Definir texto de descripción general de atributo para <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Expresión resultante del criterio definido en formato SQL",
       "actions": "Criterios",
       "actionsTip": "Cambie el orden de la regla y defina los criterios cuando se active"
+    },
+    "actions": {
+      "hide": "Ocultar",
+      "required": "Obligatorio",
+      "disabled": "Deshabilitado"
     }
   },
   "filterPage": {
     "submitHidden": "¿Enviar datos de atributos para este campo aunque esté oculto?",
-    "title": "Configurar cláusula para la regla ${action}",
+    "title": "Configurar expresión para la regla ${action}",
     "filterBuilder": "Definir acción en el campo cuando el registro coincida con ${any_or_all} de las expresiones siguientes",
     "noFilterTip": "Con las herramientas siguientes, defina la declaración para los casos en los que la acción esté activa."
   }

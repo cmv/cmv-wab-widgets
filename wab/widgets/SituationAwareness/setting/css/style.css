@@ -58,6 +58,10 @@
   margin-top: 8px;
 }
 
+.jimu-widget-SAT .validationBox {
+
+}
+
 .jimu-widget-SAT-setting .btn-add-section .btn-add-icon {
   height: 100%;
   width: 14px;
@@ -93,6 +97,10 @@
 }
 
 .jimu-widget-SAT-setting .footer {
+  text-align: right;
+}
+
+.jimu-widget-SAT-setting .field-picker-footer {
   text-align: right;
 }
 
@@ -133,6 +141,12 @@
 }
 
 .jimu-widget-SAT-setting .footer {
+  padding-top: 5px;
+  width: 100%;
+  height: 30px;
+}
+
+.jimu-widget-SAT-setting .field-picker-footer {
   padding-top: 5px;
   width: 100%;
   height: 30px;

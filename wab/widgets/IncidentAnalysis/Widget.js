@@ -879,6 +879,7 @@ define([
               if (layerType === "ArcGISFeatureLayer" && Node.originOperLayer.featureCollection) {
                 pLyrs.push(Node.originOperLayer);
               } else {
+                Node.layerObject.id = (Node.layerObject.id) ? Node.layerObject.id : Node.id;
                 pLyrs.push(Node.layerObject);
               }
             }

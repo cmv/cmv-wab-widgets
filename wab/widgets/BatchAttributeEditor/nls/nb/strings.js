@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtrer kartlag",
   "cancel": "Avbryt",
   "noValue": "Ingen verdi",
+  "emptyString": "Tom streng",
   "existingValue": "Behold eksisterende verdi",
   "newDate": "Ny dato",
   "valueChooser": "Velg/skriv inn en verdi",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Finner ikke laget ${0} med ID-en ${1} i kartet. Kartet kan ha blitt endret etter widgetens godkjenning.",
     "queryNullID": "Geoobjektet fra ${0} returnerte en ugyldig ID",
     "noSelectedLayers": "Ingen valgte lag med geoobjekter å oppdatere",
-    "inputValueError": "Ugyldig verdi i skjemaet"
+    "inputValueError": "Ugyldig verdi i skjemaet",
+    "saveError": "Kan ikke lagre ${0} geoobjekter, detaljert informasjon lagt til i konsollen.",
+    "requiredValue": "Obligatorisk verdi"
   }
 });

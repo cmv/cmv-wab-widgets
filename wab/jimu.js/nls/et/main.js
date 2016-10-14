@@ -6,6 +6,7 @@ define({
     "yes": "Jah",
     "no": "Ei",
     "next": "Järgmine",
+    "previous": "Eelmine",
     "back": "Tagasi",
     "selected": "valitud",
     "name": "Nimi",
@@ -52,7 +53,11 @@ define({
     "view": "Vaatamine",
     "newText": "Uus",
     "edit": "Muuda",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabel",
+    "zoomIn": "Suurenda",
+    "zoomOut": "Vähenda",
+    "continue1": "Jätka"
   },
   "errorCode": "Kood",
   "errorMessage": "Sõnum",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Tõstutundlik",
     "notSupportCaseSensitiveTip": "Majutatud teenused ei toeta tõstutundlikke päringuid.",
-    "setFilterTip": "Määrake filter õigesti."
+    "setFilterTip": "Määrake filter õigesti.",
+    "cascadeFilterTip": "Kuva ainult eelmiste avaldiste alusel filtreeritud väärtused."
   },
   "featureLayerSource": {
     "layer": "Kiht",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Klõpsake kaardi ulatuse ja kihtide nähtavuse taastamiseks poolelijäänud kohas."
   },
   "featureActions": {
+    "featureActions": "Objektide tegevused",
     "ZoomTo": "Suumi",
     "PanTo": "Liiguta",
     "Flash": "Välgutamine",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Lisa valikule",
     "removeSelectionTip": "Eemalda valikust",
     "selectFromCurrentSelectionTip": "Vali praegusest valikust",
-    "unselectAllSelectionTip": "Tühista kõigi praegu valitud objektide selekteering"
+    "unselectAllSelectionTip": "Tühista kõigi praegu valitud objektide selekteering",
+    "selectByPolygon": "Vali polügooni järgi",
+    "selectByCircle": "Vali ringi järgi",
+    "selectByLine": "Vali joone järgi",
+    "chooseSelectingTools": "Vali selekteerimise tööriistad",
+    "darw": "Joonista",
+    "drawShap": "Joonista kujund"
   },
   "widgetManager": {
     "createWidgetError": "Vidina loomise viga",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Teie brauser ei toeta 3D-veebirakendusi."
+  },
+  "map": {
+    "basemapNotAvailable": "Aluskaart ei ole kättesaadav.",
+    "displayDefaultBasemap": "Selle asemel kuvatakse vaikimisi aluskaart."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Kaardil on teie valitud alal liiga palju objekte. Kõigi andmete toomine võib kaua aega võtta.",
+    "askForContinue": "Kas soovite jätkata?"
   }
 });

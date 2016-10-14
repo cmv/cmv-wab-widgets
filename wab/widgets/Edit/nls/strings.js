@@ -10,7 +10,10 @@ define({
     featureLayers: "Feature Layers",
     searchTemplates: "Search Templates",
     noAvailableTempaltes: "No available templates",
-    noCanCreateLayerAreCurrentlyVisible:"No creatable layers are currently visible."
+    noCanCreateLayerAreCurrentlyVisible:"No creatable layers are currently visible.",
+    relatedTables: "Related tables:",
+    relatedRecords: "Related records:",
+    noRelatedRecotds: "No related records found"
   }),
   "ar": 1,
   "cs": 1,

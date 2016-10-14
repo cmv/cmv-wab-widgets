@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -418,7 +418,8 @@ define(['dojo/_base/declare',
           }
         }
         var node = html.create('div', {
-          'class': 'jimu-btn jimu-float-trailing jimu-trailing-margin1 ' + appendedClasses,
+          'class': 'jimu-btn jimu-popup-action-btn jimu-float-trailing jimu-trailing-margin1 ' +
+            appendedClasses,
           'innerHTML': button.label,
           'title': button.title || button.label
         }, this.buttonContainer);
@@ -426,7 +427,7 @@ define(['dojo/_base/declare',
 
         var disableNode = html.create('div', {
           'class': 'jimu-btn jimu-state-disabled jimu-float-trailing jimu-trailing-margin1 ' +
-           appendedClasses,
+            appendedClasses,
           'title': button.title || button.label,
           'innerHTML': button.label,
           'style': {

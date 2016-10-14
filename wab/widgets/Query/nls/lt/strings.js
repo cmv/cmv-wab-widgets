@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Atributo kriterijai",
   "spatialFilter": "Erdvinis filtras",
   "value": "REIKŠMĖ",
-  "noAttributeSpatialFilterTip": "Nenurodyta jokių filtrų. Visi elementai bus grąžinti."
+  "noAttributeSpatialFilterTip": "Nenurodyta jokių filtrų. Visi elementai bus grąžinti.",
+  "showAllRelatedRecords": "Rodyti visus susijusius įrašus"
 });

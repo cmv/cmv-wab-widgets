@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "البحث الجغرافي",
   "description": "استعرض إلى <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> جدول البيانات </a> أو اسحبه هنا لتصوّر بيانات الخريطة وإلحاقها به.",
   "selectCSV": "حدد CSV",
   "loadingCSV": "Loading CSV",

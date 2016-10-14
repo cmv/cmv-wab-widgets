@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 define(['dojo/_base/declare',
   'dojo/_base/lang',
   'dojo/_base/array',
+  'dojo/on',
   'dojo/text!./FeatureSetResultEditor.html',
   'dijit/_TemplatedMixin',
   '../BaseEditor',
@@ -25,7 +26,7 @@ define(['dojo/_base/declare',
   'jimu/dijit/TabContainer',
   'jimu/dijit/CheckBox'
 ],
-function(declare, lang, array, template, _TemplatedMixin, BaseEditor,
+function(declare, lang, array, on, template, _TemplatedMixin, BaseEditor,
   FeatureSetRendererEditor, PopupConfig, TabContainer, CheckBox) {
   var clazz = declare([BaseEditor, _TemplatedMixin], {
     baseClass: 'jimu-gp-editor-base jimu-gp-editor-fsrse',
@@ -54,7 +55,7 @@ function(declare, lang, array, template, _TemplatedMixin, BaseEditor,
       var popupArgs = {};
       if(this.args && this.args.param){
         if(this.args.param.defaultValue){
-          popupArgs.fields = this.args.param.defaultValue.fields;
+          popupArgs.fields = lang.clone(this.args.param.defaultValue.fields);
         }
         var popup = this.args.param.popup;
         if(popup){
@@ -64,6 +65,17 @@ function(declare, lang, array, template, _TemplatedMixin, BaseEditor,
           popupArgs.fields = array.map(popupArgs.fields, function(fieldInfo){
             var visible = array.indexOf(fieldNames, fieldInfo.name) >= 0;
             fieldInfo.visible = visible;
+            // update alias if necessary
+            var alias;
+            array.some(popup.fields, function(item) {
+              if(item.name === fieldInfo.name) {
+                alias = item.alias;
+                return true;
+              }
+            });
+            if(alias) {
+              fieldInfo.alias = alias;
+            }
             return fieldInfo;
           });
           popupArgs.title = popup.title;
@@ -72,6 +84,15 @@ function(declare, lang, array, template, _TemplatedMixin, BaseEditor,
       this.popupConfig = new PopupConfig(popupArgs);
       this.popupConfig.placeAt(this.popupConfigTab);
       this.popupConfig.startup();
+
+      this.own(on(this.popupConfig, 'noVisibleField', lang.hitch(this, function() {
+        this.enablePopup.setValue(false);
+        this.enablePopup.setStatus(false);
+      })));
+
+      this.own(on(this.popupConfig, 'hasVisibleField', lang.hitch(this, function() {
+        this.enablePopup.setStatus(true);
+      })));
 
       this.enablePopup = new CheckBox({
         checked: !this.args.param.popup ||

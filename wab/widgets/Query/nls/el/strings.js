@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Κριτήρια γνωρίσματος",
   "spatialFilter": "Χωρικό φίλτρο",
   "value": "ΤΙΜΗ",
-  "noAttributeSpatialFilterTip": "Δεν έχουν οριστεί φίλτρα. Θα επιστραφούν όλα τα στοιχεία."
+  "noAttributeSpatialFilterTip": "Δεν έχουν οριστεί φίλτρα. Θα επιστραφούν όλα τα στοιχεία.",
+  "showAllRelatedRecords": "Εμφάνιση όλων των συναφών εγγραφών"
 });

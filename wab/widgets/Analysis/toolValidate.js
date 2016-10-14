@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -69,7 +69,9 @@ define([
       }
     }, this);
 
-    return ret;
+    return array.some(layerObjects, function(layerObject) {
+      return layerObject.capabilities && layerObject.capabilities.indexOf('Extract') >= 0;
+    });
   };
 
   mo._addExtractCapability = function(layerObject){

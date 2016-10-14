@@ -4,6 +4,8 @@ define({
   "format": "Format",
   "layout": "Raspored",
   "settings": "Napredno",
+  "labels": "Oznake",
+  "showLabels": "Prikaži oznake",
   "mapScaleExtent": "Razmera/obuhvat mape",
   "preserve": "Očuvaj",
   "mapScale": "razmera mape",

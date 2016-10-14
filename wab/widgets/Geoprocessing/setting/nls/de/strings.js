@@ -25,5 +25,5 @@ define({
   "urlPlaceholder": "Feature-Set-URL",
   "useShapefile": "Shapefile in lokalem Dateisystem verwenden",
   "allowToExport": "Exportieren von Ergebnissen zulassen",
-  "useDynamicSchema": "Die Ausgabe kann verschiedene Schemas aufweisen; verwenden Sie das dynamische anstelle des vordefinierten Schemas."
+  "useDynamicSchema": "Die Ausgabe kann verschiedene Schemas aufweisen; das dynamische anstelle des vordefinierten Schemas verwenden."
 });

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,8 +23,11 @@ define([
   'dojo/dom-construct',
   'dojo/on',
   'dojo/query',
+  'dojo/dom-attr',
+  'dojo/dom-style',
   'dojo/_base/lang',
   'dojo/_base/array',
+  'dijit/registry',
   'dijit/form/Select',
   'dijit/form/TextBox',
   'dijit/form/ValidationTextBox',
@@ -37,9 +40,9 @@ define([
   './presetValuePicker',
   'dijit/form/CheckBox'
 ],
-  function(declare, BaseWidgetSetting, _WidgetsInTemplateMixin, SimpleTable, dom,
-    domConstruct, on, query, lang, array, Select, TextBox, ValidationTextBox,
-    utils, LayerInfos, Message, Popup, entities, LayersHandler, presetValuePicker) {
+  function(declare, BaseWidgetSetting, _WidgetsInTemplateMixin, SimpleTable, dom, domConstruct,
+    on, query, domAttr, domStyle, lang, array, registry, Select, TextBox, ValidationTextBox,
+    utils, LayerInfos, Message, Popup, entities, LayersHandler, presetValuePicker, CheckBox) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
 
       //these two properties is defined in the BaseWidget
@@ -51,8 +54,15 @@ define([
       groupLayerDesc: [],
       groupLayerOperator: [],
       groupLayerDefault: [],
+      //groupAppendSame: [],
+      groupAppendSameConjunc: [],
       layerCounter: 0,
       layerList: null,
+
+      postMixInProperties: function() {
+        this.nls = lang.mixin(this.nls, window.jimuNls.common);
+        this.nls = lang.mixin(this.nls, window.jimuNls.spatialFilterByFeatures);
+      },
 
       postCreate: function() {
         this.inherited(arguments);
@@ -70,8 +80,13 @@ define([
         this.groupLayerDesc = [];
         this.groupLayerOperator = [];
         this.groupLayerDefault = [];
+        //this.groupAppendSame = [];
+        this.groupAppendSameConjunc = [];
         this.chkSimpleMode.set('checked', this.config.simpleMode);
         this.chkOptionsMode.set('checked', this.config.optionsMode);
+        this.chkWebmapAppendMode.set('checked', this.config.webmapAppendMode);
+        this.slAppendChoice.set('value', this.config.slAppendChoice);
+        this.chkZoomMode.set('checked', this.config.zoomMode);
         this.createMapLayerList();
       },
 
@@ -92,6 +107,9 @@ define([
           if(validGroups && validGroupsNames && validDuplicates && validTables) {
             this.config.simpleMode = this.chkSimpleMode.checked;
             this.config.optionsMode = this.chkOptionsMode.checked;
+            this.config.webmapAppendMode = this.chkWebmapAppendMode.checked;
+            this.config.slAppendChoice = this.slAppendChoice.get('value');
+            this.config.zoomMode = this.chkZoomMode.checked;
             this.config.groups = [];
             array.forEach(this.groupLayerName, lang.hitch(this, function(groupName, i) {
               if(groupName !== null) {
@@ -101,11 +119,14 @@ define([
                   groupObj.desc = utils.sanitizeHTML(this.groupLayerDesc[i].value);
                   groupObj.operator = utils.sanitizeHTML(this.groupLayerOperator[i].value);
                   groupObj.defaultVal = utils.sanitizeHTML(this.groupLayerDefault[i].value);
+                  groupObj.appendSameLayer = true;
+                  groupObj.appendSameLayerConjunc = this.groupAppendSameConjunc[i].value;
                   groupObj.layers = [];
 
                   array.forEach(this.groupLayerContainer[i].getRows(), lang.hitch(this, function(row) {
                     var layerStruct = {};
                     var valueRadio = row.cells[2].childNodes[0];
+                    //var zoomRadio = row.cells[3].childNodes[0];
                     layerStruct.layer = row.layerCol.value;
                     layerStruct.field = row.fieldCol.value;
                     layerStruct.dataType = row.dataTypeCol.attr('displayedValue');
@@ -114,7 +135,12 @@ define([
                     } else {
                       layerStruct.useDomain = '';
                     }
-
+                    /*
+                    if(zoomRadio.checked) {
+                      layerStruct.useZoom = zoomRadio.checked;
+                    } else {
+                      layerStruct.useZoom = '';
+                    }*/
                     groupObj.layers.push(layerStruct);
                   }));
                   this.config.groups.push(groupObj);
@@ -138,7 +164,7 @@ define([
           .then(lang.hitch(this, function(operLayerInfos) {
             if(operLayerInfos._layerInfos && operLayerInfos._layerInfos.length > 0) {
               //this.layerList = operLayerInfos._layerInfos;
-
+              console.log(operLayerInfos._layerInfos);
 
               var layerHandle =  new LayersHandler({
                 "layers": operLayerInfos._layerInfos
@@ -180,32 +206,57 @@ define([
 
         var rowName = groupSettingTable.insertRow(-1);
         var cellNameLabel = rowName.insertCell(0);
+        domAttr.set(cellNameLabel, 'title', this.nls.labels.groupNameTip);
         var cellNameInput = rowName.insertCell(1);
         var cellDescLabel = rowName.insertCell(2);
+        domAttr.set(cellDescLabel, 'title', this.nls.labels.groupDescTip);
         var cellDescInput = rowName.insertCell(3);
         var cellDelete = rowName.insertCell(4);
 
         var rowPreset = groupSettingTable.insertRow(-1);
         var cellOperatorLabel = rowPreset.insertCell(0);
+        domAttr.set(cellOperatorLabel, 'title', this.nls.labels.groupOperatorTip);
         var cellOperatorInput = rowPreset.insertCell(1);
         var cellDefaultLabel = rowPreset.insertCell(2);
+        domAttr.set(cellDefaultLabel, 'title', this.nls.labels.groupDefaultTip);
         var cellDefaultInput = rowPreset.insertCell(3);
         var cellSpacer = rowPreset.insertCell(4);
+
+        var rowAppend = groupSettingTable.insertRow(-1);
+        var cellSameLayerAppend = rowAppend.insertCell(0);
+        domAttr.set(cellSameLayerAppend, "colspan", "3");
+        //var cellAppendInput = rowAppend.insertCell(1);
+        //var cellAppendUsing = rowAppend.insertCell(2);
+        var cellAppendConjun = rowAppend.insertCell(1);
+        rowAppend.insertCell(2);
+
+        domAttr.set(rowAppend, 'id', 'appendLayers_' + this.groupCounter);
+        //domStyle.set(rowAppend, 'display', 'none');
 
         cellNameLabel.innerHTML = this.nls.labels.groupName;
         cellDescLabel.innerHTML = this.nls.labels.groupDesc;
         cellOperatorLabel.innerHTML = this.nls.labels.groupOperator;
         cellDefaultLabel.innerHTML = this.nls.labels.groupDefault;
+        cellSameLayerAppend.innerHTML = this.nls.labels.sameLayerAppend;
+        //cellAppendUsing.innerHTML = this.nls.labels.sameLayerConjunc;
 
         var groupName = '';
         var groupDesc = '';
         var groupOper = '';
         var groupDef = '';
+        var groupAppend = false;
+        var groupAppendConjunc = '';
         if(typeof(pParam.group) !== 'undefined' && pParam.group !== null) {
           groupName = pParam.group.name;
           groupDesc = pParam.group.desc;
           groupOper = pParam.group.operator;
           groupDef = pParam.group.defaultVal;
+          if(typeof(pParam.group.appendSameLayer) !== 'undefined') {
+            groupAppend = pParam.group.appendSameLayer;
+          }
+          if(typeof(pParam.group.appendSameLayerConjunc) !== 'undefined') {
+            groupAppendConjunc = pParam.group.appendSameLayerConjunc;
+          }
         }
 
         var txtGroupName = new ValidationTextBox({
@@ -256,11 +307,24 @@ define([
 
         this.createOperatorSelection({cell:cellOperatorInput, value:groupOper});
 
+        /*
+        var chkAppendSame = new CheckBox({
+          name: "chkAppendSame",
+          value: '',
+          checked: groupAppend
+        });
+        domConstruct.place(chkAppendSame.domNode, cellAppendInput);
+        this.groupAppendSame.push(chkAppendSame);
+        */
+
+        this.createAppendConjunc({cell:cellAppendConjun, value:groupAppendConjunc});
+
         this.createTableObject(pParam);
 
         var addLayerNode = domConstruct.create("div", {
           id: 'addLyrDiv_' + this.groupCounter,
-          'class': 'jimu-btn group-block-add-layer'
+          'class': 'jimu-btn group-block-add-layer',
+          title: this.nls.buttons.addLayerTip
         });
         this.own(on(addLayerNode, "click", lang.hitch(this, function() {
           this.addLayerRow(addLayerNode.id);
@@ -293,6 +357,20 @@ define([
         this.groupLayerOperator.push(opSelect);
       },
 
+      createAppendConjunc: function(params) {
+        var ObjList = [
+          {'value': 'OR', 'label': this.nls.inputs.optionOR},
+          {'value': 'AND', 'label': this.nls.inputs.optionAND}
+        ];
+        var opSelect = new Select({
+          options: ObjList,
+          "class": "operator-append-select"
+        }).placeAt(params.cell);
+        opSelect.startup();
+        opSelect.set('value', entities.decode(params.value));
+        this.groupAppendSameConjunc.push(opSelect);
+      },
+
 
       createTableObject: function(pParam) {
         var fields = null;
@@ -300,24 +378,32 @@ define([
           name: "layerCol",
           title: this.nls.tables.layer,
           "class": "label",
-          type: "empty"
+          type: "empty",
+          width: "375px"
         }, {
           name: "fieldCol",
           title: this.nls.tables.field,
           "class": "label",
-          type: "empty"
+          type: "empty",
+          width: "350px"
         }, {
           name: "domainCol",
           title: this.nls.tables.value,
           "class": "label",
           type: "radio",
+          width: "100px"
+        }, /*{
+          name: "zoomCol",
+          title: this.nls.zoomTo,
+          "class": "label",
+          type: "radio",
           width: "150px"
-        }, {
+        },*/ {
           name: "actions",
           title: this.nls.tables.action,
           type: "actions",
           actions: ["delete"],
-          width: "125px"
+          width: "100px"
         }, {
           name : 'dataTypeCol',
           type : 'empty',
@@ -364,6 +450,20 @@ define([
               radioState = true;
             }
           })));
+
+          /*
+          var zoomRadio = tr.cells[3].childNodes[0];
+          var zoomState = zoomRadio.checked;
+          this.own(on(zoomRadio, "click", lang.hitch(this, function() {
+            if(zoomState) {
+              zoomRadio.checked = false;
+              zoomState = false;
+            } else {
+              zoomRadio.checked = true;
+              zoomState = true;
+            }
+          })));
+          */
         }
       },
 
@@ -397,6 +497,7 @@ define([
           lyrSelect.startup();
           tr.layerCol = lyrSelect;
           this.own(on(lyrSelect, "change", lang.hitch(this, function(val) {
+            //this.checkSameLayer(pCounter);
             this.createFieldSelection(val, tr, pParam, pCounter);
           })));
 
@@ -413,43 +514,48 @@ define([
       createFieldSelection: function(pLayer, pTR, pParam, pCounter) {
         var ctlfieldList = [];
         var ctlfieldDataType = [];
+        var restricted = "esriFieldTypeBlob,esriFieldTypeOID";
         array.forEach(this.layerList, lang.hitch(this, function(layer) {
           if(layer.children.length > 0) {
             array.forEach(layer.children, lang.hitch(this, function(child) {
               if(child.id === pLayer) {
                 array.forEach(child.children, lang.hitch(this, function(field) {
-                  var fieldObject = {};
-                  fieldObject.value = field.name;
-                  fieldObject.label = field.label;
-                  fieldObject.selected = false;
-                  ctlfieldList.push(fieldObject);
+                  if(restricted.indexOf(field.fieldType) === -1) {
+                    var fieldObject = {};
+                    fieldObject.value = field.name;
+                    fieldObject.label = field.label;
+                    fieldObject.selected = false;
+                    ctlfieldList.push(fieldObject);
 
-                  var fieldDataType = {};
-                  fieldDataType.value = field.name;
-                  fieldDataType.label = field.fieldType;
-                  fieldDataType.selected = false;
-                  ctlfieldDataType.push(fieldDataType);
+                    var fieldDataType = {};
+                    fieldDataType.value = field.name;
+                    fieldDataType.label = field.fieldType;
+                    fieldDataType.selected = false;
+                    ctlfieldDataType.push(fieldDataType);
+                  }
                 }));
               }
             }));
           } else {
             if(layer.id === pLayer) {
               array.forEach(layer.layer.fields, lang.hitch(this, function(field) {
-                var fieldObject = {};
-                fieldObject.value = field.name;
-                if(field.alias === "") {
-                  fieldObject.label = field.name;
-                } else {
-                  fieldObject.label = field.alias;
-                }
-                fieldObject.selected = false;
-                ctlfieldList.push(fieldObject);
+                if(restricted.indexOf(field.type) === -1) {
+                  var fieldObject = {};
+                  fieldObject.value = field.name;
+                  if(field.alias === "") {
+                    fieldObject.label = field.name;
+                  } else {
+                    fieldObject.label = field.alias;
+                  }
+                  fieldObject.selected = false;
+                  ctlfieldList.push(fieldObject);
 
-                var fieldDataType = {};
-                fieldDataType.value = field.name;
-                fieldDataType.label = field.type;
-                fieldDataType.selected = false;
-                ctlfieldDataType.push(fieldDataType);
+                  var fieldDataType = {};
+                  fieldDataType.value = field.name;
+                  fieldDataType.label = field.type;
+                  fieldDataType.selected = false;
+                  ctlfieldDataType.push(fieldDataType);
+                }
               }));
             }
           }
@@ -487,6 +593,30 @@ define([
         }
       },
 
+      /*
+      checkSameLayer: function(pCounter) {
+        var dupeList = [];
+        var dupeFlag = false;
+        array.forEach(this.groupLayerContainer[pCounter - 1].getRows(), lang.hitch(this, function(row) {
+          var layer = row.layerCol.value;
+          if(dupeList.indexOf(layer) !== -1) {
+            dupeFlag = true;
+          } else {
+            dupeList.push(layer);
+          }
+
+        }));
+        if(dupeFlag)  {
+          domStyle.set('appendLayers_' + pCounter, 'display', 'table-row');
+        } else {
+          domStyle.set('appendLayers_' + pCounter, 'display', 'none');
+          var chkbkCell = dom.byId('appendLayers_' + pCounter).cells[1];
+          var isDijit = registry.byNode(chkbkCell.childNodes[0]);
+          isDijit.set('checked', false);
+        }
+      },
+      */
+
       dataTypeSync: function(pParam) {
         var dtSelection = pParam.select;
         dtSelection.set('value', pParam.field);
@@ -495,13 +625,32 @@ define([
       resetRadio: function(pParam) {
         var row = pParam.row;
         var valueRadio = row.cells[2].childNodes[0];
-        if(typeof(pParam) !== 'undefined') {
-          if(pParam.param.useDomain !== "") {
-            valueRadio.checked = true;
+        if(typeof(pParam.param) !== 'undefined') {
+          if (pParam.param.hasOwnProperty("useDomain")) {
+            if(pParam.param.useDomain !== "") {
+              valueRadio.checked = true;
+            } else {
+              valueRadio.checked = false;
+            }
           } else {
             valueRadio.checked = false;
           }
         }
+
+        /*
+        var zoomRadio = row.cells[3].childNodes[0];
+        if(typeof(pParam.param) !== 'undefined') {
+          if (pParam.param.hasOwnProperty("useZoom")) {
+            if(pParam.param.useZoom !== "") {
+              zoomRadio.checked = true;
+            } else {
+              zoomRadio.checked = false;
+            }
+          } else {
+            zoomRadio.checked = false;
+          }
+        }
+        */
       },
 
 
@@ -595,9 +744,16 @@ define([
           buttons : [{
             label : window.jimuNls.common.ok,
             onClick : lang.hitch(this, function() {
+              var userInput = "";
               if(typeof valuePicker.valueParam !== "undefined") {
                 if(valuePicker.valueParam.getFilterExpr() !== null) {
-                  var userInput = valuePicker.valueParam.partsObj.parts[0].valueObj.value;
+                  var valueProviders = valuePicker.valueParam.getValueProviders();
+                  var firstValueProvider = valueProviders[0];
+                  var valueObj = firstValueProvider.getValueObject();
+                  if(valueObj){
+                    userInput = valueObj.value;
+                  }
+
                   pInput.set("value", userInput);
                 }
               }
@@ -619,6 +775,8 @@ define([
         this.groupLayerDesc[numPart - 1] = null;
         this.groupLayerOperator[numPart - 1] = null;
         this.groupLayerDefault[numPart - 1] = null;
+        //this.groupAppendSame[numPart - 1] = null;
+        this.groupAppendSameConjunc[numPart - 1] = null;
         //dijit.byId('addGroupName_' + numPart).destroyRecursive(true);
         //dijit.byId('addGroupDesc_' + numPart).destroyRecursive(true);
         domConstruct.destroy(dom.byId('addGroupDelete_' + numPart));

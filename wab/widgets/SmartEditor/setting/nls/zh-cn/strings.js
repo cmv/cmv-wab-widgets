@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "保存记录时，可选择从选择集中移除要素。如果是唯一选定记录，面板将切换回模板页面。",
     "useFilterEditor": "使用要素模板过滤器",
     "useFilterEditorTip": "过滤模板选取器可用于查看一个图层模板或按名称搜索模板，可选择使用过滤模板选取器。",
+    "listenToGroupFilter": "将群组过滤器中的过滤值应用到预设字段",
+    "listenToGroupFilterTip": "在群组过滤器微件中应用过滤器后，在预设值列表中向匹配的字段应用值。",
+    "keepTemplateActive": "保持所选模板处于活动状态",
+    "keepTemplateActiveTip": "显示模板选取器后，如果之前选择了某一模板，则重新选择该模板。",
     "layerSettingsTable": {
       "allowDelete": "允许删除",
       "allowDeleteTip": "可选择允许用户删除要素；如果图层不支持删除，则将禁用",
@@ -27,9 +31,10 @@ define({
       "fields": "字段",
       "fieldsTip": "修改要进行编辑的字段并定义智能属性",
       "description": "描述",
-      "descriptionTip": "可选择输入要显示在属性页面顶部的文本。"
+      "descriptionTip": "输入文本的选项，以显示在属性页面顶部。"
     },
-    "editFieldError": "对于不可编辑的图层，字段修改和智能属性不可用"
+    "editFieldError": "对于不可编辑的图层，字段修改和智能属性不可用",
+    "noConfigedLayersError": "智能编辑器需要一个或多个可编辑图层"
   },
   "editDescriptionPage": {
     "title": "为 <b>${layername}</b> 定义属性概览文本 "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "从定义的条件生成 SQL 格式的表达式",
       "actions": "条件",
       "actionsTip": "触发后，可更改规则的顺序并定义条件"
+    },
+    "actions": {
+      "hide": "隐藏",
+      "required": "必填",
+      "disabled": "已禁用"
     }
   },
   "filterPage": {
     "submitHidden": "即使隐藏，仍提交该字段的属性数据?",
-    "title": "配置 ${action} 规则的子句",
+    "title": "为 ${action} 规则配置表达式",
     "filterBuilder": "当记录与以下 ${any_or_all} 表达式相匹配时，设置字段的操作",
     "noFilterTip": "激活操作后，可使用以下工具来定义语句。"
   }

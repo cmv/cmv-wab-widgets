@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Trình biên tập Thông minh",
+  "noEditPrivileges": "Tài khoản của bạn không có quyền tạo hoặc sửa đổi dữ liệu.",
+  "widgetActive": "Hoạt động",
+  "widgetNotActive": "Không Hoạt động",
   "pressStr": "Nhấn ",
   "ctrlStr": " CTRL ",
   "snapStr": " để bật tính năng chụp ảnh nhanh",
@@ -19,5 +22,6 @@ define({
     "all": "Tất cả",
     "noAvailableTempaltes": "Không có mẫu khả dụng",
     "searchTemplates": "Mẫu Tìm kiếm"
-  }
+  },
+  "invalidConfiguration": "Tiện ích chưa được cấu hình hoặc lớp trong cấu hình không còn trong bản đồ. Vui lòng mở ứng dụng trong chế độ bộ thiết lập và cấu hình lại tiện ích."
 });

@@ -122,5 +122,6 @@ define({
   "uploadImage": "Učitaj sliku",
   "attributeCriteira": "Atributni kriterij",
   "specifyFilterAtRuntimeTip": "Korisnici će trebati odrediti parametre za ovaj izraz.",
-  "value": "VRIJEDNOST"
+  "value": "VRIJEDNOST",
+  "hideLayersTip": "Isključite slojeve rezultata upita kad je widget zatvoren."
 });

@@ -16,8 +16,8 @@ define({
     "esriCentimeters": "Centímetros",
     "esriDecimeters": "Decímetros",
     "esriMeters": "Metros",
-    "esriKilometers": "Quilômetros",
-    "esriDURadians": "Radians",
+    "esriKilometers": "Quilómetros",
+    "esriDURadians": "Radianos",
     "esriDUDecimalDegrees": "Graus",
     "esriSquareInches": "Sq Polegadas",
     "esriSquareFeet": "Pés Quadrados",
@@ -39,10 +39,10 @@ define({
     "esriMensurationHeightFromBaseAndTop": "Altura: Base até ao Topo",
     "esriMensurationHeightFromBaseAndTopShadow": "Altura: Base até ao Topo-Sombra",
     "esriMensurationHeightFromTopAndTopShadow": "Altura: Topo para o Topo-Sombra",
-    "esriMensurationCentroid": "Centroid",
+    "esriMensurationCentroid": "Centróide",
     "esriMensurationPoint3D": "Localização (3D)",
     "esriMensurationDistanceAndAngle3D": "Distância e Ângulo (3D)",
     "esriMensurationAreaAndPerimeter3D": "Área e Perimetro (3D)",
-    "esriMensurationCentroid3D": "Centroid (3D)"
+    "esriMensurationCentroid3D": "Centróide (3D)"
   }
 });

@@ -1,8 +1,8 @@
 {
 	"name": "BatchAttributeEditor",
 	"platform": "HTML",
-	"version": "2.1",
-	"wabVersion": "2.1",
+	"version": "2.2",
+	"wabVersion": "2.2",
 	"author": "Esri, Inc.",
 	"description": "A widget to modify a series of features at the same time.",
 	"copyright": "Esri, Inc.",

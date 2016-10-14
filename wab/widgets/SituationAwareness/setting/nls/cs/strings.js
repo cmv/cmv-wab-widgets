@@ -45,7 +45,7 @@ define({
   "save_label": "Možnosti ukládání",
   "save_checkbox": "Povolit ukládání",
   "csv_label": "Možnosti CSV",
-  "csv_checkbox": "Umožňuje exportovat všechna pole ve vrstvě.",
+  "csv_checkbox": "Exportovat všechna pole ve vrstvě",
   "display_label": "Možnosti zobrazení",
   "display_checkbox": "Zobrazit prvky souhrnu",
   "must_select_template": "Vyberte jednu z editačních šablon v možnostech ukládání.",

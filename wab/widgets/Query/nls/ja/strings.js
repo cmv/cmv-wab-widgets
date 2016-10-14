@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "属性条件",
   "spatialFilter": "空間フィルター",
   "value": "値",
-  "noAttributeSpatialFilterTip": "フィルターが定義されていません。すべてのフィーチャが返されます。"
+  "noAttributeSpatialFilterTip": "フィルターが定義されていません。すべてのフィーチャが返されます。",
+  "showAllRelatedRecords": "すべての関連レコードを表示"
 });

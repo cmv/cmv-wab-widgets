@@ -35,6 +35,7 @@
                   if (!layerIdOnMap || layer.id === layerIdOnMap) {
                     //set flag to identify layer type
                     selectedLayer.isMapServer = true;
+                    selectedLayer.id = layer.id + '_' + relatedLayerId;
                     if (baseURL.substring(0, baseURL.length - 1) === layer.url) {
                       array.forEach(layer.resourceInfo.layers, lang.hitch(this,
                         function (subLayer) {
@@ -81,6 +82,7 @@
                       selectedLayer.title = layer.title;
                       //set popup info
                       selectedLayer.popupInfo = layer.popupInfo;
+                      selectedLayer.id = layer.id;
                       if (layer.layerDefinition) {
                         //set layer's definitionExpression
                         if (layer.layerDefinition.definitionExpression) {

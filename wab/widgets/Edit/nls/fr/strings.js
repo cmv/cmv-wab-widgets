@@ -9,5 +9,8 @@ define({
   "featureLayers": "Couches d'entités",
   "searchTemplates": "Rechercher des modèles",
   "noAvailableTempaltes": "Aucun modèle disponible",
-  "noCanCreateLayerAreCurrentlyVisible": "Aucune couche à créer n'est actuellement visible."
+  "noCanCreateLayerAreCurrentlyVisible": "Aucune couche à créer n'est actuellement visible.",
+  "relatedTables": "Tables associées :",
+  "relatedRecords": "Enregistrements associés :",
+  "noRelatedRecotds": "Aucun enregistrement associé n'a été trouvé"
 });

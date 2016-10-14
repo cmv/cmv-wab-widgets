@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "Geopretraga",
   "description": "Pretražite na ili prevucite <a href=’./widgets/GeoLookup/data/sample.csv’ tooltip=’Preuzmite primer tabele’ target=’_blank’> unakrsnu tabelu </a> ovde da biste vizuelizovali i dodali podatke mape u nju.",
   "selectCSV": "Izaberite CSV",
   "loadingCSV": "Učitavanje CSV datoteke",

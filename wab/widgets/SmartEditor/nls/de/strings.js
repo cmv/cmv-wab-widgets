@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Smart Editor",
+  "noEditPrivileges": "Ihrem Konto sind keine Berechtigungen zum Erstellen oder Ändern von Daten zugewiesen.",
+  "widgetActive": "Aktiv",
+  "widgetNotActive": "Nicht aktiv",
   "pressStr": "Drücken Sie ",
   "ctrlStr": " STRG ",
   "snapStr": " , um die Fangfunktion zu aktivieren.",
@@ -14,10 +17,11 @@ define({
   "deletePromptTitle": "Feature löschen",
   "deletePrompt": "Soll das ausgewählte Feature tatsächlich gelöscht werden?",
   "attachmentLoadingError": "Fehler beim Hochladen der Anlagen",
-  "attachmentSaveDeleteWarning": "Warnung: Änderungen an Anhängen werden automatisch gespeichert",
+  "attachmentSaveDeleteWarning": "Warnung: Änderungen an Anlagen werden automatisch gespeichert.",
   "filterEditor": {
     "all": "Alle",
     "noAvailableTempaltes": "Keine verfügbaren Vorlagen",
     "searchTemplates": "Vorlagen durchsuchen"
-  }
+  },
+  "invalidConfiguration": "Das Widget wurde nicht konfiguriert oder die Layer in der Konfiguration sind nicht mehr in der Karte enthalten.  Öffnen Sie die App im Builder-Modus, und konfigurieren Sie das Widget neu."
 });

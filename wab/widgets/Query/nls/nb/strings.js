@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Attributtvilkår",
   "spatialFilter": "Romlig filter",
   "value": "VERDI",
-  "noAttributeSpatialFilterTip": "Det er ikke definert et filter. Alle poster blir returnert."
+  "noAttributeSpatialFilterTip": "Det er ikke definert et filter. Alle poster blir returnert.",
+  "showAllRelatedRecords": "Vis alle relaterte poster"
 });

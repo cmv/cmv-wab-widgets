@@ -34,9 +34,9 @@
 
 .jimu-widget-analysis .tool-name{
   font-size: 14px;
-  margin-left: 10px;
-  margin-top: 10px;
+  margin: 10px;
   color: #686868;
+  width: 220px;
 }
 
 .jimu-rtl .jimu-widget-analysis .tool-name{

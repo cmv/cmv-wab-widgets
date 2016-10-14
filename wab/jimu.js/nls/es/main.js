@@ -6,6 +6,7 @@ define({
     "yes": "Sí",
     "no": "No",
     "next": "Siguiente",
+    "previous": "Anterior",
     "back": "Atrás",
     "selected": "seleccionado(a)",
     "name": "Nombre",
@@ -52,7 +53,11 @@ define({
     "view": "Vista",
     "newText": "Nuevo",
     "edit": "Editar",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabla",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "continue1": "Continuar"
   },
   "errorCode": "Código",
   "errorMessage": "Mensaje",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Distinguir mayúsculas de minúsculas",
     "notSupportCaseSensitiveTip": "Los servicios alojados no admiten consultas que distingan mayúsculas de minúsculas.",
-    "setFilterTip": "Define el filtro correctamente."
+    "setFilterTip": "Define el filtro correctamente.",
+    "cascadeFilterTip": "Mostrar solo valores filtrados por expresiones anteriores."
   },
   "featureLayerSource": {
     "layer": "Capa",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Haz clic para restaurar la extensión de mapa y la visibilidad de las capas donde lo dejaste."
   },
   "featureActions": {
+    "featureActions": "Acciones de entidades",
     "ZoomTo": "Acercar",
     "PanTo": "Desplazar panorámicamente a",
     "Flash": "Destacar",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Agregar a la selección",
     "removeSelectionTip": "Suprimir de la selección",
     "selectFromCurrentSelectionTip": "Seleccionar desde la selección actual",
-    "unselectAllSelectionTip": "Anule la selección de todas las entidades que están seleccionadas"
+    "unselectAllSelectionTip": "Anule la selección de todas las entidades que están seleccionadas",
+    "selectByPolygon": "Seleccionar por polígono",
+    "selectByCircle": "Seleccionar por círculo",
+    "selectByLine": "Seleccionar por línea",
+    "chooseSelectingTools": "Elegir herramientas de selección",
+    "darw": "Dibujar",
+    "drawShap": "Dibujar una forma"
   },
   "widgetManager": {
     "createWidgetError": "Error al crear widget",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Las aplicaciones web 3D no son compatibles con su navegador."
+  },
+  "map": {
+    "basemapNotAvailable": "El mapa base no está disponible.",
+    "displayDefaultBasemap": "Se muestra el mapa base predeterminado en su lugar."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Hay demasiadas entidades dentro del área seleccionada en el mapa. Recuperar todos los datos puede tardar mucho tiempo.",
+    "askForContinue": "¿Deseas continuar?"
   }
 });

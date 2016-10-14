@@ -6,6 +6,7 @@ define({
     "yes": "כן",
     "no": "לא",
     "next": "הבא",
+    "previous": "הקודם",
     "back": "חזור",
     "selected": "נבחר",
     "name": "שם",
@@ -52,12 +53,16 @@ define({
     "view": "מבט",
     "newText": "חדש",
     "edit": "עריכה",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "טבלה",
+    "zoomIn": "התמקד פנימה",
+    "zoomOut": "התמקד החוצה",
+    "continue1": "המשך"
   },
   "errorCode": "קוד",
   "errorMessage": "הודעה",
   "errorDetail": "פרט",
-  "widgetPlaceholderTooltip": "כדי להגדיר זאת, עבור ללשונית: \"וידג'ט\" ולחץ על מספר המיקום המתאים",
+  "widgetPlaceholderTooltip": "כדי להגדיר זאת, עבור ללשונית:\"ווידג'ט\" ולחץ על מספר המיקום המתאים",
   "fieldStatistics": {
     "selectField": "בחר שדה",
     "statistics": "סטטיסטיקה",
@@ -115,7 +120,7 @@ define({
     "symbolSize": "גודל סמל",
     "addValue": "הוסף ערך",
     "setDefaultSymbol": "הגדר סמל ברירת מחדל",
-    "defaultSymbol": "סימבול ברירת מחדל",
+    "defaultSymbol": "סמל ברירת מחדל",
     "selectedSymbol": "בחר סמל",
     "value": "ערך",
     "label": "תווית",
@@ -142,7 +147,7 @@ define({
     "noField": "אין שדה",
     "visibility": "ניראה",
     "name": "שם",
-    "alias": "כינוי לתצוגה",
+    "alias": "כינוי",
     "actions": "פעולות"
   },
   "includeButton": {
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "תלוי רישיות",
     "notSupportCaseSensitiveTip": "השירותים המתארחים אינם תומכים בשאילתא תלויית רישיות.",
-    "setFilterTip": "הגדר בבקשה סינון תקין."
+    "setFilterTip": "הגדר בבקשה סינון תקין.",
+    "cascadeFilterTip": "הצג רק ערכים שסוננו לפי ביטויים קודמים."
   },
   "featureLayerSource": {
     "layer": "שכבה",
@@ -347,10 +353,11 @@ define({
     "restoreMap": "לחץ כדי לשחזר את תיחום המפה וניראות השכבות היכן שהפסקת."
   },
   "featureActions": {
+    "featureActions": "פעולות על ישות",
     "ZoomTo": "התמקד אל",
     "PanTo": "עבור אל",
     "Flash": "הבהוב",
-    "ShowPopup": "הצג פריט מוקפץ",
+    "ShowPopup": "הצג חלון קופץ",
     "CreateLayer": "צור שכבה",
     "ShowStatistics": "סטטיסטיקה...",
     "ClearSelection": "נקה בחירה",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "הוסף לנבחרים",
     "removeSelectionTip": "הסר מהבחירה",
     "selectFromCurrentSelectionTip": "בחר מתוך הרשומות הנבחרות",
-    "unselectAllSelectionTip": "בטל את הבחירה בכל הישויות הנבחרות הנוכחיות"
+    "unselectAllSelectionTip": "בטל את הבחירה בכל הישויות הנבחרות הנוכחיות",
+    "selectByPolygon": "בחירה לפי פוליגון",
+    "selectByCircle": "בחירה לפי מעגל",
+    "selectByLine": "בחירה לפי קו",
+    "chooseSelectingTools": "בחר כלי בחירה",
+    "darw": "שרטוט",
+    "drawShap": "שרטט צורה"
   },
   "widgetManager": {
     "createWidgetError": "שגיאה ביצירת ווידג'ט",
@@ -433,7 +446,7 @@ define({
     "findLocation_inputPlaceholder": "המקום או הישות שלך",
     "queryFeature": "שלח שאילתא לגבי ישות ובצע פעולת התמקדות",
     "addMarker": "הוסף סימול למפה",
-    "addMarker_titlePlaceholder": "כותרת חלון ה-Popup של הסמן",
+    "addMarker_titlePlaceholder": "כותרת חלון קופץ של הסמן",
     "addMarker_symbolURL": "כתובת ה-URL של סמל הסימול",
     "addMarker_label": "תווית סימול",
     "popupTitle": "כותרת חלון קופץ",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "אפליקציות אינטרנט בתלת-ממד אינו נתמכות בדפדפן שלך."
+  },
+  "map": {
+    "basemapNotAvailable": "מפת הבסיס לא זמינה.",
+    "displayDefaultBasemap": "מציג במקום זאת את מפת הבסיס שהוגדרה כברירת מחדל."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "יש יותר מדי ישויות באזור הנבחר שלך במפה. ייתכן שאחזור כל הנתונים יימשך זמן רב.",
+    "askForContinue": "האם ברצונך להמשיך?"
   }
 });

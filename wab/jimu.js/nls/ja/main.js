@@ -6,6 +6,7 @@ define({
     "yes": "はい",
     "no": "いいえ",
     "next": "次へ",
+    "previous": "前へ",
     "back": "戻る",
     "selected": "選択",
     "name": "名前",
@@ -52,7 +53,11 @@ define({
     "view": "表示",
     "newText": "新規",
     "edit": "編集",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "テーブル",
+    "zoomIn": "拡大",
+    "zoomOut": "縮小",
+    "continue1": "継続"
   },
   "errorCode": "コード",
   "errorMessage": "メッセージ",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "大文字/小文字を区別します",
     "notSupportCaseSensitiveTip": "ホスト サービスでは、大文字/小文字を区別するクエリはサポートされていません。",
-    "setFilterTip": "フィルターを正しく設定してください。"
+    "setFilterTip": "フィルターを正しく設定してください。",
+    "cascadeFilterTip": "前の条件式でフィルター処理した値のみを表示"
   },
   "featureLayerSource": {
     "layer": "レイヤー",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "クリックすると、マップ範囲およびオフにしていたレイヤーの表示設定を復元します。"
   },
   "featureActions": {
+    "featureActions": "フィーチャ アクション",
     "ZoomTo": "ズーム",
     "PanTo": "画面移動",
     "Flash": "フラッシュ",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "選択に追加",
     "removeSelectionTip": "選択セットから削除",
     "selectFromCurrentSelectionTip": "現在の選択セットから絞込選択",
-    "unselectAllSelectionTip": "現在選択されているすべてのフィーチャを選択解除します"
+    "unselectAllSelectionTip": "現在選択されているすべてのフィーチャを選択解除します",
+    "selectByPolygon": "ポリゴンによる選択",
+    "selectByCircle": "円による選択",
+    "selectByLine": "ラインによる選択",
+    "chooseSelectingTools": "選択ツールの選択",
+    "darw": "描画",
+    "drawShap": "図形の描画"
   },
   "widgetManager": {
     "createWidgetError": "ウィジェットの作成エラー",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D Web アプリは、使用中のブラウザーではサポートされていません。"
+  },
+  "map": {
+    "basemapNotAvailable": "ベースマップは利用できません。",
+    "displayDefaultBasemap": "代わりにデフォルトのベースマップを表示しています。"
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "マップ上で選択したエリア内に含まれるフィーチャの数が多すぎます。すべてのデータを取得するのに長い時間がかかる場合があります。",
+    "askForContinue": "続行しますか？"
   }
 });

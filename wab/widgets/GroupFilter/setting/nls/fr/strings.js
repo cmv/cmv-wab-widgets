@@ -2,20 +2,32 @@ define({
   "configText": "Définir vos groupes de filtre ci-dessous",
   "labels": {
     "groupName": "Nom de l'ensemble des filtres :",
+    "groupNameTip": "Nom du filtre dans lequel l'utilisateur va effectuer une sélection.",
     "groupDesc": "Description :",
+    "groupDescTip": "Description du filtre défini.",
     "groupOperator": "Opérateur prédéfini :",
-    "groupDefault": "Valeur prédéfinie :"
+    "groupOperatorTip": "Option permettant de prédéfinir l'opérateur du filtre. Si aucun opérateur prédéfini n'est sélectionné, le filtre utilise l'opérateur Egal.",
+    "groupDefault": "Valeur prédéfinie :",
+    "groupDefaultTip": "Option permettant de choisir une valeur dans une couche existante.",
+    "sameLayerAppend": "Lorsqu'une couche est répertoriée plusieurs fois, utilisez l'opérateur suivant entre les champs :",
+    "sameLayerConjunc": "Ajouter avec :"
   },
   "buttons": {
     "addNewGroup": "Ajouter un nouveau groupe",
-    "addLayer": "Ajouter une couche"
+    "addNewGroupTip": "Ajoutez un nouveau filtre défini.",
+    "addLayer": "Ajouter une couche",
+    "addLayerTip": "Ajoutez une couche au filtre défini."
   },
   "inputs": {
     "groupName": "Nommer votre groupe",
     "groupDesc": "Description de votre groupe",
     "groupDefault": "Entrer une valeur prédéfinie",
     "simpleMode": "Commencer dans la vue simple",
+    "simpleModeTip": "Option permettant de simplifier l'interface configurée du widget. Lorsque l'option est sélectionnée, la liste déroulante des opérateurs et les boutons Ajouter un critère sont supprimés de l'interface.",
+    "webmapAppendMode": "Ajouter un filtre à un filtre de carte Web existant avec ",
+    "webmapAppendModeTip": "Option permettant d'ajouter le filtre défini à un filtre de carte Web existant. Les opérateurs pris en charge sont OR et AND.",
     "optionsMode": "Masquer les options de widget",
+    "optionsModeTip": "Option permettant de présenter des paramètres de widget supplémentaires. Si l'option est sélectionnée, l'enregistrement et le chargement de filtres définis, ainsi que la conservation du filtre après la fermeture du widget, sont supprimés de l'interface.",
     "optionOR": "OU",
     "optionAND": "ET",
     "optionEQUAL": "EGAL A",
@@ -26,15 +38,21 @@ define({
     "optionLESSTHANEQUAL": "INFERIEUR OU EGAL A",
     "optionSTART": "COMMENCE PAR",
     "optionEND": "SE TERMINE PAR",
-    "optionLIKE": "CONTAINS",
+    "optionLIKE": "CONTIENT",
     "optionNOTLIKE": "NE CONTIENT PAS",
     "optionNONE": "AUCUN"
   },
   "tables": {
     "layer": "Couches",
+    "layerTip": "Nom de la couche selon la définition de la carte.",
     "field": "Champs",
+    "fieldTip": "Champ en fonction duquel la couche va être filtrée.",
     "value": "Utiliser la valeur",
-    "action": "Effacer"
+    "valueTip": "Option permettant d'utiliser les valeurs de la liste déroulante de la couche. Si aucune couche n'utilise ce paramètre, une simple zone de texte est présentée à l'utilisateur.",
+    "zoom": "Zoom",
+    "zoomTip": "Option permettant d'appliquer un zoom sur l'étendue des entités une fois le filtre appliqué. Une seule couche peut être sélectionnée pour le zoom.",
+    "action": "Effacer",
+    "actionTip": "Supprimez la couche du filtre défini."
   },
   "popup": {
     "label": "Choisir une valeur"
@@ -49,7 +67,10 @@ define({
   "picker": {
     "description": "Utilisez ce formulaire pour rechercher une valeur prédéfinie pour ce groupe.",
     "layer": "Sélectionner une couche",
+    "layerTip": "Nom de la couche selon la définition de la carte Web.",
     "field": "Sélectionner un champ",
-    "value": "Sélectionner une valeur"
+    "fieldTip": "Champ à partir duquel la valeur prédéfinie va être configurée.",
+    "value": "Sélectionner une valeur",
+    "valueTip": "Valeur qui sera la valeur par défaut du widget."
   }
 });

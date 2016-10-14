@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Opcja usunięcia obiektu z wybranego zestawu podczas zapisywania rekordu. Jeśli jest to jedyny wybrany rekord, panel jest przełączany z powrotem do strony szablonu.",
     "useFilterEditor": "Użyj szablonu filtrów obiektu",
     "useFilterEditorTip": "Opcja użycia okna wyboru szablonu filtrów, która umożliwia wyświetlenie szablonów jednej warstwy lub wyszukiwanie szablonów według nazwy.",
+    "listenToGroupFilter": "Stosowanie wartości filtru z widżetu Filtr grupy do pól Ustawienie wstępne",
+    "listenToGroupFilterTip": "Podczas stosowania filtru w widżecie Filtr grupy zastosuj wartość do zgodnego pola na liście wartości Ustawienie wstępne.",
+    "keepTemplateActive": "Utrzymywanie aktywności wybranego szablonu",
+    "keepTemplateActiveTip": "Po wyświetleniu okna wyboru szablonu, jeśli szablon był wcześniej wybrany, wybierz go ponownie.",
     "layerSettingsTable": {
       "allowDelete": "Zezwalaj na usuwanie",
       "allowDeleteTip": "Opcja umożliwiająca użytkownikowi usuwanie obiektów; wyłączona, jeśli warstwa nie obsługuje usuwania",
@@ -27,9 +31,10 @@ define({
       "fields": "Pola",
       "fieldsTip": "Modyfikuj pola, które mają być edytowane i definiuj inteligentne atrybuty",
       "description": "Opis",
-      "descriptionTip": "Opcjonalnie wprowadź tekst, który chcesz wyświetlić u góry strony atrybutów."
+      "descriptionTip": "Opcja wprowadzania tekstu do wyświetlenia u góry strony atrybutów."
     },
-    "editFieldError": "Modyfikacje pól i inteligentne atrybuty nie są dostępne w przypadku warstw, które nie są modyfikowalne"
+    "editFieldError": "Modyfikacje pól i inteligentne atrybuty nie są dostępne w przypadku warstw, które nie są modyfikowalne",
+    "noConfigedLayersError": "Inteligentny edytor wymaga co najmniej jednej edytowalnej warstwy"
   },
   "editDescriptionPage": {
     "title": "Zdefiniuj tekst opisu atrybutów dla warstwy <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Wynikowe wyrażenie w języku SQL utworzone na podstawie zdefiniowanych kryteriów",
       "actions": "Kryteria",
       "actionsTip": "Zmienia kolejność reguły i definiuje kryteria w momencie wyzwolenia"
+    },
+    "actions": {
+      "hide": "Ukryj",
+      "required": "Wymagane",
+      "disabled": "Wyłączone"
     }
   },
   "filterPage": {
     "submitHidden": "Czy przesłać dane atrybutu dla tego pola nawet wtedy, gdy jest ukryte?",
-    "title": "Skonfiguruj klauzulę dla reguły ${action}",
+    "title": "Skonfiguruj wyrażenie dla reguły ${action}",
     "filterBuilder": "Ustaw działanie dla pola, gdy rekord jest zgodny z ${any_or_all} z następujących wyrażeń",
     "noFilterTip": "Przy użyciu poniższych narzędzi zdefiniuj instrukcję dla momentu, gdy działanie jest aktywne."
   }

@@ -1,5 +1,5 @@
 define({
-  "settingsHeader": "设置 GeoLookup 微件的详细信息",
+  "settingsHeader": "设置地理查找微件的详细信息",
   "settingsDesc": "根据地图上的面图层丰富 CSV 文件位置列表。面图层中的所选字段将追加到这些位置中。",
   "settingsLoadingLayers": "正在加载图层，请稍候。",
   "settingsConfigureTitle": "配置图层字段",

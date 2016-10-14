@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Izmjeri visinu",
   "intialScaleLabel": "Odaberi početno mjerilo za nakrivljen snimke",
   "smallBuildingLabel": "Urbano područje: mala zgrada",
-  "buildingLabel": "Urbano područje: zgrada"
+  "buildingLabel": "Urbano područje: zgrada",
+  "azimuthChangeNotification": "Nema podataka u odabranom smjeru."
 });

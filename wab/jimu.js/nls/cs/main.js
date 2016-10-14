@@ -6,6 +6,7 @@ define({
     "yes": "Ano",
     "no": "Ne",
     "next": "Další",
+    "previous": "Předchozí",
     "back": "Zpět",
     "selected": "vybrané",
     "name": "Název",
@@ -52,7 +53,11 @@ define({
     "view": "Zobrazit",
     "newText": "Nový",
     "edit": "Upravit",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabulka",
+    "zoomIn": "Přiblížit",
+    "zoomOut": "Oddálit",
+    "continue1": "Pokračovat"
   },
   "errorCode": "Kód",
   "errorMessage": "Zpráva",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Rozlišovat malá a velká písmena",
     "notSupportCaseSensitiveTip": "Hostované služby nepodporují dotazy rozlišující velikost písmen.",
-    "setFilterTip": "Nastavte filtr správně."
+    "setFilterTip": "Nastavte filtr správně.",
+    "cascadeFilterTip": "Zobrazí pouze hodnoty filtrované předchozími výrazy."
   },
   "featureLayerSource": {
     "layer": "Vrstva",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Kliknutím obnovíte rozsah mapy a viditelnost vrstvy tam, kde jste skončili."
   },
   "featureActions": {
+    "featureActions": "Akce prvku",
     "ZoomTo": "Zaostřit",
     "PanTo": "Posunout k",
     "Flash": "Zablikat",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Přidat do výběru",
     "removeSelectionTip": "Odstranit z výběru",
     "selectFromCurrentSelectionTip": "Vybrat ze současného výběru",
-    "unselectAllSelectionTip": "Zruší výběr všech aktuálně vybraných prvků."
+    "unselectAllSelectionTip": "Zruší výběr všech aktuálně vybraných prvků.",
+    "selectByPolygon": "Výběr polygonem",
+    "selectByCircle": "Výběr kružnicí",
+    "selectByLine": "Výběr linií",
+    "chooseSelectingTools": "Zvolit nástroje pro výběr",
+    "darw": "Vykreslit",
+    "drawShap": "Nakreslete tvar"
   },
   "widgetManager": {
     "createWidgetError": "Došlo k chybě při vytváření widgetu.",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D webové aplikace nejsou podporovány ve vašem webovém prohlížeči."
+  },
+  "map": {
+    "basemapNotAvailable": "Podkladová mapa není k dispozici.",
+    "displayDefaultBasemap": "Místo ní se zobrazuje výchozí podkladová mapa."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Ve vybrané oblasti na mapě je příliš mnoho prvků. Může trvat dlouho, než se získají všechna data.",
+    "askForContinue": "Chcete pokračovat?"
   }
 });

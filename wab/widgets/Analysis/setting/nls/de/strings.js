@@ -5,7 +5,7 @@ define({
   "toolLabel": "Der Anzeigename des Werkzeugs",
   "showHelpTip": "Hilfe-Links im Widget anzeigen",
   "showCurrentMapExtent": "Option zum Verwenden der aktuellen Kartenausdehnung anzeigen",
-  "showCredits": "Die Option <b>Credits anzeigen</b>",
+  "showCredits": "Die Option <b>Credits anzeigen</b> anzeigen",
   "saveAsFeatureService": "Die Ergebnisse im Konto des Benutzers speichern",
   "showReadyToUseLayers": "Sofort einsatzfähige Layer aus dem \"Living Atlas of the World\" von ArcGIS Online anzeigen",
   "toolNotAvailable": "Dieses Werkzeug ist nicht verfügbar, da die Karte keine erforderlichen Feature-Layer enthält.",
@@ -21,8 +21,8 @@ define({
   "createDriveTimeAreasUsage": "Fahrzeitpolygone (oder Fahrentfernungspolygone) um Eingabepunkte für die angegebenen Fahrzeitwerte erstellen.",
   "createViewshed": "Sichtfelder erstellen",
   "createViewshedUsage": "Diese Funktion erstellt Flächen, die abhängig von angegebenen Positionen zu sehen sind.",
-  "createWatersheds": "Wassereinzugsgebiete erstellen",
-  "createWatershedsUsage": "Diese Funktion erstellt Einzugsgebiete basierend auf Positionen, die Sie angeben.",
+  "createWatersheds": "Abflussgebiete erstellen",
+  "createWatershedsUsage": "Diese Funktion erstellt Abflussgebiete basierend auf Positionen, die Sie angeben.",
   "deriveNewLocations": "Neue Positionen ableiten",
   "deriveNewLocationsUsage": "Neue Features aus den Eingabe-Layern ableiten, die einer festgelegten Abfrage entsprechen",
   "dissolveBoundaries": "Grenzen zusammenführen",
@@ -51,7 +51,7 @@ define({
   "summarizeNearbyUsage": "Für jedes Feature in einem Eingabe-Layer Daten in einer gewissen Entfernung von Features in einem anderen Layer zusammenfassen.",
   "summarizeWithin": "Zusammenfassen (innerhalb)",
   "summarizeWithinUsage": "Für jedes Polygon in einem Eingabe-Polygon-Layer die enthaltenen Daten von Features eines anderen Layers zusammenfassen.",
-  "traceDownstream": "Verfolgung flussabwärts",
+  "traceDownstream": "Flussabwärts verfolgen",
   "traceDownstreamUsage": "Diese Funktion ermittelt von den angegebenen Positionen aus die Fließrichtungen flussabwärts.",
   "allowToExport": "Exportieren von Ergebnissen zulassen"
 });

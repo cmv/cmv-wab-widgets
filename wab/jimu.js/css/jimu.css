@@ -51,6 +51,18 @@ td, th{
   text-align: right;
 }
 
+.esriPopup .esriPopupWrapper {
+  font-family: "Avenir Light";
+}
+
+.esriPopup .contentPane {
+  background-color: #ffffff;
+}
+
+.esriPopup .actionsPane{
+  background-color: #ffffff;
+}
+
 .esriMobilePopupInfoView .esriMobileInfoViewItem .action{
   margin-right: 10px;
 }
@@ -117,6 +129,10 @@ td, th{
   overflow: hidden;
   bottom: 40px;
   right: 10px;
+  display: none;
+}
+.map .load-container.loading{
+  display: block;
 }
 .map .load-container .loader {
   font-size: 20px;
@@ -127,28 +143,64 @@ td, th{
   text-indent: -9999em;
   background: url("images/loadingmap.gif");
 }
-.jimu-rtl .load-container {
+.jimu-rtl .map .load-container {
   right: auto;
   left: 10px;
 }
 
 /************* END **********************/
 
+/* Latin Extended */
 @font-face {
-  font-family: "Avenir Light";/*LT W01 35*/
-  src: url("./fonts/3511a780-31ca-4ee1-9083-89b1b7185748.eot?#iefix");
-  src: url("./fonts/3511a780-31ca-4ee1-9083-89b1b7185748.eot?#iefix") format("eot"), url("./fonts/c4352a95-7a41-48c1-83ce-d8ffd2a3b118.woff") format("woff"), url("./fonts/3e419b5b-c789-488d-84cf-a64009cc308e.ttf") format("truetype"), url("./fonts/ca038835-1be3-4dc5-ba25-be1df6121499.svg#ca038835-1be3-4dc5-ba25-be1df6121499") format("svg");
+  font-family: "Avenir Light";
+  src: url("./fonts/avenir-next/bb590848-4012-46d6-a8d5-48c9893a176b.woff2") format("woff2"),
+       url("./fonts/avenir-next/3a42a252-67ff-4186-88cf-762f56719ca1.woff") format("woff");
 }
+
 @font-face {
-  font-family: "Avenir Medium";/*LT W01 65*/
-  src: url("./fonts/212ab03d-5db2-4d6a-b94c-171cc702aa51.eot?#iefix");
-  src: url("./fonts/212ab03d-5db2-4d6a-b94c-171cc702aa51.eot?#iefix") format("eot"), url("./fonts/2cac77ec-9bc0-4ee7-87e4-27650190744f.woff") format("woff"), url("./fonts/aaf11848-aac2-4d09-9a9c-aac5ff7b8ff4.ttf") format("truetype"), url("./fonts/294099f3-8d00-4676-afc5-5e9d8d43ad69.svg#294099f3-8d00-4676-afc5-5e9d8d43ad69") format("svg");
+  font-family: "Avenir Medium";
+  src: url("./fonts/avenir-next/7195d5d0-582f-42d4-86ca-9da8dc31146e.woff2") format("woff2"),
+       url("./fonts/avenir-next/0417e965-6ae1-4395-8f71-f61ea767d523.woff") format("woff");
 }
+
 @font-face {
-  font-family: "Avenir Heavy";/*LT W01 85*/
-  src: url("./fonts/f61bf0f6-c193-4100-b940-12a1a01dcee5.eot?#iefix");
-  src: url("./fonts/f61bf0f6-c193-4100-b940-12a1a01dcee5.eot?#iefix") format("eot"), url("./fonts/7147ec3a-8ff8-4ec9-8c5c-bd1571dc6ae6.woff") format("woff"), url("./fonts/d1dc54b2-878d-4693-8d6e-b442e99fef68.ttf") format("truetype"), url("./fonts/731dd4d3-64da-427d-ba61-01575b3cf3f7.svg#731dd4d3-64da-427d-ba61-01575b3cf3f7") format("svg");
+  font-family: "Avenir Heavy";
+  src: url("./fonts/avenir-next/b86524f7-009e-4c08-a266-c43f1fb68e5e.woff2") format("woff2"),
+       url("./fonts/avenir-next/e40e6ac5-f2bd-4d65-baf7-b1e397d7fdcc.woff") format("woff");
 }
+
+/* Cyrillic */
+@font-face {
+  font-family: "Avenir Light";
+  src: url("./fonts/avenir-next/e8b9c8fa-dbfb-4576-9394-ae85e87cb003.woff2") format("woff2"),
+       url("./fonts/avenir-next/fb555151-cbda-4728-b28d-6e5f085c2d55.woff") format("woff");
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: "Avenir Medium";
+  src: url("./fonts/avenir-next/1704d161-44ab-4854-a066-fe47d583a3a6.woff2") format("woff2"),
+       url("./fonts/avenir-next/95aa7ca1-de33-40d9-ae40-ff045fcada66.woff") format("woff");
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: "Avenir Heavy";
+  src: url("./fonts/avenir-next/c4ec49e5-4817-4f05-9bee-cec6f46f9d61.woff2") format("woff2"),
+       url("./fonts/avenir-next/8e0e32b3-034a-41e8-bd15-c22974ebcdb5.woff") format("woff");
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* Avenir Next doesn't support all vietnamese characters
+ * use Lucida Grande for vi */
+.vi,
+.vi .top-nav-link,
+.vi .avenir-light,
+.vi .avenir-regular,
+.vi .top-nav,
+.vi .dropdown-link {
+    font-family: "Lucida Grande", "Arial", sans-serif;
+  }
 
 @font-face {
   font-family: 'CalciteWebCoreIcons';
@@ -158,8 +210,14 @@ td, th{
   font-style: normal;
 }
 
+
 body,html{
   font-family: 'Avenir Light', Verdana, Geneva, sans-serif;
+}
+
+/*override original style of title and subtitle of theme after custmize font style*/
+div.attribute-custom-style{
+  font-weight: normal !important;
 }
 
 /***************************************************************************
@@ -2157,6 +2215,18 @@ widget:jimu-w
   height: 100%;
 }
 
+.jimu-single-filter .hidden{
+  display: none;
+}
+
+.jimu-single-filter .cascade-checkbox.jimu-checkbox{
+  display: none;
+}
+
+.jimu-single-filter.unique-type .cascade-checkbox.jimu-checkbox{
+  display: inline-block;
+}
+
 /* css for dijit _FilterSet */
 .jimu-filter-set .header-table{
   width:100%;
@@ -2745,9 +2815,14 @@ html.hr .jimu-filter .allExpsBox > div{
   left: 0;
   right: 0;
   top: 0;
-  height: 20px;
+  /*height: 20px;*/
   line-height: 20px;
   background: #ffffff;
+}
+
+.jimu-basic-layer-chooser-from-map .error-tip-section .jimu-icon-error{
+  vertical-align: top;
+  margin-top: 4px;
 }
 
 .jimu-basic-layer-chooser-from-map .jimu-state-error-text{
@@ -3255,6 +3330,7 @@ html.hr .jimu-filter .allExpsBox > div{
 }
 
 .jimu-image-chooser .hint .display-text{
+  width: 100%;
   white-space: nowrap;
   color: white;
   cursor: pointer;
@@ -3315,6 +3391,14 @@ html.hr .jimu-filter .allExpsBox > div{
 .jimu-single-filter-parameter .dijit-form-Select>tbody>tr>td>.dijitButtonText{
   height: 20px;
   height: 20px !important;
+}
+
+.jimu-single-filter-parameter .dijit-form-FilteringSelect.loading > .dijitInputField.dijitInputContainer{
+  background: url(images/validating.gif) right no-repeat;
+}
+
+.jimu-rtl .jimu-single-filter-parameter .dijit-form-FilteringSelect.loading > .dijitInputField.dijitInputContainer{
+  background: url(images/validating.gif) left no-repeat;
 }
 
 .jimu-single-filter-parameter .dijit-form-FilteringSelect>div.dijitArrowButton.dijitDownArrowButton{
@@ -3414,11 +3498,18 @@ html.hr .jimu-filter .allExpsBox > div{
 
 /* jimu-multiple-layers-featureset-chooser */
 .jimu-multiple-layers-featureset-chooser{
-  overflow: hidden;
+  /*overflow: hidden;*/
+  height: 40px;
+  white-space: nowrap;
+}
+
+.jimu-multiple-layers-featureset-chooser .hidden{
+  display: none !important;
 }
 
 .jimu-multiple-layers-featureset-chooser > *{
   cursor: pointer;
+  vertical-align: middle;
 }
 
 .jimu-multiple-layers-featureset-chooser.disabled > *{
@@ -3429,59 +3520,200 @@ html.hr .jimu-filter .allExpsBox > div{
   height: 40px;
   line-height: 40px;
   display: inline-block;
-  text-align: center;
 }
 
-.jimu-multiple-layers-featureset-chooser .extent-icon{
-  padding: 0 72px;
+.jimu-multiple-layers-featureset-chooser .draw-item-btn{
+  width: 53%;
+  position: relative;
+  overflow: visible;
+  height: 40px;
+  line-height: 40px;
+  display: inline-block;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-item-btn .current-draw-item{
+  height: 40px;
+  font-size: 0px;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-item-btn .current-draw-item > div{
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  font-size: 12px;
+}
+
+.jimu-multiple-layers-featureset-chooser .btn-select{
+  position: absolute;
+  left: 0;
+  right: 20px;
+  top: 0;
+  bottom: 0;
   background-color: #59A700;
   color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+  border: 2px solid transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.jimu-multiple-layers-featureset-chooser .extent-icon:hover{
+.jimu-rtl .jimu-multiple-layers-featureset-chooser .btn-select{
+  left: 20px;
+  right: 0;
+}
+
+.jimu-multiple-layers-featureset-chooser .btn-select:hover{
   background-color: #417505;
 }
 
-.jimu-multiple-layers-featureset-chooser .extent-icon:active{
+.jimu-multiple-layers-featureset-chooser .btn-select:active{
   background-color: #59A700;
 }
 
-.jimu-multiple-layers-featureset-chooser .extent-icon.selected{
+.jimu-multiple-layers-featureset-chooser .btn-select.selected{
   background-color: #555555;
   border: 2px solid #59A700;
 }
 
-.jimu-multiple-layers-featureset-chooser.disabled .extent-icon{
+.jimu-multiple-layers-featureset-chooser.disabled .btn-select{
   background-color: #D2D2D2 !important;
 }
 
-.jimu-multiple-layers-featureset-chooser .extent-icon > div{
+.jimu-multiple-layers-featureset-chooser .current-draw-item .btn-select .select-icon{
   display: inline-block;
   text-align: center;
-}
-
-.jimu-multiple-layers-featureset-chooser .extent-icon .select-icon{
   position: relative;
   top: 8px;
-  width: 19px;
+  width: 24px;
   height: 24px;
-  background: url(images/select_features.png) center center no-repeat;
 }
 
-.jimu-multiple-layers-featureset-chooser .extent-icon .select-text{
+.jimu-multiple-layers-featureset-chooser .current-draw-item.EXTENT .btn-select .select-icon{
+  background: url(images/select_rectangle.png) center center no-repeat;
+}
+
+.jimu-multiple-layers-featureset-chooser .current-draw-item.POLYGON .btn-select .select-icon{
+  background: url(images/select_polygon.png) center center no-repeat;
+}
+
+.jimu-multiple-layers-featureset-chooser .current-draw-item.CIRCLE .btn-select .select-icon{
+  background: url(images/select_circle.png) center center no-repeat;
+}
+
+.jimu-multiple-layers-featureset-chooser .current-draw-item.POLYLINE .btn-select .select-icon{
+  background: url(images/select_polyline.png) center center no-repeat;
+}
+
+.jimu-multiple-layers-featureset-chooser .btn-select .select-text{
+  display: inline-block;
+  text-align: center;
   margin-left: 10px;
 }
 
-.jimu-rtl .jimu-multiple-layers-featureset-chooser .extent-icon .select-text{
+.jimu-rtl .jimu-multiple-layers-featureset-chooser .btn-select .select-text{
   margin-left: 0;
   margin-right: 10px;
 }
 
+.jimu-multiple-layers-featureset-chooser .current-draw-item .arrow{
+  width: 20px;
+  border-left: 1px solid white;
+  background-color: #59A700;
+  background-image: url(images/v-white.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.jimu-rtl .jimu-multiple-layers-featureset-chooser .current-draw-item .arrow{
+  margin-right: 1px;
+  border-left: 0;
+  border-right: 1px solid white;
+}
+
+.jimu-multiple-layers-featureset-chooser.disabled .current-draw-item .arrow{
+  background-color: #D2D2D2 !important;
+}
+
+.jimu-multiple-layers-featureset-chooser.single-geotype .current-draw-item .arrow{
+  display: none !important;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-items{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 164px;
+  background-color: white;
+  color: white;
+  z-index: 1;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-items .draw-item{
+  position: relative;
+  width: 100%;
+  height: 40px;
+  margin-top: 1px;
+  background-color: #59A700;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-items .draw-item.selected,
+.jimu-multiple-layers-featureset-chooser .draw-items .draw-item:hover{
+  background-color: #417505;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-items .draw-item .draw-icon{
+  float: left;
+  width: 40px;
+  height: 40px;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-items .draw-item-rectangle .draw-icon{
+  background: url(images/select_rectangle.png) center center no-repeat;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-items .draw-item-polygon .draw-icon{
+  background: url(images/select_polygon.png) center center no-repeat;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-items .draw-item-circle .draw-icon{
+  background: url(images/select_circle.png) center center no-repeat;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-items .draw-item-polyline .draw-icon{
+  background: url(images/select_polyline.png) center center no-repeat;
+}
+
+.jimu-multiple-layers-featureset-chooser .draw-items .draw-item .draw-text{
+  position: absolute;
+  left: 40px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jimu-rtl .jimu-multiple-layers-featureset-chooser .draw-items .draw-item .draw-icon{
+  float: right;
+}
+
+.jimu-rtl .jimu-multiple-layers-featureset-chooser .draw-items .draw-item .draw-text{
+  left: 0;
+  right: 40px;
+}
+
 .jimu-multiple-layers-featureset-chooser .btn-clear{
-  padding: 0 16px;
+  width: 35%;
   border: 1px solid #D7D7D7;
-  margin-left: 20px;
+  margin-left: 10%;
   color: #000000;
+  text-align: center;
+  white-space: nowrap;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .jimu-multiple-layers-featureset-chooser .btn-clear > div{
@@ -3495,7 +3727,7 @@ html.hr .jimu-filter .allExpsBox > div{
 
 .jimu-rtl .jimu-multiple-layers-featureset-chooser .btn-clear{
   margin-left: 0;
-  margin-right: 20px;
+  margin-right: 10%;
 }
 
 .jimu-multiple-layers-featureset-chooser.disabled .btn-clear{
@@ -3773,7 +4005,7 @@ html.hr .jimu-filter .allExpsBox > div{
   line-height: 40px;
   color: #000000;
   font-size: 12px;
-  font-family: 'Avenir-Medium';
+  font-family: 'Avenir Medium';
   white-space: nowrap;
   display: inline-block;
   max-width: 240px;
@@ -4282,3 +4514,18 @@ html.hr .jimu-filter .allExpsBox > div{
   content: '\e91d';
 }
 /* ~~ feature action icons*/
+
+/* for statistics */
+.stat-container{
+  font-size: 12px;
+}
+.stat-container .header{
+  margin-bottom: 10px;
+}
+.stat-container .header>span{
+  margin-right: 5px;
+}
+.stat-container .attrName{
+  color: #888888;
+  padding-right: 5px;
+}

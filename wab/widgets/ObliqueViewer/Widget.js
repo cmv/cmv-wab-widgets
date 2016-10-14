@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,7 +36,8 @@ define([
   "esri/geometry/geometryEngine",
   "esri/geometry/Point",
   "dojo/dom-style",
-  "dojo/dom-class"
+  "dojo/dom-class",
+  "esri/IdentityManager"
 ],
 
   function(declare, BaseWidget, Map, ObliqueViewer,
@@ -86,11 +87,18 @@ define([
 
       setImageLayerProperties: function() {
         if (this.renderingRule) {
-          this.imageLayer.setRenderingRule(this.renderingRule);
+          this.imageLayer.setRenderingRule(this.renderingRule, true);
         }
         if (this.mosaicRule) {
-          this.imageLayer.setMosaicRule(this.mosaicRule);
+          this.imageLayer.setMosaicRule(this.mosaicRule, true);
         }
+        if (this.imageFormat) {
+          this.imageLayer.setImageFormat(this.imageFormat, true);
+        }
+        if (this.compressionQuality) {
+          this.imageLayer.setCompressionQuality(this.compressionQuality, true);
+        }
+        this.imageLayer.refresh();
       },
 
       onOpen: function() {
@@ -182,6 +190,7 @@ define([
         this.clearButton.on("click", lang.hitch(this, this._clearAll)),
         this.oblique.on("raster-select", lang.hitch(this, this._closeDropDown)),
         this.oblique.on("azimuth-change", lang.hitch(this, this._handleZoomButton)),
+        this.oblique.on("azimuth-change", lang.hitch(this, this._showAzimuthChangeNotification)),
         this.oblique.on("extent-change", lang.hitch(this, this._updateExtentOnNadirMap))
         );
 
@@ -190,6 +199,22 @@ define([
         if (this.syncButton) {
           this.own(this.syncButton.on("click", lang.hitch(this, this._updateNadirExtent, true)));
         }
+      },
+
+      _showAzimuthChangeNotification: function(evt) {
+        if (evt.noDataSwitch) {
+          domStyle.set(this.notificationDiv, "display", "block");
+          domStyle.set(this.notificationDiv, "opacity", 1);
+          setTimeout(lang.hitch(this, function() {
+            this._hideAzimuthChangeNotification();
+          }), 3000);
+        } else {
+          this._hideAzimuthChangeNotification;
+        }
+      },
+
+      _hideAzimuthChangeNotification: function() {
+        domStyle.set(this.notificationDiv, "opacity", "0");
       },
 
       _addClassesToMenus: function() {
@@ -376,14 +401,18 @@ define([
         var operLayers = this.map.itemInfo.itemData.operationalLayers,
                 layer,
                 layerUrl, obliqueServiceLayer;
+        
 
         for (layer in operLayers) {
           if (operLayers.hasOwnProperty(layer)) {
             if (operLayers[layer].title === layerTitle) {
               obliqueServiceLayer = operLayers[layer];
+              layerObject = obliqueServiceLayer.layerObject;
               layerUrl = obliqueServiceLayer.url;
-              this.renderingRule = obliqueServiceLayer.layerObject.renderingRule;
-              this.mosaicRule = obliqueServiceLayer.layerObject.mosaicRule;
+              this.renderingRule = layerObject.renderingRule;
+              this.mosaicRule = layerObject.mosaicRule;
+              this.imageFormat = layerObject.format;
+              this.compressionQuality = layerObject.compressionQuality;
             }
           }
         }

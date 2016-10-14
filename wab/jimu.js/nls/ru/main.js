@@ -6,6 +6,7 @@ define({
     "yes": "Да",
     "no": "Нет",
     "next": "Далее",
+    "previous": "Предыдущий",
     "back": "Назад",
     "selected": "выбрано",
     "name": "Имя",
@@ -52,7 +53,11 @@ define({
     "view": "Просмотреть",
     "newText": "Новый",
     "edit": "Редактировать",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Таблица",
+    "zoomIn": "Увеличить",
+    "zoomOut": "Уменьшить",
+    "continue1": "Продолжить"
   },
   "errorCode": "Код",
   "errorMessage": "Сообщение",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Учитывать регистр",
     "notSupportCaseSensitiveTip": "Опубликованные сервисы не поддерживают запрос с чувствительностью к регистру.",
-    "setFilterTip": "Задайте корректный фильтр."
+    "setFilterTip": "Задайте корректный фильтр.",
+    "cascadeFilterTip": "Показывать значения только для предыдущих выражений фильтра."
   },
   "featureLayerSource": {
     "layer": "Слой",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Щелкните, чтобы сохранить заново экстент карты и видимость слоев в том виде, в котором вы их оставляете."
   },
   "featureActions": {
+    "featureActions": "Действия с объектами",
     "ZoomTo": "Приблизить к",
     "PanTo": "Переместить к",
     "Flash": "Подсветить",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Добавить к выборке",
     "removeSelectionTip": "Удалить из выборки",
     "selectFromCurrentSelectionTip": "Выбрать из текущей выборки",
-    "unselectAllSelectionTip": "Снять выделение со всех выбранных в данный момент объектов"
+    "unselectAllSelectionTip": "Снять выделение со всех выбранных в данный момент объектов",
+    "selectByPolygon": "Выбрать полигоном",
+    "selectByCircle": "Выбрать окружностью",
+    "selectByLine": "Выбрать линией",
+    "chooseSelectingTools": "Выбрать инструменты выборки",
+    "darw": "Нарисовать",
+    "drawShap": "Нарисовать форму"
   },
   "widgetManager": {
     "createWidgetError": "Ошибка создания виджета",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D веб-приложения не поддерживаются в вашем браузере."
+  },
+  "map": {
+    "basemapNotAvailable": "Базовая карта не доступна.",
+    "displayDefaultBasemap": "Вместо нее отображается базовая карта, используемая по умолчанию."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Слишком много объектов в пределах выделенной области карты. Для получения всех данных может потребоваться значительное время.",
+    "askForContinue": "Хотите продолжить?"
   }
 });

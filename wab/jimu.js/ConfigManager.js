@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         this.portalSelf = this.configLoader.portalSelf;
         this.appConfig = this._addDefaultValues(appConfig);
 
-        window.appInfo.isRunInMobile = this._isRunInMobile();
+        window.appInfo.isRunInMobile = jimuUtils.inMobileSize();
 
         console.timeEnd('Load Config');
 
@@ -131,6 +131,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         topic.publish("appConfigLoaded", _ac);
         return _ac;
       }), lang.hitch(this, function(err){
+        loading.destroy();
         console.error(err);
         if(err && err.message && typeof err.message === 'string'){
           this._showErrorMessage(err.message);
@@ -164,11 +165,11 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         return jimuUtils.getConfigElementsByName(this, name);
       };
 
-      c.getCleanConfig = function(){
+      c.getCleanConfig = function(isForAGOLTemplate){
         if(this._originConfig){
-          return getCleanConfig(this._originConfig);
+          return getCleanConfig(this._originConfig, isForAGOLTemplate);
         }else{
-          return getCleanConfig(this);
+          return getCleanConfig(this, isForAGOLTemplate);
         }
       };
 
@@ -184,7 +185,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       }
     },
     _onWindowResize: function () {
-      var runInMobile = this._isRunInMobile();
+      var runInMobile = jimuUtils.inMobileSize();
       if(window.appInfo.isRunInMobile === runInMobile){
         return;
       }
@@ -192,18 +193,6 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
 
       if(this.appConfig){
         topic.publish("appConfigChanged", this.getAppConfig(), 'layoutChange');
-      }
-    },
-
-    _isRunInMobile: function() {
-      var layoutBox = html.getMarginBox(window.jimuConfig.layoutId);
-      if (layoutBox.w <= window.jimuConfig.breakPoints[0] ||
-        layoutBox.h <= window.jimuConfig.breakPoints[0]) {
-        html.addClass(window.jimuConfig.layoutId, 'jimu-ismobile');
-        return true;
-      } else {
-        html.removeClass(window.jimuConfig.layoutId, 'jimu-ismobile');
-        return false;
       }
     },
 
@@ -692,7 +681,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
       //  this method may be called by builder or UT
       c = jimuUtils.reCreateObject(c);
 
-      window.appInfo.isRunInMobile = this._isRunInMobile();
+      window.appInfo.isRunInMobile = jimuUtils.inMobileSize();
 
       this.configLoader.processProxy(c);
 
@@ -702,6 +691,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         this._addDefaultValues(c);
 
         tokenUtils.setPortalUrl(c.portalUrl);
+        window.portalUrl = c.portalUrl;
 
         if(this.appConfig){
           //remove the options that are relative to map's display when map is changed.
@@ -974,9 +964,6 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
           }
         }else{
           e.gid = info.groupId;
-          if(e.uri){
-            jimuUtils.widgetJson.processWidgetJson(e);
-          }
         }
       }));
     },
@@ -1026,11 +1013,14 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
     return instance;
   };
 
-  function getCleanConfig(config){
+  function getCleanConfig(config, isForAGOLTemplate){
     //delete the properties that framework add
     var newConfig = lang.clone(config);
     var properties = jimuUtils.widgetProperties;
 
+    if(typeof isForAGOLTemplate === 'undefined'){
+      isForAGOLTemplate = false;
+    }
     delete newConfig.mode;
     jimuUtils.visitElement(newConfig, function(e, info){
       if(e.widgets){
@@ -1048,7 +1038,7 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         return;
       }
 
-      if(e.icon && e.icon === e.amdFolder + 'images/icon.png'){
+      if(e.icon && e.icon === e.folderUrl + 'images/icon.png?wab_dv=' + window.deployVersion){
         delete e.icon;
       }
 
@@ -1065,15 +1055,26 @@ function (declare, lang, array, html, topic, Deferred, on, jimuUtils, WidgetMana
         delete e[p];
       });
 
+      if(!isForAGOLTemplate){
+        if(e.visible){
+          delete e.visible;
+        }
 
-      if(e.visible){
-        delete e.visible;
+        if(e.manifest && e.label === e.manifest.label){
+          delete e.label;
+        }
+
+        if(e.isDefaultConfig){
+          delete e.config;
+          delete e.isDefaultConfig;
+        }
+      }else{
+        if(typeof e.openAtStart === 'undefined'){
+          e.openAtStart = false;
+        }
       }
+
       delete e.manifest;
-      if(e.isDefaultConfig){
-        delete e.config;
-        delete e.isDefaultConfig;
-      }
     });
     delete newConfig.rawAppConfig;
     //the _ssl property is added by esriRequest

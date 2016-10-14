@@ -31,13 +31,13 @@ define({
     "graphicLocationSymbolHintText": "Hinweis: Symbol für gesuchte Adresse oder aktivierte Position",
     "precinctSymbolHintText": "Hinweis: Wird verwendet, um ein Symbol für das ausgewählte Polygon anzuzeigen",
     "selectColorForPoint": "Farbe zum Hervorheben des Punktes auswählen",
-    "selectColorForPointHintText": "Hinweis: Wird zum Anzeigen der Hervorhebungsfarbe für den ausgewählten Punkt verwendet"
+    "selectColorForPointHintText": "Hinweis: Wird zum Anzeigen der Hervorhebungsfarbe für den ausgewählten Punkt verwendet."
   },
   "layerSelector": {
     "selectPolygonLayerLabel": "Polygon-Layer auswählen",
     "selectPolygonLayerHintText": "Hinweis: Wird verwendet, um Polygon-Layer auszuwählen.",
     "selectRelatedPointLayerLabel": "Mit Polygon-Layer in Beziehung stehenden Punkt-Layer auswählen",
-    "selectRelatedPointLayerHintText": "Hinweis: Wird verwendet, um einen mit dem Polygon-Layer in Beziehung stehenden Punkt-Layer auszuwählen",
+    "selectRelatedPointLayerHintText": "Hinweis: Wird verwendet, um einen mit dem Polygon-Layer in Beziehung stehenden Punkt-Layer auszuwählen.",
     "polygonLayerNotHavingRelatedLayer": "Wählen Sie einen Polygon-Layer aus, der einen zugehörigen Punkt-Layer aufweist.",
     "errorInSelectingPolygonLayer": "Wählen Sie einen Polygon-Layer aus, der einen zugehörigen Punkt-Layer aufweist.",
     "errorInSelectingRelatedLayer": "Wählen Sie einen Punkt-Layer aus, der mit einem Polygon-Layer in Beziehung steht."
@@ -48,9 +48,9 @@ define({
     "buttonSet": "Festlegen",
     "routeServiceUrlHintText": "Hinweis: Klicken Sie auf \"Festlegen\", um einen Routing-Service für Netzwerkanalysen zu durchsuchen und auszuwählen",
     "directionLengthUnit": "Längeneinheiten für Wegbeschreibung",
-    "unitsForRouteHintText": "Hinweis: Wird zum Anzeigen erfasster Einheiten für die Route verwendet",
+    "unitsForRouteHintText": "Hinweis: Wird zum Anzeigen erfasster Einheiten für die Route verwendet.",
     "selectRouteSymbol": "Symbol zum Anzeigen der Route auswählen",
-    "routeSymbolHintText": "Hinweis: Wird zum Anzeigen des Liniensymbols der Route verwendet",
+    "routeSymbolHintText": "Hinweis: Wird zum Anzeigen des Liniensymbols der Route verwendet.",
     "routingDisabledMsg": "Um Wegbeschreibungen zu aktivieren, müssen Sie sicherstellen, dass Routen im ArcGIS Online-Element aktiviert sind."
   },
   "networkServiceChooser": {

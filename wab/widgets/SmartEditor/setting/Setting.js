@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 ///////////////////////////////////////////////////////////////////////////
 
 define([
-    'dojo',
     'dojo/_base/declare',
     'dijit/_WidgetsInTemplateMixin',
     'jimu/BaseWidgetSetting',
@@ -49,7 +48,6 @@ define([
     './ChooseImage'
 ],
   function (
-    dojo,
     declare,
     _WidgetsInTemplateMixin,
     BaseWidgetSetting,
@@ -75,7 +73,7 @@ define([
       baseClass: 'jimu-widget-smartEditor-setting',
       _jimuLayerInfos: null,
       _layersTable: null,
-      _editableLayerInfos: null,
+      _configInfos: null,
       _editFields: null,
       postCreate: function () {
         this.nls = lang.mixin(this.nls, window.jimuNls.common);
@@ -98,8 +96,8 @@ define([
         delete this._jimuLayerInfos;
         this._layersTable = null;
         delete this._layersTable;
-        this._editableLayerInfos = null;
-        delete this._editableLayerInfos;
+        this._configInfos = null;
+        delete this._configInfos;
         this._editFields = null;
         delete this._editFields;
         this._editDescriptions = null;
@@ -181,27 +179,36 @@ define([
 
         var nl = query("th.simple-table-field", this._layersTable.domNode);
         nl.forEach(function (node) {
-          switch (node.innerText) {
+          var scrubText = (node.innerText === undefined || node.innerText === "") ?
+            "" : node.innerText.replace(/(\r\n|\n|\r)/gm, "");
+          switch (scrubText) {
             case this.nls.layersPage.layerSettingsTable.edit:
               node.title = this.nls.layersPage.layerSettingsTable.editTip;
+              node.alt = this.nls.layersPage.layerSettingsTable.editTip;
               break;
             case this.nls.layersPage.layerSettingsTable.label:
               node.title = this.nls.layersPage.layerSettingsTable.labelTip;
+              node.alt = this.nls.layersPage.layerSettingsTable.labelTip;
               break;
             case this.nls.layersPage.layerSettingsTable.allowUpdateOnly:
               node.title = this.nls.layersPage.layerSettingsTable.allowUpdateOnlyTip;
+              node.alt = this.nls.layersPage.layerSettingsTable.allowUpdateOnlyTip;
               break;
             case this.nls.layersPage.layerSettingsTable.allowDelete:
               node.title = this.nls.layersPage.layerSettingsTable.allowDeleteTip;
+              node.alt = this.nls.layersPage.layerSettingsTable.allowDeleteTip;
               break;
             case this.nls.layersPage.layerSettingsTable.update:
               node.title = this.nls.layersPage.layerSettingsTable.updateTip;
+              node.alt = this.nls.layersPage.layerSettingsTable.updateTip;
               break;
             case this.nls.layersPage.layerSettingsTable.description:
               node.title = this.nls.layersPage.layerSettingsTable.descriptionTip;
+              node.alt = this.nls.layersPage.layerSettingsTable.descriptionTip;
               break;
             case this.nls.layersPage.layerSettingsTable.fields:
               node.title = this.nls.layersPage.layerSettingsTable.fieldsTip;
+              node.alt = this.nls.layersPage.layerSettingsTable.fieldsTip;
               break;
 
           }
@@ -234,164 +241,52 @@ define([
         this.displayPromptOnSave.set('checked', this.config.editor.displayPromptOnSave);
         this.displayPromptOnDelete.set('checked', this.config.editor.displayPromptOnDelete);
         this.removeOnSave.set('checked', this.config.editor.removeOnSave);
+        if (this.config.editor.hasOwnProperty("listenToGF")) {
+          this.listenToGF.set('checked', this.config.editor.listenToGF);
+        }
+        else {
+          this.listenToGF.set('checked', false);
+        }
+        if (this.config.editor.hasOwnProperty("keepTemplateSelected")) {
+          this.keepTemplateSelected.set('checked', this.config.editor.keepTemplateSelected);
+        }
+        else {
+          this.keepTemplateSelected.set('checked', false);
+        }
         //this.clearSelectionOnClose.set('checked', false);
       },
 
       setConfig: function () {
-        // if (!config.editor.layerInfos) { //***************
-        //   config.editor.layerInfos = [];
-        // }
-        this._editableLayerInfos = this._getEditableLayerInfos();
-        this._setLayersTable(this._editableLayerInfos);
-
+        this._configInfos = editUtils.getConfigInfos(this._jimuLayerInfos,
+          this.config.editor.layerInfos, true, false);
+        if (this.config.editor.layerInfos) {
+          if (this.config.editor.layerInfos.length === 0) {
+            array.forEach(this._configInfos, function (configInfo) {
+              configInfo._editFlag = true;
+            });
+          }
+        }
+        this._setLayersTable();
       },
-
-      _getEditableLayerInfos: function () {
-        // summary:
-        //   get all editable layers from map.
-        // description:
-        //   layerInfo will honor configuration if that layer has configured.
-        var editableLayerInfos = [];
-        for (var i = this.map.graphicsLayerIds.length - 1; i >= 0; i--) {
-          var layerObject = this.map.getLayer(this.map.graphicsLayerIds[i]);
-          if (layerObject.type === "Feature Layer" &&
-              layerObject.url &&
-              layerObject.isEditable &&
-              layerObject.isEditable()) {
-            var layerInfo = this._getLayerInfoFromConfiguration(layerObject);
-            if (!layerInfo) {
-              layerInfo = this._getDefaultLayerInfo(layerObject);
-            }
-            editableLayerInfos.push(layerInfo);
-          }
-        }
-        return editableLayerInfos;
-      },
-
-      _getLayerInfoFromConfiguration: function (layerObject) {
-        var layerInfo = null;
-        var layerInfos = this.config.editor.layerInfos;
-        if (layerInfos && layerInfos.length > 0) {
-          for (var i = 0; i < layerInfos.length; i++) {
-            if (layerInfos[i].featureLayer &&
-               layerInfos[i].featureLayer.id === layerObject.id) {
-              layerInfo = layerInfos[i];
-              break;
-            }
-          }
-
-          if (layerInfo) {
-            // update fieldInfos.
-            layerInfo.fieldInfos = this._getSimpleFieldInfos(layerObject, layerInfo);
-            // set _editFlag to true
-            layerInfo._editFlag = true;
-
-            layerInfo.mapLayer = [];
-
-            layerInfo.mapLayer.resourceInfo =
-              this._jimuLayerInfos.getLayerInfoById(layerObject.id).originOperLayer.resourceInfo;
-            layerInfo.mapLayer.url =
-              this._jimuLayerInfos.getLayerInfoById(layerObject.id).originOperLayer.url;
-
-          }
-        }
-        return layerInfo;
-      },
-
-      _getDefaultLayerInfo: function (layerObject) {
-        var allowsCreate = false;
-        var allowsUpdate = false;
-        var allowsDelete = false;
-        var allowGeometryUpdates = false;
-        try {
-          var capabilities = layerObject.getEditCapabilities();
-          if (capabilities.canCreate) {
-            allowsCreate = true;
-          }
-          if (capabilities.canUpdate) {
-            allowsUpdate = true;
-          }
-          if (capabilities.canDelete) {
-            allowsDelete = true;
-          }
-        }
-        catch (err) {
-          if (layerObject.hasOwnProperty('capabilities')) {
-            if (String(layerObject.capabilities).indexOf('Update') === -1 &&
-              String(layerObject.capabilities).indexOf('Delete') === -1 &&
-              String(layerObject.capabilities).indexOf('Create') === -1 &&
-              String(layerObject.capabilities).indexOf('Editing') !== -1) {
-              allowsUpdate = true;
-              allowsDelete = true;
-              allowsCreate = true;
-            }
-            else {
-              if (String(layerObject.capabilities).indexOf('Update') !== -1) {
-                allowsUpdate = true;
-              }
-              if (String(layerObject.capabilities).indexOf('Delete') !== -1) {
-                allowsDelete = true;
-              }
-              if (String(layerObject.capabilities).indexOf('Create') !== -1) {
-                allowsCreate = true;
-              }
-            }
-          }
-
-        }
-
-        if (layerObject.hasOwnProperty('allowGeometryUpdates')) {
-          allowGeometryUpdates = layerObject.allowGeometryUpdates;
-        }
-        var editable = true;
-        if (this.config.editor.layerInfos &&
-            this.config.editor.layerInfos.length > 0) {
-          editable = array.some(this.config.editor.layerInfos, function (layerInfo) {
-            return (layerInfo.featureLayer.id === layerObject.id);
-          });
-        }
-        var origLayerInfo = this._jimuLayerInfos.getLayerInfoById(layerObject.id);
-        var layerInfo = {
-          'featureLayer': {
-            'id': layerObject.id,
-            'layerAllowsCreate': allowsCreate,
-            'layerAllowsUpdate': allowsUpdate,
-            'layerAllowsDelete': allowsDelete,
-            'layerAllowGeometryUpdates': allowGeometryUpdates
-          },
-          'mapLayer': {
-            'resourceInfo': origLayerInfo.originOperLayer.resourceInfo,
-            'url': origLayerInfo.originOperLayer.url
-          },
-          'disableGeometryUpdate': !allowGeometryUpdates,
-          'allowUpdateOnly': !allowsCreate,
-          'allowDelete': false,
-          'fieldInfos': this._getSimpleFieldInfos(layerObject),
-          '_editFlag': editable
-        };
-        return layerInfo;
-      },
-
-      _setLayersTable: function (layerInfos) {
+      _setLayersTable: function () {
         var nl = null;
-        array.forEach(layerInfos, function (layerInfo) {
-          var _jimuLayerInfo = this._jimuLayerInfos.getLayerInfoById(layerInfo.featureLayer.id);
-          var addRowResult = this._layersTable.addRow({
-            label: _jimuLayerInfo.title,
-            edit: layerInfo._editFlag,
-            allowUpdateOnly: layerInfo.allowUpdateOnly,
-            allowUpdateOnlyHidden: layerInfo.allowUpdateOnly === null ?
-              false : layerInfo.allowUpdateOnly,
-            allowDelete: layerInfo.allowDelete,
-            allowDeleteHidden: layerInfo.allowDelete === null ?
-              false : layerInfo.allowDelete,
-            disableGeometryUpdate: layerInfo.disableGeometryUpdate,
-            disableGeometryUpdateHidden: layerInfo.disableGeometryUpdate === null ?
-              false : layerInfo.disableGeometryUpdate
-          });
-          addRowResult.tr._layerInfo = layerInfo;
+        array.forEach(this._configInfos, function (configInfo) {
 
-          if (layerInfo.featureLayer.layerAllowsDelete === false) {
+          var addRowResult = this._layersTable.addRow({
+            label: configInfo.layerInfo.title,
+            edit: configInfo._editFlag,
+            allowUpdateOnly: configInfo.allowUpdateOnly,
+            allowUpdateOnlyHidden: configInfo.allowUpdateOnly === null ?
+              false : configInfo.allowUpdateOnly,
+            allowDelete: configInfo.allowDelete,
+            allowDeleteHidden: configInfo.allowDelete === null ?
+              false : configInfo.allowDelete,
+            disableGeometryUpdate: configInfo.disableGeometryUpdate,
+            disableGeometryUpdateHidden: configInfo.disableGeometryUpdate === null ?
+              false : configInfo.disableGeometryUpdate
+          });
+          addRowResult.tr._configInfo = configInfo;
+          if (configInfo.featureLayer.layerAllowsDelete === false) {
             nl = query(".allowDelete", addRowResult.tr);
             nl.forEach(function (node) {
 
@@ -400,7 +295,7 @@ define([
               widget.setStatus(false);
             });
           }
-          if (layerInfo.featureLayer.layerAllowsCreate === false) {
+          if (configInfo.featureLayer.layerAllowsCreate === false) {
             nl = query(".allowUpdateOnly", addRowResult.tr);
             nl.forEach(function (node) {
 
@@ -409,7 +304,7 @@ define([
               widget.setStatus(false);
             });
           }
-          if (layerInfo.featureLayer.layerAllowsUpdate === false) {
+          if (configInfo.featureLayer.layerAllowsUpdate === false) {
             nl = query(".allowUpdateOnly", addRowResult.tr);
             nl.forEach(function (node) {
 
@@ -417,8 +312,9 @@ define([
 
               widget.setStatus(false);
             });
+
           }
-          if (layerInfo.featureLayer.layerAllowGeometryUpdates === false) {
+          if (configInfo.featureLayer.layerAllowGeometryUpdates === false) {
             nl = query(".disableGeometryUpdate", addRowResult.tr);
             nl.forEach(function (node) {
 
@@ -427,125 +323,16 @@ define([
               widget.setStatus(false);
             });
           }
+
         }, this);
       },
 
-      // about fieldInfos methods.
-      _getDefaultSimpleFieldInfos: function (layerObject) {
-        var fieldInfos = [];
-        var fldInfo = null;
-        var webmapFieldInfos =
-         editUtils.getFieldInfosFromWebmap(layerObject, this._jimuLayerInfos);
-
-        array.forEach(layerObject.fields, function (field) {
-          if (field.editable) {
-            var filteredArr = dojo.filter(webmapFieldInfos, function (webmapFieldInfo) {
-              return webmapFieldInfo.fieldName === field.name;
-            });
-
-            fldInfo = lang.clone(field);
-            if (fldInfo.hasOwnProperty('alias')) {
-              fldInfo.label = fldInfo.alias;
-              delete fldInfo.alias;
-            }
-            if (fldInfo.hasOwnProperty('domain')) {
-
-              delete fldInfo.domain;
-            }
-            if (fldInfo.hasOwnProperty('visible')) {
-
-              delete fldInfo.visible;
-            }
-            if (fldInfo.hasOwnProperty('name')) {
-              fldInfo.fieldName = fldInfo.name;
-              delete fldInfo.name;
-            }
-            if (fldInfo.hasOwnProperty('editable')) {
-              fldInfo.isEditable = fldInfo.editable;
-              delete fldInfo.editable;
-            }
-            if (filteredArr.length === 1) {
-              fieldInfos.push(lang.mixin(
-                fldInfo,
-                filteredArr[0])
-                );
-            }
-            else {
-              fieldInfos.push(fldInfo);
-            }
-          }
-        });
-        return fieldInfos;
-      },
-
-      _getWebmapSimpleFieldInfos: function (layerObject) {
-        var webmapSimpleFieldInfos = [];
-        var webmapFieldInfos =
-          editUtils.getFieldInfosFromWebmap(layerObject, this._jimuLayerInfos);
-        if (webmapFieldInfos) {
-          array.forEach(webmapFieldInfos, function (webmapFieldInfo) {
-            if (webmapFieldInfo.isEditable) {
-              webmapSimpleFieldInfos.push({
-                fieldName: webmapFieldInfo.fieldName,
-                label: webmapFieldInfo.label,
-                isEditable: webmapFieldInfo.isEditable
-              });
-            }
-          });
-          if (webmapSimpleFieldInfos.length === 0) {
-            webmapSimpleFieldInfos = null;
-          }
-        } else {
-          webmapSimpleFieldInfos = null;
-        }
-        return webmapSimpleFieldInfos;
-      },
-      _merge: function () {
-        var obj = {},
-            i = 0,
-            il = arguments.length,
-            key;
-        for (; i < il; i++) {
-          for (key in arguments[i]) {
-            if (arguments[i].hasOwnProperty(key)) {
-              obj[key] = arguments[i][key];
-            }
-          }
-        }
-        return obj;
-      },
-      _getSimpleFieldInfos: function (layerObject, layerInfo) {
-        var simpleFieldInfos = [];
-        var baseSimpleFieldInfos = this._getDefaultSimpleFieldInfos(layerObject);
-
-        if (layerInfo && layerInfo.fieldInfos) {
-          // Edit widget had been configured
-          // keep order of config fieldInfos and add new fieldInfos at end.
-          array.forEach(baseSimpleFieldInfos, function (baseSimpleFieldInfo) {
-            var found = array.some(layerInfo.fieldInfos, function (configuredFieldInfo) {
-              if (configuredFieldInfo.fieldName === baseSimpleFieldInfo.fieldName) {
-                simpleFieldInfos.push(this._merge(baseSimpleFieldInfo, configuredFieldInfo));
-                return true;
-              }
-            }, this);
-            if (found === false) {
-              baseSimpleFieldInfo.canPresetValue = false;
-
-              simpleFieldInfos.push(baseSimpleFieldInfo);
-            }
-
-          }, this);
-        } else {
-          simpleFieldInfos = baseSimpleFieldInfos;
-        }
-        return simpleFieldInfos;
-      },
       _onDescriptionClick: function (tr) {
         var rowData = this._layersTable.getRowData(tr);
         if (rowData && rowData.edit) {
           this._editDescriptions = new EditDescription({
             nls: this.nls,
-            _layerInfo: tr._layerInfo,
+            _configInfo: tr._configInfo,
             _layerName: rowData.label
           });
           this._editDescriptions.popupEditDescription();
@@ -556,7 +343,7 @@ define([
         if (rowData && rowData.edit) {
           this._editFields = new EditFields({
             nls: this.nls,
-            _layerInfo: tr._layerInfo,
+            _configInfo: tr._configInfo,
             _layerName: rowData.label
           });
           this._editFields.popupEditPage();
@@ -653,6 +440,14 @@ define([
         this.config.editor.useFilterEditor =
           this.useFilterEditor.checked === undefined ?
           false : this.useFilterEditor.checked;
+
+        this.config.editor.listenToGF =
+          this.listenToGF.checked === undefined ?
+          false : this.listenToGF.checked;
+
+        this.config.editor.keepTemplateSelected =
+          this.keepTemplateSelected.checked === undefined ?
+          false : this.keepTemplateSelected.checked;
       },
 
       getConfig: function () {
@@ -662,25 +457,54 @@ define([
         // get layerInfos config
         var checkedLayerInfos = [];
         var layersTableData = this._layersTable.getData();
-        array.forEach(this._editableLayerInfos, function (layerInfo, index) {
-          layerInfo._editFlag = layersTableData[index].edit;
-          layerInfo.allowUpdateOnly = (layersTableData[index].allowUpdateOnly === null ?
+        array.forEach(this._configInfos, function (configInfo, index) {
+          if (configInfo.hasOwnProperty("featureLayer")) {
+            if (configInfo.featureLayer.hasOwnProperty("layerAllowsCreate")) {
+              delete configInfo.featureLayer.layerAllowsCreate;
+            }
+            if (configInfo.featureLayer.hasOwnProperty("layerAllowsUpdate")) {
+              delete configInfo.featureLayer.layerAllowsUpdate;
+            }
+            if (configInfo.featureLayer.hasOwnProperty("layerAllowsDelete")) {
+              delete configInfo.featureLayer.layerAllowsDelete;
+            }
+            if (configInfo.featureLayer.hasOwnProperty("layerAllowGeometryUpdates")) {
+              delete configInfo.featureLayer.layerAllowGeometryUpdates;
+            }
+          }
+          configInfo._editFlag = layersTableData[index].edit;
+          configInfo.allowUpdateOnly = (layersTableData[index].allowUpdateOnly === null ?
             layersTableData[index].allowUpdateOnlyHidden : layersTableData[index].allowUpdateOnly);
-          layerInfo.allowDelete = (layersTableData[index].allowDelete === null ?
+          configInfo.allowDelete = (layersTableData[index].allowDelete === null ?
             layersTableData[index].allowDeleteHidden : layersTableData[index].allowDelete);
-          layerInfo.disableGeometryUpdate = (layersTableData[index].disableGeometryUpdate === null ?
+          configInfo.disableGeometryUpdate = (layersTableData[index].disableGeometryUpdate === null ?
             layersTableData[index].disableGeometryUpdateHidden :
             layersTableData[index].disableGeometryUpdate);
-          if (layerInfo._editFlag) {
-            delete layerInfo._editFlag;
-            delete layerInfo.mapLayer;
-            checkedLayerInfos.push(layerInfo);
+          configInfo.fieldInfos = this._resetFieldInfos(configInfo.fieldInfos);
+          if (configInfo.hasOwnProperty("fieldValidations")) {
+            for (var k in configInfo.fieldValidations) {
+              if (configInfo.fieldValidations.hasOwnProperty(k)) {
+                array.forEach(configInfo.fieldValidations[k], function (fieldValidation) {
+                  if (fieldValidation.hasOwnProperty("expression")) {
+                    delete fieldValidation.expression;
+                  }
+                });
+
+              }
+            }
           }
-
-          layerInfo.fieldInfos = this._resetFieldInfos(layerInfo.fieldInfos);
+          if (configInfo.layerInfo) {
+            delete configInfo.layerInfo;
+          }
+          if (configInfo._editFlag) {
+            delete configInfo._editFlag;
+            checkedLayerInfos.push(configInfo);
+          }
         }, this);
-
         if (checkedLayerInfos.length === 0) {
+          new Message({
+            message: this.nls.layersPage.noConfigedLayersError
+          });
           return false;
         } else {
           this.config.editor.layerInfos = checkedLayerInfos;

@@ -2,7 +2,7 @@ define({
   "showLegend": "Pokaż legendę",
   "controlPopupMenuTitle": "Wybierz działania, które będą wyświetlane w menu kontekstowym warstwy.",
   "zoomto": "Powiększ do",
-  "transparency": "Transparency",
+  "transparency": "Przezroczystość",
   "controlPopup": "Włącz / Wyłącz okno podręczne",
   "moveUpAndDown": "Przenieś do góry / Przenieś w dół",
   "attributeTable": "Otwórz tabelę atrybutów",

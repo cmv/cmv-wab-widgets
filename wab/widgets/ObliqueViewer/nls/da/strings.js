@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Mål højde",
   "intialScaleLabel": "Vælg startmålestok for \"skæve\" billeder",
   "smallBuildingLabel": "Byområde: Lille bygning",
-  "buildingLabel": "Byområde: Bygning"
+  "buildingLabel": "Byområde: Bygning",
+  "azimuthChangeNotification": "Ingen data i den valgte retning."
 });

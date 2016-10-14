@@ -2,20 +2,32 @@ define({
   "configText": "Definire i gruppi di filtro sottostanti",
   "labels": {
     "groupName": "Nome set di filtri:",
+    "groupNameTip": "Nome del filtro che verrà selezionato dall'utente.",
     "groupDesc": "Descrizione:",
+    "groupDescTip": "Descrizione del set di filtri.",
     "groupOperator": "Operatore preimpostato:",
-    "groupDefault": "Valore preimpostato:"
+    "groupOperatorTip": "Opzione per predefinire l'operatore del filtro. Se nessun operatore preselezionato è impostato, il filtro utilizzerà l'operatore di uguaglianza.",
+    "groupDefault": "Valore preimpostato:",
+    "groupDefaultTip": "Opzione per scegliere un valore da un layer esistente.",
+    "sameLayerAppend": "Quando un layer viene elencato più volte, utilizzare il seguente operatore tra campi:",
+    "sameLayerConjunc": "Aggiungi utilizzando:"
   },
   "buttons": {
     "addNewGroup": "Aggiungi un nuovo gruppo",
-    "addLayer": "Aggiungi layer"
+    "addNewGroupTip": "Aggiungi nuovo set di filtri",
+    "addLayer": "Aggiungi layer",
+    "addLayerTip": "Aggiungere un layer al set di filtri."
   },
   "inputs": {
     "groupName": "Assegna un nome al gruppo",
     "groupDesc": "Descrizione del gruppo",
     "groupDefault": "Immettere un valore predefinito",
     "simpleMode": "Avvia in visualizzazione semplice",
+    "simpleModeTip": "Opzione per semplificare l'interfaccia widget configurata. Se selezionata, l'elenco a discesa operatore e i pulsanti Aggiungi criterio vengono rimossi dall'interfaccia.",
+    "webmapAppendMode": "Aggiungi filtro a filtro mappa Web esistente utilizzando ",
+    "webmapAppendModeTip": "Opzione per aggiungere il set di filtri a un filtro mappa Web esistente. Sono supportati gli operatori OR e AND.",
     "optionsMode": "Nascondi opzioni widget",
+    "optionsModeTip": "Opzione per esporre impostazioni widget aggiuntive. Se selezionata, il salvataggio e il caricamento di filtri definiti e il mantenimento del filtro anche dopo la chiusura del widget vengono rimossi dall'interfaccia.",
     "optionOR": "O",
     "optionAND": "E",
     "optionEQUAL": "UGUALE A",
@@ -32,9 +44,15 @@ define({
   },
   "tables": {
     "layer": "Livelli",
+    "layerTip": "Nome del layer come definito nella mappa.",
     "field": "Campi",
+    "fieldTip": "Campo rispetto al quale è possibile filtrare il layer.",
     "value": "Usa valore",
-    "action": "Può eliminare"
+    "valueTip": "Opzione per utilizzare i valori dell'elenco a discesa dal layer. Se nessun layer utilizza questi parametri, una casella testo normale verrà presentata all'utente.",
+    "zoom": "Zoom",
+    "zoomTip": "Opzione per eseguire lo zoom all'estensione delle feature dopo che il filtro viene applicato. È possibile selezionare un solo layer per lo zoom.",
+    "action": "Può eliminare",
+    "actionTip": "Rimuovere layer dal set di filtri."
   },
   "popup": {
     "label": "Seleziona un valore"
@@ -49,7 +67,10 @@ define({
   "picker": {
     "description": "Utilizzare questo modulo per trovare un valore preimpostato per questo gruppo.",
     "layer": "Seleziona un layer",
+    "layerTip": "Nome del layer come definito nella mappa Web.",
     "field": "Seleziona un campo",
-    "value": "Seleziona un valore"
+    "fieldTip": "Campo rispetto al quale verrà impostato il valore preimpostato.",
+    "value": "Seleziona un valore",
+    "valueTip": "Valore che verrà usato come predefinito del widget."
   }
 });

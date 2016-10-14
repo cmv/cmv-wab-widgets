@@ -115,6 +115,18 @@ function(BaseVersionManager) {
         }
         return newConfig;
       }
+    }, {
+      version: '2.2',
+      upgrader: function(oldConfig){
+        var newConfig = oldConfig;
+        newConfig.hideLayersAfterWidgetClosed = true;
+        var query = null;
+        for(var i = 0; i < newConfig.queries.length; i++){
+          query = newConfig.queries[i];
+          delete query.keepResultsOnMapAfterCloseWidget;
+        }
+        return newConfig;
+      }
     }];
   }
 

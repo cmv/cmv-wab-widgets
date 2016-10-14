@@ -109,7 +109,7 @@ define({
   "icon": "Simge",
   "newTask": "Yeni Görev",
   "addTaskTip": "Araca bir veya birkaç sorgu ekleyin ve her biri için parametreleri yapılandırın.",
-  "webMapPopupTip": "Web haritasında Katmanın açılan yapılandırma penceresini kullanın",
+  "webMapPopupTip": "Web haritasında katmanın açılır yapılandırma penceresini kullan",
   "customPopupTip": "Özel içeriği yapılandır",
   "showResultsSetActions": "Sonuç kümesi için eylemleri göster",
   "zoomTo": "Yakınlaştır",
@@ -122,5 +122,6 @@ define({
   "uploadImage": "Görüntü yükle",
   "attributeCriteira": "Öznitelik ölçütleri",
   "specifyFilterAtRuntimeTip": "Kullanıcılar bu deyim için parametre belirtmek zorundadır",
-  "value": "DEĞER"
+  "value": "DEĞER",
+  "hideLayersTip": "Araç kapalıyken sorgu sonucu katmanları kapatılsın."
 });

@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Alternativ for å fjerne geoobjektet fra utvalget som er angitt når posten lagres. Hvis posten er den eneste valgte posten, går panelet tilbake til å vise malsiden.",
     "useFilterEditor": "Bruk geoobjektmal-filter",
     "useFilterEditorTip": "Alternativ for bruk av filtermalvelgeren som gjør det mulig å vise malene for ett lag eller søke etter maler basert på navn.",
+    "listenToGroupFilter": "Bruk filterverdier fra widgeten Grupper filter i Forhåndsinnstilte felt",
+    "listenToGroupFilterTip": "Når et filter brukes i widgeten Grupper filter, bruker du verdien i et tilsvarende felt i listen Forhåndsinnstilte verdier.",
+    "keepTemplateActive": "Hold valgt mal aktiv",
+    "keepTemplateActiveTip": "Hvis en mal tidligere ble valgt når malvelgeren vises, velger du den på nytt.",
     "layerSettingsTable": {
       "allowDelete": "Tillat sletting",
       "allowDeleteTip": "Alternativ som tillater at brukeren sletter et geoobjekt. Deaktivert dersom laget ikke støtter sletting.",
@@ -27,9 +31,10 @@ define({
       "fields": "Felter",
       "fieldsTip": "Endre feltene som skal redigeres og definer Smart-attributter",
       "description": "Beskrivelse",
-      "descriptionTip": "Her kan du skrive inn tekst som skal vises øverst på siden med attributter."
+      "descriptionTip": "Alternativ for å skrive inn tekst som skal vises øverst på siden med attributter."
     },
-    "editFieldError": "Det er ikke mulig å endre felt og smarte attributter i lag som ikke er redigerbare"
+    "editFieldError": "Det er ikke mulig å endre felt og smarte attributter i lag som ikke er redigerbare",
+    "noConfigedLayersError": "Smart redigering krever ett eller flere redigerbare lag"
   },
   "editDescriptionPage": {
     "title": "Angi tekst for attributtoversikt for <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Resulterende uttrykk i SQL-format fra de definerte vilkårene",
       "actions": "Vilkår",
       "actionsTip": "Endre rekkefølgen for regelen og definer vilkårene for når den utløses"
+    },
+    "actions": {
+      "hide": "Skjul",
+      "required": "Påkrevd",
+      "disabled": "Deaktivert"
     }
   },
   "filterPage": {
     "submitHidden": "Sende inn attributtdata for dette feltet selv om det er skjult?",
-    "title": "Konfigurer setning for regelen ${action}",
+    "title": "Konfigurer uttrykk for regelen ${action}",
     "filterBuilder": "Angi handling for feltet når posten samsvarer med ${any_or_all} av følgende uttrykk",
     "noFilterTip": "Bruk verktøyene nedenfor til å definere uttrykket for når handlingen er aktiv."
   }

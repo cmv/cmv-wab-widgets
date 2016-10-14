@@ -9,5 +9,8 @@ define({
   "featureLayers": "שכבות ישויות",
   "searchTemplates": "תבניות חיפוש",
   "noAvailableTempaltes": "אין תבניות זמינות",
-  "noCanCreateLayerAreCurrentlyVisible": "אף שכבה ניתנת ליצירה אינה נראית כעת."
+  "noCanCreateLayerAreCurrentlyVisible": "אף שכבה ניתנת ליצירה אינה נראית כעת.",
+  "relatedTables": "טבלאות מקושרות:",
+  "relatedRecords": "רשומות מקושרות:",
+  "noRelatedRecotds": "לא נמצאו רשומות מקושרות"
 });

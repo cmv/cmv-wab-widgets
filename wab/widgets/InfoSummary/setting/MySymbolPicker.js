@@ -29,6 +29,7 @@ define(['dojo/_base/declare',
     'dijit/registry',
     'esri/symbols/jsonUtils',
     'esri/request',
+    'esri/Color',
     'jimu/dijit/SymbolPicker',
     'jimu/BaseWidget',
     'jimu/dijit/TabContainer3',
@@ -37,6 +38,8 @@ define(['dojo/_base/declare',
     'jimu/dijit/Message',
     'jimu/dijit/ColorPicker',
     'dojo/_base/array',
+    'esri/symbols/SimpleMarkerSymbol',
+    'esri/symbols/SimpleLineSymbol',
     'esri/symbols/PictureMarkerSymbol',
     'dojo/text!./MySymbolPicker.html',
     'dojo/Evented'
@@ -57,6 +60,7 @@ define(['dojo/_base/declare',
     registry,
     jsonUtils,
     esriRequest,
+    _Color,
     SymbolPicker1,
     BaseWidget,
     TabContainer,
@@ -65,6 +69,8 @@ define(['dojo/_base/declare',
     Message,
     ColorPicker,
     array,
+    SimpleMarkerSymbol,
+    SimpleLineSymbol,
     PictureMarkerSymbol,
     template,
     Evented) {
@@ -87,10 +93,6 @@ define(['dojo/_base/declare',
       panelHTML: null,
       svg: null,
 
-      // 1) Retain state is jacked up again after the layer symbol changes and the switch from halo/fill color define to fill symbol define
-      // 2) Needs to use a loading shelter or whatever...I think that will prevent the flicker while it initally draws
-      // 3) Need a way to define the symbol size for custom symbol
-
       /*jshint unused:false*/
       constructor: function ( /*Object*/ options) {
         this.nls = options.nls;
@@ -104,6 +106,7 @@ define(['dojo/_base/declare',
         this.layerId = options.value;
         this.supportsDynamic = options.layerInfo.supportsDynamic;
         this.fields = options.layerInfo.fields;
+        this.hidePanel = options.hidePanel;
       },
 
       postMixInProperties: function(){
@@ -117,8 +120,30 @@ define(['dojo/_base/declare',
         this._initTabControl();
         this._initSymbolPickerTab(this.geometryType);
         this._initFeatureOptionsTab();
-        this.own(on(this.btnAddField, 'click', lang.hitch(this, this._addFieldRow,
-          this.fieldOptionsTable, 'loSelect')));
+        if (!this.hidePanel) {
+          this.own(on(this.btnAddField, 'click', lang.hitch(this, this._addFieldRow,
+            this.fieldOptionsTable, 'loSelect')));
+          html.removeClass(this.btnAddField, "btn-add-section-disabled");
+          html.addClass(this.btnAddField, "btn-add-section");
+          html.removeClass(this.iconOptionsTextLabel, 'text-disabled');
+          html.removeClass(this.featureOptionsTextLabel, 'text-disabled');
+          html.removeClass(this.groupOptionsTextLabel, 'text-disabled');
+          html.removeClass(this.chkGroupLabel, 'text-disabled');
+          html.removeClass(this.rdoLayerIconLabel, 'text-disabled');
+          html.removeClass(this.rdoCustomIconLabel, 'text-disabled');
+        } else {
+          html.removeClass(this.btnAddField, "btn-add-section");
+          html.addClass(this.btnAddField, "btn-add-section-disabled");
+          html.addClass(this.iconOptionsTextLabel, 'text-disabled');
+          html.addClass(this.featureOptionsTextLabel, 'text-disabled');
+          html.addClass(this.groupOptionsTextLabel, 'text-disabled');
+          html.addClass(this.chkGroupLabel, 'text-disabled');
+          html.addClass(this.rdoLayerIconLabel, 'text-disabled');
+          html.addClass(this.rdoCustomIconLabel, 'text-disabled');
+        }
+        this.chkGroup.set('disabled', this.hidePanel);
+        this.rdoLayerIcon.set('disabled', this.hidePanel);
+        this.rdoCustomIcon.set('disabled', this.hidePanel);
       },
 
       _setFields: function(fields){
@@ -134,7 +159,7 @@ define(['dojo/_base/declare',
         }
       },
 
-      _initTabControl: function(){
+      _initTabControl: function() {
         this.tabContainer = new TabContainer({
           tabs: [{
             title: this.nls.symbolOptions,
@@ -382,8 +407,9 @@ define(['dojo/_base/declare',
               this.rdoCustomIcon.set('checked', true);
 
               if (this.symbolInfo.icon) {
-                //this.resetIcon(this.layerInfo.imageData);
-                this.resetIcon(this.symbolInfo.icon);
+                this.updateImg();
+                var icon = jsonUtils.fromJson(this.symbolInfo.icon);
+                this._createImageDataDiv(icon, true, this.customIconPlaceholder);
               }
               break;
           }
@@ -426,16 +452,14 @@ define(['dojo/_base/declare',
         }
       },
 
-      resetIcon: function (s) {
-        this.customIconPlaceholder.innerHTML = "<div></div>";
-        var a = domConstruct.create("div", {
-          innerHTML: [s],
-          title: this.nls.editCustomIcon
-        });
-
-        html.addClass(a.firstChild, "customPlaceholder");
-
-        this.customIconPlaceholder.innerHTML = a.innerHTML;
+      updateImg: function () {
+        if (this.symbolInfo.icon.toString().indexOf('<img') > -1) {
+          var img = document.createElement('div');
+          img.innerHTML = this.symbolInfo.icon;
+          var icon = new PictureMarkerSymbol(img.children[0].src, 26, 26);
+          this.symbolInfo.icon = icon.toJson();
+          img.remove();
+        }
       },
 
       _addEventHandlers: function (geoType) {
@@ -476,7 +500,7 @@ define(['dojo/_base/declare',
             this.userDefinedSymbol = true;
             if (this.customSymbolPlaceholder.children.length > 0) {
               if (typeof (this.customSymbolPlaceholder.children[0].src) !== 'undefined') {
-                symbol = new PictureMarkerSymbol(this.customSymbolPlaceholder.children[0].src, 30, 30);
+                symbol = new PictureMarkerSymbol(this.customSymbolPlaceholder.children[0].src, 26, 26);
               } else {
                 symbol = jsonUtils.fromJson(this.symbolInfo.symbol);
               }
@@ -489,11 +513,12 @@ define(['dojo/_base/declare',
           icon = symbol;
         } else {
           if (this.customIconPlaceholder.children.length > 0) {
-            if (typeof (this.customIconPlaceholder.innerHTML) !== 'undefined') {
+            if (typeof (this.customIconPlaceholder.children[0].src) !== 'undefined') {
               html.removeClass(this.customIconPlaceholder.firstChild, 'customPlaceholder');
               html.addClass(this.customIconPlaceholder.firstChild, 'customPlaceholderSettings');
-              icon = this.customIconPlaceholder.innerHTML;
+              icon = new PictureMarkerSymbol(this.customIconPlaceholder.children[0].src, 26, 26);
             } else {
+              //this.updateImg();
               icon = jsonUtils.fromJson(this.symbolInfo.icon);
             }
           }
@@ -528,8 +553,9 @@ define(['dojo/_base/declare',
         }
 
         if (typeof (icon) !== 'undefined') {
-          this._createImageDataDiv2(icon, 44, 44, true);
-          this._createImageDataDiv2(icon, 28, 28, false);
+          var isCustom = this.iconType !== "LayerIcon" || this.symbolType === 'CustomSymbol';
+          this._createImageDataDiv2(icon, 44, 44, true, isCustom);
+          this._createImageDataDiv2(icon, 28, 28, false, isCustom);
         }
 
         this.symbolInfo = {
@@ -539,7 +565,7 @@ define(['dojo/_base/declare',
           clusteringEnabled: this.clusteringEnabled,
           displayFeatureCount: this.displayFeatureCount,
           _highLightColor: this.colorPicker.color.toHex(),
-          icon: icon,
+          icon: icon && icon.toJson ? icon.toJson() : icon,
           clusterType: this.clusterType,
           iconType: this.iconType,
           renderer: this.renderer,
@@ -574,6 +600,9 @@ define(['dojo/_base/declare',
       _rdoLayerSymChanged: function (v) {
         if (v) {
           this.symbolType = "LayerSymbol";
+          if (this.selectedID) {
+            this.setLayerSymbol(dom.byId(this.selectedID));
+          }
         }
         html.setStyle(this.layerSym, 'display', v ? "block" : "none");
       },
@@ -595,7 +624,7 @@ define(['dojo/_base/declare',
       _chkClusterChanged: function (v) {
         this.clusteringEnabled = v;
         html.setStyle(this.grpClusterOptions, 'display', v ? "block" : "none");
-        //html.setStyle(this.grpThemeClusterOptions, 'display', v ? "block" : "none");
+        html.setStyle(this.featureFont, 'display', v ? "block" : "none");
         html.setStyle(this.clusterPickerContainer, 'display', v ? "block" : "none");
         if (v) {
           if (typeof (this.clusterType) === 'undefined') {
@@ -676,6 +705,31 @@ define(['dojo/_base/declare',
             ren = renderer.uniqueValueInfos;
           } else if (typeof (renderer.classBreakInfos) !== 'undefined') {
             ren = renderer.classBreakInfos;
+          } else if (renderer.type && renderer.type === 'heatmap' && renderer.colorStops) {
+            var colors = renderer.colorStops;
+            var infos = [];
+            if (colors && colors.length >= 1) {
+              var _c = colors[0].color;
+              var c = _Color.fromArray([_c.r, _c.g, _c.b]);
+              infos.push({
+                symbol: new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 10,
+                  new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, c), c)
+              });
+              if (colors.length > 2) {
+                _c = colors[colors.length - 1].color;
+                c = _Color.fromArray([_c.r, _c.g, _c.b]);
+                infos.push({
+                  symbol: new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 10,
+                    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, c), c)
+                });
+              }
+            }
+            if (infos.length > 0) {
+              this.layerSym.appendChild(this._createCombinedImageDataDiv(infos));
+            } else {
+              this._createImageDataDiv2(undefined, 44, 44, true, false);
+              this._createImageDataDiv2(undefined, 28, 28, false, false);
+            }
           } else {
             this.rdoEsriSym.set('checked', true);
             this.symbolType = "EsriSymbol";
@@ -694,10 +748,18 @@ define(['dojo/_base/declare',
         }
       },
 
-      _createImageDataDiv2: function (sym, w, h, isPanel) {
+      _createImageDataDiv2: function (sym, w, h, isPanel, isCustom) {
         var a;
         if (typeof (sym) === "string") {
           a = domConstruct.create("div", { 'class': "imageDataGFX", 'innerHTML': sym });
+          if (isPanel) {
+            this.panelHTML = a.innerHTML;
+          } else {
+            this.svg = a;
+          }
+        } else if (typeof (sym) === 'undefined') {
+          a = domConstruct.create("div", { 'class': "imageDataGFX" });
+          a.innerHTML = '<div></div>';
           if (isPanel) {
             this.panelHTML = a.innerHTML;
           } else {
@@ -722,8 +784,8 @@ define(['dojo/_base/declare',
             }
             if (typeof (symbol.setWidth) !== 'undefined') {
               if (typeof (symbol.setHeight) !== 'undefined') {
-                symbol.setWidth(width);
-                symbol.setHeight(height);
+                symbol.setWidth(isCustom ? width - (width * 0.25) : width);
+                symbol.setHeight(isCustom ? height - (height * 0.25) : height);
               } else {
                 symbol.setWidth(2);
               }
@@ -883,6 +945,7 @@ define(['dojo/_base/declare',
       },
 
       _editIcon: function (type) {
+        this.fileInput.value = null;
         var reader = new FileReader();
         reader.onload = lang.hitch(this, function () {
           var node;

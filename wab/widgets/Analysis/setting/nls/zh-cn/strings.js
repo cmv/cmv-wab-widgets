@@ -13,7 +13,7 @@ define({
   "aggregatePointsUsage": "将点聚合到这些点所在的面中。",
   "calculateDensity": "计算密度",
   "calculateDensityUsage": "通过展开地图范围内某一现象(表示为点或线的属性)的已知量，根据点要素或线要素创建密度图。",
-  "connectOriginsToDestinations": "连接起始点和目的地",
+  "connectOriginsToDestinations": "连接起点与终点",
   "connectOriginsToDestinationsUsage": "测量点对之间的行驶时间或距离。",
   "createBuffers": "创建缓冲区",
   "createBuffersUsage": "根据输入要素创建缓冲区面。",
@@ -43,7 +43,7 @@ define({
   "interpolatePointsUsage": "根据通过点集合进行的测量得出的新位置的预测值。",
   "mergeLayers": "合并图层",
   "mergeLayersUsage": "将多个图层中的要素合并到一个新图层中",
-  "overlayLayers": "图层叠加",
+  "overlayLayers": "叠加图层",
   "overlayLayersUsage": "通过原始图层中保留的信息将多个图层合并到一个图层中。",
   "planRoutes": "计划路径",
   "planRoutesUsage": "确定在流动劳动力中有效划分任务的方法。",
@@ -51,7 +51,7 @@ define({
   "summarizeNearbyUsage": "针对输入图层上的每个要素，汇总距离另一图层上的要素一段距离范围内的数据。",
   "summarizeWithin": "范围内汇总",
   "summarizeWithinUsage": "针对输入面图层上的每个面，汇总该范围内来自另一图层上的要素的数据。",
-  "traceDownstream": "网络下溯追踪",
+  "traceDownstream": "追踪下游",
   "traceDownstreamUsage": "确定以您指定的位置为起点的下游方向中的流路径。",
   "allowToExport": "允许导出结果"
 });

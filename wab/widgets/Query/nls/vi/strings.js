@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Tiêu chí thuộc tính",
   "spatialFilter": "Bộ lọc không gian",
   "value": "GIÁ TRỊ",
-  "noAttributeSpatialFilterTip": "Không có bộ lọc nào được xác định. Tất cả đối tượng sẽ được trả về."
+  "noAttributeSpatialFilterTip": "Không có bộ lọc nào được xác định. Tất cả đối tượng sẽ được trả về.",
+  "showAllRelatedRecords": "Hiển thị Tất cả các Bản ghi Liên quan"
 });

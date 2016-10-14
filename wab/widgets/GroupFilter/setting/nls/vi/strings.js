@@ -2,20 +2,32 @@ define({
   "configText": "Xác định Nhóm Bộ lọc của Bạn Bên dưới",
   "labels": {
     "groupName": "Tên đã Đặt của Bộ lọc:",
+    "groupNameTip": "Tên của bộ lọc mà người dùng sẽ chọn từ.",
     "groupDesc": "Mô tả:",
+    "groupDescTip": "Mô tả tập hợp bộ lọc.",
     "groupOperator": "Toán tử Đặt trước:",
-    "groupDefault": "Giá trị Đặt trước:"
+    "groupOperatorTip": "Tùy chọn để định sẵn toán tử của bộ lọc. Nếu không có Toán tử Thiết lập sẵn nào được chọn, bộ lọc sẽ sử dụng toán tử Bằng.",
+    "groupDefault": "Giá trị Đặt trước:",
+    "groupDefaultTip": "Tùy chọn để chọn một giá trị từ một lớp hiện có.",
+    "sameLayerAppend": "Khi một lớp được liệt kê nhiều hơn một lần, hãy sử dụng toán tử sau đây giữa các trường:",
+    "sameLayerConjunc": "Sử dụng Thêm:"
   },
   "buttons": {
     "addNewGroup": "Thêm Nhóm Mới",
-    "addLayer": "Thêm Lớp"
+    "addNewGroupTip": "Thêm một tập hợp bộ lọc mới.",
+    "addLayer": "Thêm Lớp",
+    "addLayerTip": "Thêm một lớp vào tập hợp bộ lọc."
   },
   "inputs": {
     "groupName": "Đặt Tên cho Nhóm của Bạn",
     "groupDesc": "Mô tả về Nhóm của Bạn",
     "groupDefault": "Nhập Giá trị Xác định trước",
     "simpleMode": "Bắt đầu ở Dạng xem Đơn giản",
+    "simpleModeTip": "Tùy chọn đơn giản hóa giao diện tiện ích có thể được cấu hình. Khi đánh dấu vào, danh sách thả xuống các toán tử và các nút thêm tiêu chí sẽ được xóa khỏi giao diện.",
+    "webmapAppendMode": "Thêm Bộ lọc vào Sử dụng Bộ lọc Bản đồ Web Hiện có ",
+    "webmapAppendModeTip": "Tùy chọn để thêm tập hợp bộ lọc vào một bộ lọc bản đồ web hiện có. Các toán tử được hỗ trợ là OR và AND.",
     "optionsMode": "Ẩn Tùy chọn Tiện ích",
+    "optionsModeTip": "Tùy chọn để công khai các cài đặt tiện ích bổ sung. Nếu được đánh dấu, lưu và tải các bộ lọc được xác định và tiếp tục bộ lọc sau khi tiện ích được đóng bị xóa khỏi giao diện.",
     "optionOR": "HOẶC",
     "optionAND": "VÀ",
     "optionEQUAL": "BẰNG",
@@ -32,9 +44,15 @@ define({
   },
   "tables": {
     "layer": "Lớp",
+    "layerTip": "Tên của lớp được định nghĩa như trên bản đồ.",
     "field": "Trường",
+    "fieldTip": "Trường mà trên đó lớp sẽ được lọc.",
     "value": "Sử dụng Giá trị",
-    "action": "Xóa"
+    "valueTip": "Tùy chọn để sử dụng các giá trị trong danh sách thả xuống từ lớp. Nếu không có lớp nào sử dụng thông số này, hộp văn bản thuần túy sẽ được hiển thị đến người dùng.",
+    "zoom": "Thu phóng",
+    "zoomTip": "Tùy chọn để thu phóng phạm vi của các đối tượng sau khi áp dụng bộ lọc. Chỉ có thể chọn một lớp để thu phóng.",
+    "action": "Xóa",
+    "actionTip": "Xóa lớp khỏi tập hợp bộ lọc."
   },
   "popup": {
     "label": "Chọn Giá trị"
@@ -49,7 +67,10 @@ define({
   "picker": {
     "description": "Sử dụng biểu mẫu này để tìm giá trị đặt trước cho nhóm này.",
     "layer": "Chọn một Lớp",
+    "layerTip": "Tên của lớp như được xác định trên bản đồ web.",
     "field": "Chọn một Trường",
-    "value": "Chọn một Giá trị"
+    "fieldTip": "Trường mà giá trị thiết lập sẵn sẽ được thiết lập.",
+    "value": "Chọn một Giá trị",
+    "valueTip": "Giá trị mà sẽ là giá trị mặc định của tiện ích."
   }
 });

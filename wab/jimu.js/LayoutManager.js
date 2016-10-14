@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -71,7 +71,10 @@ function(declare, lang, array, html, _WidgetBase, topic, on, query, domConstruct
       this.preloadGroupPanels = [];
       this.invisibleWidgetIds = [];
 
-      this.own(on(window, 'resize', lang.hitch(this, this.resize)));
+      //avoid mobileKeyboard resize
+      if (!utils.isMobileUa()) {
+        this.own(on(window, 'resize', lang.hitch(this, this.resize)));
+      }
 
       this.id = domId;
 
@@ -91,8 +94,8 @@ function(declare, lang, array, html, _WidgetBase, topic, on, query, domConstruct
     resize: function() {
       //resize widgets. the panel's resize is called by the panel manager.
       //widgets which is in panel is resized by panel
-      array.forEach(this.widgetManager.getAllWidgets(), function(w){
-        if(w.inPanel === false){
+      array.forEach(this.widgetManager.getAllWidgets(), function(w) {
+        if (w.inPanel === false) {
           w.resize();
         }
       }, this);
@@ -626,6 +629,8 @@ function(declare, lang, array, html, _WidgetBase, topic, on, query, domConstruct
         cssText += '.jimu-panel{border-color: ${mainBackgroundColor} !important;}';
         cssText += '.jimu-widget-header-controller' +
           '{border-bottom-color: ${mainBackgroundColor} !important;}';
+        cssText += '.jimu-tab>.control>.tab' +
+          '{color: ${mainBackgroundColor} !important; border-color: ${mainBackgroundColor} !important}';
       }else if(theme.name === 'BillboardTheme'){
         cssText += '.jimu-widget-homebutton .HomeButton .home, .jimu-widget-mylocation,' +
           ' .jimu-widget-mylocation .place-holder, .jimu-widget-zoomslider.vertical .zoom-in,' +

@@ -1,5 +1,6 @@
 define({
   "addTaskTip": "Thêm một hoặc nhiều bộ lọc vào tiện ích và cấu hình tham số cho từng bộ lọc.",
+  "enableMapFilter": "Gỡ bỏ bộ lọc lớp được thiết lập sẵn ra khỏi bản đồ.",
   "newFilter": "Bộ lọc Mới",
   "filterExpression": "Biểu thức bộ lọc",
   "layerDefaultSymbolTip": "Sử dụng ký hiệu mặc định của lớp",

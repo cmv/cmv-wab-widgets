@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -163,9 +163,9 @@ define([
       breakPoints: [600, 1280]
     }, jimuConfig);
 
-    window.wabVersion = '2.1';
-    // window.productVersion = 'Online 4.2';
-    window.productVersion = 'Web AppBuilder for ArcGIS (Developer Edition) 2.1';
+    window.wabVersion = '2.2';
+    // window.productVersion = 'Online 4.3';
+    window.productVersion = 'Web AppBuilder for ArcGIS (Developer Edition) 2.2';
     // window.productVersion = 'Portal for ArcGIS 10.4 Beta2';
 
     function initApp() {

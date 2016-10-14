@@ -4,6 +4,8 @@ define({
   "format": "Format",
   "layout": "Layout",
   "settings": "Avansert",
+  "labels": "Påskrifter",
+  "showLabels": "Vis etiketter",
   "mapScaleExtent": "Kartmålestokk/-utstrekning",
   "preserve": "Bevar",
   "mapScale": "målestokk",

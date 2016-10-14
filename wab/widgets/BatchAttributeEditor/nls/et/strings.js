@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtreeri kiht",
   "cancel": "Tühista",
   "noValue": "Väärtus puudub",
+  "emptyString": "Tühi string",
   "existingValue": "Säilita olemasolev väärtus",
   "newDate": "Uus kuupäev",
   "valueChooser": "Valige või sisestage väärtus",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Kihti ${0} (ID ${1}) ei leitud kaardilt. Võimalik, et kaarti on pärast vidina konfigureerimist muudetud",
     "queryNullID": "Üksuse ${0} objekt tagastas kehtetu ID",
     "noSelectedLayers": "Värskendatavate kirjetega kihte pole valitud",
-    "inputValueError": "Kehtetu väärtus vormis"
+    "inputValueError": "Kehtetu väärtus vormis",
+    "saveError": "${0} objekti ei saa salvestada. Üksikasjad on lisatud konsoolile",
+    "requiredValue": "Nõutav väärtus"
   }
 });

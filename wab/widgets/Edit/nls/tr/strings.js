@@ -9,5 +9,8 @@ define({
   "featureLayers": "Detay Katmanları",
   "searchTemplates": "Şablon Ara",
   "noAvailableTempaltes": "Kullanılabilir şablon yok",
-  "noCanCreateLayerAreCurrentlyVisible": "Şu anda görünen oluşturulabilir katman yok."
+  "noCanCreateLayerAreCurrentlyVisible": "Şu anda görünen oluşturulabilir katman yok.",
+  "relatedTables": "İlgili tablolar:",
+  "relatedRecords": "İlgili kayıtlar:",
+  "noRelatedRecotds": "İlgili kayıt bulunamadı"
 });

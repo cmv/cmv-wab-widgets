@@ -3,7 +3,7 @@ define({
   "selectSocialNetwork": "Wählen Sie folgende Optionen zum Freigeben der App aus:",
   "email": "E-Mail",
   "facebook": "Facebook",
-  "googlePlus": "google+",
+  "googlePlus": "Google+",
   "twitter": "Twitter",
   "addNew": "Neue hinzufügen",
   "socialMediaUrl": "Ihre Social Media-URL",

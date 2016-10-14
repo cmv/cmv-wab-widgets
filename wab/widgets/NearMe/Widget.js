@@ -27,7 +27,8 @@ define([
   "esri/InfoTemplate",
   "jimu/dijit/Message",
   "jimu/dijit/LoadingIndicator",
-  "dijit/registry"
+  "dijit/registry",
+  "jimu/LayerInfos/LayerInfos"
 ], function (
   declare,
   BaseWidget,
@@ -57,7 +58,8 @@ define([
   InfoTemplate,
   Message,
   LoadingIndicator,
-  registry
+  registry,
+  LayerInfos
 ) {
   // to create a widget, derive it from BaseWidget.
   return declare([BaseWidget], {
@@ -78,6 +80,11 @@ define([
     _isValidConfig: null, //Flag to check whether config has valid data for the widget
     appUtils: null,
     _hasMulitpleSourcesInSearch: true, //Set this flag if their are multiple sources in search
+
+    postCreate: function () {
+      this._bufferParams = null;  //To store Buffer parameters
+    },
+
     startup: function () {
       domClass.add(this.domNode.parentElement, "esriCTNearMeContentPanel");
       //check whether portal url is available
@@ -146,7 +153,29 @@ define([
       if (this._isValidConfig) {
         this._onWindowResize();
         this._connectMapEventHandler();
+        if (this._slider) {
+          this._slider.set("value", this.config.defaultBufferDistance);
+        }
       }
+      this._getUpdatedLayerFilters();
+    },
+
+    /**
+    * update the layer filters
+    * @memberOf widgets/NearMe/Widget
+    */
+    _getUpdatedLayerFilters: function() {
+      LayerInfos.getInstance(this.map, this.map.webMapResponse.itemInfo).then(
+        lang.hitch(this, function(layerInfosObj) {
+          array.forEach(this.config.searchLayers, lang.hitch(this,
+            function(currentLayer) {
+              var mapLayer = layerInfosObj.getLayerInfoById(
+                currentLayer.id);
+              if (mapLayer) {
+                currentLayer.definitionExpression = mapLayer.getFilter();
+              }
+            }));
+        }));
     },
 
     /**
@@ -174,6 +203,14 @@ define([
     onClose: function () {
       if (this._isValidConfig) {
         this._disconnectMapEventHandler();
+        if (this._searchContainerNodeElement) {
+          this._searchContainerNodeElement.value = "";
+        }
+        if (this._searchedLocation && this._itemListObject) {
+          this._itemListObject.showAllLayers();
+          this._itemListObject.resetAllFilters();
+          this._clearResults();
+        }
       }
     },
 
@@ -185,12 +222,9 @@ define([
       if (this._itemListObject) {
         this._itemListObject.removeGraphicsLayer();
         this._itemListObject.showAllLayers();
+        this._itemListObject.resetAllFilters();
         this._itemListObject.destroy();
         this._itemListObject = null;
-      }
-      //clear buffer graphics layer from map
-      if (this._bufferGraphicLayer) {
-        this._bufferGraphicLayer.clear();
       }
       this._clearResults();
     },
@@ -251,6 +285,8 @@ define([
       this._createSlider();
       //initialize loading indicator
       this._initLoading();
+      //get updated filters from layer
+      this._getUpdatedLayerFilters();
       //initialize layer list widget
       this._initLayerList();
       // show bufferslider widget if configured layers
@@ -288,20 +324,19 @@ define([
       // create an instance of search widget
       searchInstance = new SearchInstance({
         searchOptions: searchOptions,
-        domNode: this.search,
         config: this.config,
         nls: this.nls,
         map: this.map
-      });
+      }, domConstruct.create("div", {}, this.search));
       //handle search widget events
-      searchInstance.on("select-result", lang.hitch(this, function (evt) {
+      this.own(searchInstance.on("select-result", lang.hitch(this, function (evt) {
         evt.isFeatureFromMapClick = false;
         //now init the workflow
         this._initWorkflow(evt);
-      }));
-      searchInstance.on("clear-search", lang.hitch(this, this._clearResults));
-      searchInstance.on("search-results", lang.hitch(this, this._clearResults));
-      searchInstance.on("search-loaded", lang.hitch(this, function () {
+      })));
+      this.own(searchInstance.on("clear-search", lang.hitch(this, this._clearResults)));
+      this.own(searchInstance.on("search-results", lang.hitch(this, this._clearResults)));
+      this.own(searchInstance.on("search-loaded", lang.hitch(this, function () {
         setTimeout(lang.hitch(this, function () {
           //get search container node to resize the search control
           this._searchContainerNodeElement = query(
@@ -313,7 +348,7 @@ define([
           }
           this._onWindowResize();
         }), 1000);
-      }));
+      })));
       // once widget is created call its startup method
       searchInstance.startup();
     },
@@ -333,8 +368,8 @@ define([
       }
       //create the locator instance to reverse geocode the address
       this._locatorInstance = new Locator(geocodeURL);
-      this._locatorInstance.on("location-to-address-complete", lang.hitch(
-        this, this._onLocationToAddressComplete));
+      this.own(this._locatorInstance.on("location-to-address-complete", lang.hitch(
+        this, this._onLocationToAddressComplete)));
     },
 
     /**
@@ -367,7 +402,7 @@ define([
     * @memberOf widgets/NearMe/Widget
     */
     _initWorkflow: function (evt) {
-      var selectedFeature;
+      var selectedFeature, horzontalSliderNode;
       //clear previous results
       this._clearResults();
       //get selected feature
@@ -388,8 +423,15 @@ define([
         if (this._itemListObject.hasValidLayers()) {
           //show selected location on map
           this._highlightSelectedLocation(selectedFeature);
-          // create buffer based on specified geometry
-          this._createBuffer(selectedFeature.geometry);
+          //Check if horizontal slider is visible or not and display buffer only if slider is visible
+          horzontalSliderNode = query(".esriCTSliderDiv", this.widgetMainNode);
+          if (horzontalSliderNode && domClass.contains(horzontalSliderNode[0], "esriCTHidden")) {
+            this._itemListObject.displayLayerList(this._searchedLocation, null);
+          }
+          else {
+            // create buffer based on specified geometry
+            this._createBuffer(selectedFeature.geometry);
+          }
         }
         else {
           this._showMessage(this.nls.allPopupsDisabledMsg);
@@ -412,6 +454,9 @@ define([
       if (this._itemListObject) {
         this._itemListObject.clearResultPanel();
       }
+      if (this._bufferGraphicLayer) {
+        this._bufferGraphicLayer.clear();
+      }
       this.map.infoWindow.hide();
     },
 
@@ -422,17 +467,17 @@ define([
     _connectMapEventHandler: function () {
       this._disableWebMapPopup();
       //handle map click
-      this._mapClickHandler = this.map.on("click", lang.hitch(this,
-        this._onMapClick));
+      this._mapClickHandler = this.own(this.map.on("click", lang.hitch(this,
+        this._onMapClick)))[0];
       //handle mouse move on map to show tooltip only on non-touch devices
       if ("ontouchstart" in document.documentElement) {
         domStyle.set(this._mapTooltip, "display", "none");
       } else {
-        this._mapMoveHandler = this.map.on("mouse-move", lang.hitch(
-          this, this._onMapMouseMove));
-        this.map.on("mouse-out", lang.hitch(this, function () {
+        this._mapMoveHandler = this.own(this.map.on("mouse-move", lang.hitch(
+          this, this._onMapMouseMove)))[0];
+        this.own(this.map.on("mouse-out", lang.hitch(this, function () {
           domStyle.set(this._mapTooltip, "display", "none");
-        }));
+        })));
       }
     },
 
@@ -531,7 +576,7 @@ define([
       domAttr.set(this.silderText, "innerHTML", string.substitute(
         this.nls.bufferSliderText, this._bufferParams));
       // on change event of slider
-      this._slider.on("change", lang.hitch(this, this._sliderChange));
+      this.own(this._slider.on("change", lang.hitch(this, this._sliderChange)));
       // set maximum and minimum value of horizontal slider
       this.sliderMinValue.innerHTML = this._slider.minimum.toString();
       this.sliderMaxValue.innerHTML = this._slider.maximum.toString();

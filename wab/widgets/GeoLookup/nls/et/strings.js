@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "Geo Lookup",
   "description": "Sirvige või lohistage <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> tööleht </a> siia visualiseerimiseks ja sellele kaardiandmete lisamiseks.",
   "selectCSV": "Valige CSV",
   "loadingCSV": "CSV laadimine",

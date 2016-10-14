@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtrar Camada",
   "cancel": "Cancelar",
   "noValue": "Nenhum Valor",
+  "emptyString": "String Vazia",
   "existingValue": "Manter Valor Existente",
   "newDate": "Nova Data",
   "valueChooser": "Seleccionar/Introduzir um Valor",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "A camada ${0} com a ID ${1} não foi encontrada no mapa, o mapa pode ter sido alterado desde a configuração dos widgets",
     "queryNullID": "O elemento de ${0} foi devolvido com uma ID inválida",
     "noSelectedLayers": "Não existem camadas selecionadas com registos para atualizar",
-    "inputValueError": "Valor inválido no formulário"
+    "inputValueError": "Valor inválido no formulário",
+    "saveError": "Não é possível guardar ${0} elementos, detalhes adicionados à consola",
+    "requiredValue": "Valor Necessário"
   }
 });

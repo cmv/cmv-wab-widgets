@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Alternativ för att ta bort geoobjektet ur urvalsuppsättningen när posten sparas. Om det är den enda valda posten återgår panelen till mallsidan.",
     "useFilterEditor": "Använd mallfilter för geoobjekt",
     "useFilterEditorTip": "Alternativ för att använda filtermallväljaren som ger möjlighet att visa ett lagers mallar eller söka efter mallar efter namn.",
+    "listenToGroupFilter": "Tillämpa filtreringsvärden från gruppfiltreringswidgeten på förinställda fält",
+    "listenToGroupFilterTip": "När ett filter används i gruppfiltreringswidgeten tillämpas värdet på ett matchande fält i listan över förinställda värden.",
+    "keepTemplateActive": "Låt den markerade mallen vara aktiv",
+    "keepTemplateActiveTip": "Om en mall har valts tidigare när mallväljlaren visas, väljer du den.",
     "layerSettingsTable": {
       "allowDelete": "Tillåt borttagning",
       "allowDeleteTip": "Alternativ för att låta användaren ta bort ett geoobjekt – inaktiverat om lagret inte medger borttagning",
@@ -27,9 +31,10 @@ define({
       "fields": "Fält",
       "fieldsTip": "Modifiera fälten som ska redigeras och definiera smarta attribut",
       "description": "Beskrivning",
-      "descriptionTip": "Du kan valfritt ange text som ska visas överst på attributsidan."
+      "descriptionTip": "Alternativ för att ange text som ska visas överst på attributsidan."
     },
-    "editFieldError": "Fältmodifieringar och smarta attribut är inte tillgängliga för lager som inte kan redigeras"
+    "editFieldError": "Fältmodifieringar och smarta attribut är inte tillgängliga för lager som inte kan redigeras",
+    "noConfigedLayersError": "Smart redigerare kräver ett eller flera redigerbara lager"
   },
   "editDescriptionPage": {
     "title": "Definiera attributöversiktstext för <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Resultatuttrycket i SQL-format från angivna villkor",
       "actions": "Villkor",
       "actionsTip": "Ändra ordningen i regeln och ange villkor för när den ska utlösas"
+    },
+    "actions": {
+      "hide": "Dölj",
+      "required": "Nödvändig",
+      "disabled": "Inaktiverad"
     }
   },
   "filterPage": {
     "submitHidden": "Skicka attributdata för detta fält även om det är dolt?",
-    "title": "Konfigurera sats för regeln ${action}",
+    "title": "Konfigurera uttryck för regeln ${action}",
     "filterBuilder": "Ange åtgärd för fältet när posten matchar ${any_or_all} av följande uttryck",
     "noFilterTip": "Använd verktygen nedan för att definiera påståendet för när åtgärden är aktiv."
   }

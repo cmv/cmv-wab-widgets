@@ -9,5 +9,8 @@ define({
   "featureLayers": "要素图层",
   "searchTemplates": "搜索模板",
   "noAvailableTempaltes": "无可用模板",
-  "noCanCreateLayerAreCurrentlyVisible": "可创建图层当前不可见。"
+  "noCanCreateLayerAreCurrentlyVisible": "可创建图层当前不可见。",
+  "relatedTables": "相关表：",
+  "relatedRecords": "相关记录：",
+  "noRelatedRecotds": "未找到相关记录"
 });

@@ -4,6 +4,8 @@ define({
   "format": "Formatér",
   "layout": "Layout",
   "settings": "Avanceret",
+  "labels": "Etiketter",
+  "showLabels": "Vis etiketter",
   "mapScaleExtent": "Kortets målestok/udstrækning",
   "preserve": "Bevar",
   "mapScale": "kortets målestok",

@@ -109,7 +109,7 @@ define({
   "icon": "Icono",
   "newTask": "Nueva tarea",
   "addTaskTip": "Agregue una o varias consultas al widget y configure los parámetros para cada una de ellas.",
-  "webMapPopupTip": "Usar configuración de ventana emergente de la capa en el mapa web",
+  "webMapPopupTip": "Utilizar la configuración de los elementos emergentes de la capa en el mapa web",
   "customPopupTip": "Configurar contenido personalizado",
   "showResultsSetActions": "Mostrar acciones para el conjunto de resultados",
   "zoomTo": "Acercar",
@@ -122,5 +122,6 @@ define({
   "uploadImage": "Cargar una imagen",
   "attributeCriteira": "Criterios de atributos",
   "specifyFilterAtRuntimeTip": "Los usuarios tendrán que especificar parámetros para esta expresión.",
-  "value": "VALOR"
+  "value": "VALOR",
+  "hideLayersTip": "Desactive las capas de resultados de la consulta cuando el widget esté cerrado."
 });

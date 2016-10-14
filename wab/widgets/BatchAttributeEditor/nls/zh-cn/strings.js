@@ -24,6 +24,7 @@ define({
   "filterPopup": "过滤图层",
   "cancel": "取消",
   "noValue": "无值",
+  "emptyString": "空字符串",
   "existingValue": "保留现有值",
   "newDate": "新日期",
   "valueChooser": "选择/键入值",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "地图中未发现 ID为 ${1} 的图层 ${0}，地图可能在微件配置时发生了更改",
     "queryNullID": "${0} 的要素返回了无效 ID",
     "noSelectedLayers": "所选图层中未含有要更新的记录",
-    "inputValueError": "表单中的无效值"
+    "inputValueError": "表单中的无效值",
+    "saveError": "无法保存 ${0} 要素和向控制台添加的详细信息",
+    "requiredValue": "所需值"
   }
 });

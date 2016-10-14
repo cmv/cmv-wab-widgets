@@ -29,16 +29,16 @@ define(
     return declare([BaseWidgetSetting, _TemplatedMixin], {
       baseClass: "jimu-widget-smartEditor-setting-fields",
       templateString: template,
-      _layerInfo: null,
+      _configInfo: null,
       _fieldValid: null,
       _fieldValidations: null,
       __layerName: null,
       postCreate: function () {
         this.inherited(arguments);
         this._initFieldsTable();
-        this._setFiedsTable(this._layerInfo.fieldInfos);
-        this._fieldValidations = this._layerInfo.fieldValidations === undefined ?
-          {} : lang.clone(this._layerInfo.fieldValidations);
+        this._setFiedsTable(this._configInfo.fieldInfos);
+        this._fieldValidations = this._configInfo.fieldValidations === undefined ?
+          {} : lang.clone(this._configInfo.fieldValidations);
       },
 
       popupEditPage: function () {
@@ -46,7 +46,7 @@ define(
           titleLabel: esriLang.substitute(
             { layername: this._layerName },
             this.nls.fieldsPage.title),
-          width: 720,
+          width: 972,
           maxHeight: 700,
           autoHeight: true,
           content: this,
@@ -55,7 +55,7 @@ define(
             onClick: lang.hitch(this, function () {
               if (this._validateTable()) {
                 this._resetFieldInfos();
-                this._layerInfo.fieldValidations = this._fieldValidations;
+                this._configInfo.fieldValidations = this._fieldValidations;
                 fieldsPopup.close();
               }
             })
@@ -127,7 +127,9 @@ define(
         this._fieldsTable.startup();
         var nl = query("th.simple-table-field", this._fieldsTable.domNode);
         nl.forEach(function (node) {
-          switch (node.innerText) {
+          var scrubText = (node.innerText === undefined || node.innerText === "") ?
+          "" : node.innerText.replace(/(\r\n|\n|\r)/gm, "");
+          switch (scrubText) {
             case this.nls.fieldsPage.fieldsSettingsTable.display:
               node.title = this.nls.fieldsPage.fieldsSettingsTable.displayTip;
               break;
@@ -181,18 +183,18 @@ define(
         //  });
         //}
         var layerDefinition = {
-          currentVersion: this._layerInfo.mapLayer.resourceInfo.currentVersion,
-          fields: lang.clone(this._layerInfo.mapLayer.resourceInfo.fields)
+          currentVersion: this._configInfo.layerInfo.originOperLayer.resourceInfo.currentVersion,
+          fields: lang.clone(this._configInfo.layerInfo.layerObject.fields)
         };
         //below code removes the field from the smart action
-        //layerDefinition.fields = array.filter(this._layerInfo.mapLayer.resourceInfo.fields, function (field) {
+        //layerDefinition.fields = array.filter(this._configInfo.mapLayer.resourceInfo.fields, function (field) {
         //  return (field.name !== rowData.fieldName);
         //});
 
         this._fieldValid = new FieldValidation({
           nls: this.nls,
           _layerDefinition: layerDefinition,
-          _url: this._layerInfo.mapLayer.url,
+          _url: this._configInfo.layerInfo.layerObject.url,
           _fieldValidations: this._fieldValidations,
           _fieldName: rowData.fieldName,
           _fieldAlias: rowData.label
@@ -202,21 +204,28 @@ define(
       },
       _setFiedsTable: function (fieldInfos) {
         array.forEach(fieldInfos, function (fieldInfo) {
+          if (fieldInfo.type !== "esriFieldTypeGeometry" &&
+              fieldInfo.type !== "esriFieldTypeOID" &&
+              fieldInfo.type !== "esriFieldTypeBlob" &&
+              fieldInfo.type !== "esriFieldTypeGlobalID" &&
+              fieldInfo.type !== "esriFieldTypeRaster" &&
+              fieldInfo.type !== "esriFieldTypeXML") {
+            var newRow = {
+              fieldName: fieldInfo.fieldName,
+              isEditable: fieldInfo.isEditable,
+              canPresetValue: fieldInfo.canPresetValue,
+              label: fieldInfo.label,
+              visible: fieldInfo.visible
+            };
+            if (fieldInfo.hasOwnProperty('nullable') && fieldInfo.nullable === false) {
+              newRow.required = "*";
+            }
+            else {
+              newRow.required = "";
+            }
+            this._fieldsTable.addRow(newRow);
+          }
 
-          var newRow = {
-            fieldName: fieldInfo.fieldName,
-            isEditable: fieldInfo.isEditable,
-            canPresetValue: fieldInfo.canPresetValue,
-            label: fieldInfo.label,
-            visible: fieldInfo.visible
-          };
-          if (fieldInfo.hasOwnProperty('nullable') && fieldInfo.nullable === false) {
-            newRow.required = "*";
-          }
-          else {
-            newRow.required = "";
-          }
-          this._fieldsTable.addRow(newRow);
           //var addRowResult =
           //if (fieldInfo.hasOwnProperty('nullable') && fieldInfo.nullable === false) {
           //  var nl = query(".editable", addRowResult.tr);
@@ -228,8 +237,33 @@ define(
           //  });
           //}
         }, this);
+        setTimeout(lang.hitch(this, function () {
+          array.forEach(this._fieldsTable.fields, function (field) {
+            if (field.name === 'visible') {
+              field.onChange = lang.hitch(this, this._onDisplayFieldChanged);
+            } else if (field.name === 'isEditable') {
+              field.onChange = lang.hitch(this, this._onIsEditableFieldChanged);
+            }
+          }, this);
+        }), 300);
+      },
+      _onDisplayFieldChanged: function (tr) {
+        var rowData = this._fieldsTable.getRowData(tr);
+        var display = rowData.visible;
+        if (!display && rowData.isEditable) {
+          rowData.isEditable = false;
+          this._fieldsTable.editRow(tr, rowData);
+        }
       },
 
+      _onIsEditableFieldChanged: function (tr) {
+        var rowData = this._fieldsTable.getRowData(tr);
+        var isEditable = rowData.isEditable;
+        if (isEditable && !rowData.visible) {
+          rowData.visible = true;
+          this._fieldsTable.editRow(tr, rowData);
+        }
+      },
       _resetFieldInfos: function () {
         var newFieldInfos = [];
         var fieldsTableData = this._fieldsTable.getData();
@@ -243,7 +277,7 @@ define(
           });
         });
 
-        this._layerInfo.fieldInfos = newFieldInfos;
+        this._configInfo.fieldInfos = newFieldInfos;
       }
 
     });

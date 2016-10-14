@@ -43,5 +43,7 @@ define({
   "yards": "Ярды",
   "nauticalMiles": "Морские мили",
   "back": "Назад",
-  "execute": "Выполнить"
+  "execute": "Выполнить",
+  "enlarge": "Увеличить",
+  "setting": "Параметр"
 });

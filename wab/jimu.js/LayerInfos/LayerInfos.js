@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -293,6 +293,18 @@ define([
       return tableInfoResult;
     },
 
+    getLayerOrTableInfoById: function(layerOrTableId) {
+      var layerOrTableInfoResult = null;
+      this.traversalAll(function(layerOrTableInfo) {
+        if(layerOrTableInfo.id === layerOrTableId) {
+          layerOrTableInfoResult = layerOrTableInfo;
+          return true;
+        }
+      });
+      return layerOrTableInfoResult;
+    },
+
+    // interface concern layerInfo or tableInfo has to redefine.
     getLayerInfoByTopLayerId: function(layerId) {
       return this._findTopLayerInfoById(layerId);
     },
@@ -591,17 +603,23 @@ define([
       var title = layer.label || layer.name || "";
       if (layer.url) {
         var serviceName;
-        var serviceKeyWord = "rest/services/";
-        var index1 = layer.url.indexOf(serviceKeyWord);
-        if (index1 > -1) {
-          var index2 = index1 + serviceKeyWord.length;
-          serviceName = layer.url.substring(index2).split('/')[0];
+        var index = layer.url.indexOf("/FeatureServer");
+        if (index === -1) {
+          index = layer.url.indexOf("/MapServer");
+        }
+        if (index === -1) {
+          index = layer.url.indexOf("/service");
+        }
+        if(index > -1) {
+          serviceName = layer.url.substring(0, index);
+          serviceName = serviceName.substring(serviceName.lastIndexOf("/") + 1, serviceName.length);
           if (title) {
             title = serviceName + " - " + title;
           } else {
             title = serviceName;
           }
         }
+
       }
       return title || layer.id;
     },
@@ -649,7 +667,7 @@ define([
 
     _findTopLayerInfoById: function(id) {
       var i, layerInfo = null;
-      var layerInfos = this._finalLayerInfos;
+      var layerInfos = this._finalLayerInfos.concat(this._finalTableInfos); //******
       for (i = 0; i < layerInfos.length; i++) {
         if (layerInfos[i].id === id) {
           layerInfo = layerInfos[i];

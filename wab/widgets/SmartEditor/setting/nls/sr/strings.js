@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Opcija za uklanjanje geoobjekta iz skupa izbora kada je zapis sačuvan. Ako je to jedini izabran zapis, panel se prebacuje nazad na stranicu šablona.",
     "useFilterEditor": "Koristi filter šablona geoobjekta",
     "useFilterEditorTip": "Opcija za korišćenje birača šablona filtera koji obezbeđuje mogućnost da se pregledaju šabloni jednog sloja ili traže šabloni po imenu.",
+    "listenToGroupFilter": "Primeni vrednosti filtera iz vidžeta Grupni filter na unapred podešena polja",
+    "listenToGroupFilterTip": "Kada primenite filter u vidžetu Grupni filter, primenite vrednost na odgovarajuće polje u listi sa Unapred podešenom vrednosti.",
+    "keepTemplateActive": "Održi izabrani šablon aktivnim",
+    "keepTemplateActiveTip": "Kada je prikazan birač šablona, ponovo izaberite šablon ako je bio prethodno izabran.",
     "layerSettingsTable": {
       "allowDelete": "Dozvoli brisanje",
       "allowDeleteTip": "Opcija da se korisniku dozvoli da obriše geoobjekat; onemogućena je ako sloj ne podržava brisanje",
@@ -27,9 +31,10 @@ define({
       "fields": "Polja",
       "fieldsTip": "Izmeni polja koja treba izmeniti i definiši pametne atribute",
       "description": "Opis",
-      "descriptionTip": "Opciono unesite tekst koji želite da prikažete na vrhu stranice atributa."
+      "descriptionTip": "Opcija za unos teksta koji želite da prikažete na vrhu stranice atributa."
     },
-    "editFieldError": "Izmene polja i pametni atributi nisu dostupni slojevima koji ne mogu da se izmene"
+    "editFieldError": "Izmene polja i pametni atributi nisu dostupni slojevima koji ne mogu da se izmene",
+    "noConfigedLayersError": "Smart Editor zahteva jedan ili više izmenjivih slojeva"
   },
   "editDescriptionPage": {
     "title": "Definišite tekst za pregled atributa za <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Rezultujući izraz u SQL formatu od definisanog kriterijuma",
       "actions": "Kriterijum",
       "actionsTip": "Promeni redosled pravila i definiši kriterijum kada je aktivirano"
+    },
+    "actions": {
+      "hide": "Sakrij",
+      "required": "Obavezno",
+      "disabled": "Onemogućeno"
     }
   },
   "filterPage": {
     "submitHidden": "Želite li da prosledite podatke o atributima za ovo polje čak i kada je sakriveno?",
-    "title": "Konfiguriši odredbu za ${action} pravilo",
+    "title": "Konfiguriši izraz za ${action} pravilo",
     "filterBuilder": "Podesi radnju na polju kada se zapis poklapa ${any_or_all} od sledećih izraza",
     "noFilterTip": "Pomoću alata ispod, definišite izjavu za slučaj kada je radnja aktivna."
   }

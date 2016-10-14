@@ -344,7 +344,7 @@ define([
 
       for (var i = 0; i < results.length; i++) {
         var obj = results[i];
-        var info = utils.sanitizeHTML(obj.alias ? obj.alias : '') + "<br/>";
+        var info = utils.stripHTML(obj.alias ? obj.alias : '') + "<br/>";
         // MODIFIED: ST
         //if(info.indexOf(">area<") !== -1 || info.indexOf(">length<") !== -1) {
         if (obj.alias === this.parent.nls.area || obj.alias === this.parent.nls.length) {
@@ -409,6 +409,7 @@ define([
       if (this.summaryFeatures.length === 0) {
         return false;
       }
+
       var name;
       if (this.tab.label) {
         name = this.tab.label;
@@ -420,16 +421,65 @@ define([
       array.forEach(this.summaryFeatures, function (gra) {
         data.push(gra.attributes);
       });
+
       if (this.config.csvAllFields === true || this.config.csvAllFields === "true") {
         for (var prop in data[0]) {
           cols.push(prop);
         }
-      } else{
+      } else {
         for (var i = 0; i < this.summaryFields.length; i++) {
           cols.push(this.summaryFields[i].field);
         }
       }
-      CSVUtils.exportCSV(name, data, cols);
+
+      //var fields;
+      var fields = this.summaryLayer.fields;
+      if (this.summaryLayer && this.summaryLayer.loaded && fields) {
+        var options = {};
+        if (this.parent.opLayers && this.parent.opLayers._layerInfos) {
+          var layerInfo = this.parent.opLayers.getLayerInfoById(this.summaryLayer.id);
+          if (layerInfo) {
+            options.popupInfo = layerInfo.getPopupInfo();
+          }
+        }
+        var _outFields = [];
+        cols_loop:
+        for (var ii = 0; ii < cols.length; ii++) {
+          var col = cols[ii];
+          var found = false;
+          var field;
+          fields_loop:
+          for (var iii = 0; iii < fields.length; iii++) {
+            field = fields[iii];
+            if (field.name === col) {
+              found = true;
+              break fields_loop;
+            }
+          }
+          if (found) {
+            _outFields.push(field);
+          } else {
+            _outFields.push({
+              'name': col,
+              alias: col,
+              show: true,
+              type: "esriFieldTypeString"
+            });
+          }
+        }
+
+        options.datas = data;
+        options.fromClient = false;
+        options.withGeometry = false;
+        options.outFields = _outFields;
+        options.formatDate = true;
+        options.formatCodedValue = true;
+        options.formatNumber = false;
+        CSVUtils.exportCSVFromFeatureLayer(name, this.summaryLayer, options);
+      } else {
+        //This does not handle value formatting
+        CSVUtils.exportCSV(name, data, cols);
+      }
     },
 
     // Solutions: Added case to handle fields structure coming from a map service.

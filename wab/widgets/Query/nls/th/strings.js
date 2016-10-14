@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "เงื่อนไขข้อมูลตาราง",
   "spatialFilter": "การกรองเชิงพื้นที่",
   "value": "ค่า",
-  "noAttributeSpatialFilterTip": "ไม่มีการกำหนดตัวกรอง ข้อมูลทั้งหมดจะถูกส่งเป็นผลลัพธ์"
+  "noAttributeSpatialFilterTip": "ไม่มีการกำหนดตัวกรอง ข้อมูลทั้งหมดจะถูกส่งเป็นผลลัพธ์",
+  "showAllRelatedRecords": "แสดงเรคคอร์คเกี่ยวข้อง"
 });

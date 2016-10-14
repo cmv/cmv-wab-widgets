@@ -9,5 +9,8 @@ define({
   "featureLayers": "Векторные слои",
   "searchTemplates": "Поиск шаблонов",
   "noAvailableTempaltes": "Нет доступных шаблонов",
-  "noCanCreateLayerAreCurrentlyVisible": "В данный момент нет видимых создаваемых слоев."
+  "noCanCreateLayerAreCurrentlyVisible": "В данный момент нет видимых создаваемых слоев.",
+  "relatedTables": "Связанные таблицы:",
+  "relatedRecords": "Связанные записи:",
+  "noRelatedRecotds": "Связанных записей не найдено"
 });

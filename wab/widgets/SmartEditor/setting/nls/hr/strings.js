@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Opcija za uklanjanje geoobjekta iz skupa za odabir kad se zapis spremi.  Ako je to jedini odabrani zapis, ploča se prebacuje natrag na stranicu predloška.",
     "useFilterEditor": "Upotrijebi filtar predloška geoobjekta",
     "useFilterEditorTip": "Opcija za upotrebu birača predloška filtra koja pruža mogućnost prikaza predložaka jednog sloja ili pretraživanja predložaka po nazivu.",
+    "listenToGroupFilter": "Primijenite vrijednosti filtra iz widgeta grupnog filtra u predefinirana polja",
+    "listenToGroupFilterTip": "Kada se primijeni filtar u widgetu grupnog filtra, primijenite vrijednost u odgovarajuće polje u popisu s predefiniranim vrijednostima.",
+    "keepTemplateActive": "Ostavite aktivnim odabrani predložak",
+    "keepTemplateActiveTip": "Kada se prikaže birač predloška, a prethodno je odabran predložak, ponovno ga odaberite.",
     "layerSettingsTable": {
       "allowDelete": "Omogući brisanje",
       "allowDeleteTip": "Opcija za omogućavanje korisniku brisanje geoobjekta; onemogućeno ako sloj ne podržava brisanje",
@@ -27,9 +31,10 @@ define({
       "fields": "Polja",
       "fieldsTip": "Izmijenite polja za uređivanje i definirajte pametne atribute",
       "description": "Opis",
-      "descriptionTip": "Prema svom izboru unesite tekst za koji želite da se prikazuje na vrhu stranice atributa."
+      "descriptionTip": "Opcija za unos teksta da se prikazuje na vrhu stranice atributa."
     },
-    "editFieldError": "Izmjena polja i pametni atributi nisu dostupni za slojeve koji se ne mogu uređivati"
+    "editFieldError": "Izmjena polja i pametni atributi nisu dostupni za slojeve koji se ne mogu uređivati",
+    "noConfigedLayersError": "Za Pametni uređivač potreban je jedan ili više slojeva koji se mogu uređivati"
   },
   "editDescriptionPage": {
     "title": "Definirajte tekst pregleda atributa za <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Dobiveni izraz u SQL formatu od definiranih kriterija",
       "actions": "Kriteriji",
       "actionsTip": "Promijenite redoslijed pravila i definirajte kriterije kad će se aktivirati"
+    },
+    "actions": {
+      "hide": "Sakrij",
+      "required": "Potrebno",
+      "disabled": "Onemogućeno"
     }
   },
   "filterPage": {
     "submitHidden": "Želite predati podatke o atributu za ovo polje čak i kad je skriveno?",
-    "title": "Konfiguriraj uvjet za pravilo ${action}",
+    "title": "Konfiguriraj izraz za pravilo ${action}",
     "filterBuilder": "Postavite radnju za polje kad zapis odgovara ${any_or_all} sljedećim izrazima",
     "noFilterTip": "Pomoću alata u nastavku definirajte izjavu za situaciju kad je radnja aktivna."
   }

@@ -1,5 +1,6 @@
 ﻿define([
   "dojo/_base/declare",
+  "dijit/_WidgetBase",
   "dojo/Evented",
   "dojo/dom-class",
   "dojo/_base/lang",
@@ -9,28 +10,34 @@
   "esri/lang",
   "esri/layers/FeatureLayer",
   "esri/dijit/PopupTemplate",
-  "jimu/utils"
+  "jimu/utils",
+  "dojo/dom-construct"
 ], function (
   declare,
+  _WidgetBase,
   Evented,
   domClass,
   lang,
   array,
-  Search,
+  SearchWidget,
   Locator,
   esriLang,
   FeatureLayer,
   PopupTemplate,
-  jimuUtils
+  jimuUtils,
+  domConstruct
 ) {
-  return declare([Evented], {
-    domNode: null,
+  return declare([_WidgetBase, Evented], {
     config: null,
     map: null,
     searchOptions: null,
     _urlParams: {},
     constructor: function (options) {
       lang.mixin(this, options);
+    },
+
+    postCreate: function () {
+      this._urlParams = {};
     },
 
     startup: function () {
@@ -63,16 +70,15 @@
       if (searchLayers.length > 0) {
         defaultSources = defaultSources.concat(searchLayers);
       }
-      this.search = new Search(options, this.domNode);
+      this.search = new SearchWidget(options, domConstruct.create("div", { "class": "searchControl" }, this.domNode));
       this.search.set("sources", defaultSources);
 
-      this.search.on("load", lang.hitch(this, this._load));
-      this.search.on("select-result", lang.hitch(this, this._selectResult));
-      this.search.on("clear-search", lang.hitch(this, this._clear));
-      this.search.on("search-results", lang.hitch(this, this._results));
-      this.search.on("suggest-results", lang.hitch(this, this._results));
+      this.own(this.search.on("load", lang.hitch(this, this._load)));
+      this.own(this.search.on("select-result", lang.hitch(this, this._selectResult)));
+      this.own(this.search.on("clear-search", lang.hitch(this, this._clear)));
+      this.own(this.search.on("search-results", lang.hitch(this, this._results)));
+      this.own(this.search.on("suggest-results", lang.hitch(this, this._results)));
       this.search.startup();
-      domClass.add(this.domNode, "searchControl");
     },
 
     /**

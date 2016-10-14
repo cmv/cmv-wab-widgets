@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Đo chiều cao",
   "intialScaleLabel": "Chọn tỷ lệ ban đầu cho hình ảnh nghiêng",
   "smallBuildingLabel": "Khu Đô thị: Tòa nhà Nhỏ",
-  "buildingLabel": "Khu Đô thị: Tòa nhà"
+  "buildingLabel": "Khu Đô thị: Tòa nhà",
+  "azimuthChangeNotification": "Không có dữ liệu theo hướng đã chọn."
 });

@@ -1,6 +1,6 @@
 define({
   "drsUrl": "URL des Data Reviewer-Servers",
-  "includeReportedBy": "Reviewer-Techniker",
+  "includeReportedBy": "Reviewer",
   "label": "Layer",
   "show": "Einbinden",
   "alias": "Alias",
@@ -14,5 +14,5 @@ define({
   "noUserName": "Geben Sie einen Standardbenutzernamen ein.",
   "noLayers": "Keine operationalen Layer in der Webkarte.",
   "noSessionName": "Wählen Sie eine Sitzung aus.",
-  "revTechName": "Name des Reviewer-Technikers"
+  "revTechName": "Name des Reviewers"
 });

@@ -6,6 +6,7 @@ define({
     "yes": "Jā",
     "no": "Nē",
     "next": "Tālāk",
+    "previous": "Iepriekšējais",
     "back": "Atpakaļ",
     "selected": "izvēlēts",
     "name": "Nosaukums",
@@ -52,7 +53,11 @@ define({
     "view": "Skats",
     "newText": "Jaunais",
     "edit": "Rediģēt",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabula",
+    "zoomIn": "Pietuvināt",
+    "zoomOut": "Attālināt",
+    "continue1": "Turpināt"
   },
   "errorCode": "Kods",
   "errorMessage": "Ziņojums",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Reģistrjutīgs",
     "notSupportCaseSensitiveTip": "Viesotie servisi neatbalsta reģistrjutīgu vaicājumu.",
-    "setFilterTip": "Lūdzu, pareizi iestatiet filtru."
+    "setFilterTip": "Lūdzu, pareizi iestatiet filtru.",
+    "cascadeFilterTip": "Rādīt tikai iepriekšējo izteiksmju filtrētās vērtības."
   },
   "featureLayerSource": {
     "layer": "Slānis",
@@ -343,10 +349,11 @@ define({
     "toGeoJSON": "Eksportēt uz GeoJSON"
   },
   "appState": {
-    "title": "Aplikācijas stāvoklis",
+    "title": "Lietotnes stāvoklis",
     "restoreMap": "Noklikšķiniet, lai atjaunotu kartes pārklājumu un slāņu redzamību kāda tā bija, kad pārtraucāt darbu."
   },
   "featureActions": {
+    "featureActions": "Elementu darbības",
     "ZoomTo": "Pietuvināt",
     "PanTo": "Pārbīdīt uz",
     "Flash": "Izgaismošana",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Pievienot izvēlētajam",
     "removeSelectionTip": "Izņemt no izvēles",
     "selectFromCurrentSelectionTip": "Izvēlēties no pašreizējās izvēles",
-    "unselectAllSelectionTip": "Noņemt izvēli visiem pašreiz izvēlētajiem elementiem"
+    "unselectAllSelectionTip": "Noņemt izvēli visiem pašreiz izvēlētajiem elementiem",
+    "selectByPolygon": "Atlasīt pēc laukuma",
+    "selectByCircle": "Atlasīt pēc apļa",
+    "selectByLine": "Atlasīt pēc līnijas",
+    "chooseSelectingTools": "Izvēlēties atlases rīkus",
+    "darw": "Zīmēt",
+    "drawShap": "Uzzīmēt formu"
   },
   "widgetManager": {
     "createWidgetError": "Izveidot logrīka kļūdu",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Jūsu pārlūkā netiek atbalstītas 3D tīmekļa lietojumprogrammas."
+  },
+  "map": {
+    "basemapNotAvailable": "Pamatkarte nav pieejama.",
+    "displayDefaultBasemap": "Tā vietā tiek rādīta noklusējuma pamatkarte."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Jūsu atlasītajā kartes apgabalā ir pārāk daudz elementu. Visu datu izgūšanai var būt nepieciešams daudz laika.",
+    "askForContinue": "Vai vēlaties turpināt?"
   }
 });

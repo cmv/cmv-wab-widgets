@@ -122,5 +122,6 @@ define({
   "uploadImage": "画像のアップロード",
   "attributeCriteira": "属性条件",
   "specifyFilterAtRuntimeTip": "ユーザーはこの条件式のパラメーターを指定する必要があります。",
-  "value": "値"
+  "value": "値",
+  "hideLayersTip": "ウィジェットを閉じるときにクエリの結果レイヤーをオフにします。"
 });

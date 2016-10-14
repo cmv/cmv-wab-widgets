@@ -158,7 +158,13 @@ define([
         var c = 0;
         for (var prop in attr) {
           if (prop !== "DISTANCE" && c < 3) {
-            var value = utils.sanitizeHTML(this._getFieldValue(prop, attr[prop]));
+            var fVal = this._getFieldValue(prop, attr[prop]);
+            var value;
+            if (typeof (fVal) !== 'undefined' && fVal !== null) {
+              value = utils.stripHTML(fVal.toString());
+            } else {
+              value = "";
+            }
             var label;
             if (gra._layer && gra._layer.fields) {
               var cF = this._getField(gra._layer.fields, prop);
@@ -335,16 +341,18 @@ define([
       if (this.specialFields[fldName]) {
         var fld = this.specialFields[fldName];
         if (fld.type === "esriFieldTypeDate") {
+          var _f;
           if (this.dateFields[fldName] !== 'undefined') {
-            var dFormat = this._getDateFormat(this.dateFields[fldName]);
+            var dFormat = this.dateFields[fldName];
             if (typeof (dFormat) !== undefined) {
-              value = new Date(fldValue).toLocaleDateString(navigator.language, dFormat);
+              _f = { dateFormat: dFormat };
             } else {
-              value = new Date(fldValue).toLocaleString();
+              _f = { dateFormat: 'longMonthDayYear' };
             }
           } else {
-            value = new Date(fldValue).toLocaleString();
+            _f = { dateFormat: 'longMonthDayYear' };
           }
+          value = utils.fieldFormatter.getFormattedDate(new Date(fldValue), _f);
         } else {
           var codedValues = fld.domain.codedValues;
           array.some(codedValues, function (obj) {
@@ -364,143 +372,6 @@ define([
 
     isEmail: function (v) {
       return /\S+@\S+\.\S+/.test(v);
-    },
-
-    _getDateFormat: function (dFormat) {
-      //default is Month Day Year
-      var options;
-      switch (dFormat) {
-        case "shortDate":
-          //12/21/1997
-          options = {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric'
-          };
-          break;
-        case "shortDateLE":
-          //21/12/1997
-          options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          };
-          break;
-        case "longMonthDayYear":
-          //December 21,1997
-          options = {
-            month: 'long',
-            day: '2-digit',
-            year: 'numeric'
-          };
-          break;
-        case "dayShortMonthYear":
-          //21 Dec 1997
-          options = {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-          };
-          break;
-        case "longDate":
-          //Sunday, December 21, 1997
-          options = {
-            weekday: 'long',
-            month: 'long',
-            day: '2-digit',
-            year: 'numeric'
-          };
-          break;
-        case "shortDateLongTime":
-          //12/21/1997 6:00:00 PM
-          options = {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-          };
-          break;
-        case "shortDateLELongTime":
-          //21/12/1997 6:00:00 PM
-          options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true
-          };
-          break;
-        case "shortDateShortTime":
-          //12/21/1997 6:00 PM
-          options = {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-          };
-          break;
-        case "shortDateLEShortTime":
-          //21/12/1997 6:00 PM
-          options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true
-          };
-          break;
-        case "shortDateShortTime24":
-          //12/21/1997 18:00
-          options = {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: false
-          };
-          break;
-        case "shortDateLEShortTime24":
-          //21/12/1997 18:00
-          options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: false
-          };
-          break;
-        case "longMonthYear":
-          //December 1997
-          options = {
-            month: 'long',
-            year: 'numeric'
-          };
-          break;
-        case "shortMonthYear":
-          //Dec 1997
-          options = {
-            month: 'short',
-            year: 'numeric'
-          };
-          break;
-        case "year":
-          //1997
-          options = {
-            year: 'numeric'
-          };
-          break;
-      }
-      return options;
     },
 
     // get distance

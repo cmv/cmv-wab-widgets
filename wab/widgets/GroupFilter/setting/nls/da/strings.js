@@ -2,20 +2,32 @@ define({
   "configText": "Definér dine filtergrupper nedenfor",
   "labels": {
     "groupName": "Filtrér på angivet navn:",
+    "groupNameTip": "Navn på det filter, som brugeren skal vælge fra.",
     "groupDesc": "Beskrivelse:",
+    "groupDescTip": "Beskrivelse af det indstillede filter.",
     "groupOperator": "Forudindstillet operator:",
-    "groupDefault": "Foruddefineret værdi:"
+    "groupOperatorTip": "Indstilling til prædefinition af operatoren til filtret. Hvis der ikke er valgt nogen Forudindstillet operator, vil filtret benytte operatoren Lig med.",
+    "groupDefault": "Foruddefineret værdi:",
+    "groupDefaultTip": "Indstilling til valg af en værdi fra et eksisterende lag.",
+    "sameLayerAppend": "Når et lag er angivet mere end én gang, skal du benytte følgende operator mellem felterne:",
+    "sameLayerConjunc": "Tilknyt ved hjælp af:"
   },
   "buttons": {
     "addNewGroup": "Tilføj en ny gruppe",
-    "addLayer": "Tilføj lag"
+    "addNewGroupTip": "Tilføj et nyt filtersæt.",
+    "addLayer": "Tilføj lag",
+    "addLayerTip": "Tilføj et lag til filtersættet."
   },
   "inputs": {
     "groupName": "Giv din gruppe et navn",
     "groupDesc": "Beskrivelse af din gruppe",
     "groupDefault": "Angiv en foruddefineret værdi",
     "simpleMode": "Start i Simpel visning",
+    "simpleModeTip": "Indstilling til forenkling af den konfigurerede widget-grænseflade. Når indstillingen er valgt, fjernes operator-rullelisten og tilføj kriterier-knappen fra grænsefladen.",
+    "webmapAppendMode": "Tilknyt filter til eksisterende webkortfilter ved hjælp af ",
+    "webmapAppendModeTip": "Indstilling til tilknytning af det indstillede filter til et eksisterende webkortfilter. Understøttede operatorer er ELLER og OG.",
     "optionsMode": "Skjul widget-indstillinger",
+    "optionsModeTip": "Indstilling til visning af flere widget-indstillinger. Når indstillingen er valgt, fjernes lagring og indlæsning af definerede filtre samt bevarelse af filtret, efter at widget'en er blevet lukket, fra grænsefladen.",
     "optionOR": "ELLER",
     "optionAND": "OG",
     "optionEQUAL": "LIG MED",
@@ -32,9 +44,15 @@ define({
   },
   "tables": {
     "layer": "Lag",
+    "layerTip": "Navnet på laget, som det er defineret i kortet.",
     "field": "Felter",
+    "fieldTip": "Det felt, som laget filtreres på.",
     "value": "Brug værdi",
-    "action": "download fuldført"
+    "valueTip": "Indstilling til brug af rullelisteværdierne fra laget. Hvis ingen lag bruger denne parameter, vises der en almindelig tekstboks for brugeren.",
+    "zoom": "Zoom",
+    "zoomTip": "Indstilling til at zoome udstrækningen af objekter, efter at filtret er taget i brug. Der kan kun vælges ét lag at zoome til.",
+    "action": "download fuldført",
+    "actionTip": "Fjern lag fra det indstillede filter."
   },
   "popup": {
     "label": "Vælg en værdi"
@@ -49,7 +67,10 @@ define({
   "picker": {
     "description": "Brug denne formular til at finde en forudindstillet værdi for denne gruppe.",
     "layer": "Vælg et lag",
+    "layerTip": "Navnet på laget, som det er defineret i webkortet.",
     "field": "Vælg et felt",
-    "value": "Vælg en værdi"
+    "fieldTip": "Det felt, som den forudindstillede værdi skal hentes fra.",
+    "value": "Vælg en værdi",
+    "valueTip": "Den værdi, der skal være standarden for widget'en."
   }
 });

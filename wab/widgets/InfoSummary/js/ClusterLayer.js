@@ -20,11 +20,14 @@ define([
    'dojo/_base/event',
    'dojo/_base/lang',
    'dojo/_base/Color',
+   'dojo/_base/html',
    'dojo/DeferredList',
    'dojo/dom-class',
+   'dojo/dom',
    'dojox/gfx/fx',
    'dojo/on',
    'dojo/Evented',
+   'jimu/utils',
    'esri/layers/GraphicsLayer',
    'esri/graphic',
    'esri/geometry/Extent',
@@ -39,17 +42,21 @@ define([
    'esri/tasks/query',
    'esri/tasks/QueryTask',
    'esri/symbols/jsonUtils',
+   'esri/renderers/jsonUtils',
    'esri/layers/FeatureLayer'
 ], function (declare,
   array,
   dojoEvent,
   lang,
   Color,
+  html,
   DeferredList,
   domClass,
+  dom,
   fx,
   on,
   Evented,
+  utils,
   GraphicsLayer,
   Graphic,
   Extent,
@@ -64,6 +71,7 @@ define([
   Query,
   QueryTask,
   jsonUtils,
+  renderUtils,
   FeatureLayer) {
   var clusterLayer = declare('ClusterLayer', [GraphicsLayer, Evented], {
     //TODO change size breaks to equal interval eg. breaks = (max - min) / numRanges;
@@ -77,6 +85,8 @@ define([
       this.updateFeatures = [];
 
       //Options
+      this.hidePanel = options.hidePanel;
+      this._parent = options._parent;
       this._parentLayer = options.parentLayer;
       if (this._parentLayer) {
         this.objectIdField = this._parentLayer.objectIdField;
@@ -125,15 +135,19 @@ define([
             //Feature collection layers with no features
             // throw an error that I can't seem to catch when you
             //apply a where clause such as "1=1"
-            this.nodeCount = r;
+            if (!this.hidePanel) {
+              this.nodeCount = r;
+            }
             this._initFeatures(this._parentLayer);
           }
           else {
-            this.nodeCount = 0;
-            var fl = new FeatureLayer(lyr.url);
-            on(fl, "load", lang.hitch(this, function() {
-              this.countFeatures(fl);
-            }));
+            if (!this.hidePanel) {
+              this.nodeCount = 0;
+              var fl = new FeatureLayer(lyr.url);
+              on(fl, "load", lang.hitch(this, function () {
+                this.countFeatures(fl);
+              }));
+            }
           }
         }));
       } else {
@@ -281,23 +295,62 @@ define([
     },
 
     initalCount: function (url) {
-      var q = new Query();
-      q.returnGeometry = false;
-      q.geometry = this._map.extent;
-      if (this.filter) {
-        q.where = this.filter;
-      } else {
-        q.where = "1=1";
-      }
-      var qt = new QueryTask(url);
-      qt.executeForIds(q).then(lang.hitch(this, function (results) {
-        if (this.node) {
-          if (domClass.contains(this.node, 'searching')) {
-            domClass.remove(this.node, 'searching');
-          }
-          this.node.innerHTML = results ? results.length.toLocaleString() : 0;
+      if (!this.hidePanel) {
+        var q = new Query();
+        q.returnGeometry = false;
+        q.geometry = this._map.extent;
+        if (this.filter) {
+          q.where = this.filter;
+        } else {
+          q.where = "1=1";
         }
-      }));
+        var qt = new QueryTask(url);
+        qt.executeForIds(q).then(lang.hitch(this, function (results) {
+          var updateNode;
+          if (this.node) {
+            if (domClass.contains(this.node, 'searching')) {
+              domClass.remove(this.node, 'searching');
+            }
+            this.node.innerHTML = results ? utils.localizeNumber(results.length) : 0;
+            updateNode = this.node.parentNode;
+          } else {
+            if (this.legendNode) {
+              updateNode = this.legendNode.previousSibling;
+            }
+          }
+          this.updateExpand(updateNode, results ? false : true);
+        }));
+      }
+    },
+
+    updateExpand: function (node, hide) {
+      if (!this.hidePanel) {
+        if (typeof (node) !== 'undefined') {
+          var id;
+          var en;
+          if (node.id.indexOf('rec_') > -1) {
+            id = node.id.replace('rec_', '');
+            en = dom.byId("exp_" + id);
+          }
+          if (hide) {
+            if (node) {
+              html.addClass(node, "recDefault");
+              html.addClass(node, "inActive");
+            }
+            if (en) {
+              html.addClass(en, "expandInActive");
+            }
+          } else {
+            if (node) {
+              html.removeClass(node, "recDefault");
+              html.removeClass(node, "inActive");
+            }
+            if (en) {
+              html.removeClass(en, "expandInActive");
+            }
+          }
+        }
+      }
     },
 
     loadData: function (url) {
@@ -398,6 +451,9 @@ define([
             singles = attr.Data;
             event.stopPropagation();
             this._addSingles(singles);
+          } else if (attr.Data && attr.Data.length === 1) {
+            attr.Data[0].symbol = g.symbol;
+            this._map.infoWindow.setFeatures([attr.Data[0]]);
           } else {
             this._map.infoWindow.setFeatures([g]);
           }
@@ -426,6 +482,9 @@ define([
     refreshFeatures: function (responseLayer) {
       if (this.itemId) {
         var responseFeatureSetFeatures = responseLayer.featureSet.features;
+        if (typeof (this.updateFeatures) === 'undefined') {
+          this.updateFeatures = responseFeatureSetFeatures;
+        }
         var shouldUpdate = true;
         if (responseFeatureSetFeatures.length < 10000) {
           shouldUpdate = JSON.stringify(this.updateFeatures) !== JSON.stringify(responseFeatureSetFeatures);
@@ -492,6 +551,7 @@ define([
     },
 
     flashFeatures: function () {
+      this._map.graphics.clear();
       this.flashGraphics(this.graphics);
     },
 
@@ -510,6 +570,7 @@ define([
         var g = graphics[i];
         this._flashFeature(g);
       }
+      setTimeout(lang.hitch(this, this._clearFeatures), 1100);
     },
 
     _flashFeature: function (feature) {
@@ -518,29 +579,37 @@ define([
         var color = Color.fromHex(this._styleColor);
         var color2 = lang.clone(color);
         color2.a = 0.4;
-        symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, feature.symbol.size,
-          new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-          color, 1),
-          color2);
+        if (typeof (feature.symbol) !== 'undefined') {
+          symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, feature.symbol.size,
+            new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+            color, 1),
+            color2);
+        }
       }
-      var g = new Graphic(feature.geometry, symbol);
-      this._map.graphics.add(g);
-      var dShape = g.getDojoShape();
-      if (dShape) {
-        fx.animateStroke({
-          shape: dShape,
-          duration: 700,
-          color: {
-            start: dShape.strokeStyle.color,
-            end: dShape.strokeStyle.color
-          },
-          width: {
-            start: 18,
-            end: 0
-          }
-        }).play();
-        setTimeout(this._clearFeature, 850, g);
+      if (typeof (symbol) !== 'undefined') {
+        var g = new Graphic(feature.geometry, symbol);
+        this._map.graphics.add(g);
+        var dShape = g.getDojoShape();
+        if (dShape) {
+          fx.animateStroke({
+            shape: dShape,
+            duration: 700,
+            color: {
+              start: dShape.strokeStyle.color,
+              end: dShape.strokeStyle.color
+            },
+            width: {
+              start: 18,
+              end: 0
+            }
+          }).play();
+          setTimeout(this._clearFeature, 850, g);
+        }
       }
+    },
+
+    _clearFeatures: function () {
+      this._map.graphics.clear();
     },
 
     _clearFeature: function (f) {
@@ -578,13 +647,16 @@ define([
     // cluster features
     clusterFeatures: function () {
       this.clear();
+      if (this._map === null) {
+        this._map = this._parent.map;
+      }
       if (this._map.infoWindow.isShowing) {
         this._map.infoWindow.hide();
       }
       var features = this._features;
       var total = 0;
       if (typeof (features) !== 'undefined') {
-        if (features.length > 0) {
+        if (features.length > 0 && this.visible) {
           var clusterSize = this.clusterSize;
           this.clusterGraphics = [];
           var sr = this._map.spatialReference;
@@ -628,7 +700,7 @@ define([
             var clusterGraphic = this.clusterGraphics[g];
             var count = clusterGraphic.graphics.length;
             var data = clusterGraphic.graphics;
-            var label = count.toString();
+            var label = utils.localizeNumber(count);
             var size = label.length * 19;
             var size2 = size;
             size += 5;
@@ -698,35 +770,28 @@ define([
                 }
               }
             } else {
-              //TODO look to see if this could be consolidated further
               var pt = clusterGraphic.graphics[0].geometry;
-              var ggg;
+              var _g;
               if (this.renderer) {
                 if (this.renderer.hasOwnProperty("getSymbol") && this.symbolData.symbolType === "LayerSymbol") {
-                  ggg = new Graphic(pt, null, attr.Data[0].attributes);
-                  var symmmm = this.renderer.getSymbol(ggg);
-                  ggg.setInfoTemplate(this.infoTemplate);
-                  ggg.setSymbol(symmmm);
-                  this.add(ggg);
+                  _g = new Graphic(pt, null, attr.Data[0].attributes, this.infoTemplate);
+                  _g.setSymbol(this.renderer.getSymbol(_g));
                 } else if (this.renderer.hasOwnProperty("symbol") && this.symbolData.symbolType === "LayerSymbol") {
-                  ggg = new Graphic(pt, null, attr.Data[0].attributes);
-                  ggg.setInfoTemplate(this.infoTemplate);
-                  ggg.setSymbol(jsonUtils.fromJson(this.renderer.symbol));
-                  this.add(ggg);
+                  _g = new Graphic(pt, null, attr.Data[0].attributes, this.infoTemplate);
+                  _g.setSymbol(jsonUtils.fromJson(this.renderer.symbol));
                 } else if (this.symbolData.symbolType === "EsriSymbol") {
-                  this.add(new Graphic(pt, jsonUtils.fromJson(this.symbolData.symbol), attr));
+                  _g = new Graphic(pt, jsonUtils.fromJson(this.symbolData.symbol), attr, this.infoTemplate);
                 } else if (this.symbolData.symbolType !== "LayerSymbol") {
-                  this.add(new Graphic(pt, this.psym, attr));
+                  _g = new Graphic(pt, this.psym, attr, this.infoTemplate);
                 } else {
                   if (this.renderer.symbol) {
-                    ggg = new Graphic(pt, this.renderer.symbol, attr);
-                    ggg.setInfoTemplate(this.infoTemplate);
-                    this.add(ggg);
+                    _g = new Graphic(pt, this.renderer.symbol, attr, this.infoTemplate);
                   } else {
-                    ggg = new Graphic(pt, this.psym, attr);
-                    ggg.setInfoTemplate(this.infoTemplate);
-                    this.add(ggg);
+                    _g = new Graphic(pt, this.psym, attr, this.infoTemplate);
                   }
+                }
+                if (typeof (_g) !== 'undefined') {
+                  this.add(_g);
                 }
               }
             }
@@ -736,32 +801,57 @@ define([
       }
     },
 
+    _getSym: function (graphic) {
+      var symbol;
+      if (this.renderer.hasOwnProperty("getSymbol") && this.symbolData.symbolType === "LayerSymbol") {
+        symbol = this.renderer.getSymbol(graphic);
+      } else if (this.renderer.hasOwnProperty("symbol") && this.symbolData.symbolType === "LayerSymbol") {
+        symbol = this.renderer.symbol;
+      } else if (this.symbolData.symbolType === "EsriSymbol") {
+        symbol = this.symbolData.symbol;
+      } else if (this.symbolData.symbol) {
+        symbol = this.symbolData.symbol;
+      }
+      return symbol;
+    },
+
     _updateNode: function (total) {
-      if (this.node) {
-        if (total) {
-          this.node.innerHTML = total.toLocaleString();
+      if (!this.hidePanel) {
+        var updateNode;
+        if (this.node) {
+          if (total) {
+            this.node.innerHTML = utils.localizeNumber(total);
+          } else {
+            this.node.innerHTML = 0;
+          }
+          updateNode = this.node.parentNode;
         } else {
-          this.node.innerHTML = 0;
+          if (this.legendNode) {
+            updateNode = this.legendNode.previousSibling;
+          }
         }
+        this.updateExpand(updateNode, total && this.visible ? false : true);
       }
     },
 
     _updatePanelTime: function (modifiedTime) {
-      var dFormat = {
-        month: '2-digit',
-        day: '2-digit',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      };
-      this.pageTitle.innerHTML = "<div></div>";
-      var updateValue = "";
-      if (this.config.mainPanelText !== "") {
-        updateValue = this.config.mainPanelText + " ";
-      }
+      if (!this.hidePanel) {
+        var dFormat = {
+          month: '2-digit',
+          day: '2-digit',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        };
+        this.pageTitle.innerHTML = "<div></div>";
+        var updateValue = "";
+        if (this.config.mainPanelText !== "") {
+          updateValue = this.config.mainPanelText + " ";
+        }
 
-      this.pageTitle.innerHTML = updateValue + new Date(modifiedTime).toLocaleDateString(navigator.language, dFormat);
+        this.pageTitle.innerHTML = updateValue + new Date(modifiedTime).toLocaleDateString(navigator.language, dFormat);
+      }
     },
 
     _setSymbols: function (size, size2) {
@@ -797,7 +887,7 @@ define([
         }
 
         var path = this.symbolData.s;
-        if (path.indexOf("${appPath}") > -1) {
+        if (path && path.indexOf("${appPath}") > -1) {
           path = this.symbolData.s.replace("${appPath}", window.location.origin + window.location.pathname);
         } else if (this.symbolData.s) {
           path = this.symbolData.s;
@@ -847,15 +937,23 @@ define([
         this.icon = this.symbolData.icon;
         if (this.symbolData.symbolType === "LayerSymbol") {
           if (this._parentLayer.renderer) {
-            this.renderer = this._parentLayer.renderer;
+            if (this._parentLayer.renderer.toJson) {
+              this.renderer = this._parentLayer.renderer;
+            } else {
+              this.renderer = renderUtils.fromJson(this._parentLayer.renderer);
+            }
+          } else if (this._testRenderer) {
+            this.renderer = renderUtils.fromJson(this._testRenderer);
           } else if (this.symbolData.renderer) {
-            //this.renderer = this.symbolData.renderer;
-            this.renderer = this._testRenderer;
+            if (this.symbolData.renderer.toJson) {
+              this.renderer = this.symbolData.renderer;
+            } else {
+              this.renderer = renderUtils.fromJson(this.symbolData.renderer);
+            }
           }
         } else {
           this.renderer = new SimpleRenderer(jsonUtils.fromJson(this.symbolData.symbol));
         }
-
         var symColor = this.color.toRgb();
         var cls = new SimpleLineSymbol(SimpleLineSymbol.STYLE_NULL, new Color(0, 0, 0, 0), 0);
         this._singleSym = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 9, cls,

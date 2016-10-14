@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "Геообогащение",
   "description": "Выберите или перетащите <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> электронную таблицу </a> сюда для визуализации и присоединения в ней данных с карты.",
   "selectCSV": "Выберите CSV",
   "loadingCSV": "Выполняется загрузка CSV",

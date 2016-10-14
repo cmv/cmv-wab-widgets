@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Pametni uređivač",
+  "noEditPrivileges": "Vaš račun nema dopuštenje za stvaranje ili mijenjanje podataka.",
+  "widgetActive": "Aktivno",
+  "widgetNotActive": "Nije aktivno",
   "pressStr": "Pritisnite ",
   "ctrlStr": " CTRL ",
   "snapStr": " za omogućivanje priljepljivanja",
@@ -19,5 +22,6 @@ define({
     "all": "Svi",
     "noAvailableTempaltes": "Nema dostupnih predložaka",
     "searchTemplates": "Pretraži predloške"
-  }
+  },
+  "invalidConfiguration": "Widget nije konfiguriran ili slojevi u konfiguraciji više nisu u karti. Otvorite app u načinu sastavljača i ponovo konfigurirajte widget."
 });

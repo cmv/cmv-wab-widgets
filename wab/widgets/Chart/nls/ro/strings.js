@@ -43,5 +43,7 @@ define({
   "yards": "Iarzi",
   "nauticalMiles": "Mile marine",
   "back": "Înapoi",
-  "execute": "Executare"
+  "execute": "Executare",
+  "enlarge": "Mărire",
+  "setting": "Configurare"
 });

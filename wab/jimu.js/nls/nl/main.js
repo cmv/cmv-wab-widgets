@@ -6,6 +6,7 @@ define({
     "yes": "Ja",
     "no": "Nee",
     "next": "Volgende",
+    "previous": "Vorige",
     "back": "Vorige",
     "selected": "geselecteerd",
     "name": "Naam",
@@ -52,7 +53,11 @@ define({
     "view": "Weergeven",
     "newText": "Nieuw",
     "edit": "Bewerken",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabel",
+    "zoomIn": "Inzoomen",
+    "zoomOut": "Uitzoomen",
+    "continue1": "Doorgaan"
   },
   "errorCode": "Code",
   "errorMessage": "Bericht",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Hoofdletter gevoelig",
     "notSupportCaseSensitiveTip": "Hosted services ondersteunen geen hoofdlettergevoelige query.",
-    "setFilterTip": "Stel het filter correct in."
+    "setFilterTip": "Stel het filter correct in.",
+    "cascadeFilterTip": "Alleen waarden tonen gefilterd door vorige expressies."
   },
   "featureLayerSource": {
     "layer": "Kaartlaag",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Klik om de extent van de kaart en de zichtbaarheid van de lagen te herstellen waar u bent gebleven."
   },
   "featureActions": {
+    "featureActions": "Objectacties",
     "ZoomTo": "Zoomen naar",
     "PanTo": "Pannen naar",
     "Flash": "Flash",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Toevoegen aan selectie",
     "removeSelectionTip": "Remove from selection",
     "selectFromCurrentSelectionTip": "Selecteren uit de huidige selectie",
-    "unselectAllSelectionTip": "Deselecteer alle momenteel geselecteerde objecten"
+    "unselectAllSelectionTip": "Deselecteer alle momenteel geselecteerde objecten",
+    "selectByPolygon": "Selecteren op polygoon",
+    "selectByCircle": "Selecteren op cirkel",
+    "selectByLine": "Selecteren op lijn",
+    "chooseSelectingTools": "Selectiehulpmiddelen kiezen",
+    "darw": "Tekenen",
+    "drawShap": "Een vorm tekenen"
   },
   "widgetManager": {
     "createWidgetError": "Widgetfout maken",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D-webapps worden niet ondersteund door uw browser."
+  },
+  "map": {
+    "basemapNotAvailable": "Basiskaart is niet beschikbaar.",
+    "displayDefaultBasemap": "In plaats daarvan wordt de standaard basiskaart weergegeven."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Er bevinden zich te veel objecten in het door u geselecteerde gebied op de kaart. Het kan lang duren totdat alle gegevens geladen zijn.",
+    "askForContinue": "Wilt u doorgaan?"
   }
 });

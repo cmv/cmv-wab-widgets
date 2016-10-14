@@ -5,6 +5,8 @@ define({
     format: "Format",
     layout: "Layout",
     settings: "Advanced",
+    labels: "Labels",
+    showLabels: "Show labels",
     mapScaleExtent: "Map scale/extent",
     preserve: "Preserve",
     mapScale: "map scale",

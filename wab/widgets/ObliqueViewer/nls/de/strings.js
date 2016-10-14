@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Höhe messen",
   "intialScaleLabel": "Ursprünglichen Maßstab für Schrägluftbilder auswählen",
   "smallBuildingLabel": "Stadtgebiet: Kleines Gebäude",
-  "buildingLabel": "Stadtgebiet: Gebäude"
+  "buildingLabel": "Stadtgebiet: Gebäude",
+  "azimuthChangeNotification": "Die ausgewählte Richtung weist keine Daten auf."
 });

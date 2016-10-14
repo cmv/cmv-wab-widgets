@@ -11,7 +11,7 @@ define({
   "miles": "Meilen",
   "meters": "Meter",
   "feet": "Fuß",
-  "yards": "Yards",
+  "yards": "Yard",
   "squareKilometers": "Quadratkilometer",
   "squareMiles": "Quadratmeilen",
   "acres": "Acres",

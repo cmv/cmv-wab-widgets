@@ -69,66 +69,68 @@ function (BaseVersionManager) {
               }
               li.panelImageData = panelImageData;
             }
-            var symbolData = li.symbolData;
-            symbolData.displayFeatureCount = false;
-            symbolData._highLightColor = '#ffffff';
-            symbolData.featureDisplayOptions = {
-              groupEnabled: false,
-              fields: [],
-              groupField: { name: "", label: "" }
-            };
+            if (li.symbolData) {
+              var symbolData = li.symbolData;
+              symbolData.displayFeatureCount = false;
+              symbolData._highLightColor = '#ffffff';
+              symbolData.featureDisplayOptions = {
+                groupEnabled: false,
+                fields: [],
+                groupField: { name: "", label: "" }
+              };
 
-            if (symbolData.clusterType !== 'ThemeCluster') {
-              tc = symbolData.clusterSymbol;
-              tc2 = symbolData.clusterType;
-            }
-
-            if (symbolData.clusterType === 'ThemeCluster') {
-              if (tc) {
-                symbolData.clusterType = tc2;
-                symbolData.clusterSymbol = tc;
-              } else {
-                //symbolData.clusterType = 'CustomCluster';
-                symbolData.clusterSymbol = {
-                  color: [155, 187, 89, 128],
-                  outline: {
-                    color: [115, 140, 61, 255],
-                    width: 1.5,
-                    type: "esriSLS",
-                    style: "esriSLSSolid"
-                  },
-                  type: "esriSFS",
-                  style: "esriSFSSolid"
-                };
+              if (symbolData.clusterType !== 'ThemeCluster') {
+                tc = symbolData.clusterSymbol;
+                tc2 = symbolData.clusterType;
               }
-            }
 
-            if (symbolData.s) {
-              var panelHTML = symbolData.s;
-              if (panelHTML.indexOf('width=\"26\" height=\"26\"') > -1) {
-                panelHTML = panelHTML.replace('width=\"26\" height=\"26\"', 'width=\"44\" height=\"44\"');
-                panelHTML = panelHTML.replace('width=\"26\" height=\"26\"', 'width=\"44\" height=\"44\"');
-                panelHTML = panelHTML.replace('x=\"-13\" y=\"-13\"', 'x=\"-22\" y=\"-22\"');
-                oldM = 'matrix(1.00000000,0.00000000,0.00000000,1.00000000,13.00000000,13.00000000)';
-                newM = 'matrix(1.00000000,0.00000000,0.00000000,1.00000000,22.00000000,22.00000000)';
-                panelHTML = panelHTML.replace(oldM, newM);
-                panelHTML = panelHTML.replace(oldM, newM);
-              } else if (panelHTML.indexOf('data:image' > -1)) {
-                var svg = '<svg overflow=\"hidden\" width=\"44\" height=\"44\"><defs></defs>';
-                svg += '<image fill-opacity=\"0\" stroke=\"none\" ';
-                svg += 'stroke-opacity=\"0\" stroke-width=\"1\" stroke-linecap=\"butt\" ';
-                svg += 'stroke-linejoin=\"miter\" stroke-miterlimit=\"4\" ';
-                svg += 'x=\"-22\" y=\"-22\" width=\"44\" height=\"44\"';
-                svg += 'preserveAspectRatio=\"none\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" ';
-                svg += 'xlink:href=\"';
-                svg += panelHTML;
-                svg += '\" transform=\"';
-                svg += 'matrix(1.00000000,0.00000000,0.00000000,1.00000000,22.00000000,22.00000000)\">';
-                svg += '</image></svg>';
+              if (symbolData.clusterType === 'ThemeCluster') {
+                if (tc) {
+                  symbolData.clusterType = tc2;
+                  symbolData.clusterSymbol = tc;
+                } else {
+                  //symbolData.clusterType = 'CustomCluster';
+                  symbolData.clusterSymbol = {
+                    color: [155, 187, 89, 128],
+                    outline: {
+                      color: [115, 140, 61, 255],
+                      width: 1.5,
+                      type: "esriSLS",
+                      style: "esriSLSSolid"
+                    },
+                    type: "esriSFS",
+                    style: "esriSFSSolid"
+                  };
+                }
               }
-              symbolData.panelHTML = panelHTML;
+
+              if (symbolData.s) {
+                var panelHTML = symbolData.s;
+                if (panelHTML.indexOf('width=\"26\" height=\"26\"') > -1) {
+                  panelHTML = panelHTML.replace('width=\"26\" height=\"26\"', 'width=\"44\" height=\"44\"');
+                  panelHTML = panelHTML.replace('width=\"26\" height=\"26\"', 'width=\"44\" height=\"44\"');
+                  panelHTML = panelHTML.replace('x=\"-13\" y=\"-13\"', 'x=\"-22\" y=\"-22\"');
+                  oldM = 'matrix(1.00000000,0.00000000,0.00000000,1.00000000,13.00000000,13.00000000)';
+                  newM = 'matrix(1.00000000,0.00000000,0.00000000,1.00000000,22.00000000,22.00000000)';
+                  panelHTML = panelHTML.replace(oldM, newM);
+                  panelHTML = panelHTML.replace(oldM, newM);
+                } else if (panelHTML.indexOf('data:image' > -1)) {
+                  var svg = '<svg overflow=\"hidden\" width=\"44\" height=\"44\"><defs></defs>';
+                  svg += '<image fill-opacity=\"0\" stroke=\"none\" ';
+                  svg += 'stroke-opacity=\"0\" stroke-width=\"1\" stroke-linecap=\"butt\" ';
+                  svg += 'stroke-linejoin=\"miter\" stroke-miterlimit=\"4\" ';
+                  svg += 'x=\"-22\" y=\"-22\" width=\"44\" height=\"44\"';
+                  svg += 'preserveAspectRatio=\"none\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" ';
+                  svg += 'xlink:href=\"';
+                  svg += panelHTML;
+                  svg += '\" transform=\"';
+                  svg += 'matrix(1.00000000,0.00000000,0.00000000,1.00000000,22.00000000,22.00000000)\">';
+                  svg += '</image></svg>';
+                }
+                symbolData.panelHTML = panelHTML;
+              }
+              li.symbolData = symbolData;
             }
-            li.symbolData = symbolData;
             lyrInfos[i] = li;
           }
         }

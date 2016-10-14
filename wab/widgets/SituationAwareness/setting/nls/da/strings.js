@@ -45,7 +45,7 @@ define({
   "save_label": "Gem indstillinger",
   "save_checkbox": "Aktivér lagring",
   "csv_label": "Tillad eksport af resultater",
-  "csv_checkbox": "CSV-indstillinger",
+  "csv_checkbox": "Eksportér alle felter i laget",
   "display_label": "Indstillinger for visning",
   "display_checkbox": "Vis opsummerede objekter",
   "must_select_template": "Vælg en af redigeringsskabelonerne under Gem indstillinger.",

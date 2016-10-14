@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Viedais redaktors",
+  "noEditPrivileges": "Jūsu kontam nav piešķirta atļauja izveidot vai modificēt datus.",
+  "widgetActive": "Aktīvs",
+  "widgetNotActive": "Neaktīvs",
   "pressStr": "Nospiediet ",
   "ctrlStr": " CTRL ",
   "snapStr": " , lai iespējotu pieķeršanos",
@@ -19,5 +22,6 @@ define({
     "all": "Visi",
     "noAvailableTempaltes": "Nav pieejamas sagataves",
     "searchTemplates": "Meklēt sagataves"
-  }
+  },
+  "invalidConfiguration": "Logrīks nav konfigurēts vai konfigurētie slāņi vairs nav kartē. Lūdzu, atveriet programmu veidotāja režīmā un konfigurējiet logrīku atkārtoti."
 });

@@ -9,5 +9,8 @@ define({
   "featureLayers": "Slojevi geoobjekta",
   "searchTemplates": "Pretraži predloške",
   "noAvailableTempaltes": "Nema dostupnih predložaka",
-  "noCanCreateLayerAreCurrentlyVisible": "Slojevi koji se mogu stvoriti nisu trenutačno vidljivi."
+  "noCanCreateLayerAreCurrentlyVisible": "Slojevi koji se mogu stvoriti nisu trenutačno vidljivi.",
+  "relatedTables": "Povezane tablice:",
+  "relatedRecords": "Povezani zapisi:",
+  "noRelatedRecotds": "Nema pronađenih povezanih zapisa"
 });

@@ -35,7 +35,7 @@ define({
     "yAxisHintText": "רמז: כותרת ציר Y",
     "fieldColorLabel": "תווית",
     "fieldColorColor": "צבע",
-    "defaultFieldSelectLabel": "בחר",
+    "defaultFieldSelectLabel": "בחירה",
     "errMsgFieldValuesNotFound": "לא ניתן למצוא ערכים עבור השדה שנבחר",
     "errMsgSectionTitle": "הזן את כותרת הקטע",
     "errMsgFieldByValue": "בחר ערך שדה",

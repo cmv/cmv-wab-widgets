@@ -6,6 +6,7 @@ define({
     "yes": "Da",
     "no": "Ne",
     "next": "Sljedeće",
+    "previous": "Prethodno",
     "back": "Natrag",
     "selected": "odabrano",
     "name": "Naziv",
@@ -52,7 +53,11 @@ define({
     "view": "Prikaz",
     "newText": "Novo",
     "edit": "Uredi",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tablica",
+    "zoomIn": "Povećaj",
+    "zoomOut": "Smanji",
+    "continue1": "Nastavak"
   },
   "errorCode": "Kod",
   "errorMessage": "Poruka",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Osjetljivo na velika i mala slova",
     "notSupportCaseSensitiveTip": "Hostirane usluge ne podržavaju upit osjetljiv na velika i mala slova.",
-    "setFilterTip": "Ispravno postavite filtar."
+    "setFilterTip": "Ispravno postavite filtar.",
+    "cascadeFilterTip": "Prikaži samo vrijednosti filtrirane prethodnim izrazima."
   },
   "featureLayerSource": {
     "layer": "Sloj",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Kliknite da biste vratili obuhvat karte i vidljivost slojeva na posljednju vrijednost."
   },
   "featureActions": {
+    "featureActions": "Radnje za geoobjekte",
     "ZoomTo": "Povećaj na",
     "PanTo": "Kreći se na",
     "Flash": "Bljeskalica",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Dodaj odabiru",
     "removeSelectionTip": "Ukloni iz odabira",
     "selectFromCurrentSelectionTip": "Odaberi iz trenutačnog odabira",
-    "unselectAllSelectionTip": "Odznači sve trenutačno odabrane geoobjekte"
+    "unselectAllSelectionTip": "Odznači sve trenutačno odabrane geoobjekte",
+    "selectByPolygon": "Odaberi prema poligonu",
+    "selectByCircle": "Odaberi prema krugu",
+    "selectByLine": "Odaberi prema liniji",
+    "chooseSelectingTools": "Izaberi alate za odabir",
+    "darw": "Crtaj",
+    "drawShap": "Nacrtaj oblik"
   },
   "widgetManager": {
     "createWidgetError": "Pogreška pri stvaranju widgeta",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D web-appovi nisu podržani u vašem pregledniku."
+  },
+  "map": {
+    "basemapNotAvailable": "Kartografska podloga nije dostupna.",
+    "displayDefaultBasemap": "Umjesto toga prikazuje se zadana kartografska podloga."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Postoje previše geoobjekata unutar odabranog područja na karti. Dohvaćanje svih podataka moglo bi potrajati dulje vrijeme.",
+    "askForContinue": "Želite li nastaviti?"
   }
 });

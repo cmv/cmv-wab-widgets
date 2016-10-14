@@ -9,5 +9,8 @@ define({
   "featureLayers": "Elementa slāņi",
   "searchTemplates": "Meklēt sagataves",
   "noAvailableTempaltes": "Nav pieejamu sagatavju",
-  "noCanCreateLayerAreCurrentlyVisible": "Pašaik nav redzams neviens izveidojamais slānis."
+  "noCanCreateLayerAreCurrentlyVisible": "Pašaik nav redzams neviens izveidojamais slānis.",
+  "relatedTables": "Saistītās tabulas:",
+  "relatedRecords": "Saistītie ieraksti:",
+  "noRelatedRecotds": "Nav atrasti saistīti ieraksti"
 });

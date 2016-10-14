@@ -24,6 +24,7 @@ define({
   "filterPopup": "Sloj filtera",
   "cancel": "Otkaži",
   "noValue": "Nema vrednosti",
+  "emptyString": "Prazan string",
   "existingValue": "Koristi postojeću vrednost",
   "newDate": "Novi podaci",
   "valueChooser": "Izaberite/unesite vrednost",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Sloj ${0} sa ID brojem ${1} nije pronađen u mapi, mapa je možda izmenjena od konfiguracije vidžeta",
     "queryNullID": "Geoobjekat od ${0} je vratio nevažeći ID",
     "noSelectedLayers": "Nema izabranih slojeva sa zapisima za ažuriranje",
-    "inputValueError": "Nevažeća vrednost u obrascu"
+    "inputValueError": "Nevažeća vrednost u obrascu",
+    "saveError": "Nije moguće sačuvati (${0}) geoobjekte, detalji su dodati u konzolu",
+    "requiredValue": "Zahtevana vrednost"
   }
 });

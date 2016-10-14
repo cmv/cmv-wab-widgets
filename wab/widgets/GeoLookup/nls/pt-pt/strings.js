@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "Geo Lookup",
   "description": "Navegue até aqui, ou arraste, uma <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> folha de cálculo </a> para visualizar, e à qual anexar dados de mapa.",
   "selectCSV": "Selecione um ficheiro CSV",
   "loadingCSV": "A carregar CSV",

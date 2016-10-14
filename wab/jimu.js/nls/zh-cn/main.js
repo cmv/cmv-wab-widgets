@@ -6,7 +6,8 @@ define({
     "yes": "是",
     "no": "否",
     "next": "下一步",
-    "back": "返回",
+    "previous": "上一个",
+    "back": "上一步",
     "selected": "选定",
     "name": "名称",
     "usage": "用法",
@@ -24,13 +25,13 @@ define({
     "input": "输入",
     "output": "输出",
     "type": "类型",
-    "required": "必选",
+    "required": "必填项",
     "options": "选项",
     "label": "标注",
     "tooltip": "工具提示",
     "visible": "可见",
     "symbol": "符号",
-    "popup": "弹出菜单",
+    "popup": "弹出窗口",
     "upload": "上传",
     "execute": "执行",
     "help": "帮助",
@@ -52,7 +53,11 @@ define({
     "view": "查看",
     "newText": "新建",
     "edit": "编辑",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "表格",
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "continue1": "继续"
   },
   "errorCode": "代码",
   "errorMessage": "消息",
@@ -83,7 +88,7 @@ define({
     "transportation": "交通运输",
     "symbolSize": "符号大小",
     "color": "颜色",
-    "alpha": "透明度",
+    "alpha": "Alpha",
     "outlineColor": "轮廓颜色",
     "outlineWidth": "轮廓宽度",
     "style": "样式",
@@ -103,7 +108,7 @@ define({
     "transparent": "透明"
   },
   "rendererChooser": {
-    "domain": "属性域",
+    "domain": "域",
     "use": "使用",
     "singleSymbol": "单一符号",
     "uniqueSymbol": "唯一符号",
@@ -167,7 +172,7 @@ define({
   "basicServiceChooser": {
     "validate": "验证",
     "example": "示例",
-    "set": "集合"
+    "set": "设置"
   },
   "urlInput": {
     "invalidUrl": "URL 无效。"
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "区分大小写",
     "notSupportCaseSensitiveTip": "托管的服务不支持区分大小写的查询。",
-    "setFilterTip": "请正确设置过滤器。"
+    "setFilterTip": "请正确设置过滤器。",
+    "cascadeFilterTip": "仅显示由上一表达式过滤的值。"
   },
   "featureLayerSource": {
     "layer": "图层",
@@ -284,7 +290,7 @@ define({
     "signIn": "登录",
     "publicMap": "公共",
     "myOrganization": "我的组织",
-    "myGroup": "我的组",
+    "myGroup": "我的群组",
     "myContent": "我的内容",
     "count": "计数",
     "fromPortal": "从 Portal",
@@ -338,15 +344,16 @@ define({
   },
   "exportTo": {
     "exportTo": "导出",
-    "toCSV": "导出到 CSV 文件",
+    "toCSV": "导出为 CSV 文件",
     "toFeatureCollection": "导出至要素集合",
     "toGeoJSON": "导出至 GeoJSON"
   },
   "appState": {
     "title": "应用程序状态",
-    "restoreMap": "单击以恢复之前停止的地图范围和图层可见性。"
+    "restoreMap": "单击以恢复之前的地图范围和图层可见性。"
   },
   "featureActions": {
+    "featureActions": "要素操作",
     "ZoomTo": "缩放至",
     "PanTo": "平移至",
     "Flash": "闪烁",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "添加到选择内容",
     "removeSelectionTip": "从选择内容中移除",
     "selectFromCurrentSelectionTip": "从当前选择内容中选择",
-    "unselectAllSelectionTip": "取消选择所有当前选择的要素"
+    "unselectAllSelectionTip": "取消选择所有当前选择的要素",
+    "selectByPolygon": "按多边形选择",
+    "selectByCircle": "按圆选择",
+    "selectByLine": "按线选择",
+    "chooseSelectingTools": "选取选择工具",
+    "darw": "绘制",
+    "drawShap": "绘制形状"
   },
   "widgetManager": {
     "createWidgetError": "创建微件出错",
@@ -412,7 +425,7 @@ define({
     "googlePlus": "google+",
     "shareGooglePlus": "Google+",
     "EmbedTips": "将此应用程序嵌入到网站中",
-    "shareEmailSubject": "正在共享 Web 应用程序:",
+    "shareEmailSubject": "共享 Web 应用程序：",
     "shareEmailTxt1": "这是通过使用 Web AppBuilder for ArcGIS 与您共享的 Web 应用程序。",
     "shareEmailTxt2": "可以使用 Esri Web AppBuilder for ArcGIS 创建和共享自己的 Web 应用程序。",
     "shareEmailTxt3": "详细信息请访问 http://www.esri.com/software/web-appbuilder。",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "您的浏览器不支持 3D Web 应用程序。"
+  },
+  "map": {
+    "basemapNotAvailable": "底图不可用。",
+    "displayDefaultBasemap": "显示默认底图。"
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "地图中所选区域内的要素数量过多。检索全部数据可能会花费很长时间。",
+    "askForContinue": "是否要继续?"
   }
 });

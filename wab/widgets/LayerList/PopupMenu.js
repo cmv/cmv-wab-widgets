@@ -162,7 +162,7 @@ define([
 
     selectItem: function(item, evt) {
       var found = false;
-      for (var i = 1; i < this._deniedItems.length; i++) {
+      for (var i = 0; i < this._deniedItems.length; i++) {
         if (this._deniedItems[i].key === item.key) {
           found = true;
           break;

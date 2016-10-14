@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Opzione per rimuovere la feature dalla selezione impostata quando il record viene salvato. Se è il solo record selezionato, il pannello viene riportato alla pagina del modello.",
     "useFilterEditor": "Utilizza filtro modello di feature",
     "useFilterEditorTip": "Opzione per utilizzare il selettore Filtra modello che offre la possibilità di visualizzare un modello layer o ricercare modelli in base al nome.",
+    "listenToGroupFilter": "Applica valori ai filtri dal widget Filtro gruppo ai campi preimpostati",
+    "listenToGroupFilterTip": "Quando un filtro viene applicato nel widget Filtro gruppo, applicare il valore a un campo corrispondente nell'elenco dei valori preimpostati.",
+    "keepTemplateActive": "Mantieni attivo il modello selezionato",
+    "keepTemplateActiveTip": "Quando viene visualizzato il selettore dei modelli, se un modello è stato selezionato in precedenza, selezionarlo nuovamente.",
     "layerSettingsTable": {
       "allowDelete": "Consenti cancellazione",
       "allowDeleteTip": "Opzione per consentire all'utente di cancellare una feature; disabilitata se il layer non supporta la cancellazione",
@@ -27,9 +31,10 @@ define({
       "fields": "Campi",
       "fieldsTip": "Modificare i campi da modificare e definire attributi Smart",
       "description": "Descrizione",
-      "descriptionTip": "Facoltativamente, immettere il testo da visualizzare sopra la pagina dell'attributo."
+      "descriptionTip": "Opzione per immettere testo da visualizzare sopra la pagina dell'attributo."
     },
-    "editFieldError": "Modifiche campo e attributi Smart non sono disponibili per layer non modificabili"
+    "editFieldError": "Modifiche campo e attributi Smart non sono disponibili per layer non modificabili",
+    "noConfigedLayersError": "Smart Editor richiede uno o più layer modificabili"
   },
   "editDescriptionPage": {
     "title": "Definire il testo panoramica attributo per <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "L'espressione risultante in formato SQL dei criteri definiti",
       "actions": "Criteri",
       "actionsTip": "Modificare l'ordine della regola e definire i criteri quando viene attivata"
+    },
+    "actions": {
+      "hide": "Nascondi",
+      "required": "Richiesto",
+      "disabled": "Disabilitato"
     }
   },
   "filterPage": {
     "submitHidden": "Inviare dati attributo per questo campo anche quando è nascosto?",
-    "title": "Configura clausola per la regola ${action}",
+    "title": "Configura espressione per la regola ${action}",
     "filterBuilder": "Impostare azione su campo quando il record corrisponde a ${any_or_all} delle seguenti espressioni",
     "noFilterTip": "Utilizzando gli strumenti sottostanti, definire l'istruzione per quando l'azione è attiva."
   }

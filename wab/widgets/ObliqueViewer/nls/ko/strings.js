@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "높이 측정",
   "intialScaleLabel": "사선 이미지의 초기 축척 선택",
   "smallBuildingLabel": "도심 지역: 소형 건물",
-  "buildingLabel": "도심 지역: 건물"
+  "buildingLabel": "도심 지역: 건물",
+  "azimuthChangeNotification": "선택한 방향에 데이터가 없습니다."
 });

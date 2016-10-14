@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtrér lag",
   "cancel": "Annullér",
   "noValue": "Ingen værdi",
+  "emptyString": "Tom streng",
   "existingValue": "Behold eksisterende værdi",
   "newDate": "Ny dato",
   "valueChooser": "Vælg/angiv en værdi",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Laget ${0} med id'et ${1} blev ikke fundet på kortet, kortlaget kan være ændret siden widget-konfigurationen",
     "queryNullID": "Objektet fra ${0} returnerede et ugyldigt id",
     "noSelectedLayers": "Ingen valgte lag med poster, der skal opdateres",
-    "inputValueError": "Ugyldig værdi i formularen"
+    "inputValueError": "Ugyldig værdi i formularen",
+    "saveError": "Kan ikke gemme ${0} objekter, detaljer er føjet til konsollen",
+    "requiredValue": "Påkrævet værdi"
   }
 });

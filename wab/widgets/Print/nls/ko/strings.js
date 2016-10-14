@@ -4,6 +4,8 @@ define({
   "format": "형식",
   "layout": "레이아웃",
   "settings": "고급",
+  "labels": "레이블",
+  "showLabels": "레이블 보기",
   "mapScaleExtent": "맵 축척/범위",
   "preserve": "유지",
   "mapScale": "맵 축척",

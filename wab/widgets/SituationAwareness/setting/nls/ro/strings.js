@@ -45,7 +45,7 @@ define({
   "save_label": "Opţiuni salvare",
   "save_checkbox": "Activare salvare",
   "csv_label": "Opţiuni CSV",
-  "csv_checkbox": "Exportaţi toate câmpurile din stratul tematic.",
+  "csv_checkbox": "Exportaţi toate câmpurile din stratul tematic",
   "display_label": "Opţiuni de afişare",
   "display_checkbox": "Afişare obiecte spaţiale rezumat",
   "must_select_template": "Selectaţi unul dintre şabloanele de editare din Opţiuni salvare.",

@@ -4,6 +4,8 @@ define({
   "format": "Formát",
   "layout": "Rozvržení",
   "settings": "Pokročilé",
+  "labels": "Popisky",
+  "showLabels": "Zobrazit popisky",
   "mapScaleExtent": "Měřítko/rozsah mapy",
   "preserve": "Zachovat",
   "mapScale": "měřítko mapy",

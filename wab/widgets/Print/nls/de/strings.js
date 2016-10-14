@@ -4,6 +4,8 @@ define({
   "format": "Format",
   "layout": "Layout",
   "settings": "Erweitert",
+  "labels": "Beschriftungen",
+  "showLabels": "Beschriftungen anzeigen",
   "mapScaleExtent": "Maßstab/Ausdehnung der Karte",
   "preserve": "Beibehalten",
   "mapScale": "Kartenmaßstab",

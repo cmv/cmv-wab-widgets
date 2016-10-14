@@ -4,6 +4,8 @@ define({
   "format": "Vorming",
   "layout": "Paigutus",
   "settings": "Täiustunud",
+  "labels": "Märgised",
+  "showLabels": "Kuva märgised",
   "mapScaleExtent": "Kaardi mõõtkava/ulatus",
   "preserve": "Säilita",
   "mapScale": "kaardi mõõtkava",

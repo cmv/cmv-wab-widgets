@@ -89,9 +89,9 @@ define({
   "availableSpatialRelationships": "קישורים מרחביים זמינים",
   "setSpatialRelationships": "הגדר קישורים מרחביים",
   "availability": "זמינות",
-  "relationship": "קישור",
+  "relationship": "יחס",
   "actions": "פעולות",
-  "intersect": "יחס",
+  "intersect": "חותך",
   "contain": "מכיל",
   "areContainedIn": "כלולים בתוך",
   "cross": "חוצה",
@@ -101,5 +101,5 @@ define({
   "touche": "נוגע",
   "within": "בתוך",
   "areWithin": "כלולים",
-  "indexIntersect": "נחתך באינדקס"
+  "indexIntersect": "חותך באינדקס"
 });

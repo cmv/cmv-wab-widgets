@@ -9,5 +9,8 @@ define({
   "featureLayers": "Vrstvy prvků",
   "searchTemplates": "Vyhledávání šablon",
   "noAvailableTempaltes": "Žádné šablony nejsou k dispozici.",
-  "noCanCreateLayerAreCurrentlyVisible": "Momentálně nejsou viditelné žádné vytvořitelné vrstvy."
+  "noCanCreateLayerAreCurrentlyVisible": "Momentálně nejsou viditelné žádné vytvořitelné vrstvy.",
+  "relatedTables": "Související tabulky:",
+  "relatedRecords": "Související záznamy:",
+  "noRelatedRecotds": "Nebyly nalezeny žádné související záznamy."
 });

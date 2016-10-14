@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "智慧編輯器",
+  "noEditPrivileges": "您的帳號沒有建立或修改資料的權限。",
+  "widgetActive": "使用中",
+  "widgetNotActive": "非使用中",
   "pressStr": "按 ",
   "ctrlStr": " Ctrl 鍵 ",
   "snapStr": " 啟用貼齊",
@@ -19,5 +22,6 @@ define({
     "all": "全部",
     "noAvailableTempaltes": "沒有可用的樣板",
     "searchTemplates": "搜尋樣板"
-  }
+  },
+  "invalidConfiguration": "未配置 widget，或配置中的圖層已從地圖中消失。請在建構器模式中開啟應用程式，並重新配置 widget。"
 });

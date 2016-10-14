@@ -7,6 +7,7 @@ define({
       yes: "Yes",
       no: "No",
       next: "Next",
+      previous: "Previous",
       back: "Back",
       selected: "selected",
       name: "Name",
@@ -53,7 +54,11 @@ define({
       view: "View",
       newText: "New",
       edit: "Edit",
-      wkid: "WKID"
+      wkid: "WKID",
+      table: "Table",
+      zoomIn: "Zoom in",
+      zoomOut: "Zoom out",
+      continue1: "Continue"
     },
     errorCode: "Code",
     errorMessage: "Message",
@@ -237,7 +242,8 @@ define({
       },
       caseSensitive: "Case Sensitive",
       notSupportCaseSensitiveTip: "Hosted services do not support case-sensitive query.",
-      setFilterTip: "Please set filter correctly."
+      setFilterTip: "Please set filter correctly.",
+      cascadeFilterTip: "Only show values filtered by previous expressions."
     },
 
     featureLayerSource: {
@@ -349,6 +355,7 @@ define({
       restoreMap: "Click to restore the map extent and layers visibility where you left off."
     },
     featureActions: {
+      featureActions: "Feature actions",
       ZoomTo: "Zoom to",
       PanTo: "Pan to",
       Flash : "Flash",
@@ -391,7 +398,13 @@ define({
       addSelectionTip: "Add to selection",
       removeSelectionTip: "Remove from selection",
       selectFromCurrentSelectionTip: "Select from the current selection",
-      unselectAllSelectionTip: "Unselect all currently selected features"
+      unselectAllSelectionTip: "Unselect all currently selected features",
+      selectByPolygon: "Select By Polygon",
+      selectByCircle: "Select By Circle",
+      selectByLine: "Select By Line",
+      chooseSelectingTools: "Choose selecting tools",
+      darw: "Draw",
+      drawShap: "Draw a shape"
     },
     widgetManager: {
       createWidgetError: "Create widget error",
@@ -451,7 +464,19 @@ define({
     },
     webSceneLoader: {
       webglSupportTip: "3D web apps aren't supported in your browser."
-    }
+    },
+    map: {
+      basemapNotAvailable: "Basemap is not available.",
+      displayDefaultBasemap: "Displaying the default basemap instead."
+    },
+    queryFeatures: {
+      tooManyFeaturesTip: "There are too many features within your selected area on the map. It may take long time to retrieve all data.",
+      askForContinue: "Do you want to continue?"
+    },
+
+    //we put these strings in here instead of in common because these strings are not translated.
+    noEditPrivileges: "Your account does not have permission to create or modify data.",
+    invalidConfiguration: "Widget is either not configured or the layers in the configuration are no longer in the map.  Please open the app in the builder mode and reconfigure the widget."
   }),
   "ar": 1,
   "cs": 1,

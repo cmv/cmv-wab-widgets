@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtra layer",
   "cancel": "Annulla",
   "noValue": "Nessun valore",
+  "emptyString": "Stringa vuota",
   "existingValue": "Mantieni valore esistente",
   "newDate": "Nuova data",
   "valueChooser": "Selezionare/digitare un valore",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Impossibile trovare il layer ${0} con ID ${1} nella mappa. È possibile che la mappa sia stata modificata dalla configurazione dei widget",
     "queryNullID": "La feature di ${0} ha restituito un ID non valido",
     "noSelectedLayers": "Nessun layer selezionato con record da aggiornare",
-    "inputValueError": "Valore non valido nel modulo"
+    "inputValueError": "Valore non valido nel modulo",
+    "saveError": "Impossibile salvare ${0}, dettagli aggiunti alla console",
+    "requiredValue": "Valore obbligatorio"
   }
 });

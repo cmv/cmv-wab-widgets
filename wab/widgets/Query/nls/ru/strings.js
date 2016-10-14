@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Критерий атрибута",
   "spatialFilter": "Пространственный фильтр",
   "value": "ЗНАЧЕНИЕ",
-  "noAttributeSpatialFilterTip": "Фильтры не заданы. Будут возвращены все объекты."
+  "noAttributeSpatialFilterTip": "Фильтры не заданы. Будут возвращены все объекты.",
+  "showAllRelatedRecords": "Показать все связанные записи"
 });

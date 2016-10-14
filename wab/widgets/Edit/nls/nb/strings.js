@@ -9,5 +9,8 @@ define({
   "featureLayers": "Geoobjektslag",
   "searchTemplates": "Søk i maler",
   "noAvailableTempaltes": "Ingen tilgjengelige maler",
-  "noCanCreateLayerAreCurrentlyVisible": "Ingen lag som kan opprettes, er synlige for øyeblikket."
+  "noCanCreateLayerAreCurrentlyVisible": "Ingen lag som kan opprettes, er synlige for øyeblikket.",
+  "relatedTables": "Relaterte tabeller:",
+  "relatedRecords": "Relaterte poster:",
+  "noRelatedRecotds": "Ingen tilknyttede oppføringer funnet"
 });

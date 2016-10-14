@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Měřit výšku",
   "intialScaleLabel": "Vyberte počáteční měřítko pro nakloněné snímky",
   "smallBuildingLabel": "Městská oblast: malá budova",
-  "buildingLabel": "Městská oblast: budova"
+  "buildingLabel": "Městská oblast: budova",
+  "azimuthChangeNotification": "Ve vybraném směru nejsou žádná data."
 });

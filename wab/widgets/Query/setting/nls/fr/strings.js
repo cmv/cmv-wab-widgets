@@ -122,5 +122,6 @@ define({
   "uploadImage": "Charger une image",
   "attributeCriteira": "Critères des attributs",
   "specifyFilterAtRuntimeTip": "Les utilisateurs doivent spécifier les paramètres de cette expression.",
-  "value": "VALEUR"
+  "value": "VALEUR",
+  "hideLayersTip": "Désactivez les couches de résultats de la requête lorsque le widget est fermé."
 });

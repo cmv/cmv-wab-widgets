@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Opcija noņemt elementu no iestatītās izvēles, kad tiek saglabāts ieraksts. Ja tas ir vienīgais izvēlētais ieraksts, panelis tiek pārslēgts atpakaļ uz šablona lapu.",
     "useFilterEditor": "Izmantot elementu šablona filtru",
     "useFilterEditorTip": "Opcija izmantot atlasītāju Filtrēt šablonu, kas sniedz iespēju skatīt vienu slāņu šablonus vai meklēt šablonus pēc nosaukuma.",
+    "listenToGroupFilter": "Lietot grupu filtra logrīka filtra vērtības iepriekšnoteiktajiem laukiem",
+    "listenToGroupFilterTip": "Kad grupu filtra logrīkā tiek lietots filtrs, lietot vērtību atbilstošā iepriekšnoteikto vērtību saraksta laukā.",
+    "keepTemplateActive": "Uzturēt atlasīto veidni aktīvā statusā",
+    "keepTemplateActiveTip": "Kad tiek parādīts veidņu atlasītājs, atkārtoti atlasīt veidni, ja tā ir bijusi atlasīta iepriekš.",
     "layerSettingsTable": {
       "allowDelete": "Atļaut dzēšanu",
       "allowDeleteTip": "Opcija atļaut lietotājam izdzēst elementu; ja slānī dzēšana nav atbalstīta, opcija tiek atspējota",
@@ -27,9 +31,10 @@ define({
       "fields": "Lauki",
       "fieldsTip": "Modificēt rediģējamos laukus un definēt viedos atribūtus",
       "description": "Apraksts",
-      "descriptionTip": "Pēc izvēles varat ievadīt tekstu, kuru vēlaties parādīt atribūtu lapas augšdaļā."
+      "descriptionTip": "Opcija ievadīt tekstu, ko parādīt atribūtu lapas augšdaļā."
     },
-    "editFieldError": "Lauku modificēšanas iespējas un viedie atribūti nav pieejami tiem slāņiem, kas nav rediģējami"
+    "editFieldError": "Lauku modificēšanas iespējas un viedie atribūti nav pieejami tiem slāņiem, kas nav rediģējami",
+    "noConfigedLayersError": "Programmai Smart Editor ir nepieciešams viens vai vairāki rediģējami slāņi"
   },
   "editDescriptionPage": {
     "title": "Definēt atribūtu pārskata tekstu slānim <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Rezultātā iegūtā izteiksme SQL formātā no definētajiem kritērijiem",
       "actions": "Kritēriji",
       "actionsTip": "Mainiet noteikuma secību un definējiet kritērijus, kad tā tiek aktivizēta"
+    },
+    "actions": {
+      "hide": "Paslēpt",
+      "required": "Nepieciešams",
+      "disabled": "Atspējots"
     }
   },
   "filterPage": {
     "submitHidden": "Vai iesniegt šī lauka atribūta datus pat tad, ja tas ir paslēpts?",
-    "title": "Konfigurēt ${action} noteikuma klauzulu",
+    "title": "Konfigurēt ${action} noteikuma izteiksmi",
     "filterBuilder": "Laukā iestatīt darbību, ja ieraksts atbilst ${any_or_all} no tālāk esošajām izteiksmēm",
     "noFilterTip": "Izmantojot tālāk norādītos rīkus, definējiet pieprasījumu par to, kad darbība ir aktīva."
   }

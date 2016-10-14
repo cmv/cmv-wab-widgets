@@ -43,5 +43,7 @@ define({
   "yards": "Jardi",
   "nauticalMiles": "Nautičke milje",
   "back": "Natrag",
-  "execute": "Izvrši"
+  "execute": "Izvrši",
+  "enlarge": "Uvećaj",
+  "setting": "Postavka"
 });

@@ -2,20 +2,32 @@ define({
   "configText": "Zdefiniuj grupy filtrów poniżej",
   "labels": {
     "groupName": "Nazwa zestawu filtrów:",
+    "groupNameTip": "Nazwa filtru, którą wybierze użytkownik.",
     "groupDesc": "Opis:",
+    "groupDescTip": "Opis zestawu filtrów.",
     "groupOperator": "Wstępnie ustawiony operator:",
-    "groupDefault": "Wstępnie ustawiona wartość:"
+    "groupOperatorTip": "Opcja wstępnego zdefiniowania operatora filtru. Jeśli wstępnie ustawiony operator nie zostanie wybrany, w filtrze zostanie użyty operator równości.",
+    "groupDefault": "Wstępnie ustawiona wartość:",
+    "groupDefaultTip": "Opcja wyboru wartości z istniejącej warstwy.",
+    "sameLayerAppend": "Kiedy warstwa jest wymieniana więcej niż jeden raz, użyj następującego operatora między polami:",
+    "sameLayerConjunc": "Dołącz, używając:"
   },
   "buttons": {
     "addNewGroup": "Dodaj nową grupę",
-    "addLayer": "Dodaj warstwę"
+    "addNewGroupTip": "Dodaj nowy zestaw filtrów.",
+    "addLayer": "Dodaj warstwę",
+    "addLayerTip": "Dodaj warstwę do zestawu filtrów."
   },
   "inputs": {
     "groupName": "Nadaj grupie nazwę",
     "groupDesc": "Opis grupy",
     "groupDefault": "Wprowadź predefiniowaną wartość",
     "simpleMode": "Rozpocznij w prostym widoku",
+    "simpleModeTip": "Opcja uproszczenia interfejsu skonfigurowanego widżetu. Po zaznaczeniu z interfejsu zostanie usunięta lista rozwijana operatorów i przyciski dodawania kryteriów.",
+    "webmapAppendMode": "Dołącz filtr do istniejącego filtru mapy internetowej, używając ",
+    "webmapAppendModeTip": "Opcja dołączenia zestawu filtrów do istniejącego filtru mapy internetowej. Obsługiwane operatory to OR i AND.",
     "optionsMode": "Ukryj opcje widżetu",
+    "optionsModeTip": "Opcja wyświetlania dodatkowych ustawień widżetu. Jeśli zostanie zaznaczona, opcje zapisywania i wczytywania zdefiniowanych filtrów oraz utrwalania filtru po zamknięciu widżetu są usuwane z interfejsu.",
     "optionOR": "LUB",
     "optionAND": "I",
     "optionEQUAL": "RÓWNA SIĘ",
@@ -32,9 +44,15 @@ define({
   },
   "tables": {
     "layer": "Warstwy",
+    "layerTip": "Nazwa warstwy zdefiniowana w mapie.",
     "field": "Pola",
+    "fieldTip": "Pole, według którego będzie filtrowana warstwa.",
     "value": "Użyj wartości",
-    "action": "Usuwanie"
+    "valueTip": "Opcja użycia wartości listy rozwijanej z warstwy. Jeśli żadna warstwa nie używa tego parametru, będzie wyświetlane zwykłe pole tekstowe.",
+    "zoom": "Zmiana skali",
+    "zoomTip": "Opcja powiększania zasięgu obiektów po zastosowaniu filtru. Do powiększenia można wybrać tylko jedną warstwę.",
+    "action": "Usuwanie",
+    "actionTip": "Usuń warstwę z zestawu filtrów."
   },
   "popup": {
     "label": "Wybierz wartość"
@@ -49,7 +67,10 @@ define({
   "picker": {
     "description": "Użyj tego formularza, aby znaleźć wstępnie ustawioną wartość dla tej grupy.",
     "layer": "Wybierz warstwę",
+    "layerTip": "Nazwa warstwy zdefiniowana w mapie internetowej.",
     "field": "Wybierz pole",
-    "value": "Wybierz wartość"
+    "fieldTip": "Pole, z którego zostanie wzięta wartość wstępnie ustawiona.",
+    "value": "Wybierz wartość",
+    "valueTip": "Wartość, która będzie wartością domyślną widżetu."
   }
 });

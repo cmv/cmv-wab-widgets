@@ -27,7 +27,7 @@ define({
     "optionLESSTHANEQUAL": "KLEINER ODER GLEICH",
     "optionSTART": "BEGINNT MIT",
     "optionEND": "ENDET MIT",
-    "optionLIKE": "CONTAINS",
+    "optionLIKE": "ENTHÄLT",
     "optionNOTLIKE": "ENTHÄLT NICHT",
     "textboxNumber": "Zwischen ${0} und ${1}",
     "textboxText": "Einen Wert eingeben"

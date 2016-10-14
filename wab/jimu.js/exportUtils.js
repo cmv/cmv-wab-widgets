@@ -23,8 +23,9 @@ define([
   'dojo/Deferred',
   'esri/tasks/query',
   'esri/tasks/QueryTask',
+  './utils',
   './jsonConverters'],
-  function(declare, lang, array, JSON, Deferred, Query, QueryTask, jsonConverters) {
+  function(declare, lang, array, JSON, Deferred, Query, QueryTask, jimuUtils, jsonConverters) {
     var mo = {};
 
     /**
@@ -228,6 +229,20 @@ define([
           return feature.attributes;
         });
 
+        if(featureSet.fields && featureSet.fields.length > 0){
+          array.forEach(fields, function(item){
+            var fieldName = item.name;
+            array.some(featureSet.fields, function(fieldInfo){
+              if(fieldInfo.name === fieldName){
+                item.type = fieldInfo.type;
+                return true;
+              }else{
+                return false;
+              }
+            });
+          });
+        }
+
         return createCSVString(fields, datas);
       }
     });
@@ -343,6 +358,9 @@ define([
             value = feature[typeof _field === 'string'? _field: _field.name];
             if (!value && typeof value !== 'number') {
               value = '';
+            }
+            if(value && _field.type === 'esriFieldTypeDate'){
+              value = jimuUtils.localizeDateByFieldInfo(value, null);
             }
             if (value && /[",\r\n]/g.test(value)) {
               value = textField + value.replace(/(")/g, '""') + textField;

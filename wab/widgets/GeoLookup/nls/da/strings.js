@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "Geo-søgning",
   "description": "Gå til eller træk et <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> regneark </a> herhen for at visualisere, og knyt kortdata til det.",
   "selectCSV": "Vælg en CSV",
   "loadingCSV": "Indlæser CSV",

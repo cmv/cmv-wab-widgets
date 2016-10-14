@@ -4,6 +4,8 @@ define({
   "format": "格式",
   "layout": "排版",
   "settings": "進階",
+  "labels": "標注",
+  "showLabels": "顯示標籤",
   "mapScaleExtent": "地圖比例/範圍",
   "preserve": "保留",
   "mapScale": "地圖比例",

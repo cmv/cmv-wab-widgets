@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -74,6 +74,9 @@ define([
       constructor: function(map, currentAttrs){
         this.map = map;
         this.currentAttrs = currentAttrs;
+        if(this.currentAttrs.layerInfo.maxRecordCount > 0){
+          this.currentAttrs.query.maxRecordCount = this.currentAttrs.layerInfo.maxRecordCount;
+        }
       },
 
       resetCurrentAttrs: function(){
@@ -337,7 +340,7 @@ define([
           var def = this._queryByObjectIds(partialIds, true, relationship);
           def.then(lang.hitch(this, function(response){
             var features = response.features;
-            this.currentAttrs.query.maxRecordCount = features.length;
+            //this.currentAttrs.query.maxRecordCount = features.length;
             this.currentAttrs.query.nextIndex += features.length;
             resultDef.resolve(features);
           }), lang.hitch(this, function(err){
@@ -546,6 +549,7 @@ define([
         queryParams.returnGeometry = !!returnGeometry;
         queryParams.spatialRelationship = relationship;
         queryParams.outFields = this.getOutputFields();
+        //queryParams.maxRecordCount = this.currentAttrs.query.maxRecordCount;
         var queryTask = new QueryTask(this.currentAttrs.config.url);
         return queryTask.execute(queryParams);
       },

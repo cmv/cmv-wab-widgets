@@ -109,7 +109,7 @@ define({
   "icon": "Ikon",
   "newTask": "Ny uppgift",
   "addTaskTip": "Lägg till en eller flera frågor i widgeten och ställ in parametrar för var och en.",
-  "webMapPopupTip": "Använd popupkonfigureringar under Lager i webbkartan",
+  "webMapPopupTip": "Använd lagrets popupkonfiguration i webbkartan",
   "customPopupTip": "Konfigurera anpassat innehåll",
   "showResultsSetActions": "Visa åtgärder för resultatuppsättningen",
   "zoomTo": "Zooma till",
@@ -122,5 +122,6 @@ define({
   "uploadImage": "Överför en bild",
   "attributeCriteira": "Attributkriterier",
   "specifyFilterAtRuntimeTip": "Användarna måste ange parametrar för det här uttrycket.",
-  "value": "VÄRDE"
+  "value": "VÄRDE",
+  "hideLayersTip": "Stäng av frågeresultatlager när widgeten stängs."
 });

@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filter laag",
   "cancel": "Annuleren",
   "noValue": "Geen waarde",
+  "emptyString": "Lege tekenreeks",
   "existingValue": "Bestaande waarde gebruiken",
   "newDate": "Nieuwe gegevens",
   "valueChooser": "Selecteer/type een waarde",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Laag ${0} met ID ${1} werd niet gevonden in de kaart, de kaart is mogelijk gewijzigd sinds de configuratie van de widget",
     "queryNullID": "Het object van ${0} gaf een ongeldige ID",
     "noSelectedLayers": "Geen geselecteerde lagen met te actualiseren records",
-    "inputValueError": "Ongeldige waarde in de vorm"
+    "inputValueError": "Ongeldige waarde in de vorm",
+    "saveError": "Kan ${0} objecten niet opslaan, details toegevoegd aan console",
+    "requiredValue": "Vereiste waarde"
   }
 });

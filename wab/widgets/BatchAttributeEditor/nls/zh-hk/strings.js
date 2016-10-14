@@ -24,6 +24,7 @@ define({
   "filterPopup": "篩選圖層",
   "cancel": "取消",
   "noValue": "沒有值",
+  "emptyString": "空字串",
   "existingValue": "保留現有值",
   "newDate": "新增資料",
   "valueChooser": "選擇/鍵入值",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "在地圖中找不到包含 ID ${1} 的圖層 ${0}，地圖在 widget 配置後可能已變更",
     "queryNullID": "${0} 的圖徵傳回無效的 ID",
     "noSelectedLayers": "沒有包含要更新記錄的所選圖層",
-    "inputValueError": "表單中有無效值"
+    "inputValueError": "表單中有無效值",
+    "saveError": "無法儲存 ${0} 圖徵，已將詳細資訊新增至控制台",
+    "requiredValue": "必要值"
   }
 });

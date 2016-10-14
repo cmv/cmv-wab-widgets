@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Smart Editor",
+  "noEditPrivileges": "L'account non dispone dell'autorizzazione per creare o modificare dati.",
+  "widgetActive": "Attivo",
+  "widgetNotActive": "Non attiva",
   "pressStr": "Premere ",
   "ctrlStr": " CTRL ",
   "snapStr": " per abilitare lo snap",
@@ -19,5 +22,6 @@ define({
     "all": "Tutto",
     "noAvailableTempaltes": "Nessun modello disponibile",
     "searchTemplates": "Cerca modelli"
-  }
+  },
+  "invalidConfiguration": "Il widget non è configurato o i layer nella configurazione non sono più presenti nella mappa. Aprire l'app nella modalità generatore e riconfigurare il widget."
 });

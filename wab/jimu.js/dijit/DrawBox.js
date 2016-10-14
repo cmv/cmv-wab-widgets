@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -154,6 +154,18 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, templat
       html.addClass(this.domNode, 'disabled');
       html.removeClass(this.domNode, 'enabled');
       this.deactivate();
+    },
+
+    hideLayer: function(){
+      if(this.drawLayer){
+        this.drawLayer.hide();
+      }
+    },
+
+    showLayer: function(){
+      if(this.drawLayer){
+        this.drawLayer.show();
+      }
     },
 
     isEnabled: function(){

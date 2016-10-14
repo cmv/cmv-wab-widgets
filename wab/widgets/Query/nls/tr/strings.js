@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Öznitelik ölçütleri",
   "spatialFilter": "Mekansal filtre",
   "value": "DEĞER",
-  "noAttributeSpatialFilterTip": "Tanımlı filtre yok. Tüm detaylar döndürülecek."
+  "noAttributeSpatialFilterTip": "Tanımlı filtre yok. Tüm detaylar döndürülecek.",
+  "showAllRelatedRecords": "İlgili Kayıtların Tümünü Göster"
 });

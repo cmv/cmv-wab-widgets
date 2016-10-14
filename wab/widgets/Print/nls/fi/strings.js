@@ -4,6 +4,8 @@ define({
   "format": "Tiedostomuoto",
   "layout": "Asettelu",
   "settings": "Lisäasetukset",
+  "labels": "Tunnustekstit",
+  "showLabels": "Näytä tunnustekstit",
   "mapScaleExtent": "Kartan mittakaava/laajuus",
   "preserve": "Säilytä",
   "mapScale": "Kartan mittakaava",

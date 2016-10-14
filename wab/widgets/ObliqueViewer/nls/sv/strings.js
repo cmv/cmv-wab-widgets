@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Mät höjd",
   "intialScaleLabel": "Välj inledande skala för sneda bilder",
   "smallBuildingLabel": "Storstadsområde: liten byggnad",
-  "buildingLabel": "Storstadsområde: byggnad"
+  "buildingLabel": "Storstadsområde: byggnad",
+  "azimuthChangeNotification": "Inga data i den valda riktningen."
 });

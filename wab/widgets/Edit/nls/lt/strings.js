@@ -9,5 +9,8 @@ define({
   "featureLayers": "Elementų sluoksniai",
   "searchTemplates": "Ieškoti šablonų",
   "noAvailableTempaltes": "Galimų šablonų nėra",
-  "noCanCreateLayerAreCurrentlyVisible": "Šiuo metu nėra matomi jokie kurtini sluosniai."
+  "noCanCreateLayerAreCurrentlyVisible": "Šiuo metu nėra matomi jokie kurtini sluosniai.",
+  "relatedTables": "Susijusios lentelės:",
+  "relatedRecords": "Susiję įrašai:",
+  "noRelatedRecotds": "Susijusių įrašų nerasta"
 });

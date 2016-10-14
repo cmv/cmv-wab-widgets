@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "Geo Araması",
   "description": "Bir <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> elektronik tabloyu </a> görselleştirmek ve harita verilerini eklemek için tabloya gidin veya onu buraya sürükleyin.",
   "selectCSV": "CSV Seç",
   "loadingCSV": "CSV Yükleniyor",

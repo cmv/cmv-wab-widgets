@@ -17,11 +17,13 @@ define(['dojo/_base/declare',
   'dijit/_WidgetsInTemplateMixin',
   'dijit/form/Select',
   'dijit/form/ValidationTextBox',
+  'dijit/registry',
   'dojo/dom-construct',
   'dojo/_base/array',
   'dojo/_base/lang',
   'dojo/_base/html',
   'dojo/dom-style',
+  'dojo/dom-class',
   'dojo/on',
   'dojo/query',
   'jimu/BaseWidget',
@@ -35,11 +37,13 @@ function (declare,
   _WidgetsInTemplateMixin,
   Select,
   ValidationTextBox,
+  registry,
   domConstruct,
   array,
   lang,
   html,
   domStyle,
+  domClass,
   on,
   query,
   BaseWidget,
@@ -75,7 +79,6 @@ function (declare,
 
     startup: function () {
       var fields = null;
-      //TODO all these titles need to be pulled from nls
       if (this.callerTab.type === "summary") {
         fields = [{
           name: "layer",
@@ -190,17 +193,19 @@ function (declare,
 
       this.btnOk.innerText = this.nls.common.ok;
       this.own(on(this.btnOk, 'click', lang.hitch(this, function () {
-        this.updateSummaryType();
-        var ok = false;
-        for (var key in this.advStat.stats) {
-          if (this.advStat.stats.hasOwnProperty(key)) {
-            ok = true;
+        if (!domClass.contains(this.btnOk, 'jimu-state-disabled')) {
+          this.updateSummaryType();
+          var ok = false;
+          for (var key in this.advStat.stats) {
+            if (this.advStat.stats.hasOwnProperty(key)) {
+              ok = true;
+            }
           }
+          if (!ok) {
+            this.advStat = null;
+          }
+          this.emit('ok', this.advStat);
         }
-        if (!ok) {
-          this.advStat = null;
-        }
-        this.emit('ok', this.advStat);
       })));
 
       this.layerTables = [];
@@ -213,6 +218,7 @@ function (declare,
         domStyle.set(this.btnAddField, "display", "none");
       } else {
         this.own(on(this.btnAddField, 'click', lang.hitch(this, this._addTabRow)));
+        this.own(on(this.displayFieldsTable, 'row-delete', lang.hitch(this, this._rowDeleted)));
       }
     },
 
@@ -262,8 +268,6 @@ function (declare,
     _completeMapLayers: function (args) {
       if (args) {
         var layer = args;
-        //var tempLayer = [];
-        console.log(layer);
         var fields;
         var aStat;
         var geomType;
@@ -336,6 +340,24 @@ function (declare,
 
       domConstruct.destroy(visSpan);
 
+      var allValid = fitsWidth;
+      var id = registry.byNode(this.domNode).id;
+      query('.validationBox').forEach(function (node) {
+        var _dijit = registry.byNode(node);
+        if (id !== _dijit.id) {
+          allValid = allValid ? _dijit.state !== 'Error' : allValid;
+        }
+      });
+
+      var s = query('.field-picker-footer')[0];
+      if (s) {
+        if (!allValid) {
+          html.addClass(s.children[0], 'jimu-state-disabled');
+        } else {
+          html.removeClass(s.children[0], 'jimu-state-disabled');
+        }
+      }
+
       return fitsWidth;
     },
 
@@ -352,17 +374,10 @@ function (declare,
       var options = [];
       array.forEach(pFields, lang.hitch(this, function (field) {
         if (validFieldTypes.indexOf(field.type) > -1) {
-          // if ((field.alias).toUpperCase() === 'OBJECTID') {
-          //   options.push({
-          //     'label' : 'Features',
-          //     'value' : field.name
-          //   });
-          // } else {
           options.push({
             'label': field.alias,
             'value': field.name
           });
-          // }
         }
       }));
       if (options.length < 1) {
@@ -435,7 +450,8 @@ function (declare,
         style: {
           width: "100%",
           height: "26px"
-        }
+        },
+        "class": "validationBox"
       });
 
       labelTextBox.invalidMessage = this.nls.invalid_string_width;
@@ -487,7 +503,7 @@ function (declare,
             {
               value: 0,
               expression: this.objectIdField,
-              label: utils.sanitizeHTML(this.featureCountLabel.value ? this.featureCountLabel.value : this.nls.count)
+              label: utils.stripHTML(this.featureCountLabel.value ? this.featureCountLabel.value : this.nls.count)
             }
           ];
         }
@@ -498,7 +514,7 @@ function (declare,
             {
               value: 0,
               expression: this.objectIdField,
-              label: utils.sanitizeHTML(this.featureAreaLabel.value ? this.featureAreaLabel.value : this.nls.area)
+              label: utils.stripHTML(this.featureAreaLabel.value ? this.featureAreaLabel.value : this.nls.area)
             }
           ];
         }
@@ -509,7 +525,7 @@ function (declare,
             {
               value: 0,
               expression: this.objectIdField,
-              label: utils.sanitizeHTML(this.featureLengthLabel.value ? this.featureLengthLabel.value : this.nls.length)
+              label: utils.stripHTML(this.featureLengthLabel.value ? this.featureLengthLabel.value : this.nls.length)
             }
           ];
         }
@@ -543,30 +559,54 @@ function (declare,
     },
 
     chkCountChanged: function (v) {
-      this.featureCountLabel.set("disabled", !v);
-      this.featureCountLabel.validator = this.checkStringWidth;
-      this.featureCountLabel.invalidMessage = this.nls.invalid_string_width;
-      if (v && this.featureCountLabel.value === '') {
-        this.featureCountLabel.set("value", this.nls.count);
-      }
+      this.updateLabel(this.featureCountLabel, v);
     },
 
     chkAreaChanged: function (v) {
-      this.featureAreaLabel.set("disabled", !v);
-      this.featureAreaLabel.validator = this.checkStringWidth;
-      this.featureAreaLabel.invalidMessage = this.nls.invalid_string_width;
-      if (v && this.featureAreaLabel.value === '') {
-        this.featureAreaLabel.set("value", this.nls.area);
-      }
+      this.updateLabel(this.featureAreaLabel, v);
     },
 
     chkLengthChanged: function (v) {
-      this.featureLengthLabel.set("disabled", !v);
-      this.featureLengthLabel.validator = this.checkStringWidth;
-      this.featureLengthLabel.invalidMessage = this.nls.invalid_string_width;
-      if (v && this.featureLengthLabel.value === '') {
-        this.featureLengthLabel.set("value", this.nls.length);
+      this.updateLabel(this.featureLengthLabel, v);
+    },
+
+    updateLabel: function(c, v){
+      c.set("disabled", !v);
+      c.validator = this.checkStringWidth;
+      c.invalidMessage = this.nls.invalid_string_width;
+      if (v && c.value === '') {
+        var l = '';
+        if (c.id === this.featureCountLabel.id) {
+          l = this.nls.count;
+        } else if (c.id === this.featureAreaLabel.id) {
+          l = this.nls.area;
+        } else if (c.id === this.featureLengthLabel.id) {
+          l = this.nls.length;
+        }
+        c.set("value", l);
       }
+      this.validateAll();
+    },
+
+    validateAll: function(){
+      var allValid = true;
+      query('.validationBox').forEach(function (node) {
+        var _dijit = registry.byNode(node);
+        allValid = allValid ? _dijit.state !== 'Error' : allValid;
+      });
+
+      var s = query('.field-picker-footer')[0];
+      if (s) {
+        if (!allValid) {
+          html.addClass(s.children[0], 'jimu-state-disabled');
+        } else {
+          html.removeClass(s.children[0], 'jimu-state-disabled');
+        }
+      }
+    },
+
+    _rowDeleted: function () {
+      this.validateAll();
     },
 
     destroy: function () {

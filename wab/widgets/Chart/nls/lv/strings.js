@@ -43,5 +43,7 @@ define({
   "yards": "Jardi",
   "nauticalMiles": "Jūras jūdzes",
   "back": "Atpakaļ",
-  "execute": "Izpildīt"
+  "execute": "Izpildīt",
+  "enlarge": "Palielināt",
+  "setting": "Iestatījums"
 });

@@ -2,20 +2,32 @@ define({
   "configText": "Tālāk definējiet savas filtru grupas",
   "labels": {
     "groupName": "Filtru kopas nosaukums:",
+    "groupNameTip": "Tā filtra nosaukums, kurā lietotājs veiks izvēli.",
     "groupDesc": "Apraksts:",
+    "groupDescTip": "Filtru kopas apraksts.",
     "groupOperator": "Iepriekš iestatītais operators:",
-    "groupDefault": "Iepriekš iestatītā vērtība:"
+    "groupOperatorTip": "Opcija iepriekš definēt filtra operatoru. Ja netiek atlasīts iepriekšnoteikts operators, filtrs izmantos vienādo operatoru.",
+    "groupDefault": "Iepriekš iestatītā vērtība:",
+    "groupDefaultTip": "Opcija izvēlēties vērtību no esoša slāņa.",
+    "sameLayerAppend": "Ja slānis ir norādīts vairākas reizes, starp laukiem izmantot šādu operatoru:",
+    "sameLayerConjunc": "Pievienot, izmantojot:"
   },
   "buttons": {
     "addNewGroup": "Pievienot jaunu grupu",
-    "addLayer": "Pievienot slāni"
+    "addNewGroupTip": "Jaunas filtru kopas pievienošana.",
+    "addLayer": "Pievienot slāni",
+    "addLayerTip": "Slāņa pievienošana filtru kopai."
   },
   "inputs": {
     "groupName": "Piešķiriet savai grupai nosaukumu",
     "groupDesc": "Jūsu grupas apraksts",
     "groupDefault": "Ievadīt iepriekš definētu vērtību",
     "simpleMode": "Sākt vienkāršajā skatā",
+    "simpleModeTip": "Opcija vienkāršot konfigurētu logrīka saskarni. Ja opcija ir atzīmēta, no saskarnes tiks noņemts nolaižamais operatoru saraksts un kritēriju pievienošanas pogas.",
+    "webmapAppendMode": "Pievienot filtru esošam tīmekļa kartes filtram, izmantojot ",
+    "webmapAppendModeTip": "Opcija pievienot filtru kopu esošam tīmekļa kartes filtram. Tiek atbalstīti operatori OR un AND.",
     "optionsMode": "Paslēpt logrīka opcijas",
+    "optionsModeTip": "Opcija atklāt logrīka papildiestatījumus. Ja opcija ir atzīmēta, no saskarnes tiks noņemti saglabāšanas un ielādes definētie filtri un filtra turpināšanas iespēja pēc logrīka aizvēršanas.",
     "optionOR": "'VAI'",
     "optionAND": "UN",
     "optionEQUAL": "VIENĀDS AR",
@@ -32,9 +44,15 @@ define({
   },
   "tables": {
     "layer": "Slāņi",
+    "layerTip": "Slāņa nosaukums, kā tas ir definēts kartē.",
     "field": "Lauki",
+    "fieldTip": "Lauks, kurā slānis tiks filtrēts.",
     "value": "Izmantot vērtību",
-    "action": "Izdzēst"
+    "valueTip": "Opcija izmantot slāņa nolaižamā saraksta vērtības. Ja neviens slānis neizmanto šo parametru, lietotājam tiks parādīts vienkāršs tekstlodziņš.",
+    "zoom": "Mērogmaiņa",
+    "zoomTip": "Opcija mērogmainīt līdz elementu pārklājumam pēc filtra lietošanas. Var atlasīt tikai vienu slāni, līdz kuram mērogmainīt.",
+    "action": "Izdzēst",
+    "actionTip": "Slāņa noņemšana no filtru kopas."
   },
   "popup": {
     "label": "Izvēlēties vērtību"
@@ -49,7 +67,10 @@ define({
   "picker": {
     "description": "Izmantojiet šo veidlapu, lai šai grupai atrastu iepriekš iestatītu vērtību.",
     "layer": "Atlasīt slāni",
+    "layerTip": "Slāņa nosaukums, kā tas ir definēts tīmekļa kartē.",
     "field": "Atlasīt lauku",
-    "value": "Atlasīt vērtību"
+    "fieldTip": "Lauks, no kura tiks iestatīta iepriekšnoteiktā vērtība.",
+    "value": "Atlasīt vērtību",
+    "valueTip": "Vērtība, kas būs logrīka noklusējuma vērtība."
   }
 });

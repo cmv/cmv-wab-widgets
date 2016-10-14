@@ -24,6 +24,7 @@ define({
   "filterPopup": "Suodata taso",
   "cancel": "Peruuta",
   "noValue": "Ei arvoa",
+  "emptyString": "Tyhjä merkkijono",
   "existingValue": "Säilytä olemassa oleva arvo",
   "newDate": "Uusi päivämäärä",
   "valueChooser": "Valitse tai kirjoita arvo",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Karttatasoa ${0}, jonka tunnus on ${1}, ei löydy kartasta. Kartta on saattanut muuttua pienoisohjelman edellisen määrityksen jälkeen",
     "queryNullID": "Kohde kohteesta ${0} palautti virheellisen tunnuksen",
     "noSelectedLayers": "Päivitettäviä karttatasoja ja tietueita ei ole valittu",
-    "inputValueError": "Virheellinen arvo lomakkeessa"
+    "inputValueError": "Virheellinen arvo lomakkeessa",
+    "saveError": "${0} kohteen tallennus epäonnistui. Lisätiedot lisättiin konsoliin",
+    "requiredValue": "Pakollinen arvo"
   }
 });

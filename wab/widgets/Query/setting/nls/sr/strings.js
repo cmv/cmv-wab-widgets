@@ -122,5 +122,6 @@ define({
   "uploadImage": "Otpremi snimak",
   "attributeCriteira": "Kriterijumi atributa",
   "specifyFilterAtRuntimeTip": "Korisnici će trebati da navedu parametre za ovaj izraz.",
-  "value": "VREDNOST"
+  "value": "VREDNOST",
+  "hideLayersTip": "Isključite slojeve sa rezultatima upita kada je vidžet zatvoren."
 });

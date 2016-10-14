@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "GeoLookup",
+  "_widgetLabel": "ตารางข้อมูลภูมิศาสตร์",
   "description": "เรียกดูหรือลาก <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> สเปรดชีต</a> เข้ามาจะเห็นภาพ และผนวกข้อมูลแผนที่ได้",
   "selectCSV": "เลือก CSV",
   "loadingCSV": "โหลด CSV",

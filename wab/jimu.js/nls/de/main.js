@@ -6,6 +6,7 @@ define({
     "yes": "Ja",
     "no": "Nein",
     "next": "Weiter",
+    "previous": "Zurück",
     "back": "Zurück",
     "selected": "ausgewählte",
     "name": "Name",
@@ -52,7 +53,11 @@ define({
     "view": "Anzeigen",
     "newText": "Neu",
     "edit": "Bearbeiten",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabelle",
+    "zoomIn": "Vergrößern",
+    "zoomOut": "Verkleinern",
+    "continue1": "Fortfahren"
   },
   "errorCode": "Code",
   "errorMessage": "Meldung",
@@ -71,7 +76,7 @@ define({
   },
   "symbolChooser": {
     "preview": "Vorschau",
-    "basic": "Anfänger",
+    "basic": "Standard",
     "arrows": "Pfeile",
     "business": "Gewerbe",
     "cartographic": "Kartografisch",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Groß-/Kleinschreibung beachten",
     "notSupportCaseSensitiveTip": "Gehostete Services unterstützen keine Abfragen, bei denen zwischen Groß- und Kleinschreibung unterschieden wird.",
-    "setFilterTip": "Legen Sie den Filter ordnungsgemäß fest."
+    "setFilterTip": "Legen Sie den Filter ordnungsgemäß fest.",
+    "cascadeFilterTip": "Nur Werte anzeigen, die nach vorherigen Ausdrücken gefiltert wurden"
   },
   "featureLayerSource": {
     "layer": "Layer",
@@ -282,7 +288,7 @@ define({
     "noneGroups": "Keine Gruppen",
     "signInTip": "Ihre Anmeldesitzung ist abgelaufen. Aktualisieren Sie Ihren Browser, um sich erneut bei Ihrem Portal anzumelden.",
     "signIn": "Anmelden",
-    "publicMap": "Öffentlichkeit",
+    "publicMap": "Öffentlich",
     "myOrganization": "Eigene Organisation",
     "myGroup": "Eigene Gruppen",
     "myContent": "Eigene Inhalte",
@@ -316,13 +322,13 @@ define({
     "itemToAttributeTable": "Attributtabelle öffnen"
   },
   "imageChooser": {
-    "unsupportReaderAPI": "ZU ERLEDIGEN: Der Browser unterstützt die Datei-Reader-API nicht",
+    "unsupportReaderAPI": "Der Browser unterstützt die Datei-Reader-API nicht.",
     "readError": "Die Datei kann nicht gelesen werden.",
-    "unknowError": "Vorgänge können nicht abgeschlossen werden",
+    "unknowError": "Vorgänge können nicht abgeschlossen werden.",
     "invalidType": "Ungültiger Dateityp.",
     "cropImage": "Bild zuschneiden",
     "exceed": "Dateigröße darf 1024 KB nicht überschreiten",
-    "enableFlash": "ZU ERLEDIGEN: Flash aktivieren.",
+    "enableFlash": "Flash aktivieren.",
     "cropWaining": "Wählen Sie ein Foto mit einem Format von mindestens ${width} x ${height} Pixel aus.",
     "toolTip": "Optimale Ergebnisse erzielen Sie mit einer Bildgröße von ${width} x ${height} Pixel (Breite x Höhe). Andere Größen werden angepasst. Zulässige Bildformate sind: PNG, GIF und JPEG."
   },
@@ -347,9 +353,10 @@ define({
     "restoreMap": "Klicken Sie, um den zuvor erreichten Status der Kartenausdehnung und der Layer-Sichtbarkeit wiederherzustellen."
   },
   "featureActions": {
+    "featureActions": "Feature-Aktionen",
     "ZoomTo": "Zoomen auf",
     "PanTo": "Schwenken auf",
-    "Flash": "Blitz",
+    "Flash": "Aufblinken lassen",
     "ShowPopup": "Popup-Text anzeigen",
     "CreateLayer": "Layer erstellen",
     "ShowStatistics": "Statistiken...",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Zur Auswahl hinzufügen",
     "removeSelectionTip": "Aus Auswahl entfernen",
     "selectFromCurrentSelectionTip": "Aus der aktuellen Auswahl selektieren",
-    "unselectAllSelectionTip": "Auswahl aller aktuell ausgewählten Features aufheben"
+    "unselectAllSelectionTip": "Auswahl aller aktuell ausgewählten Features aufheben",
+    "selectByPolygon": "Mit Polygon auswählen",
+    "selectByCircle": "Mit Kreis auswählen",
+    "selectByLine": "Mit Linie auswählen",
+    "chooseSelectingTools": "Auswahlwerkzeuge auswählen",
+    "darw": "Darstellen",
+    "drawShap": "Ein Shape zeichnen"
   },
   "widgetManager": {
     "createWidgetError": "Fehler beim Erstellen des Widgets",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D-Web-Apps werden in Ihrem Browser nicht unterstützt."
+  },
+  "map": {
+    "basemapNotAvailable": "Grundkarte ist nicht verfügbar",
+    "displayDefaultBasemap": "Stattdessen wird die Standardgrundkarte angezeigt"
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Der ausgewählte Bereich auf der Karte enthält zu viele Features. Das Abrufen aller Daten kann einige Zeit in Anspruch nehmen.",
+    "askForContinue": "Möchten Sie fortfahren?"
   }
 });

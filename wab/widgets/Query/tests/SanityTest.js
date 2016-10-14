@@ -112,6 +112,7 @@ define([
 
       tdd.test('single task', function(){
         widgetJson.config = {
+          "hideLayersAfterWidgetClosed": true,
           "queries": [{
             "url": "http://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0",
             "name": "SampleWorldCities - Cities",
@@ -152,7 +153,6 @@ define([
             "orderByFields": [],
             "useLayerSymbol": true,
             "resultsSymbol": null,
-            "keepResultsOnMapAfterCloseWidget": false,
             "enableExport": false,
             "singleResultLayer": true,
             "webMapLayerId": "SampleWorldCities_3008"

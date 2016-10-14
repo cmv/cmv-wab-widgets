@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Opţiune de eliminare a obiectului din setul selectat la salvarea înregistrării. Dacă acesta este singura înregistrare selectată, panoul este comutat înapoi la pagina şablonului.",
     "useFilterEditor": "Utilizaţi filtrul de şabloane de obiecte spaţiale",
     "useFilterEditorTip": "Opţiune de utilizare a selectorului de şabloane de filtrare, care permite vizualizarea unui şablon de obiecte spaţiale sau căutarea şabloanelor după nume.",
+    "listenToGroupFilter": "Aplicaţi valorile filtrului din widgetul Filtru grupuri la câmpurile Presetate",
+    "listenToGroupFilterTip": "Dacă este aplicat un filtru în widgetul Filtru grupuri, aplicaţi valoarea la un câmp corespunzător din lista de valori presetate.",
+    "keepTemplateActive": "Menţineţi activ şablonul selectat",
+    "keepTemplateActiveTip": "Atunci când este afişat selectorul de şabloane, dacă un şablon a fost selectat în prealabil, îl selectaţi din nou.",
     "layerSettingsTable": {
       "allowDelete": "Se permite ştergerea",
       "allowDeleteTip": "Opţiune care permite utilizatorului să şteargă un obiect spaţial; este dezactivată dacă stratul tematic nu permite ştergerea",
@@ -27,9 +31,10 @@ define({
       "fields": "Câmpuri",
       "fieldsTip": "Modificaţi câmpurile de editat şi definiţi atribute inteligente",
       "description": "Descriere",
-      "descriptionTip": "Opţional, introduceţi textul dorit pentru afişare în partea de sus a paginii de atribute."
+      "descriptionTip": "Opţiune pentru introducerea textului de afişare în partea de sus a paginii de atribute."
     },
-    "editFieldError": "Modificările câmpurilor şi atributele inteligente nu sunt disponibile pentru straturile tematice care nu sunt editabile"
+    "editFieldError": "Modificările câmpurilor şi atributele inteligente nu sunt disponibile pentru straturile tematice care nu sunt editabile",
+    "noConfigedLayersError": "Editorul inteligent necesită unul sau mai multe straturi tematice editabile"
   },
   "editDescriptionPage": {
     "title": "Definiţi textul prezentării generale a atributelor pentru <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Expresia rezultată în format SQL pe baza criteriilor definite",
       "actions": "Criterii",
       "actionsTip": "Schimbaţi ordinea regulii şi definiţi criteriile în momentul declanşării acestora"
+    },
+    "actions": {
+      "hide": "Ascundere",
+      "required": "Obligatoriu",
+      "disabled": "Dezactivat"
     }
   },
   "filterPage": {
     "submitHidden": "Trimiteţi datele atributelor pentru acest câmp chiar şi atunci când este ascuns?",
-    "title": "Configuraţi clauza pentru regula ${action}",
+    "title": "Configuraţi expresia pentru regula ${action}",
     "filterBuilder": "Setaţi acţiunea câmpului când înregistrarea corespunde ${any_or_all} dintre următoarele expresii",
     "noFilterTip": "Utilizând instrumentele de mai jos, definii afirmaţia pentru situaţia în care acţiunea este activă."
   }

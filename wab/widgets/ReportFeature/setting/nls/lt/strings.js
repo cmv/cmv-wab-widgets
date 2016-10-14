@@ -6,7 +6,7 @@ define({
   "alias": "Pseudonimas",
   "warning": "Klaidinga įvestis",
   "defaultSessionId": "Numatytoji sesija",
-  "setSource": "Grupė",
+  "setSource": "Nustatyti",
   "getCurrentUser": "Prijungtas vartotojo vardas",
   "getDefaultUser": "Įveskite numatytąją reikšmę",
   "getUser": "Leisti vartotojo įvestį",

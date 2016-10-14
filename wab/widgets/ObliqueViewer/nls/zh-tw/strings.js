@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "測量高度",
   "intialScaleLabel": "選擇斜角影像的初始比例",
   "smallBuildingLabel": "都會區: 小建築物",
-  "buildingLabel": "都會區: 建築物"
+  "buildingLabel": "都會區: 建築物",
+  "azimuthChangeNotification": "在選擇的方向中沒有值。"
 });

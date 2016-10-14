@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Indstilling, der fjerner objektet fra den angivne markering, når posten gemmes. Hvis det er den eneste valgte post, skifter panelet tilbage til skabelonsiden.",
     "useFilterEditor": "Brug objektskabelonfilter",
     "useFilterEditorTip": "Indstilling, der bruger filterskabelonvælgeren, som giver mulighed for at få vist enkeltlagsskabeloner eller søge efter skabeloner efter navn.",
+    "listenToGroupFilter": "Anvend filterværdier fra Gruppefiltrerings-widget'en til de forudindstillede felter",
+    "listenToGroupFilterTip": "Når der anvendes et filter i Gruppefiltrerings-widget'en, skal værdien anvendes til et tilsvarende felt på listen Foruddefineret værdi.",
+    "keepTemplateActive": "Bevar den valgte skabelon som aktiv",
+    "keepTemplateActiveTip": "Hvis der tidligere har været valgt en skabelon, når skabelonvælgeren vises, skal du vælge skabelonen igen.",
     "layerSettingsTable": {
       "allowDelete": "Tillad sletning",
       "allowDeleteTip": "Indstilling, der gør det muligt for brugeren at slette et objekt. Indstillingen deaktiveres, hvis laget ikke understøtter sletning",
@@ -27,9 +31,10 @@ define({
       "fields": "Felter",
       "fieldsTip": "Redigér de felter, der skal redigeres, og definér smarte attributter",
       "description": "Beskrivelse",
-      "descriptionTip": "Du kan valgfrit indtaste den tekst, som du ønsker at få vist øverst på attributsiden."
+      "descriptionTip": "Indstilling til indtastning af tekst, der skal vises øverst på attributsiden."
     },
-    "editFieldError": "Feltredigeringer og smarte attributter er ikke tilgængelige for lag, der ikke er redigérbare"
+    "editFieldError": "Feltredigeringer og smarte attributter er ikke tilgængelige for lag, der ikke er redigérbare",
+    "noConfigedLayersError": "Smart-redigering kræver et eller flere redigérbare lag"
   },
   "editDescriptionPage": {
     "title": "Definér attributoversigtsteksten for <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Det resulterende udtryk i SQL-format ud fra de definerede kriterier",
       "actions": "Kriterier",
       "actionsTip": "Redigér rækkefølgen for reglerne, og definér kriterierne for, hvornår handlingen skal udløses"
+    },
+    "actions": {
+      "hide": "Skjul",
+      "required": "Krævet",
+      "disabled": "Deaktiveret"
     }
   },
   "filterPage": {
     "submitHidden": "Send attributdata for dette felt, også når det er skjult?",
-    "title": "Konfigurér sætning for reglen ${action}",
+    "title": "Konfigurér udtryk for reglen ${action}",
     "filterBuilder": "Angiv handlingen for feltet, når posten svarer til ${any_or_all} af følgende udtryk",
     "noFilterTip": "Definér erklæringen for, hvornår handlingen er aktiv, ved hjælp af værktøjerne nedenfor."
   }

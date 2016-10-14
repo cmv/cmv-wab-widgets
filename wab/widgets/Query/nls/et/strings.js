@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Atribuudi kriteeriumid",
   "spatialFilter": "Ruumifilter",
   "value": "VÄÄRTUS",
-  "noAttributeSpatialFilterTip": "Ühtki filtrit pole määratletud. Kõik objektid tagastatakse."
+  "noAttributeSpatialFilterTip": "Ühtki filtrit pole määratletud. Kõik objektid tagastatakse.",
+  "showAllRelatedRecords": "Kuva kõik seotud kirjed"
 });

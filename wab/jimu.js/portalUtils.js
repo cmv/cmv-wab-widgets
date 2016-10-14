@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -674,8 +674,9 @@ define([
               content = lang.mixin(content, args);
             }
             var folder = item.ownerFolder;
+            var userName = item.owner;
             esriRequest({
-              url: portalUrlUtils.getUpdateItemUrl(this.portalUrl, this.username, itemId, folder),
+              url: portalUrlUtils.getUpdateItemUrl(this.portalUrl, userName, itemId, folder),
               handleAs: 'json',
               callbackParamName: 'callback',
               timeout: 100000,
@@ -809,6 +810,26 @@ define([
 
       getItemData: function() {
         return this.portal.getItemData(this.id);
+      },
+
+      getItemGroups: function() {
+        this.updateCredential();
+
+        var itemGroupsUrl = portalUrlUtils.getItemGroupsUrl(this.portalUrl, this.id);
+        var args = {
+          url: itemGroupsUrl,
+          handleAs: 'json',
+          content: {
+            f: 'json'
+          },
+          callbackParamName: 'callback'
+        };
+
+        if (this.isValidCredential()) {
+          args.content.token = this.credential.token;
+        }
+
+        return esriRequest(args);
       }
     });
 

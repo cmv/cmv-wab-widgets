@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Mål høyde",
   "intialScaleLabel": "Velg initiell målestokk for skrå bilder",
   "smallBuildingLabel": "Byområde: Liten bygning",
-  "buildingLabel": "Byområde: Bygning"
+  "buildingLabel": "Byområde: Bygning",
+  "azimuthChangeNotification": "Ingen data i valgt veibeskrivelse."
 });

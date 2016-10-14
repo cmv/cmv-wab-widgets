@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtruoti sluoksnį",
   "cancel": "Atšaukti",
   "noValue": "Reikšmių nėra",
+  "emptyString": "Tuščia eilutė",
   "existingValue": "Palikti esamas reikšmes",
   "newDate": "Nauja data",
   "valueChooser": "Pasirinkite / įveskite reikšmę",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Sluoksnis ${0} su ID ${1} žemėlapyje nerastas, gali būti, kad po valdiklių konfigūracijos žemėlapis pasikeitė",
     "queryNullID": "Elementas iš ${0} pateikė netinkamą ID",
     "noSelectedLayers": "Nėra naujinamų sluoksnių su įrašais",
-    "inputValueError": "Netinkama reikšmė formoje"
+    "inputValueError": "Netinkama reikšmė formoje",
+    "saveError": "Negalima įrašyti tiek elementų: ${0}, išsami informacija pridėta prie skilties",
+    "requiredValue": "Būtina reikšmė"
   }
 });

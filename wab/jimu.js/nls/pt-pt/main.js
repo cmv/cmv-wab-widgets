@@ -6,6 +6,7 @@ define({
     "yes": "Sim",
     "no": "Não",
     "next": "Seguinte",
+    "previous": "Anterior",
     "back": "Regressar",
     "selected": "selecionadas",
     "name": "Nome",
@@ -52,7 +53,11 @@ define({
     "view": "Ver",
     "newText": "Novo",
     "edit": "Editar",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabela",
+    "zoomIn": "Aumentar Zoom",
+    "zoomOut": "Reduzir zoom",
+    "continue1": "Continuar"
   },
   "errorCode": "Código",
   "errorMessage": "Mensagem",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Diferencia Tamanho de Letra",
     "notSupportCaseSensitiveTip": "Os serviços alojados não suportam consultas que diferenciam maiúsculas de minúsculas.",
-    "setFilterTip": "Por favor, defina o filtro corretamente."
+    "setFilterTip": "Por favor, defina o filtro corretamente.",
+    "cascadeFilterTip": "Apenas valores filtrados por expressões anteriores."
   },
   "featureLayerSource": {
     "layer": "Camada",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Clique para restaurar a extensão de mapa e camadas de visibilidade de onde saiu."
   },
   "featureActions": {
+    "featureActions": "Acções de elementos",
     "ZoomTo": "Efectuar zoom para",
     "PanTo": "Mover para",
     "Flash": "Flash",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Adicionar à seleção",
     "removeSelectionTip": "Remover da seleção",
     "selectFromCurrentSelectionTip": "Selecionar da seleção atual",
-    "unselectAllSelectionTip": "Desselecionar todos os elementos atualmente selecionados"
+    "unselectAllSelectionTip": "Desselecionar todos os elementos atualmente selecionados",
+    "selectByPolygon": "Seleccionar por Polígono",
+    "selectByCircle": "Seleccionar por Círculo",
+    "selectByLine": "Seleccionar por linha",
+    "chooseSelectingTools": "Escolha ferramentas de seleção",
+    "darw": "Desenhar",
+    "drawShap": "Desenhar a forma"
   },
   "widgetManager": {
     "createWidgetError": "Criar erro de widget",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "As aplicações web 3D não são suportadas no seu navegador."
+  },
+  "map": {
+    "basemapNotAvailable": "O Mapa Base não se encontra disponível.",
+    "displayDefaultBasemap": "Exibir o mapa base predefinido ao invés."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Existem demasiados elementos na sua área selecionada no mapa. Pode levar algum tempo a recolher todos os dados.",
+    "askForContinue": "Deseja continuar?"
   }
 });

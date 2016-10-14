@@ -302,7 +302,8 @@ define([
       _processDelayedLayerInfos: function() { // must be invoke after initialize this._layerInfos
         if (this._delayedLayerInfos.length > 0) {
           array.forEach(this._delayedLayerInfos, lang.hitch(this, function(delayedLayerInfo) {
-            if (!this._getLayerInfoById(delayedLayerInfo && delayedLayerInfo.id)) {
+            if (!this._getLayerInfoById(delayedLayerInfo && delayedLayerInfo.id) &&
+              this.map && this.map.getLayer(delayedLayerInfo.id)) {
               this._layerInfosFromMap.push(delayedLayerInfo);
             }
           }));

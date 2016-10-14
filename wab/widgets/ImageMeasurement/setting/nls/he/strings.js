@@ -1,6 +1,6 @@
 define({
   "layerSelect": "בחר את שכבת התמונות",
-  "displayMeasureResultInPopup": "הצג תוצאות מדידה בחלון מוקפץ",
+  "displayMeasureResultInPopup": "הצג תוצאות מדידה בחלון קופץ",
   "angularUnitSelect": "ברירת מחדל ליחידת זווית",
   "linearUnitSelect": "ברירת מחדל ליחידת לינארית",
   "areaUnitSelect": "ברירת מחדל ליחידת שטח",

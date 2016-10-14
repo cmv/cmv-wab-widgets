@@ -43,5 +43,7 @@ define({
   "yards": "Jaardia",
   "nauticalMiles": "Meripeninkulmaa",
   "back": "Takaisin",
-  "execute": "Suorita"
+  "execute": "Suorita",
+  "enlarge": "Laajenna",
+  "setting": "Asetus"
 });

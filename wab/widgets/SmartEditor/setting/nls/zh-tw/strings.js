@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "儲存記錄時，用來從選擇集中移除圖徵的選項。如果僅選擇該記錄，面板會切換回範本頁面。",
     "useFilterEditor": "使用圖徵範本篩選器",
     "useFilterEditorTip": "用來使用「篩選範本」選取器的選項，可讓您檢視一個圖層範本或按名稱搜尋範本。",
+    "listenToGroupFilter": "將篩選器值從「群組篩選器」widget 套用至「預設」欄位",
+    "listenToGroupFilterTip": "在「群組篩選器」widget 中套用篩選器時，將值套用至「預設」值清單中的符合欄位。",
+    "keepTemplateActive": "維持所選樣版使用中",
+    "keepTemplateActiveTip": "顯示樣版選取器時，如果先前已選擇樣版，請重新選擇它。",
     "layerSettingsTable": {
       "allowDelete": "允許刪除",
       "allowDeleteTip": "用來允許使用者刪除圖徵的選項；如果圖層不支援刪除則停用",
@@ -27,9 +31,10 @@ define({
       "fields": "欄位",
       "fieldsTip": "修改要編輯的欄位及定義智慧屬性",
       "description": "說明",
-      "descriptionTip": "(選用) 輸入要在屬性頁面頂端顯示的文字。"
+      "descriptionTip": "可用來輸入文字，以便在屬性頁面頂端顯示該文字的選項。"
     },
-    "editFieldError": "欄位修改和智慧屬性不適用於無法編輯的圖層"
+    "editFieldError": "欄位修改和智慧屬性不適用於無法編輯的圖層",
+    "noConfigedLayersError": "「智慧型編輯器」需要一或多個可編輯圖層"
   },
   "editDescriptionPage": {
     "title": "定義 <b>${layername}</b> 的屬性概觀文字。 "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "從定義的準則中導出的 SQL 格式的表達式",
       "actions": "準則",
       "actionsTip": "變更規則的順序和定義觸發時的準則"
+    },
+    "actions": {
+      "hide": "隱藏",
+      "required": "必填資訊",
+      "disabled": "已停用"
     }
   },
   "filterPage": {
     "submitHidden": "提交此欄位的屬性資料，即使在隱藏時也是如此?",
-    "title": "配置 ${action} 規則的子句",
+    "title": "配置 ${action} 規則的表達式",
     "filterBuilder": "在欄位上設定當記錄符合下列表達式的 ${any_or_all} 時的動作",
     "noFilterTip": "使用下列工具來定義啟用動作的陳述式。"
   }

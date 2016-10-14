@@ -1,5 +1,5 @@
 define({
-  "tabs_section_Label": "Kortelės",
+  "tabs_section_Label": "Skirtukai",
   "addTab": "Pridėti skirtuką",
   "layerName": "Sluoksnis",
   "layerType": "Analizės tipas",

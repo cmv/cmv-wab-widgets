@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Akıllı Düzenleyici",
+  "noEditPrivileges": "Hesabınızın veri oluşturma veya değiştirme izni yok.",
+  "widgetActive": "Etkin",
+  "widgetNotActive": "Etkin Değil",
   "pressStr": "Basılacak Tuş ",
   "ctrlStr": " CTRL ",
   "snapStr": " yakalamayı etkinleştirmek için",
@@ -19,5 +22,6 @@ define({
     "all": "Tümü",
     "noAvailableTempaltes": "Kullanılabilir şablon yok",
     "searchTemplates": "Şablon Ara"
-  }
+  },
+  "invalidConfiguration": "Araç yapılandırılmamış veya yapılandırmadaki katmanlar artık haritada değil. Uygulamayı oluşturucu modda açın ve aracı yeniden yapılandırın."
 });

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -340,6 +340,13 @@ define([
           if (this.getExistLayerTabPage(selfId)) {
             this.layerTabPageClose(selfId, true);
           }
+
+          if (this._resourceManager.getLayerInfoById(selfId)) {
+            this._resourceManager.removeLayerInfo(selfId);
+          }
+          if (this._resourceManager.getConfigInfoById(selfId)) {
+            this._resourceManager.removeConfigInfo(selfId);
+          }
         }
       },
 
@@ -391,6 +398,7 @@ define([
 
         this.AttributeTableDiv = null;
         this._loadInfoDef = null;
+        this._activeLayerInfoId = null;
         if (this._resourceManager) {
           this._resourceManager.empty();
         }
@@ -424,8 +432,15 @@ define([
           this._activeTable.changeHeight(h - this.noGridHeight);
         }
 
+        // publish changeMapPosition to MapManager
         topic.publish('changeMapPosition', {
           bottom: h + this.bottomPosition
+        });
+        // publish changeMapPosition to other widgets
+        this.publishData({
+          'changeMapPosition': {
+            bottom: h + this.bottomPosition
+          }
         });
 
         if (h !== 0) {
@@ -727,6 +742,7 @@ define([
           this._activeTable.cancelThread();
           this._activeTable.deactive();
           this._unbindActiveTableEvents();
+          this._activeTable = null;
         }
         if (table) {
           this._activeTable = table;
@@ -871,7 +887,8 @@ define([
           this.layerTabPages.push(page);
 
           page.set("title", json.name);
-          this.own(on(page, "close", lang.hitch(this, this.layerTabPageClose, json.paneId, true)));
+          // tabContainer will remove the page and destroy the page by itself.
+          this.own(on(page, "close", lang.hitch(this, this.layerTabPageClose, json.paneId)));
           this.tabContainer.addChild(page);
         }
         this.tabContainer.selectChild(page);
@@ -908,7 +925,8 @@ define([
           page = new ContentPane(json);
           this.layerTabPages.push(page);
           page.set("title", json.name);
-          this.own(on(page, "close", lang.hitch(this, this.layerTabPageClose, json.paneId, true)));
+          // tabContainer will remove the page and destroy the page by itself.
+          this.own(on(page, "close", lang.hitch(this, this.layerTabPageClose, json.paneId)));
 
           this.tabContainer.addChild(page);
         }
@@ -1011,9 +1029,9 @@ define([
             }
             if (isRemoveChild === true) {
               this.tabContainer.removeChild(this.layerTabPages[i]);
+              this.layerTabPages[i].destroyRecursive();
             }
             if (this.layerTabPages && this.layerTabPages[i]) {
-              this.layerTabPages[i].destroyRecursive();
               this.layerTabPages.splice(i, 1);
             }
 
@@ -1021,6 +1039,7 @@ define([
             this._resourceManager.removeLayerInfo(paneId);
 
             if (len === 1) {
+              this._activeLayerInfoId = null;
               this.onClose();
               return;
             }  else if(paneId === this._activeLayerInfoId) {

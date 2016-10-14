@@ -4,6 +4,8 @@ define({
   "format": "Formato",
   "layout": "Layout",
   "settings": "Avançado",
+  "labels": "Rótulos",
+  "showLabels": "Mostrar rótulos",
   "mapScaleExtent": "Extensão/escala do mapa",
   "preserve": "Preservar",
   "mapScale": "escala do mapa",

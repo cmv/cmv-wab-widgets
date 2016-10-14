@@ -4,6 +4,8 @@ define({
   "format": "Format",
   "layout": "Layout",
   "settings": "Avancerad",
+  "labels": "Etiketter",
+  "showLabels": "Visa etiketter",
   "mapScaleExtent": "Kartskala/utbredning",
   "preserve": "Bevara",
   "mapScale": "kartskala",

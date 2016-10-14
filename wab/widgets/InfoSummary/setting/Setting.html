@@ -12,8 +12,6 @@
     </div>
     <hr />
     <div class="padTop20">
-      <input data-dojo-attach-point="panelCountOptions" data-dojo-type="dijit/form/CheckBox" />
-      <span class="label"> ${nls.panelCountOption}</span>
       <div class="refreshOptions refreshOff" data-dojo-attach-point="refreshOptions">
         <div class="refreshIntervalTitle" title="${nls.refreshIntervalTitle}">
           <span style="padding-right: 10px;">${nls.refreshIntervalInstruction}</span>
@@ -22,48 +20,63 @@
                  data-dojo-type="dijit/form/ValidationTextBox"
                  data-dojo-props="regExp:'[\\d]+', _hasBeenBlurred:true, trim:true"
                  data-dojo-attach-point="refreshInterval"
-                 data-dojo-attach-event="onChange:_updateOK"
+                 data-dojo-attach-event="onKeyUp:_updateOK"
                  class="refreshInterval" required="true">
           <span style="padding-left: 10px;">${nls.refreshUnit}</span>
         </div>
       </div>
     </div>
-    <div class="padTop20">
-      <input data-dojo-attach-point="panelIconOptions" data-dojo-type="dijit/form/CheckBox" />
-      <span class="label"> ${nls.panelIconOption}</span>
-    </div>
-    <div class="padTop30">
-      <div class="mainPanelPreviewContainer mainPanelPreviewContainerOff" data-dojo-attach-point="mainPanelPreviewContainer">
-        <div class="leftContainer">
-          <div data-dojo-attach-point="mainPanelPreviewButton" class="mainPanelPreviewButton">
-            <div data-dojo-attach-event="onclick:uploadImage" class="jimu-btn">
-              ${nls.uploadImage}
-            </div>
-          </div>
-          <div class="instruction2">
-            ${nls.mainPanelText}
-          </div>
-        </div>
-        <div class="rightContainer">
-          <div data-dojo-attach-point="mainPanelPreview" class="bg rounded mainPanelPreview">
-            <div class="panelContent bg">
-              <div class="page">
-                <div data-dojo-attach-point="panelMainIcon"></div>
+    <div class="displayOptionsContainer" data-dojo-attach-point="displayOptionsContainer">
+      <div class="padTop20" title="${nls.panelCountOptionHelp}">
+        <input data-dojo-attach-point="panelCountOptions" data-dojo-type="dijit/form/CheckBox" />
+        <span class="label" data-dojo-attach-point="panelCountOptionsLabel"> ${nls.panelCountOption}</span>
+      </div>
+      <div class="padTop20" title="${nls.panelIconOptionHelp}">
+        <input data-dojo-attach-point="panelIconOptions" data-dojo-type="dijit/form/CheckBox" />
+        <span class="label" data-dojo-attach-point="panelIconOptionsLabel"> ${nls.panelIconOption}</span>
+      </div>
+      <div class="padTop20">
+        <div class="mainPanelPreviewContainer mainPanelPreviewContainerOff" data-dojo-attach-point="mainPanelPreviewContainer">
+          <div class="leftContainer">
+            <div data-dojo-attach-point="mainPanelPreviewButton" class="mainPanelPreviewButton">
+              <div data-dojo-attach-event="onclick:uploadImage" class="jimu-btn">
+                ${nls.uploadImage}
               </div>
             </div>
+            <div class="instruction2">
+              ${nls.mainPanelText}
+            </div>
           </div>
-          <input type="text" name="mainPanelText"
-                 placeholder="${nls.mainPanelTextPlaceholder}"
-                 data-dojo-type="dijit/form/TextBox"
-                 data-dojo-props="trim:true"
-                 data-dojo-attach-point="mainPanelText"
-                 class="mainPanelText">
+          <div class="rightContainer">
+            <div data-dojo-attach-point="mainPanelPreview" class="bg rounded mainPanelPreview">
+              <div class="panelContent bg">
+                <div class="page">
+                  <div data-dojo-attach-point="panelMainIcon"></div>
+                </div>
+              </div>
+            </div>
+            <input type="text" name="mainPanelText"
+                   placeholder="${nls.mainPanelTextPlaceholder}"
+                   data-dojo-type="dijit/form/TextBox"
+                   data-dojo-props="trim:true"
+                   data-dojo-attach-point="mainPanelText"
+                   class="mainPanelText">
+          </div>
+        </div>
+        <input type="file"
+               accept="image/png, image/jpeg, image/bmp, image/gif"
+               data-dojo-attach-point="fileInput"
+               class="fileInput">
+      </div>
+      <div class="hidePanelContainer">
+        <div title="${nls.hidePanelHelp}">
+          <input data-dojo-attach-point="hidePanelOptions" data-dojo-type="dijit/form/CheckBox" />
+          <span class="label"> ${nls.hidePanel}</span>
+          <div class="padTop10 help-off" data-dojo-attach-point="hidePanelHelpText">
+            <span class="label note-help"> ${nls.continuousRefreshHelp}</span>
+          </div>
         </div>
       </div>
-      <input type="file"
-             accept="image/png, image/jpeg, image/bmp, image/gif"
-             data-dojo-attach-point="fileInput"
-             class="fileInput">
     </div>
   </div>
 </div>

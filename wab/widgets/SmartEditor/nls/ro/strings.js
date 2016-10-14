@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Editor inteligent",
+  "noEditPrivileges": "Contul dumneavoastră nu are permisiunea de a crea sau modifica date.",
+  "widgetActive": "Activ",
+  "widgetNotActive": "Inactiv",
   "pressStr": "Apăsaţi pe ",
   "ctrlStr": " CTRL ",
   "snapStr": " pentru a activa fixarea",
@@ -19,5 +22,6 @@ define({
     "all": "Toate",
     "noAvailableTempaltes": "Nu există şabloane disponibile",
     "searchTemplates": "Căutare şabloane"
-  }
+  },
+  "invalidConfiguration": "Widgetul nu este configurat sau straturile tematice din configuraţie nu se mai află pe hartă.  Deschideţi aplicaţia în modul de creare şi reconfiguraţi widgetul."
 });

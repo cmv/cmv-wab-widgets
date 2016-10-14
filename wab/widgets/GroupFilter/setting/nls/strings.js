@@ -3,20 +3,32 @@ define({
     configText : "Define Your Filter Groups Below",
     labels : {
       groupName : "Filter Set Name:",
+      groupNameTip : "Name of the filter that the user will select from.",
       groupDesc : "Description:",
+      groupDescTip : "Description of the filter set.",
       groupOperator : "Preset Operator:",
-      groupDefault : "Preset Value:"
+      groupOperatorTip : "Option to predefine the operator of the filter. If no Preset Operator is selected, the filter will use the Equal operator.",
+      groupDefault : "Preset Value:",
+      groupDefaultTip : "Option to choose a value from an existing layer.",
+      sameLayerAppend : "When a layer is listed more than once, use the following operator between fields:",
+      sameLayerConjunc : "Append Using:"
     },
     buttons : {
       addNewGroup : "Add a New Group",
-      addLayer : "Add Layer"
+      addNewGroupTip : "Add a new filter set.",
+      addLayer : "Add Layer",
+      addLayerTip : "Add a layer to the filter set."
     },
     inputs : {
       groupName : "Give Your Group a Name",
       groupDesc : "Description for Your Group",
       groupDefault : "Enter a Predefined Value",
       simpleMode : "Start in Simple View",
+      simpleModeTip : "Option to simplify the configured widget interface. When checked, the operator drop-down list and add criteria buttons are removed from the interface.",
+      webmapAppendMode : "Append Filter to Existing Web Map Filter Using ",
+      webmapAppendModeTip : "Option to append the filter set to an existing web map filter. Operators that are supported are OR and AND.",
       optionsMode : "Hide Widget Options",
+      optionsModeTip : "Option to expose additional widget settings. If checked, saving and loading defined filters and persisting the filter after the widget is closed are removed from the interface.",
       optionOR : "OR",
       optionAND : "AND",
       optionEQUAL : "EQUALS",
@@ -33,9 +45,15 @@ define({
     },
     tables : {
       layer : "Layers",
+      layerTip: "Name of the layer as defined in the map.",
       field : "Fields",
+      fieldTip: "Field that the layer will be filtered on.",
       value : "Use Value",
-      action : "Delete"
+      valueTip : "Option to use the drop-down list values from the layer. If no layer uses this parameter, a plain text box will be presented to the user.",
+      zoom : "Zoom",
+      zoomTip: "Option to zoom to the extent of the features after the filter is applied. Only one layer can be selected to zoom to.",
+      action : "Delete",
+      actionTip: "Remove layer from the filter set."
     },
     popup : {
       label : "Pick a Value"
@@ -49,9 +67,12 @@ define({
     },
     picker : {
       description: "Use this form to find a preset value for this group.",
-      layer: "Select a Layer",
-      field: "Select a Field",
-      value: "Select a Value"
+      layer : "Select a Layer",
+      layerTip : "Name of the layer as defined in the web map.",
+      field : "Select a Field",
+      fieldTip : "Field that the preset value will be set from.",
+      value : "Select a Value",
+      valueTip : "Value that will be the default of the widget."
     }
   }),
   "ar": 1,

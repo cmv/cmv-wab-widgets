@@ -21,14 +21,14 @@ define({
       "ArcGISOnline": "ArcGIS Online"
     },
     "sortOptions": {
-      "prompt": "Sortieren:",
+      "prompt": "Sortieren  nach:",
       "relevance": "Relevanz",
       "title": "Titel",
       "owner": "Besitzer",
       "rating": "Bewertung",
       "views": "Aufrufe",
       "date": "Datum",
-      "switchOrder": "Wechseln"
+      "switchOrder": "Umkehren"
     },
     "typeOptions": {
       "prompt": "Typ",
@@ -72,7 +72,7 @@ define({
         "addFailed": "Fehler beim Hinzufügen",
         "unsupported": "Nicht unterstützt"
       },
-      "typeByOwnerPattern": "{type} nach {owner}",
+      "typeByOwnerPattern": "{type} von {owner}",
       "dateFormat": "d. MMMM yyyy",
       "datePattern": "{date}",
       "ratingsCommentsViewsPattern": "{ratings} {ratingsIcon} {comments} {commentsIcon} {views} {viewsIcon}",
@@ -97,13 +97,13 @@ define({
     "type": "Typ",
     "url": "URL",
     "types": {
-      "ArcGIS": "Einen ArcGIS-Server-Web-Service",
-      "WMS": "Einen WMS-OGC-Web-Service",
-      "WMTS": "Einen WMTS-OGC-Web-Service",
-      "WFS": "Einen WFS-OGC-Web-Service",
-      "KML": "Eine KML-Datei",
-      "GeoRSS": "Eine GeoRSS-Datei",
-      "CSV": "Eine CSV-Datei"
+      "ArcGIS": "ArcGIS-Server-Web-Service",
+      "WMS": "WMS-OGC-Web-Service",
+      "WMTS": "WMTS-OGC-Web-Service",
+      "WFS": "WFS-OGC-Web-Service",
+      "KML": "KML-Datei",
+      "GeoRSS": "GeoRSS-Datei",
+      "CSV": "CSV-Datei"
     },
     "samplesHint": "Beispiel-URL(s)"
   }

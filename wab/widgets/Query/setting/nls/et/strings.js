@@ -122,5 +122,6 @@ define({
   "uploadImage": "Laadi üles pilt",
   "attributeCriteira": "Atribuudi kriteeriumid",
   "specifyFilterAtRuntimeTip": "Kasutajad peavad määratlema selle avaldise jaoks parameetrid.",
-  "value": "VÄÄRTUS"
+  "value": "VÄÄRTUS",
+  "hideLayersTip": "Kui vidin on suletud, lülitage päringu tulemkihid välja."
 });

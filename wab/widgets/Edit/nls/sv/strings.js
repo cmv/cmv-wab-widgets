@@ -9,5 +9,8 @@ define({
   "featureLayers": "geoobjektslager",
   "searchTemplates": "Sök efter mallar",
   "noAvailableTempaltes": "Inga tillgängliga mallar",
-  "noCanCreateLayerAreCurrentlyVisible": "Inga lager som kan skapas är synliga just nu."
+  "noCanCreateLayerAreCurrentlyVisible": "Inga lager som kan skapas är synliga just nu.",
+  "relatedTables": "Relaterade tabeller:",
+  "relatedRecords": "Relaterade poster:",
+  "noRelatedRecotds": "Inga relaterade poster hittades"
 });

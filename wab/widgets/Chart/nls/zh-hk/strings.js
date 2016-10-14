@@ -43,5 +43,7 @@ define({
   "yards": "碼",
   "nauticalMiles": "海浬",
   "back": "返回",
-  "execute": "執行"
+  "execute": "執行",
+  "enlarge": "放大",
+  "setting": "設定"
 });

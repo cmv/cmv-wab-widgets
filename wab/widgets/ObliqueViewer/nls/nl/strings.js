@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Hoogte meten",
   "intialScaleLabel": "Selecteer intitiële schaal voor obliekbeelden",
   "smallBuildingLabel": "Stedelijk gebied: Klein gebouw",
-  "buildingLabel": "Stedelijk gebied: Gebouw"
+  "buildingLabel": "Stedelijk gebied: Gebouw",
+  "azimuthChangeNotification": "Geen gegevens in de geselecteerde richting."
 });

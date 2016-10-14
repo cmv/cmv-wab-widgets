@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -370,7 +370,35 @@ function(declare, lang, array, locale, esriLang, ItemFileWriteStore, jimuUtils) 
       return filterString;
     },
 
+    _preBuiltSingleFilterString: function(part){
+      if(part.fieldObj.shortType === 'string' && part.valueObj.value === "<Null>"){
+        if(part.operator === this.OPERATORS.stringOperatorIs){
+          return {
+            whereClause: part.fieldObj.name + " IS NULL"
+          };
+        }else if(part.operator === this.OPERATORS.stringOperatorIsNot){
+          return {
+            whereClause: part.fieldObj.name + " IS NOT NULL"
+          };
+        }
+      }
+
+      if(part.fieldObj.shortType === 'number' && part.valueObj.value === "<Null>"){
+        if(part.operator === this.OPERATORS.numberOperatorIs){
+          return {
+            whereClause: part.fieldObj.name + " IS NULL"
+          };
+        }else if(part.operator === this.OPERATORS.numberOperatorIsNot){
+          return {
+            whereClause: part.fieldObj.name + " IS NOT NULL"
+          };
+        }
+      }
+      return null;
+    },
+
     builtSingleFilterString: function(part, parameterizeCount) {
+
       if(this.isHosted){
         part.caseSensitive = false;
       }
@@ -379,6 +407,11 @@ function(declare, lang, array, locale, esriLang, ItemFileWriteStore, jimuUtils) 
         return {
           whereClause: null
         };
+      }
+
+      var preBuildResult = this._preBuiltSingleFilterString(part);
+      if(preBuildResult){
+        return preBuildResult;
       }
 
       var value = part.valueObj.value;

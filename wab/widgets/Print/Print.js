@@ -120,6 +120,20 @@ define([
       utils.combineRadioCheckBoxWithLabel(scaleRadio, this.printWidgetMapScaleLabel);
       utils.combineRadioCheckBoxWithLabel(extentRadio, this.printWidgetMapExtentLabel);
 
+      if (this.defaultLayout === 'MAP_ONLY') {
+        html.setStyle(this.titleTr, 'display', 'none');
+      } else {
+        html.setStyle(this.titleTr, 'display', '');
+      }
+
+      if (this._hasLabelLayer()) {
+        html.setStyle(this.labelsFormDijit.domNode, 'display', '');
+        html.setStyle(this.labelsTitleNode, 'display', '');
+      } else {
+        html.setStyle(this.labelsFormDijit.domNode, 'display', 'none');
+        html.setStyle(this.labelsTitleNode, 'display', 'none');
+      }
+
       LayerInfos.getInstance(this.map, this.map.itemInfo)
         .then(lang.hitch(this, function(layerInfosObj) {
           this.layerInfosObj = layerInfosObj;
@@ -174,6 +188,13 @@ define([
           lang.hitch(this, '_excludeInvalidLegend')
         );
       }
+    },
+
+    _hasLabelLayer: function() {
+      return array.some(this.map.graphicsLayerIds, function(glid) {
+        var l = this.map.getLayer(glid);
+        return l && l.declaredClass === 'esri.layers.LabelLayer';
+      }, this);
     },
 
     _getPrintTaskInfo: function() {
@@ -464,6 +485,7 @@ define([
       if (this.printSettingsFormDijit.isValid()) {
         var form = this.printSettingsFormDijit.get('value');
         lang.mixin(form, this.layoutMetadataDijit.get('value'));
+        lang.mixin(form, this.labelsFormDijit.get('value'));
         this.preserve = this.preserveFormDijit.get('value');
         lang.mixin(form, this.preserve);
         this.layoutForm = this.layoutFormDijit.get('value');
@@ -502,6 +524,7 @@ define([
         template.preserveScale = (form.preserveScale === 'true' || form.preserveScale === 'force');
         template.label = form.title;
         template.exportOptions = mapOnlyForm;
+        template.showLabels = form.showLabels && form.showLabels[0];
         template.layoutOptions = {
           authorText: hasAuthorText ? form.author : "",
           copyrightText: hasCopyrightText ? (form.copyright || this._getMapAttribution()) : "",

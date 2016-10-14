@@ -44,7 +44,9 @@ define({
     yards: "Yards",
     nauticalMiles: "Nautical Miles",
     back: "Back",
-    execute: "Execute"
+    execute: "Execute",
+    enlarge: "Enlarge",
+    setting: "Setting"
   }),
   "ar": 1,
   "cs": 1,

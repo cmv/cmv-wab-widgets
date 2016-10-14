@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,14 +33,14 @@ define([
       _templatePicker: null,
       _layers: null,
       map: null,
-      nls:null,
+      nls: null,
       _origGetItemsFromLayerFunc: null,
 
       postCreate: function () {
         this._createFilterTool();
       },
 
-      _createFilterTool: function() {
+      _createFilterTool: function () {
         // label for select
         //var flLabel = domConstruct.create("label", {
         //  innerHTML: "Feature Layers"
@@ -49,9 +49,10 @@ define([
 
         this._createLayerFilter();
         this._createTemplateFilter();
+        this._loadTemplates();
       },
 
-      _createLayerFilter: function() {
+      _createLayerFilter: function () {
         // DropDown of select feature layer.
         this.selectDropDown = domConstruct.create("select", {
           'class': 'flDropDown templatePicker'
@@ -61,23 +62,56 @@ define([
           this._onLayerFilterChanged();
         });
 
+      },
+      removeOptions: function (selectbox) {
+        var i;
+        for (i = selectbox.options.length - 1 ; i >= 0 ; i--) {
+          selectbox.remove(i);
+        }
+      },
+      _loadTemplates: function () {
+        var selectedValue = (this.selectDropDown.value === this.nls.filterEditor.all ||
+          this.selectDropDown.value === "") ? null : this.selectDropDown.value;
+        var filterText = this.filterTextBox.value;
+        var selectedValueExist = false;
+        this.removeOptions(this.selectDropDown);
         var optionAll = domConstruct.create("option", {
           value: this.nls.filterEditor.all,
           innerHTML: this.nls.filterEditor.all
         });
+
         domConstruct.place(optionAll, this.selectDropDown);
         var layerObject;
         for (var i = 0; i < this._layers.length; i++) {
           layerObject = this._layers[i];
-          var option = domConstruct.create("option", {
-            value: layerObject.id,
-            innerHTML: layerObject.name
-          });
-          domConstruct.place(option, this.selectDropDown);
+          if (layerObject.visible === true && layerObject.visibleAtMapScale === true) {
+            if (selectedValue !== null && layerObject.id === selectedValue) {
+              selectedValueExist = true;
+            }
+            var option = domConstruct.create("option", {
+              value: layerObject.id,
+              innerHTML: layerObject.name
+            });
+
+            domConstruct.place(option, this.selectDropDown);
+          }
+        }
+        if (selectedValueExist === true) {
+          this.selectDropDown.value = selectedValue;
+          this._onLayerFilterChanged();
+        }
+        if (filterText !== null && filterText !== "") {
+          this.filterTextBox.value = filterText;
+          this._onTemplateFilterChanged();
         }
       },
-
-      _createTemplateFilter: function() {
+      setTemplatePicker: function (templatePicker, layers) {
+        this._layers = layers;
+        this._templatePicker = templatePicker;
+        this._overrideTemplatePicker();
+        this._loadTemplates();
+      },
+      _createTemplateFilter: function () {
         // textBox filter
         this.filterTextBox = domConstruct.create("input", {
           'class': "searchtextbox templatePicker",
@@ -85,9 +119,13 @@ define([
           placeholder: this.nls.filterEditor.searchTemplates
         }, this.filterEditorDiv);
         this.filterTextBox.onkeyup = lang.hitch(this, function () {
-          this._onTempalteFilterChanged();
+          this._onTemplateFilterChanged();
         });
 
+        this._overrideTemplatePicker();
+      },
+
+      _overrideTemplatePicker: function () {
         this._origGetItemsFromLayerFunc = this._templatePicker._getItemsFromLayer;
 
         this._templatePicker._getItemsFromLayer = lang.hitch(this, function () {
@@ -128,8 +166,6 @@ define([
           return items;
         });
       },
-
-
       /**************************
        * Events
        *************************/
@@ -142,8 +178,11 @@ define([
         var val = this.selectDropDown.options[this.selectDropDown.selectedIndex].text;
         if (val !== "") {
           if (val === this.nls.filterEditor.all) {
+            var visLayers = array.filter(this._layers, function (layer) {
+              return (layer.visible === true && layer.visibleAtMapScale === true);
+            });
             this._templatePicker.attr("featureLayers",
-                                this._layers);
+                                visLayers);
             if (this.filterTextBox.value === "") {
               this._templatePicker.attr("grouping", true);
             }
@@ -159,7 +198,7 @@ define([
         }
       },
 
-      _onTempalteFilterChanged: function() {
+      _onTemplateFilterChanged: function () {
         var val = this.selectDropDown.options[this.selectDropDown.selectedIndex].text;
         var filterText = this.filterTextBox.value;
         if (val === this.nls.filterEditor.all && filterText === "") {

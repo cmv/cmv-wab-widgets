@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "Ģeogrāfiskā meklēšana",
+  "_widgetLabel": "Geo Lookup",
   "description": "Pārlūkojiet līdz <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> izklājlapai </a> vai velciet to šeit, lai vizualizētu, un pievienojiet tai kartes datus.",
   "selectCSV": "Atlasiet CSV failu",
   "loadingCSV": "Ielādē CSV failu",

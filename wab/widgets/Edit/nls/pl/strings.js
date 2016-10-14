@@ -9,5 +9,8 @@ define({
   "featureLayers": "Warstwy obiektów",
   "searchTemplates": "Szablony wyszukiwania",
   "noAvailableTempaltes": "Brak dostępnych szablonów",
-  "noCanCreateLayerAreCurrentlyVisible": "Żadne warstwy, które można utworzyć, nie są obecnie widoczne."
+  "noCanCreateLayerAreCurrentlyVisible": "Żadne warstwy, które można utworzyć, nie są obecnie widoczne.",
+  "relatedTables": "Powiązane tabele:",
+  "relatedRecords": "Powiązane rekordy:",
+  "noRelatedRecotds": "Nie znaleziono powiązanych rekordów"
 });

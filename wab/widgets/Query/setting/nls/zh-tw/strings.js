@@ -109,7 +109,7 @@ define({
   "icon": "圖示",
   "newTask": "新增任務",
   "addTaskTip": "將一個或多個查詢新增至 widget 並為其分別配置參數。",
-  "webMapPopupTip": "在 Web 地圖中使用圖層的快顯視窗組態",
+  "webMapPopupTip": "在 Web 地圖中使用圖層的快顯視窗配置",
   "customPopupTip": "配置自訂內容",
   "showResultsSetActions": "顯示結果集的動作",
   "zoomTo": "縮放至",
@@ -122,5 +122,6 @@ define({
   "uploadImage": "上傳圖片",
   "attributeCriteira": "屬性準則",
   "specifyFilterAtRuntimeTip": "使用者將需要指定此表達式的參數。",
-  "value": "值"
+  "value": "值",
+  "hideLayersTip": "關閉 widget 後關閉查詢結果圖層。"
 });

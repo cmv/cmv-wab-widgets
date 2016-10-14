@@ -10,7 +10,7 @@ define({
   "phaseFieldName": "שלב במחזור החיים",
   "statusFieldName": "מצב מחזור החיים",
   "allSessions": "כל המהלכים",
-  "dashboardTab": "לוח בקרה",
+  "dashboardTab": "לוח מחוונים",
   "filtersTab": "הגדרות",
   "noResults": "לא נמצאו תוצאות",
   "resultsBy": "תוצאות לפי: ",

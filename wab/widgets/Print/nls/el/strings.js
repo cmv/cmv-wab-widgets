@@ -4,6 +4,8 @@ define({
   "format": "Μορφή",
   "layout": "Διάταξη",
   "settings": "Για προχωρημένους",
+  "labels": "Ετικέτες",
+  "showLabels": "Εμφάνιση ετικετών",
   "mapScaleExtent": "Κλίμακα/έκταση χάρτη",
   "preserve": "Διατήρηση",
   "mapScale": "κλίμακας χάρτη",

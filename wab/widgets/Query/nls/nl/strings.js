@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Attribuutcriteria",
   "spatialFilter": "Ruimtelijk filter",
   "value": "WAARDE",
-  "noAttributeSpatialFilterTip": "Geen filters gedefinieerd. Alle objecten worden geretourneerd."
+  "noAttributeSpatialFilterTip": "Geen filters gedefinieerd. Alle objecten worden geretourneerd.",
+  "showAllRelatedRecords": "Alle gerelateerde records weergeven"
 });

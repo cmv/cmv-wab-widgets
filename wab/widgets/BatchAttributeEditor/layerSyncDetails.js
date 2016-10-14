@@ -26,7 +26,7 @@ function (Evented, declare, lang, array) {
           if (updateItem && updateItem.hasOwnProperty('success') && updateItem.success === false) {
             if (updateItem && updateItem.hasOwnProperty('error')) {
               this.recordsErrors = this.recordsErrors + 1;
-              console.log(updateItem.error);
+              console.info(updateItem.error);
             }
           }
         }, this);

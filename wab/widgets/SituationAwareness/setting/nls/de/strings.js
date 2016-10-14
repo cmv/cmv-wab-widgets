@@ -45,7 +45,7 @@ define({
   "save_label": "Speicheroptionen",
   "save_checkbox": "Speichern aktivieren",
   "csv_label": "CSV-Optionen",
-  "csv_checkbox": "Alle Felder des Layers exportieren.",
+  "csv_checkbox": "Alle Felder des Layers exportieren",
   "display_label": "Anzeigeoptionen",
   "display_checkbox": "Zusammenfassungs-Features anzeigen",
   "must_select_template": "Wählen Sie eine der Bearbeitungsvorlagen unter \"Speicheroptionen\" aus.",

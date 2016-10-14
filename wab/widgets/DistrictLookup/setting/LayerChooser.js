@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the 'License');
 // you may not use this file except in compliance with the License.
@@ -173,7 +173,8 @@ define([
         this.precinctLayer = selectedPrecinctLayer[0];
         this.precinctLayerInfo = {
           "url": this.precinctLayer.url,
-          "geometryType": "esriGeometryPolygon"
+            "geometryType": "esriGeometryPolygon",
+            "id": selectedPrecinctLayer[0].id
         };
         if (this.precinctLayer.layerId) {
           this.precinctLayerInfo.layerId = this.precinctLayer.layerId;
@@ -185,9 +186,6 @@ define([
         var baseURL = this.precinctLayer.url.substr(0, this.precinctLayer
           .url.lastIndexOf('/') + 1);
         this.precinctLayerInfo.baseURL = baseURL;
-        this.precinctLayerInfo = lang.mixin(this.precinctLayerInfo,
-          this._getLayerDetailsFromMap(baseURL, this.precinctLayerInfo
-            .layerId));
         this.pollingPlaceInfo = [];
         deferredLayerInfoArray = [];
         array.forEach(this.precinctLayer.relationships, lang.hitch(
@@ -220,11 +218,9 @@ define([
                 "relationShipId": this.precinctLayer.relationships[
                   i].id,
                 "layerId": result[i].id,
-                "geometryType": "esriGeometryPoint"
+                "geometryType": "esriGeometryPoint",
+                "title": result[i].name
               };
-              pollingPlaceInfo = lang.mixin(pollingPlaceInfo,
-                this._getLayerDetailsFromMap(baseURL, result[
-                  i].id));
               if (pollingPlaceInfo.title) {
                 this.pollingPlaceInfo[options.length] =
                   pollingPlaceInfo;
@@ -276,71 +272,6 @@ define([
       domClass.add(this.okButton, "jimu-state-disabled");
       //Show error as the selected polygon layer is not having any valid related point layers
       this._errorMessage(this.nls.layerSelector.polygonLayerNotHavingRelatedLayer);
-    },
-    /**
-    * This function gets selected layer details from map
-    * @return {object} Object of config
-    * @memberOf widgets/DistrictLookup/setting/setting
-    **/
-    _getLayerDetailsFromMap: function (baseURL, relatedLayerId) {
-      var selectedLayer = {};
-      if (this.map && this.map.webMapResponse && this.map.webMapResponse
-        .itemInfo && this.map.webMapResponse.itemInfo.itemData &&
-        this.map.webMapResponse.itemInfo.itemData.operationalLayers) {
-        array.forEach(this.map.webMapResponse.itemInfo.itemData.operationalLayers,
-          lang.hitch(this, function (layer) {
-            if (layer.layerObject) {
-              if (layer.layerType === "ArcGISMapServiceLayer" ||
-                layer.layerType === "ArcGISTiledMapServiceLayer") {
-                if (baseURL.substring(0, baseURL.length - 1) ===
-                  layer.url) {
-                  array.forEach(layer.resourceInfo.layers, lang.hitch(
-                    this,
-                    function (subLayer) {
-                      if (subLayer.id === parseInt(
-                          relatedLayerId, 10)) {
-                        selectedLayer.title = subLayer.name;
-                        return;
-                      }
-                    }));
-                  array.forEach(layer.layers, lang.hitch(this,
-                    function (subLayer) {
-                      if (subLayer.id === parseInt(
-                          relatedLayerId, 10)) {
-                        if (subLayer.name) {
-                          selectedLayer.title = subLayer.name;
-                        }
-                        selectedLayer.popupInfo = subLayer.popupInfo;
-                        //set layer's definitionExpression
-                        if (subLayer.layerDefinition &&
-                          subLayer.layerDefinition.definitionExpression
-                        ) {
-                          selectedLayer.definitionExpression =
-                            subLayer.layerDefinition.definitionExpression;
-                        }
-                        return;
-                      }
-                    }));
-                }
-              } else {
-                if (layer.url.replace(/.*?:\/\//g, "") === (
-                    baseURL + relatedLayerId).replace(/.*?:\/\//g,
-                    "")) {
-                  selectedLayer.title = layer.title;
-                  selectedLayer.popupInfo = layer.popupInfo;
-                  //set layer's definitionExpression
-                  if (layer.layerDefinition && layer.layerDefinition
-                    .definitionExpression) {
-                    selectedLayer.definitionExpression = layer.layerDefinition
-                      .definitionExpression;
-                  }
-                  return;
-                }
-              }
-            }
-          }));
-      }
-      return selectedLayer;
     },
 
     _onBtnBackClicked: function () {

@@ -4,7 +4,7 @@ define({
   "selectByGeography": "Filter nach Geographie einbeziehen",
   "selectUrl": "Service-Layer für Filter nach Geographie",
   "selectMapUrl": "Service für Filter nach Geographie",
-  "geometryServiceURL": "URL des Geometrie-Service",
+  "geometryServiceURL": "URL des Geometrieservice",
   "includeFieldNames": "Felder auswählen",
   "fieldNames": "Feldnamen",
   "lifecyclePhaseFieldName": "LEBENSZYKLUSPHASE",

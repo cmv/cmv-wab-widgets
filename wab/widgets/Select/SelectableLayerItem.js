@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -47,20 +47,10 @@ _WidgetsInTemplateMixin, template, ClearSelectionAction) {
       this.inherited(arguments);
 
       this.popupMenu = PopupMenu.getInstance();
-
-      this.layerInfo.getLayerObject().then(lang.hitch(this, function(layerObject) {
-        if(layerObject) {
-          this._init(layerObject);
-        }
-      }));
     },
 
-    _init: function(layerObject) {
+    init: function(layerObject) {
       this.featureLayer = layerObject;
-
-      if(!this.featureLayer) {
-        return;
-      }
 
       var selectedCount = this.featureLayer.getSelectedFeatures().length;
       this.layerName = this.layerInfo.title || 'layer';

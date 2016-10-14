@@ -1491,6 +1491,11 @@ define([
         var requestArgs, styleName, selectedTheme;
         //Get selected theme Name
         selectedTheme = this.appConfig.theme.name;
+
+        if(this.appConfig && this.appConfig.theme && this.appConfig.theme.customStyles){
+          this.config.selectedThemeColor = this.appConfig.theme.customStyles.mainBackgroundColor;
+          return;
+        }
         //get selected theme's style
         if (this.appConfig && this.appConfig.theme && this.appConfig.theme.styles) {
           styleName = this.appConfig.theme.styles[0];

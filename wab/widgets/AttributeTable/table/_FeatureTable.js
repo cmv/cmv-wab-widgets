@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -375,10 +375,10 @@ define([
 
     startQuery: function(queryByStoreObjectIds) {
       this.cancelThread();
-      if (this.tableCreated && this.layerInfo &&
-        this.layerInfo.isTable && !this._relatedQuery) {
-        return;
-      }
+      // if (this.tableCreated && this.layerInfo &&
+      //   this.layerInfo.isTable && !this._relatedQuery) {
+      //   return;
+      // }
 
       this._requestStatus = 'processing';
       this.loading.show();
@@ -538,7 +538,7 @@ define([
 
     getSelectedRows: function() {
       if (!this.tableCreated) {
-        return;
+        return [];
       }
       return this.selectionRows;
     },
@@ -548,24 +548,22 @@ define([
     },
 
     toggleSelectedRecords: function() {
-      if (!this.tableCreated) {
-        return;
-      }
-
       if (this._relatedQuery && !this.showSelected && this.getSelectedRows().length === 0) {
+        this._relatedQuery = false;
+        this._relatedQueryIds = [];
         if (this.layerInfo && !this.layerInfo.isTable) {
-          this._relatedQuery = false;
-          this._relatedQueryIds = [];
-
           this.matchingCheckBox.set('checked', true);
-        } else {
-          this.startQuery();
         }
+        this.startQuery();
         this.showSelectedRecordsMenuItem.set('label', this.nls.showSelectedRecords);
         this.showSelected = false;
         this.emit('show-all-records', {
           layerInfoId: this.layerInfo.id
         });
+        return;
+      }
+
+      if (!this.tableCreated) {
         return;
       }
       if (this.showSelected) {
@@ -700,7 +698,13 @@ define([
 
     changeToolbarStatus: function() {
       if (!this.tableCreated) {
-        this.showSelectedRecordsMenuItem.set('disabled', true);
+        if (this._relatedQuery) {
+          this.showSelectedRecordsMenuItem.set('disabled', false);
+          this.showSelectedRecordsMenuItem.set('label', this.nls.showAllRecords);
+        } else {
+          this.showSelectedRecordsMenuItem.set('disabled', true);
+        }
+
         this.showRelatedRecordsMenuItem.set('disabled', true);
         this.matchingCheckBox.set('disabled', true);
         this.filterMenuItem.set('disabled', true);
@@ -902,7 +906,7 @@ define([
         var datas = lang.clone(options.datas);
         array.forEach(datas, function(d) {
           var geometry = d.geometry;
-          if (geometry.type === 'point') {
+          if (geometry && geometry.type === 'point') {
             if ('x' in d) {
               d._x = geometry.x;
             } else {
@@ -1502,7 +1506,8 @@ define([
         results.fields, _typeIdFild, _types, (supportOrder && supportPage) || !exceededLimit,
         supportStatistics
       );
-      this.createTable(columns, store, recordCounts);
+      var autoWidth = (20 * 1 + 100 * results.fields.length) < html.getMarginBox(this.domNode).w;
+      this.createTable(columns, store, recordCounts, autoWidth);
       this._currentExtent = nExtent;
 
       var selectedFeatures = this.layer.getSelectedFeatures();
@@ -1520,7 +1525,7 @@ define([
       this.emit('data-loaded');
     },
 
-    createTable: function(columns, store, recordCounts) {
+    createTable: function(columns, store, recordCounts, autoWidthMode) {
       if (this.grid) {
         this.grid.set("store", store);
         this.grid.set('columns', columns);
@@ -1544,6 +1549,10 @@ define([
         this.grid = new(declare(demands))(json, html.create("div"));
         html.place(this.grid.domNode, this.domNode);
         this.grid.startup();
+
+        if (this.tipNode) {
+          html.destroy(this.tipNode);
+        }
         // // private preperty in grid
         // // _clickShowSelectedRecords
         // // when these value is true selected rows after refresh complete.
@@ -1567,6 +1576,12 @@ define([
             this.grid,
             ".dgrid-header .dgrid-cell:click",
             lang.hitch(this, this._onHeaderClick)
+          ));
+
+          this.own(on(
+            this.grid,
+            'dgrid-columnstatechange',
+            lang.hitch(this, this._onColumnStateChange)
           ));
 
           this.own(on(
@@ -1606,6 +1621,12 @@ define([
         if (isFinite(smt) && headerBox && smt < headerBox.h) {
           html.setStyle(scroller, 'marginTop', headerBox.h + 'px');
         }
+      }
+
+      if (autoWidthMode) {
+        html.addClass(this.domNode, 'auto-width');
+      } else {
+        html.removeClass(this.domNode, 'auto-width');
       }
 
       if (this.footer) {
@@ -1712,7 +1733,8 @@ define([
         return;
       }
       var popup = this.map.infoWindow;
-      var layerInfoTemplate = this.layerInfo.getInfoTemplate();
+      var layerInfoTemplate = this.layerInfo.isPopupEnabled() &&
+        this.layerInfo.getInfoTemplate();
       if (popup && popup.setFeatures && result.length === 1 && layerInfoTemplate) {
         array.forEach(result, lang.hitch(this, function(item) {
           item._layer = this.layerInfo.layerObject;
@@ -1802,45 +1824,45 @@ define([
       return gs;
     },
 
-    addGraphics: function(result) {
-      var symbol, graphic;
-      var len = result.length;
-      var outlineSymbol = new SimpleLineSymbol(
-        SimpleLineSymbol.STYLE_SOLID,
-        new Color([0, 255, 255]),
-        2
-      );
-      // this.graphicsLayer.clear();
+    // addGraphics: function(result) {
+    //   var symbol, graphic;
+    //   var len = result.length;
+    //   var outlineSymbol = new SimpleLineSymbol(
+    //     SimpleLineSymbol.STYLE_SOLID,
+    //     new Color([0, 255, 255]),
+    //     2
+    //   );
+    //   // this.graphicsLayer.clear();
 
-      for (var i = 0; i < len; i++) {
-        var geometry = null;
-        if (!result[i].geometry) {
-          console.error('unable to get geometry of the reocord: ', result[i]);
-          continue;
-        } else if (!result[i].geometry.spatialReference.equals(this.map.spatialReference)) {
-          console.warn('unable to draw graphic result in different wkid from map');
-        }
-        if (result[i].geometry.type === "point") {
-          geometry = new Point(result[i].geometry.toJson());
-          symbol = lang.clone(this.map.infoWindow.markerSymbol);
-        } else if (result[i].geometry.type === "multipoint") {
-          geometry = new Multipoint(result[i].geometry.toJson());
-          symbol = lang.clone(this.map.infoWindow.markerSymbol);
-        } else if (result[i].geometry.type === "polyline") {
-          geometry = new Polyline(result[i].geometry.toJson());
-          symbol = outlineSymbol;
-        } else if (result[i].geometry.type === "polygon") {
-          geometry = new Polygon(result[i].geometry.toJson());
-          symbol = new SimpleFillSymbol(
-            SimpleFillSymbol.STYLE_SOLID,
-            outlineSymbol,
-            new Color([255, 255, 255, 0.25])
-          );
-        }
-        graphic = new Graphic(geometry, symbol, result[i].attributes, result[i].infoTemplate);
-        // this.graphicsLayer.add(graphic);
-      }
-    },
+    //   for (var i = 0; i < len; i++) {
+    //     var geometry = null;
+    //     if (!result[i].geometry) {
+    //       console.error('unable to get geometry of the reocord: ', result[i]);
+    //       continue;
+    //     } else if (!result[i].geometry.spatialReference.equals(this.map.spatialReference)) {
+    //       console.warn('unable to draw graphic result in different wkid from map');
+    //     }
+    //     if (result[i].geometry.type === "point") {
+    //       geometry = new Point(result[i].geometry.toJson());
+    //       symbol = lang.clone(this.map.infoWindow.markerSymbol);
+    //     } else if (result[i].geometry.type === "multipoint") {
+    //       geometry = new Multipoint(result[i].geometry.toJson());
+    //       symbol = lang.clone(this.map.infoWindow.markerSymbol);
+    //     } else if (result[i].geometry.type === "polyline") {
+    //       geometry = new Polyline(result[i].geometry.toJson());
+    //       symbol = outlineSymbol;
+    //     } else if (result[i].geometry.type === "polygon") {
+    //       geometry = new Polygon(result[i].geometry.toJson());
+    //       symbol = new SimpleFillSymbol(
+    //         SimpleFillSymbol.STYLE_SOLID,
+    //         outlineSymbol,
+    //         new Color([255, 255, 255, 0.25])
+    //       );
+    //     }
+    //     graphic = new Graphic(geometry, symbol, result[i].attributes, result[i].infoTemplate);
+    //     // this.graphicsLayer.add(graphic);
+    //   }
+    // },
 
     getExtent: function(result) {
       var def = new Deferred();
@@ -1979,7 +2001,9 @@ define([
       if (this.grid.store instanceof Memory) {
         var obj = this.grid.store.get(id);
         var data = this.grid.store.data;
-        if (sort && sort.attribute && esriLang.isDefined(sort.descending)) {
+        if (!obj) {
+          dataIndex = -1;
+        }else if (sort && sort.attribute && esriLang.isDefined(sort.descending)) {
           data = lang.clone(data);
           compare = (function(attr, des) {
             return function(a, b) {
@@ -2216,6 +2240,26 @@ define([
       }
     },
 
+    _onColumnStateChange: function(evt) {
+      if (evt && evt.grid && evt.grid.columns){
+        // var visibleFields = array.filter(evt.grid.columns, lang.hitch(this, function(c) {
+        //   return !c.hidden;
+        // }));
+        // var len = visibleFields.length;
+        var len = 0;
+        for (var p in evt.grid.columns) {
+          if (!evt.grid.columns[p].hidden) {
+            len++;
+          }
+        }
+
+        if ((20 * 1 + 100 * len - 1) < html.getMarginBox(this.domNode).w) {
+          html.addClass(this.domNode, 'auto-width');
+        } else {
+          html.removeClass(this.domNode, 'auto-width');
+        }
+      }
+    },
 
     _onSelectionHandleClick: function() {
       var ids = this._getSelectedIds();

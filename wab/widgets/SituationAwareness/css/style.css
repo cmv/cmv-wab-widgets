@@ -236,18 +236,15 @@
   right: 0px;
   height: 100px;
   display: none;
-  overflow-x: auto;
-  overflow-y: hidden !important;
+  overflow: auto;
 }
 
 .jimu-widget-SAT .SAT_tabPanelContent {
   position: absolute;
   top: 0px;
-  width: auto;
-  height: 90px;
+  height: 80px;
   white-space: nowrap;
   display: block;
-  overflow: hidden;
   user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -313,13 +310,13 @@
 
 .jimu-widget-SAT .SATcol {
   float: left;
-  height: 90px;
+  height: 80px;
   width: 220px;
   border-left: none;
   border-right: 1px solid #ffffff;
   border-right: 1px solid rgba(255, 255, 255, 0.5);
   margin-left: 0;
-  padding: 0 20px;
+  padding: 0 10px;
   user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -572,14 +569,12 @@
 
 .jimu-widget-SAT .SATcolRec {
   float: left;
-  height: 90px;
-  width: 220px;
+  height: 100%;
   border-left: none;
   border-right: 1px solid #ffffff;
   border-right: 1px solid rgba(255, 255, 255, 0.5);
   margin-left: 0;
-  padding: 0 20px;
-  overflow: hidden;
+  padding: 0 10px;
   text-align: left;
   text-overflow: ellipsis;
   user-select: none;
@@ -587,6 +582,8 @@
   -khtml-user-select: none;
   -webkit-user-select: none;
   -o-user-select: none;
+  min-width: 220px;
+  max-width: 300px;
 }
 
 .jimu-rtl .jimu-widget-SAT .SATcolRec {
@@ -645,8 +642,7 @@
 
 .jimu-widget-SAT .SATcolInfo {
   position: relative;
-  margin-top: 10px;
-  height: 64px;
+  margin-top: 5px;
   width: 100%;
   display: block;
   overflow: hidden;

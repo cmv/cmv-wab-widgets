@@ -103,14 +103,14 @@
 		<div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="cbxCaseSensitive" label="${nls.caseSensitive}" style="display:none;"></div>
 	</div>
 	<div data-dojo-attach-point="promptSection" class="prompt">
-		<table data-dojo-attach-point="promptTable" cellpadding="0" cellspacing="0" class="prompt-table">
+		<table data-dojo-attach-point="promptTable" cellpadding="0" cellspacing="0" class="prompt-table" style="width:100%;">
 			<tbody>
 				<tr>
 					<td class="first-td">
 						<span>${nls.prompt}</span>
 					</td>
 					<td class="second-td">
-						<div data-dojo-attach-point="promptTB" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="required:true,trim:true" style="width:100%;" class="dijit-form-ValidationTextBox" ></div>
+						<div data-dojo-attach-point="promptTB" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="required:true,trim:true" style="width:257px;" class="dijit-form-ValidationTextBox" ></div>
 					</td>
 				</tr>
 				<tr>
@@ -118,7 +118,12 @@
 						<span>${nls.hint}</span>
 					</td>
 					<td class="second-td">
-						<div data-dojo-attach-point="hintTB" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="trim:true" style="width:100%;" class="dijit-form-ValidationTextBox" ></div>
+						<div data-dojo-attach-point="hintTB" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="trim:true" style="width:257px;" class="dijit-form-ValidationTextBox" ></div>
+					</td>
+				</tr>
+				<tr data-dojo-attach-point="cascadeTr" class="cascade-tr">
+					<td class="first-td" colspan="2">
+						<div data-dojo-attach-point="cbxCascade" data-dojo-type="jimu/dijit/CheckBox"></div>
 					</td>
 				</tr>
 			</tbody>

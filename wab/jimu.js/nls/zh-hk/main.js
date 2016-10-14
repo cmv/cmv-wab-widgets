@@ -6,6 +6,7 @@ define({
     "yes": "是",
     "no": "否",
     "next": "下一步",
+    "previous": "上一頁",
     "back": "上一步",
     "selected": "選取",
     "name": "名稱",
@@ -52,7 +53,11 @@ define({
     "view": "檢視",
     "newText": "新建",
     "edit": "編輯",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "表",
+    "zoomIn": "放大",
+    "zoomOut": "縮小",
+    "continue1": "繼續"
   },
   "errorCode": "代碼",
   "errorMessage": "訊息",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "區分大小寫",
     "notSupportCaseSensitiveTip": "託管的服務不支援區分大小寫的查詢。",
-    "setFilterTip": "請正確設定篩選程式。"
+    "setFilterTip": "請正確設定篩選程式。",
+    "cascadeFilterTip": "僅顯示先前的表達式所篩選的值。"
   },
   "featureLayerSource": {
     "layer": "圖層",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "按一下以還原離開時的地圖範圍和圖層可見度。"
   },
   "featureActions": {
+    "featureActions": "圖徵動作",
     "ZoomTo": "縮放至",
     "PanTo": "平移至",
     "Flash": "快閃",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "增加到選擇內容",
     "removeSelectionTip": "從選取中移除",
     "selectFromCurrentSelectionTip": "從目前選擇中選擇",
-    "unselectAllSelectionTip": "取消選擇目前選擇的所有圖徵"
+    "unselectAllSelectionTip": "取消選擇目前選擇的所有圖徵",
+    "selectByPolygon": "按多邊形選擇",
+    "selectByCircle": "按圓形選擇",
+    "selectByLine": "按線條選擇",
+    "chooseSelectingTools": "選擇選擇工具",
+    "darw": "繪製",
+    "drawShap": "繪製形狀"
   },
   "widgetManager": {
     "createWidgetError": "建立 widget 錯誤",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D Web 應用程式不受您的瀏覽器支援。"
+  },
+  "map": {
+    "basemapNotAvailable": "底圖無法使用。",
+    "displayDefaultBasemap": "正在改為顯示預設底圖。"
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "您在地圖上所選區域內有過多圖徵。擷取所有資料可能會耗費冗長的時間。",
+    "askForContinue": "是否要繼續?"
   }
 });

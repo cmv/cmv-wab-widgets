@@ -60,7 +60,7 @@ define(
 
         var rowData = this._validationTable.getRowData(tr);
         if (rowData) {
-          if (rowData.label === 'Hide') {
+          if (rowData.label === this.nls.actionPage.actions.hide) {
             this.submitWhenHidden.style.display = "block";
             this._submitHidden = new CheckBox({
               id: "submitHidden",
@@ -90,7 +90,7 @@ define(
                 action: rowData.label
               },
               this.nls.filterPage.title),
-            width: 680,
+            width: 850,
             height: 485,
             content: this,
             rowData: rowData,

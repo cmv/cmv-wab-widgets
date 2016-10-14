@@ -26,7 +26,7 @@ define({
   "weather_Label": "خيارات الطقس",
   "weather_checkBox": "تضمين معلومات الطقس",
   "selectLayers": "تحديد طبقات الطقس",
-  "currentlySelectedLayer": "طبقات الطقس المُحددة حاليًا",
+  "currentlySelectedLayer": "طبقات الطقس المحددة حاليًا",
   "missingTabLabel": "تفقد على الأقل علامة تبويب واحدة تسميتها",
   "missingLayerInWebMap": "لا توجد طبقات تشغيلية",
   "selectFields": "Select Fields",

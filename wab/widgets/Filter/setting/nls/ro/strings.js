@@ -1,5 +1,6 @@
 define({
   "addTaskTip": "Adăugaţi unul sau mai multe filtre în widget şi configuraţi parametri pentru fiecare dintre acestea.",
+  "enableMapFilter": "Eliminaţi filtrul stratului tematic presetat din hartă.",
   "newFilter": "Filtru nou",
   "filterExpression": "Expresie de filtrare",
   "layerDefaultSymbolTip": "Utilizaţi simbolul implicit al stratului tematic",

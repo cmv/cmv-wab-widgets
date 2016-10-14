@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -70,6 +70,8 @@ domAttr, aspect, portalUrlUtils, jimuUtils, jsonUtils, PopupTemplate, Legend) {
 
     _getLayerOptionsForCreateLayerObject: function() {
       var options = {};
+      // assign id
+      options.id = this.id;
       // prepare outFileds for create feature layer.
       var outFields = [];
       var infoTemplate = this.getInfoTemplate();
@@ -83,6 +85,9 @@ domAttr, aspect, portalUrlUtils, jimuUtils, jsonUtils, PopupTemplate, Legend) {
         outFields = ["*"];
       }
       options.outFields = outFields;
+
+      // assign capabilities
+      //options.resourceInfo = {capabilities: ["Query"]};
       return options;
     },
 
@@ -378,15 +383,32 @@ domAttr, aspect, portalUrlUtils, jimuUtils, jsonUtils, PopupTemplate, Legend) {
       return popupTemplate;
     },
 
-    // need improve, todo ...
     enablePopup: function() {
-      this.controlPopupInfo.enablePopup = true;
-      this.layerObject.infoTemplate = this.controlPopupInfo.infoTemplate;
+      return this.loadInfoTemplate().then(lang.hitch(this, function() {
+        if(this.controlPopupInfo.infoTemplate) {
+          this.controlPopupInfo.enablePopup = true;
+          this.layerObject.infoTemplate = this.controlPopupInfo.infoTemplate;
+          return true;
+        } else {
+          return false;
+        }
+      }));
     },
 
     disablePopup: function() {
       this.controlPopupInfo.enablePopup = false;
       this.layerObject.infoTemplate = null;
+    },
+
+    isPopupEnabled: function() {
+      var isPopupEnabled;
+      if(this.controlPopupInfo &&
+         this.controlPopupInfo.enablePopup) {
+        isPopupEnabled = true;
+      } else {
+        isPopupEnabled = false;
+      }
+      return isPopupEnabled;
     },
 
     loadInfoTemplate: function() {
@@ -402,7 +424,7 @@ domAttr, aspect, portalUrlUtils, jimuUtils, jsonUtils, PopupTemplate, Legend) {
       return this.controlPopupInfo.infoTemplate;
     },
 
-    _getRelatedUrls: function(layerObject) {
+    _getRelatedUrls: function(layerObject, relationshipRole) {
       var relatedUrls = [];
       if(!layerObject || !layerObject.url || !layerObject.relationships) {
         return relatedUrls;
@@ -411,18 +433,28 @@ domAttr, aspect, portalUrlUtils, jimuUtils, jsonUtils, PopupTemplate, Legend) {
       var index = layerObject.url.lastIndexOf('/');
       var serverUrl = layerObject.url.slice(0, index);
       array.forEach(layerObject.relationships, function(relationship) {
-        var subUrl = serverUrl + '/' + relationship.relatedTableId.toString();
-        relatedUrls.push(subUrl);
+        if (!relationshipRole ||
+            !relationship.role ||
+            relationshipRole === relationship.role) {
+              var subUrl = serverUrl + '/' + relationship.relatedTableId.toString();
+              relatedUrls.push(subUrl);
+        }
       }, this);
 
       return relatedUrls;
     },
 
-    getRelatedTableInfoArray: function() {
+    // summary:
+    //   get related tableInfo array
+    // parameters:
+    //   relationshipRole: optional
+    //       "esriRelRoleOrigin"
+    //       "esriRelRoleDestination"
+    getRelatedTableInfoArray: function(relationshipRole) {
       var relatedTableInfoArray = [];
       var def = new Deferred();
       this.getLayerObject().then(lang.hitch(this, function(layerObject) {
-        var relatedUrls = this._getRelatedUrls(layerObject);
+        var relatedUrls = this._getRelatedUrls(layerObject, relationshipRole);
         if(relatedUrls.length === 0) {
           def.resolve(relatedTableInfoArray);
         } else {
@@ -434,9 +466,9 @@ domAttr, aspect, portalUrlUtils, jimuUtils, jsonUtils, PopupTemplate, Legend) {
             } else {
               array.forEach(relatedUrls, function(relatedUrl, index) {
                 if(lang.getObject("layerObject.url", false, layerInfo) &&
-                   (portalUrlUtils.removeProtocol(relatedUrl.toString().toLowerCase()) ===
+                   (portalUrlUtils.removeProtocol(relatedUrl.toString().replace(/\/+/g, '/').toLowerCase()) ===
                    portalUrlUtils.removeProtocol(
-                                 layerInfo.layerObject.url.toString().toLowerCase()))
+                                 layerInfo.layerObject.url.toString().replace(/\/+/g, '/').toLowerCase()))
                 ) {
                   relatedTableInfoArray.push(layerInfo);
                   relatedUrlIndex = index;

@@ -9,5 +9,8 @@ define({
   "featureLayers": "ชั้นข้อมูลฟีเจอร์",
   "searchTemplates": "ค้นหาแม่แบบ",
   "noAvailableTempaltes": "ไม่มีแม่แบบที่ใช้งานได้",
-  "noCanCreateLayerAreCurrentlyVisible": "ไม่มีชั้นข้อมูลที่สร้างได้ เปิดแสดงผลในขณะนี้"
+  "noCanCreateLayerAreCurrentlyVisible": "ไม่มีชั้นข้อมูลที่สร้างได้ เปิดแสดงผลในขณะนี้",
+  "relatedTables": "ตารางเชื่อมโยง",
+  "relatedRecords": "เรคคอร์ดเชื่อมโยง",
+  "noRelatedRecotds": "ไม่พบค่าที่เกี่ยวข้อง"
 });

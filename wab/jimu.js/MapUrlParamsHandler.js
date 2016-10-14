@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -315,6 +315,7 @@ define([
     var query = new Query();
     var prefix = '';
 
+    query.outSpatialReference = map.spatialReference;
     if(queryArray.length === 2){
       query.where = queryArray[1];
     }else if(queryArray.length === 3){
@@ -328,9 +329,9 @@ define([
           return;
         }
         if(["esriFieldTypeSmallInteger", "esriFieldTypeInteger", "esriFieldTypeSingle",
-          "esriFieldTypeDouble"].indexOf(field.type) > -1){
+          "esriFieldTypeDouble", "esriFieldTypeOID"].indexOf(field.type) > -1){
           query.where = field.name + '=' + queryArray[2];
-        }else if(["esriFieldTypeString", '"esriFieldTypeOID"'].indexOf(field.type) > -1){
+        }else if(["esriFieldTypeString"].indexOf(field.type) > -1){
           query.where = queryArray[1] + "=" + prefix + "'" + queryArray[2].replace(/\'/g, "''") + "'";
         }
       }, this);

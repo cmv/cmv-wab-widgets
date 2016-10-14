@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Option permettant de supprimer l'entité du jeu de sélection lors de la sauvegarde de l'enregistrement. S'il s'agit du seul enregistrement sélectionné, la fenêtre revient sur la page du modèle.",
     "useFilterEditor": "Utiliser le filtre des modèles d'entités",
     "useFilterEditorTip": "Option permettant d'utiliser le sélecteur des modèles de filtre visant à afficher un modèle de couche ou à rechercher des modèles en fonction de leur nom.",
+    "listenToGroupFilter": "Appliquer des valeurs de filtre du widget Filtrer les groupes aux champs prédéfinis",
+    "listenToGroupFilterTip": "Lorsqu'un filtre est appliqué dans le widget Filtrer les groupes, appliquez la valeur à un champ d'appariement dans la liste des valeurs prédéfinies.",
+    "keepTemplateActive": "Conserver le modèle sélectionné actif",
+    "keepTemplateActiveTip": "Lorsque le sélecteur de modèles est affiché, si un modèle a été précédemment sélectionné, resélectionnez-le.",
     "layerSettingsTable": {
       "allowDelete": "Autoriser la suppression",
       "allowDeleteTip": "Option qui permet à l'utilisateur de supprimer une entité. Désactivée si la couche ne prend pas en charge la suppression",
@@ -27,9 +31,10 @@ define({
       "fields": "Champs",
       "fieldsTip": "Modifier les champs à mettre à jour et définir les attributs intelligents",
       "description": "Description",
-      "descriptionTip": "Vous pouvez saisir le texte que vous souhaitez afficher au-dessus de la page des attributs."
+      "descriptionTip": "Option permettant de saisir le texte à afficher au-dessus de la page des attributs."
     },
-    "editFieldError": "Les modifications de champ et les attributs intelligents ne sont pas disponibles dans les couches non modifiables"
+    "editFieldError": "Les modifications de champ et les attributs intelligents ne sont pas disponibles dans les couches non modifiables",
+    "noConfigedLayersError": "Le widget Editeur intelligent requiert une ou plusieurs couches modifiables"
   },
   "editDescriptionPage": {
     "title": "Définir le texte de vue d'ensemble des attributs de <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "L'expression obtenue au format SQL à partir des critères définis",
       "actions": "Critère",
       "actionsTip": "Modifier l'ordre de la règle et définir les critères lors de son déclenchement"
+    },
+    "actions": {
+      "hide": "Masquer",
+      "required": "Obligatoire",
+      "disabled": "Désactivé"
     }
   },
   "filterPage": {
     "submitHidden": "Soumettre les données attributaires de ce champ même s'il est masqué ?",
-    "title": "Configurer la clause de la règle ${action}",
+    "title": "Configurer l'expression de la règle ${action}",
     "filterBuilder": "Définir l'action sur le champ lorsque l'enregistrement correspond à ${any_or_all} des expressions suivantes",
     "noFilterTip": "A l'aide des outils ci-dessous, définissez l'instruction indiquant la période d'activité de l'action."
   }

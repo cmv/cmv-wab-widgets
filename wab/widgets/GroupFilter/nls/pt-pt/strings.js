@@ -18,7 +18,7 @@ define({
   },
   "inputs": {
     "optionOR": "OU",
-    "optionAND": "AND",
+    "optionAND": "E",
     "optionEQUAL": "IGUAL",
     "optionNOTEQUAL": "NÃO IGUAL",
     "optionGREATERTHAN": "MAIOR DO QUE",

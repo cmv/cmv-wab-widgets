@@ -45,7 +45,7 @@ define({
   "save_label": "儲存選項",
   "save_checkbox": "啟用儲存",
   "csv_label": "CSV 選項",
-  "csv_checkbox": "匯出圖層中的所有欄位。",
+  "csv_checkbox": "匯出圖層中的所有欄位",
   "display_label": "顯示選項",
   "display_checkbox": "顯示摘要圖徵",
   "must_select_template": "請在「儲存選項」中選擇其中一個編輯範本。",

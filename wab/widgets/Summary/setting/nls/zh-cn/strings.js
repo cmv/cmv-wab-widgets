@@ -1,6 +1,6 @@
 define({
-  "selectLayer": "选择摘要图层",
-  "filterField": "摘要图层过滤器字段",
+  "selectLayer": "选择汇总图层",
+  "filterField": "汇总图层过滤器字段",
   "count": "计数",
   "sum": "总和",
   "min": "最小值",
@@ -14,5 +14,5 @@ define({
   "displayCluster": "显示为汇总聚类",
   "showFeatureCount": "显示要素计数",
   "featureCountLabel": "要素计数标注",
-  "missingLayerInWebMap": "请向 webmap 添加摘要图层。"
+  "missingLayerInWebMap": "请向 web 地图添加汇总图层。"
 });

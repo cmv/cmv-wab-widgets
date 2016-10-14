@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the 'License');
 // you may not use this file except in compliance with the License.
@@ -76,10 +76,14 @@ define([
 
     postMixInProperties: function(){
       //mixin default nls with widget nls
-      this.nls = lang.mixin(this.nls, window.jimuNls.common);
+      this.nls.common = {};
+      lang.mixin(this.nls.common, window.jimuNls.common);
     },
 
     postCreate: function () {
+      this._unitsDetails = {}; // To store unit format
+      this._searchLayers = []; // Selected search layers
+      this._symbolParams = {}; //to store symbol info
       var defaultBufferSymbol = {
         "color": [255, 189, 1, 0],
         "outline": {
@@ -525,10 +529,6 @@ define([
       // initialize layer chooser popup widget
       layerChooserPopup = new LayerChooserPopup(param);
       layerChooserPopup.startup();
-      //close layer chooser popup on cancel button click
-      layerChooserPopup.onCancelClick = lang.hitch(this, function () {
-        layerChooserPopup.popup.close();
-      });
       //hide layer chooser popup and display selected layers in config UI panel
       layerChooserPopup.onOkClick = lang.hitch(this, function () {
         this._setSearchLayersInfo(layerChooserPopup.searchLayers);

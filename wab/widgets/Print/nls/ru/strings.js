@@ -4,6 +4,8 @@ define({
   "format": "Формат",
   "layout": "Компоновка",
   "settings": "Расширенный",
+  "labels": "Подписи",
+  "showLabels": "Показать подписи",
   "mapScaleExtent": "Масштаб/экстент карты",
   "preserve": "Сохранить",
   "mapScale": "масштаб карты",

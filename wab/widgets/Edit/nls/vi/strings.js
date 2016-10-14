@@ -9,5 +9,8 @@ define({
   "featureLayers": "Lớp đối tượng",
   "searchTemplates": "Mẫu Tìm kiếm",
   "noAvailableTempaltes": "Không có mẫu khả dụng",
-  "noCanCreateLayerAreCurrentlyVisible": "Không có lớp có thể tạo nào hiện đang hiển thị."
+  "noCanCreateLayerAreCurrentlyVisible": "Không có lớp có thể tạo nào hiện đang hiển thị.",
+  "relatedTables": "Bảng liên quan:",
+  "relatedRecords": "Bản ghi liên quan:",
+  "noRelatedRecotds": "Không tìm thấy hồ sơ liên quan"
 });

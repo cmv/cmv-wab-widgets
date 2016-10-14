@@ -9,5 +9,8 @@ define({
   "featureLayers": "Camadas de Feições",
   "searchTemplates": "Pesquisar Modelos",
   "noAvailableTempaltes": "Nenhum modelo disponível",
-  "noCanCreateLayerAreCurrentlyVisible": "Nenhuma camada editável está atualmente visível."
+  "noCanCreateLayerAreCurrentlyVisible": "Nenhuma camada editável está atualmente visível.",
+  "relatedTables": "Tabelas relacionadas:",
+  "relatedRecords": "Registros relacionados:",
+  "noRelatedRecotds": "Nenhum registro relacionado encontrado"
 });

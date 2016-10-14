@@ -81,6 +81,8 @@
       this.parent = parent;
       this.config = parent.config;
       this.graphicsLayer = null;
+      this.specialFields = {};
+      this.dateFields = {};
     },
 
     /* jshint unused: true */
@@ -101,7 +103,7 @@
           tempFL.infoTemplate = this.tab.tabLayers[0].infoTemplate;
           this.tab.tabLayers[1] = tempFL;
           this._initGraphicsLayer(graphicsLayer);
-          this.summaryFields = this._getFields();
+          this.summaryFields = this._getFields(this.tab.tabLayers[0]);
           lang.hitch(this, this._queryFeatures(buffer.geometry));
         } else {
           tempFL = new FeatureLayer(this.tab.tabLayers[0].url);
@@ -125,7 +127,7 @@
             }
             this.tab.tabLayers[1] = tempFL;
             this._initGraphicsLayer(graphicsLayer);
-            this.summaryFields = this._getFields();
+            this.summaryFields = this._getFields(this.tab.tabLayers[1]);
             lang.hitch(this, this._queryFeatures(buffer.geometry));
           }));
         }
@@ -227,7 +229,15 @@
       for (var i = 0; i < this.summaryFeatures.length; i++) {
         var feat = this.summaryFeatures[i];
         if (typeof (this.summaryFields) !== 'undefined' && this.summaryFields.length > 0) {
-          var val = feat.attributes[this.summaryFields[0].field];
+          var v = feat.attributes[this.summaryFields[0].field];
+          var fVal = this._getFieldValue(this.summaryFields[0].field, v);
+          var val;
+          if (typeof (fVal) !== 'undefined' && fVal !== null) {
+            val = utils.stripHTML(fVal.toString());
+          } else {
+            val = "";
+          }
+
           if (!(val in this.groupedResults)) {
             this.groupedResults[val] = { features: [feat] };
           } else {
@@ -283,7 +293,7 @@
       for (var k in sortedResults) {
         var v = sortedResults[k];
         var f = results[v];
-        var info = utils.sanitizeHTML(v);
+        var info = utils.stripHTML(v.toString());
         if (v === this.parent.nls.area || v === this.parent.nls.length) {
           total = f.total;
         } else {
@@ -350,6 +360,7 @@
       if (this.summaryFeatures.length === 0) {
         return false;
       }
+
       var name;
       if (this.tab.label) {
         name = this.tab.label;
@@ -361,6 +372,7 @@
       array.forEach(this.summaryFeatures, function (gra) {
         data.push(gra.attributes);
       });
+
       if (this.config.csvAllFields === true || this.config.csvAllFields === "true") {
         for (var prop in data[0]) {
           cols.push(prop);
@@ -370,13 +382,85 @@
           cols.push(this.summaryFields[i].field);
         }
       }
-      CSVUtils.exportCSV(name, data, cols);
+
+      var fields = this.summaryLayer.fields;
+      if (this.summaryLayer && this.summaryLayer.loaded && fields) {
+        var options = {};
+        if (this.parent.opLayers && this.parent.opLayers._layerInfos) {
+          var layerInfo = this.parent.opLayers.getLayerInfoById(this.summaryLayer.id);
+          if (layerInfo) {
+            options.popupInfo = layerInfo.getPopupInfo();
+          }
+        }
+        var _outFields = [];
+        cols_loop:
+          for (var ii = 0; ii < cols.length; ii++) {
+            var col = cols[ii];
+            var found = false;
+            var field;
+            fields_loop:
+              for (var iii = 0; iii < fields.length; iii++) {
+                field = fields[iii];
+                if (field.name === col) {
+                  found = true;
+                  break fields_loop;
+                }
+              }
+            if (found) {
+              _outFields.push(field);
+            } else {
+              _outFields.push({
+                'name': col,
+                alias: col,
+                show: true,
+                type: "esriFieldTypeString"
+              });
+            }
+          }
+
+        options.datas = data;
+        options.fromClient = false;
+        options.withGeometry = false;
+        options.outFields = _outFields;
+        options.formatDate = true;
+        options.formatCodedValue = true;
+        options.formatNumber = false;
+        CSVUtils.exportCSVFromFeatureLayer(name, this.summaryLayer, options);
+      } else {
+        //This does not handle value formatting
+        CSVUtils.exportCSV(name, data, cols);
+      }
     },
 
-    // Solutions: Added case to handle fields structure coming from a map service.
-    // also added a small integer into summary types.
+    //_exportToCSV: function () {
+    //  if (this.summaryFeatures.length === 0) {
+    //    return false;
+    //  }
+    //  var name;
+    //  if (this.tab.label) {
+    //    name = this.tab.label;
+    //  } else {
+    //    name = this.tab.layers;
+    //  }
+    //  var data = [];
+    //  var cols = [];
+    //  array.forEach(this.summaryFeatures, function (gra) {
+    //    data.push(gra.attributes);
+    //  });
+    //  if (this.config.csvAllFields === true || this.config.csvAllFields === "true") {
+    //    for (var prop in data[0]) {
+    //      cols.push(prop);
+    //    }
+    //  } else {
+    //    for (var i = 0; i < this.summaryFields.length; i++) {
+    //      cols.push(this.summaryFields[i].field);
+    //    }
+    //  }
+    //  CSVUtils.exportCSV(name, data, cols);
+    //},
+
     /*jshint loopfunc: true */
-    _getFields: function () {
+    _getFields: function (layer) {
       var fields = [];
       if (typeof (this.tab.advStat) !== 'undefined') {
         var stats = this.tab.advStat.stats;
@@ -395,7 +479,60 @@
           }
         }
       }
+
+      // special fields: dates and domains
+      var spFields = {};
+      array.forEach(layer.fields, lang.hitch(this, function (fld) {
+        if (fld.type === "esriFieldTypeDate" || fld.domain) {
+          if (fld.type === "esriFieldTypeDate") {
+            if (layer.infoTemplate) {
+              for (var key in layer.infoTemplate._fieldsMap) {
+                if (typeof (layer.infoTemplate._fieldsMap[key].fieldName) !== 'undefined') {
+                  if (layer.infoTemplate._fieldsMap[key].fieldName === fld.name) {
+                    if (typeof (layer.infoTemplate._fieldsMap[key].format.dateFormat) !== 'undefined') {
+                      this.dateFields[fld.name] = layer.infoTemplate._fieldsMap[key].format.dateFormat;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          spFields[fld.name] = fld;
+        }
+      }));
+      this.specialFields = spFields;
       return fields;
+    },
+
+    // get field value
+    _getFieldValue: function (fldName, fldValue) {
+      var value = fldValue;
+      if (this.specialFields[fldName]) {
+        var fld = this.specialFields[fldName];
+        if (fld.type === "esriFieldTypeDate") {
+          var _f;
+          if (this.dateFields[fldName] !== 'undefined') {
+            var dFormat = this.dateFields[fldName];
+            if (typeof (dFormat) !== undefined) {
+              _f = { dateFormat: dFormat };
+            } else {
+              _f = { dateFormat: 'longMonthDayYear' };
+            }
+          } else {
+            _f = { dateFormat: 'longMonthDayYear' };
+          }
+          value = utils.fieldFormatter.getFormattedDate(new Date(fldValue), _f);
+        } else {
+          var codedValues = fld.domain.codedValues;
+          array.some(codedValues, function (obj) {
+            if (obj.code === fldValue) {
+              value = obj.name;
+              return true;
+            }
+          });
+        }
+      }
+      return value;
     }
   });
 

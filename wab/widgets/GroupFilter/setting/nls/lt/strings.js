@@ -2,20 +2,32 @@ define({
   "configText": "Žemiau nurodykite savo filtrų grupes",
   "labels": {
     "groupName": "Filtrų rinkinio pavadinimas:",
+    "groupNameTip": "Filtro, iš kurio vartotojas rinksis, pavadinimas.",
     "groupDesc": "Aprašymas:",
+    "groupDescTip": "Filtrų rinkinio aprašymas.",
     "groupOperator": "Iš anksto nustatytas operatorius:",
-    "groupDefault": "Iš anksto nustatyta reikšmė:"
+    "groupOperatorTip": "Iš anksto nustatyto filtro operatoriaus parinktis. Jei nepasirenkamas iš anksto nustatytas operatorius, filtras naudos operatorių Lygu.",
+    "groupDefault": "Iš anksto nustatyta reikšmė:",
+    "groupDefaultTip": "Reikšmės pasirinkimo iš esamo sluoksnio parinktis.",
+    "sameLayerAppend": "Kai sluoksnis pateikiamas daugiau nei vieną kartą, tarp laukų naudokite šį operatorių:",
+    "sameLayerConjunc": "Pridėti naudojimą:"
   },
   "buttons": {
     "addNewGroup": "Pridėti naują grupę",
-    "addLayer": "Pridėti sluoksnį"
+    "addNewGroupTip": "Pridėti naują filtrų rinkinį.",
+    "addLayer": "Pridėti sluoksnį",
+    "addLayerTip": "Prie filtrų rinkinio pridėti sluoksnį."
   },
   "inputs": {
     "groupName": "Pavadinkite savo grupę",
     "groupDesc": "Jūsų grupės aprašymas",
     "groupDefault": "Įvesti iš anksto nustatytą reikšmę",
     "simpleMode": "Pradėti paprastoje peržiūros aplikacijoje",
+    "simpleModeTip": "Sukonfigūruotos valdiklio sąsajos supaprastinimo parinktis. Kai pažymėta, iš sąsajos pašalinami operatoriaus sąrašo išplėtimo ir kriterijų pridėjimo mygtukai.",
+    "webmapAppendMode": "Pridėkite filtrą prie esamo internetinio žemėlapio filtro naudodami ",
+    "webmapAppendModeTip": "Filtrų rinkinio pridėjimo prie esamo internetinių žemėlapių filtro parinktis. Palaikomi operatoriai: ARBA ir IR.",
     "optionsMode": "Slėpti valdiklio parinktis",
+    "optionsModeTip": "Papildomų valdiklio parametrų rodymo parinktis. Jei pažymėta, iš sąsajos pašalinamas apibrėžtų filtrų įrašymas ir įkėlimas bei filtro išlaikymas po to, kai uždaromas valdiklis.",
     "optionOR": "ARBA",
     "optionAND": "IR",
     "optionEQUAL": "LYGU",
@@ -32,9 +44,15 @@ define({
   },
   "tables": {
     "layer": "Sluoksniai",
+    "layerTip": "Sluoksnio pavadinimas, kaip nurodyta žemėlapyje.",
     "field": "Laukai",
+    "fieldTip": "Laukas, kuriame bus išfiltruotas sluoksnis.",
     "value": "Naudoti reikšmę",
-    "action": "Pašalinti"
+    "valueTip": "Iš sluoksnio iškrentančio sąrašo reikšmių naudojimo parinktis. Jei šio parametro nenaudoja joks sluoksnis, vartotojui bus pateiktas paprastas teksto laukas.",
+    "zoom": "Didinti",
+    "zoomTip": "Didinimo parinktis, siekiant aprėpti elementus pritaikius filtrą. Didinimui galima pasirinkti tik vieną sluoksnį.",
+    "action": "Pašalinti",
+    "actionTip": "Pašalinti sluoksnį iš filtrų rinkinio."
   },
   "popup": {
     "label": "Pasirinkti reikšmę"
@@ -49,7 +67,10 @@ define({
   "picker": {
     "description": "Naudokite šią formą norėdami rasti iš anksto nustatytas šios grupės reikšmes.",
     "layer": "Pasirinkite sluoksnį",
+    "layerTip": "Sluoksnio pavadinimas, kaip nurodyta internetiniame žemėlapyje.",
     "field": "Pasirinkite lauką",
-    "value": "Pasirinkite reikšmę"
+    "fieldTip": "Laukas, kurio iš anksto nustatyta reikšmė bus naudojama.",
+    "value": "Pasirinkite reikšmę",
+    "valueTip": "Reikšmė, kuri valdikliui bus numatytoji."
   }
 });

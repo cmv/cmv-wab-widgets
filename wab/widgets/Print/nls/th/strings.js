@@ -4,6 +4,8 @@ define({
   "format": "รูปแบบ",
   "layout": "แบบร่าง",
   "settings": "ระดับสูง",
+  "labels": "ป้ายชื่อ",
+  "showLabels": "แสดงตัวหนังสือ",
   "mapScaleExtent": "มาตราส่วนแผนที่/ขอบเขต",
   "preserve": "เก็บ",
   "mapScale": "มาตราส่วนแผนที่",

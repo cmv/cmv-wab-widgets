@@ -24,6 +24,7 @@ define({
   "filterPopup": "Lớp Lọc",
   "cancel": "Hủy",
   "noValue": "Không có Giá trị",
+  "emptyString": "Chuỗi Trống",
   "existingValue": "Giữ Giá trị Có sẵn",
   "newDate": "Dữ liệu Mới",
   "valueChooser": "Chọn/Nhập một Giá trị",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Không tìm thấy lớp ${0} có ID ${1} trong bản đồ, bản đồ có thể đã thay đổi do cấu hình của các tiện ích",
     "queryNullID": "Đối tượng từ ${0} đã trả về ID không hợp lệ",
     "noSelectedLayers": "Không có lớp được chọn nào có bản ghi cần cập nhật",
-    "inputValueError": "Giá trị không hợp lệ trong biểu mẫu"
+    "inputValueError": "Giá trị không hợp lệ trong biểu mẫu",
+    "saveError": "Không thể lưu ${0} đối tượng, chi tiết được thêm vào bảng điều khiển",
+    "requiredValue": "Giá trị Yêu cầu"
   }
 });

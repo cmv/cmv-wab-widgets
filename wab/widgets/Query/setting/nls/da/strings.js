@@ -122,5 +122,6 @@ define({
   "uploadImage": "Overfør et billede",
   "attributeCriteira": "Attributkriterier",
   "specifyFilterAtRuntimeTip": "Brugerne skal angive parametre for dette udtryk.",
-  "value": "VÆRDI"
+  "value": "VÆRDI",
+  "hideLayersTip": "Deaktivér forespørgselsresultatlag, når widget'en er lukket."
 });

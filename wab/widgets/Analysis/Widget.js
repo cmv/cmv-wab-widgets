@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -244,7 +244,7 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on, 
         'class': 'icon-td'
       }, tr);
       domConstruct.create('div', {
-        'class': 'tool-name',
+        'class': 'tool-name jimu-ellipsis',
         innerHTML: jimuUtils.stripHTML(rowData.toolLabel)
       }, iconTd);
       //create img
@@ -728,11 +728,6 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on, 
       this._appendMessage(this.nls.jobSuccess, 'success');
       this._onJobDone();
 
-      if (this.currentToolSetting.dijitID.indexOf('ExtractData') >= 0) {
-        domStyle.set(this.resultSection, 'display', '');
-        domAttr.set(this.outputtip, 'innerHTML', jimuUtils.stripHTML(this.nls.outputSaveInPortal));
-      }
-      domStyle.set(this.buttonSection, 'display', '');
       domStyle.set(this.resultLoading, 'display', '');
       this.emit('job-success', res);
     },
@@ -797,12 +792,15 @@ function(declare, lang, html, array, domStyle, domAttr, domClass, Deferred, on, 
           "value": <output item info | feature collection>
         }
       */
-      domAttr.set(this.outputtip, 'innerHTML', jimuUtils.stripHTML(this.nls.outputtip));
       domStyle.set(this.resultSection, 'display', '');
       domStyle.set(this.buttonSection, 'display', '');
       var outputLayerName = this._appendResultMessage(res);
 
-      if (this.currentToolSetting.dijitID.indexOf('ExtractData') < 0) {
+      if(this.currentToolSetting.dijitID.indexOf('ExtractData') >= 0) {
+        domAttr.set(this.outputtip, 'innerHTML', jimuUtils.stripHTML(this.nls.outputSaveInPortal));
+        domStyle.set(this.resultLoading, 'display', 'none');
+      } else {
+        domAttr.set(this.outputtip, 'innerHTML', jimuUtils.stripHTML(this.nls.outputtip));
         var popupTemplate;
         if (res.value.itemId) {
           var popupInfo = null;

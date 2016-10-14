@@ -1,8 +1,8 @@
 define({
-  "settingsHeader": "Nustatyti išsamią GeoLookup valdiklio informaciją",
-  "settingsDesc": "Suteikite geografinės informacijos vietoms iš CSV failo, užklodami jas ant žemėlapio poligonų sluoksnių. Pasirinkti poligonų laukai priskiriami vietoms.",
+  "settingsHeader": "Nustatyti išsamią Geopaieškos valdiklio informaciją",
+  "settingsDesc": "Praturtinkite CSV faile esančių vietų sąrašą, užklodami jas ant žemėlapio poligonų sluoksnių. Pasirinkti poligonų laukai priskiriami vietoms.",
   "settingsLoadingLayers": "Palaukite, sluoksniai įkeliami.",
-  "settingsConfigureTitle": "Konfigūruoti sluoksnio laukus",
+  "settingsConfigureTitle": "Konfigūruoti laukus",
   "layerTable": {
     "colEnrich": "Praturtinti",
     "colLabel": "Sluoksnis",
@@ -21,11 +21,11 @@ define({
   },
   "advSettings": {
     "label": "Išplėstiniai parametrai",
-    "latFieldsDesc": "Galimi platumos lauko laukų pavadinimai.",
-    "longFieldsDesc": "Galimi ilgumos lauko laukų pavadinimai.",
+    "latFieldsDesc": "Galimi platumos lauko pavadinimai.",
+    "longFieldsDesc": "Galimi ilgumos lauko pavadinimai.",
     "intersectFieldDesc": "Pavadinimas lauko, sukurto saugoti reikšmę, jeigu paieška susikerta su sluoksniu.",
-    "intersectInDesc": "Reikšmė, saugoma, kai vieta susikerta su poligonu.",
-    "intersectOutDesc": "Reikšmė, saugoma, kai vieta nesusikirto su poligonu.",
+    "intersectInDesc": "Reikšmė saugoma, kai vieta susikerta su poligonu.",
+    "intersectOutDesc": "Reikšmė saugoma, kai vieta nesusikirto su poligonu.",
     "maxRowCount": "Maksimalus CSV failo eilučių skaičius.",
     "cacheNumberDesc": "Taško židinio riba greitesniam apdorojimui.",
     "subTitle": "Nustatyti reikšmes CSV failui."

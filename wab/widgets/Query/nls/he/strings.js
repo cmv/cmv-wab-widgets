@@ -53,7 +53,7 @@ define({
   "drawGraphicOnMap": "רק יישויות החותכות אזור המוגדר על-ידי המשתמש",
   "specifySpatialFilterMsg": "הגדר בבקשה סינון למשימה הזו.",
   "clearResults": "נקה תוצאות",
-  "operationalTip": "כאשר האפשרות מסומנת, התוצאות יוצגו במפה עד שתלחץ על הכפתור \"${clearResults}\".",
+  "operationalTip": "כאשר האפשרות הזו מסומנת, התוצאות תוצגנה במפה עד שתלחץ על הלחצן \"${clearResults}\".",
   "noneQueryTip": "לא הוגדרה משימת שאילתא עבור וידג'ט זה.",
   "noPermissionsMsg": "אין לך הרשאות לגשת לשירות זה.",
   "attributesFromRelationship": "מאפיינים מטבלה קשורה",
@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "קריטריוני מאפיין",
   "spatialFilter": "פילטר מרחבי",
   "value": "ערך",
-  "noAttributeSpatialFilterTip": "לא הוגדרו פילטרים. כל הישויות יוחזרו."
+  "noAttributeSpatialFilterTip": "לא הוגדרו פילטרים. כל הישויות יוחזרו.",
+  "showAllRelatedRecords": "הצג את כל הרשומות המקושרות"
 });

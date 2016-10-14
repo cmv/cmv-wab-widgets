@@ -46,9 +46,9 @@ define({
     "fontColorLabel": "Schriftfarbe für Suchergebnisse auswählen",
     "fontColorHintText": "Hinweis: Schriftfarbe für Suchergebnisse",
     "zoomToSelectedFeature": "Auf das ausgewählte Feature zoomen",
-    "zoomToSelectedFeatureHintText": "Hinweis: Zoomen Sie auf das ausgewählte Feature statt auf den Puffer.",
+    "zoomToSelectedFeatureHintText": "Hinweis: Es wird auf das ausgewählte Feature statt auf den Puffer gezoomt.",
     "intersectSearchLocation": "Sich schneidende(s) Polygon(e) zurückgeben",
-    "intersectSearchLocationHintText": "Hinweis: Geben Sie Polygone zurück, die die gesuchte Position enthalten, anstatt Polygone innerhalb des Puffers.",
+    "intersectSearchLocationHintText": "Hinweis: Es werden  Polygone zurückgegeben, die die gesuchte Position enthalten, anstatt Polygone innerhalb des Puffers.",
     "bufferVisibilityLabel": "Puffersichtbarkeit festlegen",
     "bufferVisibilityHintText": "Hinweis: Der Puffer wird auf der Karte angezeigt.",
     "bufferColorLabel": "Puffersymbol festlegen",
@@ -58,7 +58,7 @@ define({
   },
   "layerSelector": {
     "selectLayerLabel": "Such-Layer(s) auswählen",
-    "layerSelectionHint": "Hinweis: Verwenden Sie die Schaltfläche \"Festlegen\", um Layer auszuwählen",
+    "layerSelectionHint": "Hinweis: Verwenden Sie die Schaltfläche \"Festlegen\", um Layer auszuwählen.",
     "addLayerButton": "Festlegen"
   },
   "routeSetting": {
@@ -87,11 +87,11 @@ define({
   "errorStrings": {
     "bufferErrorString": "Geben Sie einen gültigen numerischen Wert ein.",
     "selectLayerErrorString": "Wählen Sie den/die zu durchsuchenden Layer aus.",
-    "invalidDefaultValue": "Der Standardpufferabstand darf nicht leer sein. Geben Sie den Pufferabstand an",
-    "invalidMaximumValue": "Der maximale Pufferabstand darf nicht leer sein. Geben Sie den Pufferabstand an",
-    "defaultValueLessThanMax": "Geben Sie den Standardpufferabstand innerhalb der maximalen Grenzwerte an",
-    "defaultBufferValueGreaterThanZero": "Geben Sie für den Standardpufferabstand einen Wert größer als 0 an",
-    "maximumBufferValueGreaterThanZero": "Geben Sie für den maximalen Pufferabstand einen Wert größer als 0 an"
+    "invalidDefaultValue": "Der Standardpufferabstand darf nicht leer sein. Geben Sie den Pufferabstand an.",
+    "invalidMaximumValue": "Der maximale Pufferabstand darf nicht leer sein. Geben Sie den Pufferabstand an.",
+    "defaultValueLessThanMax": "Geben Sie den Standardpufferabstand innerhalb der maximalen Grenzwerte an.",
+    "defaultBufferValueGreaterThanZero": "Geben Sie für den Standardpufferabstand einen Wert größer als 0 an.",
+    "maximumBufferValueGreaterThanZero": "Geben Sie für den maximalen Pufferabstand einen Wert größer als 0 an."
   },
   "symbolPickerPreviewText": "Vorschau:"
 });

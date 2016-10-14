@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "スマート エディター",
+  "noEditPrivileges": "ご使用のアカウントには、データを作成/変更する権限がありません。",
+  "widgetActive": "アクティブ",
+  "widgetNotActive": "アクティブではない",
   "pressStr": "押す ",
   "ctrlStr": " Ctrl キー ",
   "snapStr": " スナップを有効にします",
@@ -19,5 +22,6 @@ define({
     "all": "すべて",
     "noAvailableTempaltes": "利用可能なテンプレートがありません",
     "searchTemplates": "テンプレートの検索"
-  }
+  },
+  "invalidConfiguration": "ウィジェットが構成されていないか、構成で指定されたレイヤーがマップ内に存在しません。アプリをビルダー モードで開き、ウィジェットを再構成してください。"
 });

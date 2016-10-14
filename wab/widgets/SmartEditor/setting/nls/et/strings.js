@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Valik objekti eemaldamiseks valitud komplektist, kui kirjet salvestatakse. Kui see on ainus valitud kirje, lülitub paneel tagasi mallilehele.",
     "useFilterEditor": "Kasuta objekti malli filtrit",
     "useFilterEditorTip": "Valik filtrimalli valija kasutamiseks, mille abil saab vaadata ühe kihi malle või otsida malle nime järgi.",
+    "listenToGroupFilter": "Grupeerimise filtri vidina filtriväärtuste rakendamine eelseatud väljadele",
+    "listenToGroupFilterTip": "Kui filter on rakendatud rühmafiltri vidinas, rakendage väärtus vastavale väljale eelseatud väärtuste loendis.",
+    "keepTemplateActive": "Valitud malli hoidmine aktiivsena",
+    "keepTemplateActiveTip": "Kui mall oli eelnevalt valitud, valige see mallivalija kuvamise korral uuesti.",
     "layerSettingsTable": {
       "allowDelete": "Luba kustutamine",
       "allowDeleteTip": "Valik, mis lubab kasutajal objekti kustutada. Kui kiht ei toeta kustutamist, on see valik keelatud.",
@@ -27,9 +31,10 @@ define({
       "fields": "Väljad",
       "fieldsTip": "Saate muuta redigeeritavaid välju ja määratleda nutikad atribuudid",
       "description": "Kirjeldus",
-      "descriptionTip": "Soovi korral saate sisestada atribuudilehe ülaosas kuvatava teksti."
+      "descriptionTip": "Võimalus sisestada atribuudilehe ülaosas kuvatav tekst."
     },
-    "editFieldError": "Mittemuudetavate kihtide korral ei saa välju muuta ja nutikad atribuudid pole saadaval"
+    "editFieldError": "Mittemuudetavate kihtide korral ei saa välju muuta ja nutikad atribuudid pole saadaval",
+    "noConfigedLayersError": "Smart Editor nõuab mitut muudetavat kihti"
   },
   "editDescriptionPage": {
     "title": "Määratle kihi <b>${layername}</b> atribuutide ülevaate tekst "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "Määratletud kriteeriumide alusel saadav avaldis SQL-vormingus",
       "actions": "Kriteeriumid",
       "actionsTip": "Saate muuta reegli järjestust ja määratleda selle sisselülitumise kriteeriumid"
+    },
+    "actions": {
+      "hide": "Peida",
+      "required": "Nõutav",
+      "disabled": "Keelatud"
     }
   },
   "filterPage": {
     "submitHidden": "Kas edastada selle välja kohta atribuudi andmed isegi siis, kui see on peidetud?",
-    "title": "Konfigureerige toimingu ${action} reegli tingimus",
+    "title": "Konfigureerige toimingu ${action} reegli avaldis",
     "filterBuilder": "Saate määrata väljale toimingu, kui kirje vastab ${any_or_all} järgmistele avaldistele",
     "noFilterTip": "Määratlege alljärgnevate tööriistade abil avaldus, mille korral toiming on aktiivne."
   }

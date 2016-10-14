@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "Upelis",
+  "_widgetLabel": "Srautas",
   "noStreamLayer": "Nėra prieinamų iš anksto sukonfigūruoto srautų sluoksnio parinkčių.",
   "streamControls": "Srauto valdikliai",
   "startStreaming": "Paleisti srautą",

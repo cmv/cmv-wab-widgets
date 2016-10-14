@@ -9,5 +9,8 @@ define({
   "featureLayers": "圖徵圖層",
   "searchTemplates": "搜尋樣板",
   "noAvailableTempaltes": "沒有可用的樣板",
-  "noCanCreateLayerAreCurrentlyVisible": "目前沒有可見的可建立圖層。"
+  "noCanCreateLayerAreCurrentlyVisible": "目前沒有可見的可建立圖層。",
+  "relatedTables": "相關表格:",
+  "relatedRecords": "相關記錄:",
+  "noRelatedRecotds": "找不到相關記錄"
 });

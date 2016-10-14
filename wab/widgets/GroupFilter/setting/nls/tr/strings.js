@@ -2,20 +2,32 @@ define({
   "configText": "Filtre Gruplarınızı Aşağıda Tanımlayın",
   "labels": {
     "groupName": "Filtre Grubu Adı:",
+    "groupNameTip": "Kullanıcının seçim yapacağı filtrenin adı.",
     "groupDesc": "Açıklama:",
+    "groupDescTip": "Filtre kümesinin açıklaması.",
     "groupOperator": "Ön Ayar Operatörü:",
-    "groupDefault": "Ön Ayar Değeri:"
+    "groupOperatorTip": "Filtre işlecini önceden tanımlama seçeneği. Ön Tanımlı İşleç seçilmezse, filtre Eşittir işlecini kullanır.",
+    "groupDefault": "Ön Ayar Değeri:",
+    "groupDefaultTip": "Mevcut bir katmandan değer seçme seçeneği.",
+    "sameLayerAppend": "Bir katman birden çok kez listelendiğinde, alanlar arasında aşağıdaki işleci kullanın:",
+    "sameLayerConjunc": "Şunu Kullanarak Birleştir:"
   },
   "buttons": {
     "addNewGroup": "Yeni Grup Ekle",
-    "addLayer": "Katman Ekle"
+    "addNewGroupTip": "Yeni bir filtre kümesi ekleyin.",
+    "addLayer": "Katman Ekle",
+    "addLayerTip": "Filtre kümesine bir katman ekleyin."
   },
   "inputs": {
     "groupName": "Grubunuza Ad Verin",
     "groupDesc": "Grubunuzla İlgili Açıklama",
     "groupDefault": "Ön Tanımlı Değer Girin",
     "simpleMode": "Basit Görünümde Başlatın",
+    "simpleModeTip": "Yapılandırılan araç arayüzünü yalınlaştırma seçeneği. İşaretlendiğinde, işleç açılır listesi ve ölçüt ekleme düğmesi arayüzden kaldırılır.",
+    "webmapAppendMode": "Filtreyi Mevcut Web Haritası Filtresine Şunu Kullanarak Ekle: ",
+    "webmapAppendModeTip": "Filtre kümesini mevcut bir web haritası filtresine ekleme seçeneği. Desteklenen işleçler OR ve AND'dir.",
     "optionsMode": "Araç Seçeneklerini Gizle",
+    "optionsModeTip": "İlave araç ayarlarını düzenleme seçeneğidir. İşaretli ise, tanımlı filtrelerin kaydedilmesi ve yüklenmesi ile araç kapatıldıktan sonra filtrenin tutulması özellikleri arayüzden kaldırılır.",
     "optionOR": "'VEYA'",
     "optionAND": "VE",
     "optionEQUAL": "EŞİTTİR",
@@ -32,9 +44,15 @@ define({
   },
   "tables": {
     "layer": "Katmanlar",
+    "layerTip": "Haritada tanımlandığı biçimiyle katman adı.",
     "field": "Alanlar",
+    "fieldTip": "Katmanın filtreleneceği alan.",
     "value": "Değeri Kullan",
-    "action": "Sil"
+    "valueTip": "Açılır liste değerlerini katmandan kullanma seçeneği. Bu parametreyi kullanan katman yoksa, kullanıcıya düz bir metin kutusu gösterilir.",
+    "zoom": "Yakınlaştır",
+    "zoomTip": "Filtre uygulandıktan sonra detay yayılımına yakınlaştırma seçeneği. Yakınlaştırmak için yalnızca bir katman seçilebilir.",
+    "action": "Sil",
+    "actionTip": "Katmanı filtre kümesinden kaldırın."
   },
   "popup": {
     "label": "Değer Seç"
@@ -49,7 +67,10 @@ define({
   "picker": {
     "description": "Bu formu kullanarak bu grup için bir ön ayar değeri bulun.",
     "layer": "Katman Seçin",
+    "layerTip": "Web haritasında tanımlandığı biçimiyle katman adı.",
     "field": "Alan Seçin",
-    "value": "Değer Seçin"
+    "fieldTip": "Ön ayar değerinin ayarlanacağı alan.",
+    "value": "Değer Seçin",
+    "valueTip": "Araç varsayılanı olarak kullanılacak değer."
   }
 });

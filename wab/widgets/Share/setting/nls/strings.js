@@ -1,6 +1,6 @@
 define({
   root: ({
-    selectSocialNetwork: "Select following options to share the app"
+    selectSocialNetwork: "Choose sharing options"
   }),
   "ar": 0,
   "cs": 0,

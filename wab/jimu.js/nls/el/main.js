@@ -6,6 +6,7 @@ define({
     "yes": "Ναι",
     "no": "Όχι",
     "next": "Επόμενο",
+    "previous": "ΠΡΟΗΓΟΥΜΕΝΟ",
     "back": "Πίσω",
     "selected": "επιλέχθηκε",
     "name": "Όνομα",
@@ -52,7 +53,11 @@ define({
     "view": "Προβολή",
     "newText": "Νέο",
     "edit": "Επεξεργασία",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Πίνακας",
+    "zoomIn": "Εστίαση σε μεγαλύτερη κλίμακα",
+    "zoomOut": "Απομάκρυνση σε μικρότερη κλίμακα",
+    "continue1": "Συνέχεια"
   },
   "errorCode": "Κωδικός",
   "errorMessage": "Μήνυμα",
@@ -236,10 +241,11 @@ define({
     },
     "caseSensitive": "Διάκριση πεζών-κεφαλαίων",
     "notSupportCaseSensitiveTip": "Οι hosted υπηρεσίες δεν υποστηρίζουν ερωτήματα με διάκριση πεζών-κεφαλαίων.",
-    "setFilterTip": "Ορίστε σωστά το φίλτρο."
+    "setFilterTip": "Ορίστε σωστά το φίλτρο.",
+    "cascadeFilterTip": "Εμφανίστε μόνο τις τιμές που φιλτράρονται από προηγούμενες εκφράσεις."
   },
   "featureLayerSource": {
-    "layer": "Θεματικό επίπεδο",
+    "layer": "Θεματικό Επίπεδο",
     "browse": "Περιήγηση",
     "selectFromMap": "Επιλογή από το χάρτη",
     "selectFromPortal": "Προσθήκη από το Portal for ArcGIS",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Κάντε κλικ για να επαναφέρετε την έκταση του χάρτη και την ορατότητα των θεματικών επιπέδων στο σημείο που σταματήσατε."
   },
   "featureActions": {
+    "featureActions": "Ενέργειες στοιχείων",
     "ZoomTo": "Εστίαση",
     "PanTo": "Μετατόπιση",
     "Flash": "Φλας",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Προσθήκη στην επιλογή",
     "removeSelectionTip": "Κατάργηση από την επιλογή",
     "selectFromCurrentSelectionTip": "Επιλέξτε από την τρέχουσα επιλογή",
-    "unselectAllSelectionTip": "Αποεπιλέξτε όλα τα τρέχοντα επιλεγμένα στοιχεία"
+    "unselectAllSelectionTip": "Αποεπιλέξτε όλα τα τρέχοντα επιλεγμένα στοιχεία",
+    "selectByPolygon": "Επιλογή με πολύγωνο",
+    "selectByCircle": "Επιλογή με κύκλο",
+    "selectByLine": "Επιλογή με γραμμή",
+    "chooseSelectingTools": "Ενεργοποίηση εργαλείων επιλογής",
+    "darw": "Σχεδίαση",
+    "drawShap": "Σχεδίαση σχήματος"
   },
   "widgetManager": {
     "createWidgetError": "Σφάλμα δημιουργίας του widget",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Δεν υποστηρίζονται 3D web εφαρμογές στο πρόγραμμα περιήγησης που χρησιμοποιείτε."
+  },
+  "map": {
+    "basemapNotAvailable": "Το υπόβαθρο δεν είναι διαθέσιμο.",
+    "displayDefaultBasemap": "Γίνεται εμφάνιση του προεπιλεγμένου υπόβαθρου αντί αυτού."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Υπάρχουν υπερβολικά πολλά στοιχεία στην επιλεγμένη περιοχή του χάρτη. Ίσως χρειαστεί αρκετό διάστημα για την ανάκτηση όλων των δεδομένων.",
+    "askForContinue": "Θέλετε οπωσδήποτε να συνεχίσετε;"
   }
 });

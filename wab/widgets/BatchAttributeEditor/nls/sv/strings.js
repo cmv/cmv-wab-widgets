@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtrera lager",
   "cancel": "Avbryt",
   "noValue": "Inget värde",
+  "emptyString": "Tom sträng",
   "existingValue": "Behåll befintligt värde",
   "newDate": "Nytt datum",
   "valueChooser": "Välj/skriv ett värde",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Lagret ${0} med ID:t ${1} hittades inte i kartan. Kartan kan ha ändrats efter att widgeten konfigurerades.",
     "queryNullID": "Geoobjektet från ${0} returnerade ett ogiltigt ID",
     "noSelectedLayers": "Inga markerade lager har poster att uppdatera",
-    "inputValueError": "Ogiltigt värde i formuläret"
+    "inputValueError": "Ogiltigt värde i formuläret",
+    "saveError": "Det går inte att spara ${0} geoobjekt; informationen har lagts till i konsolen",
+    "requiredValue": "Obligatoriskt värde"
   }
 });

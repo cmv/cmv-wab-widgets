@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Opção para remover a feição do conjunto de seleção quando o registro for salvo.  Se ele for o único registro selecionado, o painel é trocado de volta para a página do modelo.",
     "useFilterEditor": "Utilizar filtro do modelo de feição",
     "useFilterEditorTip": "Opção para utilizar o seletor do Modelo de Filtro que fornece a habilidade para visualizar uns modelos de camadas ou pesquisar modelos por nome.",
+    "listenToGroupFilter": "Aplica valores de filtro a partir do widget Filtrar Grupo para os campos Preset",
+    "listenToGroupFilterTip": "Quando um filtro for aplicado no widget Filtrar Grupo, aplique o valor para um campo correspondente na lista de valor do Preset.",
+    "keepTemplateActive": "Mantenha o modelo selecionado ativo",
+    "keepTemplateActiveTip": "Quando o seletor de modelo for exibido, se um modelo foi selecionado anteriormente, selecione-o novamente.",
     "layerSettingsTable": {
       "allowDelete": "Permitir Exclusão",
       "allowDeleteTip": "Opção para permitir que o usuário exclua uma feição; desabilitado se a camada não suportar exclusão",
@@ -27,9 +31,10 @@ define({
       "fields": "Campos",
       "fieldsTip": "Modificar os campos a serem editados e definir Atributos Inteligentes",
       "description": "Descrição",
-      "descriptionTip": "Opcionalmente insira o texto que deseja exibir na parte superior da página de atributos."
+      "descriptionTip": "Opção para inserir texto para exibir na parte superior da página de atributos."
     },
-    "editFieldError": "As modificações de campo e atributos Inteligentes não estão disponíveis para camadas que não são editáveis"
+    "editFieldError": "As modificações de campo e atributos Inteligentes não estão disponíveis para camadas que não são editáveis",
+    "noConfigedLayersError": "O Editor Inteligente exige um ou mais camadas editáveis"
   },
   "editDescriptionPage": {
     "title": "Defina o texto de visão geral dos atributos para <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "A expressão resultante no formato SQL a partir dos critérios definidos",
       "actions": "Critérios",
       "actionsTip": "Altere a ordem da regra e defina os critérios quando ela for ativada"
+    },
+    "actions": {
+      "hide": "Ocultar",
+      "required": "Exigido",
+      "disabled": "Desabilitado"
     }
   },
   "filterPage": {
     "submitHidden": "Enviar dados de atributos para este campo até quando estiver oculto?",
-    "title": "Configure a cláusula para a regra ${action}",
+    "title": "Configure a expressão para a regra ${action}",
     "filterBuilder": "Configure a ação no campo quando o registro corresponder ${any_or_all} das seguintes expressões",
     "noFilterTip": "Utilizando as ferramentas abaixo, defina a declaração para quando a ação estiver ativa."
   }

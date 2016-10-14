@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Criteri attributo",
   "spatialFilter": "Filtro spaziale",
   "value": "VALUE",
-  "noAttributeSpatialFilterTip": "Nessun filtro definito. Tutte le feature verranno restituite."
+  "noAttributeSpatialFilterTip": "Nessun filtro definito. Tutte le feature verranno restituite.",
+  "showAllRelatedRecords": "Mostra tutti i record correlati"
 });

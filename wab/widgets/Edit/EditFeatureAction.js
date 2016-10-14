@@ -1,5 +1,5 @@
 
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ define([
     iconClass: 'icon-edit',
 
     isFeatureSupported: function(featureSet, layer){
-      if(featureSet.features.length !== 1 || !layer){
+      /*jshint unused: false*/
+      if(!layer) {
         return false;
       }
-
       var layerHasBeenConfiged = false;
       var editConfig = this.appConfig.getConfigElementById(this.widgetId).config;
       if(!editConfig.editor.layerInfos) {
@@ -53,26 +53,13 @@ define([
       }
     },
 
-    onExecute: function(featureSet){
+    onExecute: function(featureSet, layer){
       //jshint unused:false
       var def = new Deferred();
-      var featurePoint;
-      var showEvent = {};
-      var feature = featureSet.features[0];
       WidgetManager.getInstance().triggerWidgetOpen(this.widgetId)
       .then(function(editWidget) {
-        //TODO show edit depends on the feature
-        if(feature.geometry.type === 'point') {
-          featurePoint = feature.geometry;
-        } else {
-          featurePoint = feature.geometry.getExtent().getCenter();
-        }
-        showEvent.mapPoint = featurePoint;
-        showEvent.graphic = feature;
-        editWidget.reClickMap(showEvent);
-        def.resolve();
+        editWidget.beginEditingByFeatures(featureSet.features, layer);
       });
-
       return def.promise;
     }
   });

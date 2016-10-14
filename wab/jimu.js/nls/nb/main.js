@@ -6,6 +6,7 @@ define({
     "yes": "Ja",
     "no": "Nei",
     "next": "Neste",
+    "previous": "Forrige",
     "back": "Bak",
     "selected": "valgte",
     "name": "Navn",
@@ -52,7 +53,11 @@ define({
     "view": "Vis",
     "newText": "Ny",
     "edit": "Rediger",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabell",
+    "zoomIn": "Zoom inn",
+    "zoomOut": "Zoom ut",
+    "continue1": "Fortsett"
   },
   "errorCode": "Kode",
   "errorMessage": "Melding",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Skille mellom store og små bokstaver",
     "notSupportCaseSensitiveTip": "Administrerte tjenester støtter ikke spørringer som skiller mellom små og store bokstaver.",
-    "setFilterTip": "Angi filteret på riktig måte."
+    "setFilterTip": "Angi filteret på riktig måte.",
+    "cascadeFilterTip": "Vis kun verdier filtrert av tidligere uttrykk."
   },
   "featureLayerSource": {
     "layer": "Lag",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Klikk for å gjenopprette kartutstrekningen og synligheten for lagene der du slapp."
   },
   "featureActions": {
+    "featureActions": "Geoobjekthandlinger",
     "ZoomTo": "Zoom til",
     "PanTo": "Panorer til",
     "Flash": "Blits",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Legg til utvalg",
     "removeSelectionTip": "Fjern fra utvalg",
     "selectFromCurrentSelectionTip": "Velg fra gjeldende utvalg",
-    "unselectAllSelectionTip": "Opphev valget av alle valgte geoobjekter"
+    "unselectAllSelectionTip": "Opphev valget av alle valgte geoobjekter",
+    "selectByPolygon": "Select By Polygon",
+    "selectByCircle": "Select By Circle",
+    "selectByLine": "Select By Line",
+    "chooseSelectingTools": "Velg utvalgsverktøy",
+    "darw": "Tegn",
+    "drawShap": "Tegne en form"
   },
   "widgetManager": {
     "createWidgetError": "Feil ved oppretting av miniprogram",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Nettleseren støtter ikke 3D-webapper."
+  },
+  "map": {
+    "basemapNotAvailable": "Bakgrunnskart ikke tilgjengelig.",
+    "displayDefaultBasemap": "Viser i stedet standardbakgrunnskartet."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Det er for mange geoobjekter innenfor det valgte området på kartet. Det kan ta lang tid å hente alle dataene.",
+    "askForContinue": "Vil du fortsette?"
   }
 });

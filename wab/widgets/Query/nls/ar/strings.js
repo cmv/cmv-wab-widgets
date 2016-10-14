@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "معايير البيانات الجدولية",
   "spatialFilter": "عامل التصفية المكاني",
   "value": "قيمة",
-  "noAttributeSpatialFilterTip": "لم يتم تعريف عوامل تصفية، وسيتم إرجاع كل المعالم."
+  "noAttributeSpatialFilterTip": "لم يتم تعريف عوامل تصفية، وسيتم إرجاع كل المعالم.",
+  "showAllRelatedRecords": "إظهار جميع السجلات ذات الصلة"
 });

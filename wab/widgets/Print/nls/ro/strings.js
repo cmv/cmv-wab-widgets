@@ -4,6 +4,8 @@ define({
   "format": "Formatare",
   "layout": "Configuraţie",
   "settings": "Avansat",
+  "labels": "Etichete",
+  "showLabels": "Afişare etichete",
   "mapScaleExtent": "Scară/Extindere hartă",
   "preserve": "Menţinere",
   "mapScale": "scară hartă",

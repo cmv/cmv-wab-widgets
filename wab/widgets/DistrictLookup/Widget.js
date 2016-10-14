@@ -33,7 +33,9 @@ define([
   "dijit/layout/ContentPane",
   "jimu/dijit/LoadingIndicator",
   "dojo/_base/array",
-  "dijit/registry"
+  "dijit/registry",
+  "jimu/LayerInfos/LayerInfos",
+  "./utils"
 ], function (
   declare,
   BaseWidget,
@@ -69,7 +71,9 @@ define([
   ContentPane,
   LoadingIndicator,
   array,
-  registry
+  registry,
+  LayerInfos,
+  appUtils
 ) {
   return declare([BaseWidget], {
 
@@ -94,10 +98,18 @@ define([
     _directionsWidget: null, // Direction widget object
     _isValidConfig: null, //Flag to check whether config has valid data for the widget
     _hasMulitpleSourcesInSearch: true, //Set this flag if their are multiple sources in search
-
-    postMixInProperties: function(){
+    _tables: [],//Related table instances for configured layers
+    appUtils: null,
+    _precintRelatedRecordsPanel: null,//To display related table records for precint feature
+    _pollingRelatedRecordsPanel: null,//To display related table records for polling place
+    postMixInProperties: function () {
       //mixin default nls with widget nls
-      this.nls = lang.mixin(this.nls, window.jimuNls.common);
+      this.nls.common = {};
+      lang.mixin(this.nls.common, window.jimuNls.common);
+    },
+
+    postCreate: function () {
+      this._tables = []; //Related table instances for configured layers
     },
 
     startup: function () {
@@ -107,6 +119,8 @@ define([
       // validate if layers are configured then only load the widget
       this._isValidConfig = this._validateConfig();
       if (this._isValidConfig) {
+        //initialize utils widget
+        this.appUtils = new appUtils({ map: this.map });
         //update config for current webmap properties
         this._updateConfig();
         //Show main node
@@ -157,6 +171,44 @@ define([
         this._onWindowResize();
         this._connectMapEventHandler();
       }
+      this._updateLayerFilters();
+    },
+
+    /**
+    * update layer filters
+    */
+    _updateLayerFilters: function () {
+      //get map layer infos
+      LayerInfos.getInstance(this.map, this.map.webMapResponse.itemInfo).then(
+        lang.hitch(this, function (layerInfosObj) {
+          var precintLayer, pollingPlaceLayer, filter;
+          //updated definition expression for precint layer
+          precintLayer = layerInfosObj.getLayerInfoById(this.config.precinctLayerInfo
+            .id);
+          if (precintLayer) {
+            filter = precintLayer.getFilter();
+            if (filter !== this.config.precinctLayerInfo.definitionExpression) {
+              this.config.precinctLayerInfo.definitionExpression = filter;
+              if (this._precinctLayer) {
+                this._precinctLayer.setDefinitionExpression(this.config.precinctLayerInfo
+                  .definitionExpression);
+              }
+            }
+          }
+          //updated definition expression for polling-place layer
+          pollingPlaceLayer = layerInfosObj.getLayerInfoById(this.config.pollingPlaceLayerInfo
+            .id);
+          if (pollingPlaceLayer) {
+            filter = pollingPlaceLayer.getFilter();
+            if (filter !== this.config.precinctLayerInfo.definitionExpression) {
+              this.config.pollingPlaceLayerInfo.definitionExpression = filter;
+              if (this._pollingPlaceLayer) {
+                this._pollingPlaceLayer.setDefinitionExpression(this.config
+                  .pollingPlaceLayerInfo.definitionExpression);
+              }
+            }
+          }
+        }));
     },
 
     /**
@@ -181,6 +233,11 @@ define([
     onClose: function () {
       if (this._isValidConfig) {
         this._disconnectMapEventHandler();
+        this._clearResults();
+        //Clearing searchBox text value
+        if (this._searchContainerNodeElement) {
+          this._searchContainerNodeElement.value = "";
+        }
       }
     },
 
@@ -213,85 +270,18 @@ define([
     _updateConfig: function () {
       //update layer-details for polygon(precinct) layer
       lang.mixin(this.config.precinctLayerInfo,
-        this._getLayerDetailsFromMap(this.config.precinctLayerInfo.baseURL,
-          this.config.precinctLayerInfo.layerId));
+        this.appUtils.getLayerDetailsFromMap(
+          this.config.precinctLayerInfo.baseURL, this.config.precinctLayerInfo
+            .layerId, this.config.precinctLayerInfo.id));
       //update layer-details for related point(polling place) layer
       lang.mixin(this.config.pollingPlaceLayerInfo,
-        this._getLayerDetailsFromMap(this.config.pollingPlaceLayerInfo
-          .baseURL, this.config.pollingPlaceLayerInfo.layerId));
+        this.appUtils.getLayerDetailsFromMap(
+          this.config.pollingPlaceLayerInfo.baseURL, this.config.pollingPlaceLayerInfo
+            .layerId, this.config.pollingPlaceLayerInfo.id));
       //to ensure backward compatibility check if newly added kesy are present in config, if not add default values for it.
       if (!this.config.highlightColor) {
         this.config.highlightColor = "#00FFFF";
       }
-    },
-
-    /**
-    * This function gets selected layer details from map
-    * @return {object} Object of config
-    * @memberOf widgets/DistrictLookup
-    **/
-    _getLayerDetailsFromMap: function (baseURL, relatedLayerId) {
-      var selectedLayer = {};
-      //check if valid webmap details
-      if (this.map && this.map.webMapResponse && this.map.webMapResponse
-        .itemInfo && this.map.webMapResponse.itemInfo.itemData &&
-        this.map.webMapResponse.itemInfo.itemData.operationalLayers) {
-        //iterate through all operational layers of the webmap and get the required properties
-        array.forEach(this.map.webMapResponse.itemInfo.itemData.operationalLayers,
-          lang.hitch(this, function (layer) {
-            if (layer.layerObject) {
-              if (layer.layerType === "ArcGISMapServiceLayer" ||
-                layer.layerType === "ArcGISTiledMapServiceLayer") {
-                if (baseURL.substring(0, baseURL.length - 1) ===
-                  layer.url) {
-                  array.forEach(layer.layers, lang.hitch(this,
-                    function (subLayer) {
-                      if (subLayer.id === parseInt(
-                          relatedLayerId, 10)) {
-                        selectedLayer.popupInfo = subLayer.popupInfo;
-                        if (subLayer.layerDefinition) {
-                          //set layer's definitionExpression
-                          if (subLayer.layerDefinition.definitionExpression) {
-                            selectedLayer.definitionExpression = subLayer.layerDefinition
-                                    .definitionExpression;
-                          }
-                          //set layer's renderer from webmap
-                          if (subLayer.layerDefinition.drawingInfo &&
-                                subLayer.layerDefinition.drawingInfo.renderer) {
-                            selectedLayer.renderer = subLayer.layerDefinition
-                                    .drawingInfo.renderer;
-                          }
-                        }
-                        return;
-                      }
-                    }));
-                }
-              } else {
-                //check if layer url matches
-                if (layer.url.replace(/.*?:\/\//g, "") === (
-                    baseURL + relatedLayerId).replace(/.*?:\/\//g,
-                    "")) {
-                  selectedLayer.popupInfo = layer.popupInfo;
-                  if (layer.layerDefinition) {
-                    //set layer's definitionExpression
-                    if (layer.layerDefinition.definitionExpression) {
-                      selectedLayer.definitionExpression = layer.layerDefinition
-                              .definitionExpression;
-                    }
-                    //set layer's renderer from webmap
-                    if (layer.layerDefinition.drawingInfo && layer.layerDefinition
-                          .drawingInfo.renderer) {
-                      selectedLayer.renderer = layer.layerDefinition.drawingInfo
-                              .renderer;
-                    }
-                  }
-                  return;
-                }
-              }
-            }
-          }));
-      }
-      return selectedLayer;
     },
 
     /**
@@ -377,7 +367,7 @@ define([
           }]
         }, this.tabContainerPanel);
 
-        this.tabContainer.on("tabChanged", lang.hitch(this, function (
+        this.own(this.tabContainer.on("tabChanged", lang.hitch(this, function (
           tabTitle) {
           if (tabTitle === this.nls.directionTabTitle && !this._routeCalculated) {
             //Create's and display route between selected location and polling place
@@ -386,7 +376,7 @@ define([
           if (this.id && registry.byId(this.id)) {
             registry.byId(this.id).resize();
           }
-        }));
+        })));
         this.tabContainer.startup();
       } else {
         domClass.add(informationPanel, "esriCTTopBorder");
@@ -413,6 +403,14 @@ define([
           this.tabContainer.selectTab(this.nls.informationTabTitle);
         }
       })));
+      //create container for polling feature's related records
+      this._pollingRelatedRecordsPanel = domConstruct.create("div", {
+        "class": "esriCTRelatedRecordPanel"
+      }, informationPanel);
+      //create container for precint feature's related records
+      this._precintRelatedRecordsPanel = domConstruct.create("div", {
+        "class": "esriCTRelatedRecordPanel"
+      }, informationPanel);
     },
 
     /**
@@ -458,20 +456,19 @@ define([
       // create an instance of search widget
       searchInstance = new SearchInstance({
         searchOptions: searchOptions,
-        domNode: this.search,
         config: this.config,
         nls: this.nls,
         map: this.map
-      });
+      }, domConstruct.create("div", {}, this.search));
       //handle search widget events
-      searchInstance.on("select-result", lang.hitch(this, function (evt) {
+      this.own(searchInstance.on("select-result", lang.hitch(this, function (evt) {
         evt.isFeatureFromMapClick = false;
         //now init the workflow
         this._initWorkflow(evt);
-      }));
-      searchInstance.on("clear-search", lang.hitch(this, this._clearResults));
-      searchInstance.on("search-results", lang.hitch(this, this._clearResults));
-      searchInstance.on("search-loaded", lang.hitch(this, function () {
+      })));
+      this.own(searchInstance.on("clear-search", lang.hitch(this, this._clearResults)));
+      this.own(searchInstance.on("search-results", lang.hitch(this, this._clearResults)));
+      this.own(searchInstance.on("search-loaded", lang.hitch(this, function () {
         setTimeout(lang.hitch(this, function () {
           //get search container node to resize the search control
           this._searchContainerNodeElement = query(
@@ -483,7 +480,7 @@ define([
           }
           this._onWindowResize();
         }), 1000);
-      }));
+      })));
       // once widget is created call its startup method
       searchInstance.startup();
     },
@@ -538,6 +535,8 @@ define([
     * @memberOf widgets/DistrictLookup/Widget
     */
     _setLayers: function () {
+      //get table data from webmap
+      this._tables = this.map.webMapResponse.itemInfo.itemData.tables;
       //Create and  add graphics-layer for highlighting features
       this._highlightGraphicsLayer = new GraphicsLayer();
       this.map.addLayer(this._highlightGraphicsLayer);
@@ -549,6 +548,10 @@ define([
         this._precinctLayer.setDefinitionExpression(this.config.precinctLayerInfo
           .definitionExpression);
       }
+      //Set layer id
+      if (this.config.precinctLayerInfo.id) {
+        this._precinctLayer.id = this.config.precinctLayerInfo.id;
+      }
       //Set layer renderer
       if (this.config.precinctLayerInfo.renderer) {
         this._precinctLayer.setRenderer(this.config.precinctLayerInfo.renderer);
@@ -558,7 +561,16 @@ define([
         this._precinctLayer.setInfoTemplate(new PopupTemplate(
           this.config.precinctLayerInfo.popupInfo));
       }
-
+      //get related table information
+      if (this._precinctLayer.loaded) {
+        this._precinctLayer.tableInfos = this._getRelatedTableInfo(this._precinctLayer,
+          this.config.precinctLayerInfo);
+      } else {
+        this.own(this._precinctLayer.on("load", lang.hitch(this, function () {
+          this._precinctLayer.tableInfos = this._getRelatedTableInfo(
+            this._precinctLayer, this.config.precinctLayerInfo);
+        })));
+      }
       //create new feature layer for polling-place
       this._pollingPlaceLayer = new FeatureLayer(this.config.pollingPlaceLayerInfo
         .url);
@@ -567,15 +579,33 @@ define([
         this._pollingPlaceLayer.setDefinitionExpression(this.config.pollingPlaceLayerInfo
           .definitionExpression);
       }
+      //Set layer id
+      if (this.config.pollingPlaceLayerInfo.id) {
+        this._pollingPlaceLayer.id = this.config.pollingPlaceLayerInfo.id;
+      }
       //Set layer renderer
       if (this.config.pollingPlaceLayerInfo.renderer) {
-        this._pollingPlaceLayer.setRenderer(this.config.pollingPlaceLayerInfo.renderer);
+        this._pollingPlaceLayer.setRenderer(this.config.pollingPlaceLayerInfo
+          .renderer);
       }
       //if popup info available then only set the infotemplate
       if (this.config.pollingPlaceLayerInfo.popupInfo) {
         this._pollingPlaceLayer.setInfoTemplate(new PopupTemplate(
           this.config.pollingPlaceLayerInfo.popupInfo));
       }
+      //get related table information
+      if (this._pollingPlaceLayer.loaded) {
+        this._pollingPlaceLayer.tableInfos = this._getRelatedTableInfo(this._pollingPlaceLayer,
+          this.config.pollingPlaceLayerInfo);
+      } else {
+        this.own(this._pollingPlaceLayer.on("load", lang.hitch(this, function () {
+          this._pollingPlaceLayer.tableInfos = this._getRelatedTableInfo(
+            this._pollingPlaceLayer, this.config.pollingPlaceLayerInfo
+          );
+        })));
+      }
+      //get updated filters from layer
+      this._updateLayerFilters();
     },
 
     /**
@@ -637,6 +667,16 @@ define([
       if (this._highlightGraphicsLayer) {
         this._highlightGraphicsLayer.clear();
       }
+      //Setting visibility of FeatureListNode to hidden
+      if (this.featuresListNode && !domClass.contains(this.featuresListNode,
+        "esriCTHidden")) {
+        domClass.add(this.featuresListNode, "esriCTHidden");
+      }
+      //Setting visibility of resultsPanel to hidden
+      if (this.resultsPanel && !domClass.contains(this.resultsPanel,
+        "esriCTHidden")) {
+        domClass.remove(this.resultsPanel, "esriCTHidden");
+      }
       //clear Directions
       if (this._directionsWidget) {
         this._directionsWidget.clearDirections();
@@ -658,6 +698,14 @@ define([
       this._selectedPollingPlace = null;
       //It clears the list of result
       this._clearFeatureList();
+      this.map.infoWindow.hide();
+        //empty related popup container
+        if (this._pollingRelatedRecordsPanel) {
+          domConstruct.empty(this._pollingRelatedRecordsPanel);
+        }
+        if (this._precintRelatedRecordsPanel) {
+          domConstruct.empty(this._precintRelatedRecordsPanel);
+        }
     },
 
     /**
@@ -667,17 +715,17 @@ define([
     _connectMapEventHandler: function () {
       this._disableWebMapPopup();
       //handle map click
-      this._mapClickHandler = this.map.on("click", lang.hitch(this,
-        this._onMapClick));
+      this._mapClickHandler = this.own(this.map.on("click", lang.hitch(this,
+        this._onMapClick)))[0];
       //handle mouse move on map to show tooltip only on non-touch devices
       if ("ontouchstart" in document.documentElement) {
         domStyle.set(this._mapTooltip, "display", "none");
       } else {
-        this._mapMoveHandler = this.map.on("mouse-move", lang.hitch(
-          this, this._onMapMouseMove));
-        this.map.on("mouse-out", lang.hitch(this, function () {
+        this._mapMoveHandler = this.own(this.map.on("mouse-move", lang.hitch(
+          this, this._onMapMouseMove)))[0];
+        this.own(this.map.on("mouse-out", lang.hitch(this, function () {
           domStyle.set(this._mapTooltip, "display", "none");
-        }));
+        })));
       }
     },
 
@@ -877,6 +925,100 @@ define([
       }
       //get polling place
       this._getRelatedPollingPlaces(selectedFeature);
+      this._getRelatedRecords(selectedFeature, false);
+    },
+
+    /**
+    * Get related table info
+    * @param{int} layer index in array
+    * @memberOf widgets/DistrictLookup/Widget
+    **/
+    _getRelatedTableInfo: function (layer, config) {
+      var relatedTable, tableInfos = [];
+      if (layer) {
+        array.forEach(layer.relationships, lang.hitch(this, function (table) {
+          array.forEach(this._tables, lang.hitch(this, function (tableData, index) {
+            if (tableData.url.replace(/.*?:\/\//g, "") === (config.baseURL + table.relatedTableId).replace(/.*?:\/\//g, "")) {
+              if (tableData.popupInfo) {
+                //if popup is configure for related table
+                if (!tableData.relationshipIds) {
+                  tableData.relationshipIds = {};
+                }
+                tableData.relationshipIds[layer.id] = table.id;
+                tableInfos.push(index);
+              }
+            }
+          }));
+        }));
+      }
+      return tableInfos;
+    },
+
+    /**
+    * Get related record from the layers's respective tables
+    * @memberOf widgets/DistrictLookup/Widget
+    **/
+    _getRelatedRecords: function (selectedFeature, isPollingPlace) {
+      var tableInfos, layer, panel, featureId;
+      if (selectedFeature) {
+        if (isPollingPlace) {
+          tableInfos = this._pollingPlaceLayer.tableInfos;
+          layer = this._pollingPlaceLayer;
+          panel = this._pollingRelatedRecordsPanel;
+        } else {
+          tableInfos = this._precinctLayer.tableInfos;
+          layer = this._precinctLayer;
+          panel = this._precintRelatedRecordsPanel;
+        }
+        if (panel) {
+          domConstruct.empty(panel);
+        }
+        //get related records from polling-place layer
+        array.forEach(tableInfos, lang.hitch(this, function (tableIndex) {
+          featureId = selectedFeature.attributes[layer.objectIdField];
+          this._queryRelatedRecords(layer, this._tables[tableIndex], featureId, panel);
+        }));
+      }
+    },
+
+    /**
+    * Query for related records
+    * @memberOf widgets/DistrictLookup/Widget
+    **/
+    _queryRelatedRecords: function (layer, tableInfo, featureId, panel) {
+      if (tableInfo && layer) {
+        var queryParams = new RelationshipQuery();
+        queryParams.objectIds = [parseInt(featureId, 10)];
+        queryParams.outFields = ["*"];
+        queryParams.relationshipId = tableInfo.relationshipIds[layer.id];
+        //if filter is configured in webmap for related table
+        if (tableInfo.layerDefinition && tableInfo.layerDefinition.definitionExpression) {
+          queryParams.where = tableInfo.layerDefinition.definitionExpression;
+        }
+        layer.queryRelatedFeatures(queryParams, lang.hitch(this, function (results) {
+          var fset, features;
+          fset = results[featureId];
+          features = fset ? fset.features : [];
+          array.forEach(features, lang.hitch(this, function (feature) {
+            feature.setInfoTemplate(new PopupTemplate(tableInfo.popupInfo));
+            this._showPopupInfo(feature, panel);
+          }));
+        }));
+      }
+    },
+
+
+    /**
+    * Show related popup info in information panel
+    * @memberOf widgets/DistrictLookup/Widget
+    **/
+    _showPopupInfo: function (feature, panel) {
+      if (feature) {
+        var contentPane = new ContentPane({ "class": "esriCTPopupInfo" },
+          domConstruct.create("div", {}, panel));
+        contentPane.startup();
+        contentPane.set("content", feature.getContent());
+      }
     },
 
     /**
@@ -981,6 +1123,7 @@ define([
                   pollingPlaceAttachmentsDiv, this._pollingPlaceLayer
                 );
               }
+              this._getRelatedRecords(result.features[0], true);
             }
             //if any of the layer is having infotempate then show the result panel
             if (this._pollingPlaceLayer.infoTemplate || this._precinctLayer.infoTemplate) {
@@ -1258,13 +1401,13 @@ define([
         this._directionsWidget.startup();
       }
       //handle directions-finish event to resize the widget and hide the loading indicator
-      this._directionsWidget.on("directions-finish", lang.hitch(this,
+      this.own(this._directionsWidget.on("directions-finish", lang.hitch(this,
         function () {
           if (this.id && registry.byId(this.id)) {
             registry.byId(this.id).resize();
           }
           this._loading.hide();
-        }));
+        })));
       //clears previous directions
       this._directionsWidget.clearDirections();
       //check if valid selected/searched location and pollingPlace features

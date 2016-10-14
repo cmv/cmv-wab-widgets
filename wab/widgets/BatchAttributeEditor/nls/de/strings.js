@@ -24,6 +24,7 @@ define({
   "filterPopup": "Layer filtern",
   "cancel": "Abbrechen",
   "noValue": "Kein Wert",
+  "emptyString": "Leere Zeichenfolge",
   "existingValue": "Vorhandenen Wert beibehalten",
   "newDate": "Neue Daten",
   "valueChooser": "Einen Wert auswählen/eingeben",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Der Layer ${0} mit der ID ${1} wurde nicht auf der Karte gefunden. Die Karte wurde möglicherweise nach der Widget-Konfiguration geändert",
     "queryNullID": "Das Feature aus ${0} gab eine ungültige ID zurück",
     "noSelectedLayers": "Keine ausgewählten Layer mit zu aktualisierenden Datensätzen",
-    "inputValueError": "Ungültiger Wert im Formular"
+    "inputValueError": "Ungültiger Wert im Formular",
+    "saveError": "${0} Features konnten nicht gespeichert werden; Details wurden der Konsole hinzugefügt",
+    "requiredValue": "Erforderlicher Wert"
   }
 });

@@ -4,6 +4,8 @@ define({
   "format": "Opmaak",
   "layout": "Lay-out",
   "settings": "Geavanceerd",
+  "labels": "Labels",
+  "showLabels": "Labels weergeven",
   "mapScaleExtent": "Kaartschaal/-extent",
   "preserve": "Behouden",
   "mapScale": "kaartschaal",

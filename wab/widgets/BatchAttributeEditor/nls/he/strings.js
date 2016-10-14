@@ -1,6 +1,6 @@
 define({
   "_widgetLabel": "עורך מאפיינים באצווה",
-  "widgetIntroSelectByArea": "השתמש באחד הכלים המפורטים להלן כדי ליצור ערכת ישויות נבחרות לעדכון.  אם השורה <font class='maxRecordInIntro'>מסומנת</font>, חרגת ממספר הרשומות המקסימלי.",
+  "widgetIntroSelectByArea": "השתמש באחד הכלים המפורטים להלן כדי ליצור סט ישויות נבחרות לעדכון.  אם השורה <font class='maxRecordInIntro'>מסומנת</font>, חרגת ממספר הרשומות המקסימלי.",
   "widgetIntroSelectByFeature": "השתמש בכלי שלהלן כדי לבחור ישות מהשכבה <font class='layerInIntro'>${‏0}</font>.  ישות זו תשמש לבחירה ועדכון של כל הישויות הנחתכות.  אם השורה <font class='maxRecordInIntro'>מסומנת</font>, חרגת ממספר הרשומות המקסימלי.",
   "widgetIntroSelectByFeatureQuery": "השתמש בכלי שלהלן כדי לבחור ישות מתוך <font class='layerInIntro'>${‏0}</font>.  מאפיין <font class='layerInIntro'>${1}</font> של הישות ישמש לשליחת שאילתות לשכבות שמתחת ולעדכון הישויות המתקבלות.  אם השורה <font class='maxRecordInIntro'>מסומנת</font>, חרגת ממספר הרשומות המקסימלי.",
   "widgetIntroSelectByQuery": "הזן ערך כדי ליצור סט בחירה.  אם השורה <font class='maxRecordInIntro'>מסומנת</font>, חרגת ממספר הרשומות המקסימלי.",
@@ -24,6 +24,7 @@ define({
   "filterPopup": "שכבת סינון",
   "cancel": "ביטול",
   "noValue": "ללא ערך",
+  "emptyString": "מחרוזת ריקה",
   "existingValue": "השאר ערך קיים",
   "newDate": "תאריך חדש",
   "valueChooser": "בחר/הקלד ערך",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "השכבה ${0} שמספר הזיהוי שלה הוא ${1} לא נמצאה במפה, יתכן שחלו במפה שינויים מאז הגדרת הווידג'טים",
     "queryNullID": "השכבה מ- ${0} החזירה מספר זיהוי שגוי",
     "noSelectedLayers": "אין שכבות בחורות שקיימות בהן רשומות שיש לעדכן",
-    "inputValueError": "קיים ערך לא חוקי בטופס"
+    "inputValueError": "קיים ערך לא חוקי בטופס",
+    "saveError": "לא ניתן לשמור ${0} ישויות, הפרטים נוספו ללוח הבקרה",
+    "requiredValue": "ערך נדרש"
   }
 });

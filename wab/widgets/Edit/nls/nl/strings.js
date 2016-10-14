@@ -9,5 +9,8 @@ define({
   "featureLayers": "Objectlagen",
   "searchTemplates": "Templates zoeken",
   "noAvailableTempaltes": "Geen beschikbare templates",
-  "noCanCreateLayerAreCurrentlyVisible": "Er zijn momenteel geen maakbare lagen zichtbaar."
+  "noCanCreateLayerAreCurrentlyVisible": "Er zijn momenteel geen maakbare lagen zichtbaar.",
+  "relatedTables": "Gerelateerde tabellen:",
+  "relatedRecords": "Gerelateerde records:",
+  "noRelatedRecotds": "Geen verwante records gevonden"
 });

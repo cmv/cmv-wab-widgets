@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Smart redigerare",
+  "noEditPrivileges": "Ditt konto har inte behörighet att skapa eller ändra data.",
+  "widgetActive": "Aktiv",
+  "widgetNotActive": "Inte aktiv",
   "pressStr": "Tryck på ",
   "ctrlStr": " CTRL ",
   "snapStr": " när du vill aktivera snappning",
@@ -19,5 +22,6 @@ define({
     "all": "Alla",
     "noAvailableTempaltes": "Inga tillgängliga mallar",
     "searchTemplates": "Sök efter mallar"
-  }
+  },
+  "invalidConfiguration": "Widgeten är antingen inte konfigurerad eller så finns lagren i konfigurationen inte längre i kartan. Öppna appen i byggläge och konfigurera om widgeten."
 });

@@ -39,16 +39,16 @@
     }
 
     .jimu-widget-smartEditor-setting .disable {
-        width: 200px;
+        width: 220px;
     }
 
     .jimu-widget-smartEditor-setting .actions {
-        width: 50px;
-        padding-right: 0 !important;
+        width: 70px;
+        padding-right: 1px !important;
     }
 
     .jimu-widget-smartEditor-setting .description {
-        width: 100px;
+        width: 90px;
     }
 /*CSS for fields config tables*/
 .jimu-widget-smartEditor-setting-fields .required {
@@ -59,7 +59,7 @@
 }
 
 .jimu-widget-smartEditor-setting-fields .editable {
-    width: 90px;
+    width: 120px;
 }
 
 .jimu-widget-smartEditor-setting-fields .visible {
@@ -67,11 +67,11 @@
 }
 
 .jimu-widget-smartEditor-setting-fields .preset {
-    width: 80px;
+    width: 120px;
 }
 
 .jimu-widget-smartEditor-setting-fields .fieldName {
-      width: 120px;
+      width: 190px;
 }
 
 .jimu-widget-smartEditor-setting-fields .fieldLabel {
@@ -93,7 +93,7 @@
 }
 /*CSS for fields rule tables*/
 .jimu-widget-smartEditor-rule-table .rule {
-    width: 125px;
+    width: 185px;
 }
 
 .jimu-widget-smartEditor-rule-table .expression {

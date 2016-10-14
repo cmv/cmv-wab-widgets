@@ -9,5 +9,8 @@ define({
   "featureLayers": "Capas de entidades",
   "searchTemplates": "Buscar plantillas",
   "noAvailableTempaltes": "No hay plantillas disponibles",
-  "noCanCreateLayerAreCurrentlyVisible": "Actualmente no hay visible ninguna capa que se pueda crear."
+  "noCanCreateLayerAreCurrentlyVisible": "Actualmente no hay visible ninguna capa que se pueda crear.",
+  "relatedTables": "Tablas relacionadas:",
+  "relatedRecords": "Registros relacionados:",
+  "noRelatedRecotds": "No se encontraron registros relacionados"
 });

@@ -9,5 +9,8 @@ define({
   "featureLayers": "フィーチャ レイヤー",
   "searchTemplates": "テンプレートの検索",
   "noAvailableTempaltes": "利用可能なテンプレートがありません",
-  "noCanCreateLayerAreCurrentlyVisible": "作成可能なレイヤーが現在表示されていません。"
+  "noCanCreateLayerAreCurrentlyVisible": "作成可能なレイヤーが現在表示されていません。",
+  "relatedTables": "関連テーブル:",
+  "relatedRecords": "関連レコード:",
+  "noRelatedRecotds": "関連するレコードが見つかりませんでした"
 });

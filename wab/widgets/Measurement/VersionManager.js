@@ -54,6 +54,11 @@ function(BaseVersionManager) {
         }
         return newConfig;
       }
+    }, {
+      version: '2.2',
+      upgrader: function(oldConfig) {
+        return oldConfig;
+      }
     }];
   }
 

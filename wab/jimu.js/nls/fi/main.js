@@ -6,6 +6,7 @@ define({
     "yes": "Kyllä",
     "no": "Ei",
     "next": "Seuraava",
+    "previous": "Edellinen",
     "back": "Takaisin",
     "selected": "valitut",
     "name": "Nimi",
@@ -52,7 +53,11 @@ define({
     "view": "Näytä",
     "newText": "Uusi",
     "edit": "Muokkaa",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Taulukko",
+    "zoomIn": "Lähennä",
+    "zoomOut": "Loitonna",
+    "continue1": "Jatka"
   },
   "errorCode": "Koodi",
   "errorMessage": "Viesti",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Kirjainkoolla on merkitystä",
     "notSupportCaseSensitiveTip": "Isännöidyt palvelut eivät tue kirjainkoon tunnistavaa kyselyä.",
-    "setFilterTip": "Määritä suodatin oikein."
+    "setFilterTip": "Määritä suodatin oikein.",
+    "cascadeFilterTip": "Näytä vain aiempien lausekkeiden suodattamat arvot."
   },
   "featureLayerSource": {
     "layer": "Karttataso",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Palauta karttalaajuus ja karttatasojen näkyvyys tilaan, jossa ne olivat alun perin."
   },
   "featureActions": {
+    "featureActions": "Kohdetoiminnot",
     "ZoomTo": "Tarkenna kohteeseen",
     "PanTo": "Vieritä kohteeseen",
     "Flash": "Väläytä",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Lisää valinta",
     "removeSelectionTip": "Remove from selection",
     "selectFromCurrentSelectionTip": "Valitse nykyisestä valinnasta",
-    "unselectAllSelectionTip": "Poista kaikkien tällä hetkellä valittujen kohteiden valinta"
+    "unselectAllSelectionTip": "Poista kaikkien tällä hetkellä valittujen kohteiden valinta",
+    "selectByPolygon": "Valitse alueella",
+    "selectByCircle": "Valitse ympyrällä",
+    "selectByLine": "Valitse viivalla",
+    "chooseSelectingTools": "Valitse valintatyökalut",
+    "darw": "Piirrä",
+    "drawShap": "Piirrä muoto"
   },
   "widgetManager": {
     "createWidgetError": "Pienoisohjelman luontivirhe",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Selaimesi ei tue 3D-web-sovelluksia."
+  },
+  "map": {
+    "basemapNotAvailable": "Taustakartta ei ole käytettävissä.",
+    "displayDefaultBasemap": "Näytetään oletustaustakartta sen sijaan."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Valitsemallasi alueella kartalla on liikaa kohteita. Kaikkien tietojen nouto voi kestää kauan.",
+    "askForContinue": "Haluatko jatkaa?"
   }
 });

@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Zmierz wysokość",
   "intialScaleLabel": "Wybierz początkową skalę dla zobrazowania w rzucie ukośnym",
   "smallBuildingLabel": "Obszar zurbanizowany: mały budynek",
-  "buildingLabel": "Obszar zurbanizowany: budynek"
+  "buildingLabel": "Obszar zurbanizowany: budynek",
+  "azimuthChangeNotification": "Nie ma danych w wybranym kierunku."
 });

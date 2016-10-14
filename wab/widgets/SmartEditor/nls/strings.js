@@ -1,6 +1,9 @@
 define({
   root: ({
     _widgetLabel: "Smart Editor",
+    noEditPrivileges: "Your account does not have permission to create or modify data.",
+    widgetActive:"Active",
+    widgetNotActive:"Not Active",
     pressStr: "Press ",
     ctrlStr: " CTRL ",
     snapStr: " to enable snapping",
@@ -20,7 +23,8 @@ define({
       all: "All",
       noAvailableTempaltes: "No available templates",
       searchTemplates: "Search Templates"
-    }
+    },
+    invalidConfiguration: "Widget is either not configured or the layers in the configuration are no longer in the map.  Please open the app in the builder mode and reconfigure the widget."
   }),
   "ar": 1,
   "cs": 1,

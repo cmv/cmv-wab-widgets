@@ -9,5 +9,8 @@ define({
   "featureLayers": "Camadas de Elementos",
   "searchTemplates": "Modelos Pesquisáveis",
   "noAvailableTempaltes": "Modelos não disponíveis",
-  "noCanCreateLayerAreCurrentlyVisible": "Não sencontram visíveis quaisquer camadas que possam ser criadas."
+  "noCanCreateLayerAreCurrentlyVisible": "Não sencontram visíveis quaisquer camadas que possam ser criadas.",
+  "relatedTables": "Tabelas relacionadas:",
+  "relatedRecords": "Registos relacionados:",
+  "noRelatedRecotds": "Não foram encontrados registos relacionados"
 });

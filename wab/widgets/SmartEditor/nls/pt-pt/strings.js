@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Editor Inteligente",
+  "noEditPrivileges": "A sua conta não tem permissão para criar ou modificar dados.",
+  "widgetActive": "Ativo",
+  "widgetNotActive": "Não Ativo",
   "pressStr": "Pressione ",
   "ctrlStr": " CTRL ",
   "snapStr": " para ativar o ajuste automático",
@@ -19,5 +22,6 @@ define({
     "all": "Todas",
     "noAvailableTempaltes": "Modelos não disponíveis",
     "searchTemplates": "Modelos Pesquisáveis"
-  }
+  },
+  "invalidConfiguration": "O widget não se encontra configurado ou as camadas da configuração já não se encontram no mapa.  Por favor, abra a aplicação no modo de builder e reconfigure o widget."
 });

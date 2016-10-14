@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtr vrstvy",
   "cancel": "Storno",
   "noValue": "Žádná hodnota",
+  "emptyString": "Prázdný řetězec",
   "existingValue": "Zachovat stávající hodnotu",
   "newDate": "Nové datum",
   "valueChooser": "Vyberte či zadejte hodnotu",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Vrstva ${0} s ID ${1} nebyla v mapě nalezena. Mapa se možná od prvotní konfigurace změnila.",
     "queryNullID": "Prvek z ${0} vrátil neplatné ID",
     "noSelectedLayers": "Nebyly zvoleny žádné vrstvy se záznamy k aktualizování",
-    "inputValueError": "Formulář obsahuje neplatnou hodnotu"
+    "inputValueError": "Formulář obsahuje neplatnou hodnotu",
+    "saveError": "Nelze uložit ${0} prvků. Detaily byly přidány do konzoly.",
+    "requiredValue": "Vyžadovaná hodnota"
   }
 });

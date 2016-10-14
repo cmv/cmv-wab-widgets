@@ -122,5 +122,6 @@ define({
   "uploadImage": "Nahrát obrázek",
   "attributeCriteira": "Kritéria atributu",
   "specifyFilterAtRuntimeTip": "Uživatelé budou muset zadat parametry pro tento výraz.",
-  "value": "HODNOTA"
+  "value": "HODNOTA",
+  "hideLayersTip": "Vypnout vrstvy výsledků dotazování, když je widget uzavřen."
 });

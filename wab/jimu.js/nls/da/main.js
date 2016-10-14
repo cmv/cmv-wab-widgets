@@ -6,6 +6,7 @@ define({
     "yes": "Ja",
     "no": "Nej",
     "next": "Næste",
+    "previous": "Forrige",
     "back": "Tilbage",
     "selected": "valgt",
     "name": "Navn",
@@ -52,7 +53,11 @@ define({
     "view": "Vis",
     "newText": "Ny",
     "edit": "Redigér",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabel",
+    "zoomIn": "Zoom ind",
+    "zoomOut": "Zoom ud",
+    "continue1": "Fortsæt"
   },
   "errorCode": "Kode",
   "errorMessage": "Meddelelse",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Skelner mellem store og små bogstaver",
     "notSupportCaseSensitiveTip": "\"Hostede\" tjenester understøtter ikke forespørgsler, der skelner mellem store og små bogstaver.",
-    "setFilterTip": "Angiv filteret korrekt."
+    "setFilterTip": "Angiv filteret korrekt.",
+    "cascadeFilterTip": "Vis kun værdier filtreret efter de forrige udtryk."
   },
   "featureLayerSource": {
     "layer": "Lag",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Klik for at gendanne kortudstrækningen og lagenes synlighed dér, hvor du var nået til."
   },
   "featureActions": {
+    "featureActions": "Objekthandlinger",
     "ZoomTo": "Zoom til",
     "PanTo": "Panorér til",
     "Flash": "Blitz",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Føj til markering",
     "removeSelectionTip": "Fjern fra markeringen",
     "selectFromCurrentSelectionTip": "Vælg ud fra den aktuelle markering",
-    "unselectAllSelectionTip": "Fravælg alle aktuelt valgte objekter"
+    "unselectAllSelectionTip": "Fravælg alle aktuelt valgte objekter",
+    "selectByPolygon": "Vælg efter polygon",
+    "selectByCircle": "Vælg efter cirkel",
+    "selectByLine": "Vælg efter linje",
+    "chooseSelectingTools": "Vælg markeringsværktøjer",
+    "darw": "Tegn",
+    "drawShap": "Tegn en form"
   },
   "widgetManager": {
     "createWidgetError": "Fejl ved oprettelse af widget",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D-webapplikationer understøttes ikke i din browser."
+  },
+  "map": {
+    "basemapNotAvailable": "Baggrundskortet er ikke tilgængeligt.",
+    "displayDefaultBasemap": "Viser standardbaggrundskort i stedet for."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Der er for mange objekter inden for det valgte område på kortet. Det kan tage for lang tid at hente alle data.",
+    "askForContinue": "Vil du fortsætte?"
   }
 });

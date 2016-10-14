@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Mittaa korkeus",
   "intialScaleLabel": "Valiste viistokuvien aloitusmittakaava",
   "smallBuildingLabel": "Kaupunkialue: pieni rakennus",
-  "buildingLabel": "Kaupunkialue: rakennus"
+  "buildingLabel": "Kaupunkialue: rakennus",
+  "azimuthChangeNotification": "Valitussa suunnassa ei ole tietoja."
 });

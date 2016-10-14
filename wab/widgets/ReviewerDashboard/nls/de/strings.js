@@ -14,7 +14,7 @@ define({
   "filtersTab": "Einstellungen",
   "noResults": "Keine Ergebnisse gefunden",
   "resultsBy": "Ergebnisse nach: ",
-  "reviewed": "Widerrufen",
+  "reviewed": "Review",
   "corrected": "Korrektur",
   "verified": "Überprüfung",
   "OtherCategory": "Andere",

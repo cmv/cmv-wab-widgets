@@ -78,13 +78,25 @@ define(
         return result;
       },
 
+      _nlsActionToConfig: function (label) {
+        switch (label) {
+          case this.nls.actionPage.actions.hide:
+            return "Hide";
+          case this.nls.actionPage.actions.disabled:
+            return "Disabled";
+          case this.nls.actionPage.actions.required:
+            return "Required";
+          default:
+            return label;
+        }
+      },
       popupActionsPage: function () {
 
         var fieldsPopup = new Popup({
           titleLabel: esriLang.substitute(
             { fieldname: this._fieldName },
             this.nls.actionPage.title),
-          width: 720,
+          width: 920,
           maxHeight: 600,
           autoHeight: true,
           content: this,
@@ -104,7 +116,7 @@ define(
 
                 var newAction = {};
 
-                newAction.actionName = rowData.label;
+                newAction.actionName = this._nlsActionToConfig(rowData.label);
                 newAction.submitWhenHidden = rowData.submitWhenHidden;
                 if (rowData.expression !== undefined && rowData.expression !== null &&
                   rowData.expression !== '') {
@@ -178,7 +190,9 @@ define(
         this._validationTable.startup();
         var nl = query("th.simple-table-field", this._validationTable.domNode);
         nl.forEach(function (node) {
-          switch (node.innerText) {
+          var scrubText = (node.innerText === undefined || node.innerText === "") ?
+            "" : node.innerText.replace(/(\r\n|\n|\r)/gm, "");
+          switch (scrubText) {
             case this.nls.actionPage.actionsSettingsTable.rule:
               node.title = this.nls.actionPage.actionsSettingsTable.ruleTip;
               break;
@@ -217,19 +231,60 @@ define(
         var actions = this._getConfigActionOrder();
         array.forEach(actions, function (action) {
           var configAction = this._getConfigAction(action);
+          var actionLbl = action;
+          switch (action){
+            case "Hide":
+              if (this.nls.actionPage.hasOwnProperty("actions")){
+                if (this.nls.actionPage.actions.hasOwnProperty("hide")){
+                  actionLbl = this.nls.actionPage.actions.hide;
+                }
+              }
+              break;
+            case "Required":
+              if (this.nls.actionPage.hasOwnProperty("actions")) {
+                if (this.nls.actionPage.actions.hasOwnProperty("required")) {
+                  actionLbl = this.nls.actionPage.actions.required;
+                }
+              }
+              break;
+            case "Disabled":
+              if (this.nls.actionPage.hasOwnProperty("actions")) {
+                if (this.nls.actionPage.actions.hasOwnProperty("disabled")) {
+                  actionLbl = this.nls.actionPage.actions.disabled;
+                }
+              }
+              break;
+            default:
+              actionLbl = action;
+              break;
+          }
           var settings = {
-            label: action,
+            label: actionLbl,
             expression: null
           };
           if (configAction !== undefined && configAction !== null) {
-            if (configAction.expression !== undefined &&
-              configAction.expression !== null && configAction.expression !== '') {
-
+            if (configAction.hasOwnProperty("filter")) {
+              if (configAction.filter !== undefined &&
+                configAction.filter !== null) {
+                settings.filter = JSON.stringify(configAction.filter);
+                settings.expression = configAction.filter.expr;
+              }
+            }
+            if (configAction.hasOwnProperty("expression")) {
               settings.expression = configAction.expression;
+            }
+            if (configAction.hasOwnProperty("submitWhenHidden")) {
               settings.submitWhenHidden = configAction.submitWhenHidden;
-              settings.filter = JSON.stringify(configAction.filter);
             }
           }
+          //  if (configAction.expression !== undefined &&
+          //    configAction.expression !== null && configAction.expression !== '') {
+
+          //    settings.expression = configAction.expression;
+          //    settings.submitWhenHidden = configAction.submitWhenHidden;
+          //    settings.filter = JSON.stringify(configAction.filter);
+          //  }
+          //}
           this._validationTable.addRow(settings);
 
 

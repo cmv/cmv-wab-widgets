@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -94,9 +94,6 @@ define(['dojo/_base/declare',
             findWidget;
 
           setting = lang.clone(setting);
-          if (!setting.folderUrl) {
-            utils.widgetJson.processWidgetJson(setting);
-          }
 
           findWidget = this.getWidgetById(setting.id);
 
@@ -143,7 +140,13 @@ define(['dojo/_base/declare',
           //    load the widget's main class, and return deferred
           var def = new Deferred();
 
-          require(utils.getRequireConfig(), [setting.uri], lang.hitch(this, function(clazz) {
+          var uri;
+          if(setting.isRemote){
+            uri = setting.uri + '.js';
+          }else{
+            uri = setting.uri;
+          }
+          require(utils.getRequireConfig(), [uri], lang.hitch(this, function(clazz) {
             def.resolve(clazz);
           }));
 
@@ -186,7 +189,7 @@ define(['dojo/_base/declare',
 
         loadWidgetManifest: function(widgetJson){
           var def = new Deferred();
-          var url = widgetJson.folderUrl + 'manifest.json';
+          var url = utils.getUriInfo(widgetJson.uri).folderUrl + 'manifest.json';
           //json.manifest is added in configmanager if manifest is merged.
           if(widgetJson.manifest){
             def.resolve(widgetJson);
@@ -199,8 +202,8 @@ define(['dojo/_base/declare',
               "X-Requested-With": null
             }
           }).then(lang.hitch(this, function(manifest){
-            manifest.amdFolder = widgetJson.amdFolder;
             manifest.category = 'widget';
+            lang.mixin(manifest, utils.getUriInfo(widgetJson.uri));
 
             utils.manifest.addI18NLabel(manifest).then(lang.hitch(this, function(){
               this._processManifest(manifest);
@@ -377,7 +380,13 @@ define(['dojo/_base/declare',
           //    load the widget's main class, and return deferred
           var def = new Deferred();
 
-          require(utils.getRequireConfig(), [setting.folderUrl + 'setting/Setting.js'],
+          var uri;
+          if(setting.isRemote){
+            uri = setting.folderUrl + 'setting/Setting.js';
+          }else{
+            uri = setting.amdFolder + 'setting/Setting';
+          }
+          require(utils.getRequireConfig(), [uri],
           lang.hitch(this, function(clazz) {
             def.resolve(clazz);
           }));
@@ -1105,7 +1114,11 @@ define(['dojo/_base/declare',
             hasp = 'hasSettingUIFile';
           } else if (flag === 'settingI18n') {
             file = setting.amdFolder + 'setting/nls/strings.js';
-            setting.settingI18nFile = setting.amdFolder + 'setting/nls/strings';
+            if(setting.isRemote){
+              setting.settingI18nFile = file;
+            }else{
+              setting.settingI18nFile = setting.amdFolder + 'setting/nls/strings';
+            }
             hasp = 'hasSettingLocale';
           } else if (flag === 'settingStyle') {
             file = setting.amdFolder + 'setting/css/style.css';

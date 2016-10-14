@@ -7,7 +7,8 @@
   "dojo/on",
   "dojo/text!./layerChooserPopup.html",
   "jimu/dijit/LayerChooserFromMap",
-  "jimu/dijit/Popup"
+  "jimu/dijit/Popup",
+  "dojo/dom-construct"
 ], function (
   declare,
   BaseWidgetSetting,
@@ -17,7 +18,8 @@
   on,
   LayerChooseTemplate,
   LayerChooserFromMap,
-  Popup
+  Popup,
+  domConstruct
 ) {
   // to create a widget, derive it from BaseWidget.
   return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
@@ -30,20 +32,11 @@
       this.inherited(arguments);
     },
     postCreate: function () {
-      //create popup for layer selector
-      this._createLayerSelectorPopup();
+      this.searchLayers = []; //to store selected  search layers
       // initialize layer chooser
       this._initLayerSelector();
-      //provide handler when cancel button is clicked
-      this.own(on(this.cancelButton, "click", lang.hitch(this, function () {
-        this.onCancelClick();
-      })));
-      this.own(on(this.okButton, "click", lang.hitch(this, function () {
-        if (!domClass.contains(this.okButton, "jimu-state-disabled")) {
-          this._getSelectedSearchLayers();
-          this.onOkClick();
-        }
-      })));
+      //create popup for layer selector
+      this._createLayerSelectorPopup();
     },
 
     /**
@@ -63,10 +56,10 @@
       this._layerChooserFromMap._onTreeClick = lang.hitch(this, function () {
         if (this._layerChooserFromMap.getSelectedItems().length) {
           //enable 'OK' button if any layer is selected
-          domClass.remove(this.okButton, "jimu-state-disabled");
+          this.popup.enableButton(0);
         } else {
           //disable 'OK' button if no layer is selected
-          domClass.add(this.okButton, "jimu-state-disabled");
+          this.popup.disableButton(0);
         }
       });
     },
@@ -89,12 +82,27 @@
     * @memberOf widgets/NearMe/setting/layerChooserPopup
     **/
     _createLayerSelectorPopup: function () {
+      //creating ok button
+      this.okButton = domConstruct.create("button", {
+        title: this.nls.common.ok
+      });
+      this.okButton.label = this.nls.common.ok;
+      this.okButton.onClick = lang.hitch(this, this._getSelectedSearchLayers);
+      //creating cancel button
+      this.cancelButton = domConstruct.create("button", {
+        title: this.nls.common.cancel
+      });
+      this.cancelButton.label = this.nls.common.cancel;
+      //initializing popup with default configuration
       this.popup = new Popup({
         titleLabel: this.nls.layerSelector.selectLayerLabel,
+        content: this.layerSelectorContainer,
         width: 640,
-        height: 200,
-        content: this.layerSelectorContainer
+        autoHeight: true,
+        buttons: [this.okButton, this.cancelButton]
       });
+      //Setting default state of ok button as disabled
+      this.popup.disableButton(0);
     },
 
     /**
@@ -128,11 +136,9 @@
           this.searchLayers.push(layerItem);
         }
       }
+      this.onOkClick();
     },
     onOkClick: function (evt) {
-      return evt;
-    },
-    onCancelClick: function (evt) {
       return evt;
     }
   });

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,7 +53,6 @@ define([
       currentTaskSetting: null,
       hiddenClass: "not-visible",
       _resultLayerInfos: null,//[{value,label,taskIndex,singleQueryResult}]
-      _activeLayerId: null,//save the current visible layer id
       mapManager: null,
       layerInfosObj: null,
 
@@ -119,22 +118,19 @@ define([
       },
 
       onOpen: function(){
-        // var resultLayers = this._getAllResultLayers();
-        // array.forEach(resultLayers, lang.hitch(this, function(layer){
-        //   layer.show();
-        // }));
-
-        if(this._activeLayerId){
-          var layer = this.map.getLayer(this._activeLayerId);
-          if(layer){
-            layer.show();
-          }
+        var info = this._getCurrentResultLayerInfo();
+        var singleQueryResult = info &&　info.singleQueryResult;
+        if(singleQueryResult){
+          singleQueryResult.showLayer();
         }
+        this._showTempLayers();
+        this.inherited(arguments);
       },
 
       onActive: function(){
         //this.map.setInfoWindowOnClick(false);
         this.mapManager.disableWebMapPopup();
+        this._showTempLayers();
       },
 
       onDeActive: function(){
@@ -144,17 +140,15 @@ define([
           this.currentTaskSetting.deactivate();
         }
         this.mapManager.enableWebMapPopup();
+        this._hideTempLayers();
       },
 
       onClose:function(){
-        // var resultLayers = this._getAllResultLayers();
-        // array.forEach(resultLayers, lang.hitch(this, function(layer){
-        //   if(!layer.keepResultsOnMapAfterCloseWidget){
-        //     layer.hide();
-        //   }
-        // }));
-        this._hideAllLayers();
+        if(this.config.hideLayersAfterWidgetClosed){
+          this._hideAllLayers();
+        }
         this._hideInfoWindow();
+        this._hideTempLayers();
         this.inherited(arguments);
       },
 
@@ -162,6 +156,18 @@ define([
         this._hideInfoWindow();
         this._removeResultLayerInfos(this._resultLayerInfos);
         this.inherited(arguments);
+      },
+
+      _hideTempLayers: function(){
+        if(this.currentTaskSetting){
+          this.currentTaskSetting.hideTempLayers();
+        }
+      },
+
+      _showTempLayers: function(){
+        if(this.currentTaskSetting){
+          this.currentTaskSetting.showTempLayers();
+        }
       },
 
       _initSelf:function(){
@@ -383,8 +389,15 @@ define([
 
             tr.relationshipLayerInfos = relationshipLayerInfos;
             var relationshipPopupTemplates = {};
+            var webMapItemData = this.map.itemInfo.itemData;
+
+            var baseServiceUrl = tr.singleConfig.url.replace(/\d*\/*$/g, '');
+
             for(var layerId in relationshipLayerInfos){
-              var popupInfo = queryUtils.getDefaultPopupInfo(relationshipLayerInfos[layerId], false, true);
+              var layerDefinition = relationshipLayerInfos[layerId];
+              //var popupInfo = queryUtils.getDefaultPopupInfo(layerDefinition, false, true);
+              var layerUrl = baseServiceUrl + layerId;
+              var popupInfo = queryUtils.getPopupInfoForRelatedLayer(webMapItemData, layerUrl , layerDefinition);
               relationshipPopupTemplates[layerId] = new PopupTemplate(popupInfo);
             }
             this.shelter.hide();
@@ -730,40 +743,30 @@ define([
       },
 
       _onResultLayerSelectChanged: function(){
-        var value = this.resultLayersSelect.get('value');
-        if(value){
-          var resultLayerInfo = this._getResultLayerInfoByValue(value);
-          if (resultLayerInfo) {
-            this._showResultLayerInfo(resultLayerInfo);
-            var singleQueryResult = resultLayerInfo.singleQueryResult;
-            if(singleQueryResult){
-              singleQueryResult.zoomToLayer();
-            }
-          }
+        var resultLayerInfo = this._getCurrentResultLayerInfo();
+        if (resultLayerInfo) {
+          this._showResultLayerInfo(resultLayerInfo);
+          /*var singleQueryResult = resultLayerInfo.singleQueryResult;
+          if (singleQueryResult) {
+            singleQueryResult.zoomToLayer();
+          }*/
         }
       },
 
-      _getAllResultLayers: function(){
-        var resultLayers = [];
-        array.map(this._resultLayerInfos, lang.hitch(this, function(resultLayerInfo){
-          if(resultLayerInfo.singleQueryResult){
-            var currentAttrs = resultLayerInfo.singleQueryResult.getCurrentAttrs();
-            if(currentAttrs && currentAttrs.query){
-              var layer = currentAttrs.query.resultLayer;
-              if(layer){
-                resultLayers.push(layer);
-              }
-            }
-          }
-        }));
-        return resultLayers;
+      _getCurrentResultLayerInfo: function(){
+        var resultLayerInfo = null;
+        var value = this.resultLayersSelect.get('value');
+        if(value){
+          resultLayerInfo = this._getResultLayerInfoByValue(value);
+        }
+        return resultLayerInfo;
       },
 
-      _hideAllLayers: function(/*optional*/ ignoreLayer){
-        var resultLayers = this._getAllResultLayers();
-        array.forEach(resultLayers, lang.hitch(this, function(layer){
-          if(layer !== ignoreLayer){
-            layer.hide();
+      _hideAllLayers: function(/*optional*/ ignoredSingleQueryResult){
+        var dijits = this._getAllSingleQueryResultDijits();
+        array.forEach(dijits, lang.hitch(this, function(singleQueryResult){
+          if(singleQueryResult && singleQueryResult !== ignoredSingleQueryResult){
+            singleQueryResult.hideLayer();
           }
         }));
       },
@@ -854,20 +857,11 @@ define([
       _showResultLayerInfo: function(resultLayerInfo){
         this._hideAllSingleQueryResultDijits();
         var singleQueryResult = resultLayerInfo.singleQueryResult;
-        var resutlLayer = null;
+        this._hideAllLayers(singleQueryResult);
         if (singleQueryResult) {
           html.setStyle(singleQueryResult.domNode, 'display', 'block');
-          var currentAttrs = singleQueryResult.getCurrentAttrs();
-          resutlLayer = lang.getObject("query.resultLayer", false, currentAttrs);
-        }
-
-        if (resutlLayer) {
-          this._activeLayerId = resutlLayer.id;
-          this._hideAllLayers(resutlLayer);
-          resutlLayer.show();
-        }else{
-          this._activeLayerId = null;
-          this._hideAllLayers();
+          singleQueryResult.showLayer();
+          singleQueryResult.zoomToLayer();
         }
       },
 

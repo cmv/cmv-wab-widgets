@@ -169,20 +169,20 @@ function(declare,
           return field.label;
         });
         array.forEach(fieldNames, function(field) {
+          var aliasPosition = fieldNames.indexOf(field);
           var fieldStruct = {
-          'name' : null,
-          'alias' : null,
-          'type' : 'esriFieldTypeString',
-          'editable' : true,
-          'domain' : null
-        };
-          if (this.lookupLayersFieldNames.indexOf(field) < 0) {
-            var aliasPosition = fieldNames.indexOf(field);
-            fieldStruct.name = field;
-            fieldStruct.alias = fieldAlias[aliasPosition];
-            this.lookupLayersFieldNames.push(fieldStruct.name);
-            this.lookupLayersFields.push(fieldStruct);
-          }
+            'name' : null,
+            'alias' : null,
+            'type' : 'esriFieldTypeString',
+            'editable' : true,
+            'domain' : null
+          };
+          //if (this.lookupLayersFieldNames.indexOf(field) < 0) {
+          fieldStruct.name = configLayer.label + "_" + field;
+          fieldStruct.alias = configLayer.label + "_" + fieldAlias[aliasPosition];
+          this.lookupLayersFieldNames.push(fieldStruct.name);
+          this.lookupLayersFields.push(fieldStruct);
+          //}
         }, this);
       }, this);
     },

@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the 'License');
 // you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ define([
   "./LayerChooser",
   "jimu/portalUtils",
   "dojo/dom-style",
-  "dojo/_base/array",
   "jimu/dijit/TabContainer3",
   'jimu/symbolUtils',
   "jimu/dijit/ColorPicker",
   "dojo/_base/Color",
+  "../utils",
   "dojo/domReady!"
 ], function (
   declare,
@@ -57,26 +57,30 @@ define([
   LayerChooser,
   portalUtils,
   domStyle,
-  array,
   TabContainer3,
   symbolUtils,
   ColorPicker,
-  Color
+  Color,
+  appUtils
 ) {
   return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
     baseClass: 'jimu-widget-districtlookup-setting',
     UnitsDetails: {},
     _symbolParams: {},
+    appUtils: null,
     startup: function () {
       this.inherited(arguments);
     },
 
     postMixInProperties: function(){
       //mixin default nls with widget nls
-      this.nls = lang.mixin(this.nls, window.jimuNls.common);
+      this.nls.common = {};
+      lang.mixin(this.nls.common, window.jimuNls.common);
     },
 
     postCreate: function () {
+      this.UnitsDetails = {};
+      this._symbolParams = {};
       //initialize tabs
       this._initTabs();
       //set Unit details
@@ -101,6 +105,8 @@ define([
       } else {
         domClass.remove(this.routingDisabledMsg, "esriCTHidden");
       }
+      //initialize utils widget
+      this.appUtils = new appUtils({ map: this.map });
       //set previous/default symbol values
       this._createSymbolPicker(this.precinctSymbolNode, "precinctSymbol",
          "esriGeometryPolygon", this.nls.layerSetting.selectPrecinctSymbolLabel);
@@ -180,11 +186,8 @@ define([
           this._highlightColorPicker.setColor(new Color(this.config.highlightColor));
         }
         if (this.config.precinctLayerInfo && this.config.pollingPlaceLayerInfo) {
-          //Update the layerDetails from the current webmap
-          this._updateConfig();
           //show the layer details in config popup
-          this._setLayerInfos(this.config.precinctLayerInfo, this.config
-            .pollingPlaceLayerInfo);
+          this._setLayerInfos(this.config.precinctLayerInfo, this.config.pollingPlaceLayerInfo);
         }
         //set default/previous direction length unit
         if (this.config.directionLengthUnit) {
@@ -211,15 +214,15 @@ define([
     * properties such as layerName, layerDefinations, popupInfo get updated.
     * @memberOf widgets/DistrictLookup/setting/Setting
     **/
-    _updateConfig: function () {
+    _updateConfig: function (precinctLayerInfo, pollingPlaceLayerInfo) {
       //update layer-details for polygon(precinct) layer
-      lang.mixin(this.config.precinctLayerInfo,
-        this._getLayerDetailsFromMap(this.config.precinctLayerInfo.baseURL,
-          this.config.precinctLayerInfo.layerId));
+      lang.mixin(precinctLayerInfo, this.appUtils.getLayerDetailsFromMap(
+        precinctLayerInfo.baseURL, precinctLayerInfo
+          .layerId, precinctLayerInfo.id));
       //update layer-details for related point(polling place) layer
-      lang.mixin(this.config.pollingPlaceLayerInfo,
-        this._getLayerDetailsFromMap(this.config.pollingPlaceLayerInfo
-          .baseURL, this.config.pollingPlaceLayerInfo.layerId));
+      lang.mixin(pollingPlaceLayerInfo, this.appUtils.getLayerDetailsFromMap(
+        pollingPlaceLayerInfo.baseURL, pollingPlaceLayerInfo
+          .layerId, pollingPlaceLayerInfo.id));
     },
 
     /**
@@ -272,9 +275,11 @@ define([
     _createPreviewContainer: function (symbolNode) {
       var tablePreviwText, trPreviewText, tdPreviewText, tdSymbolNode,
         divPreviewText, symbolChooserNode;
-      tablePreviwText = domConstruct.create("table", { "cellspacing": "0",
-      "cellpadding":"0"}, symbolNode);
-      trPreviewText = domConstruct.create("tr", {"style":"height:30px"}, tablePreviwText);
+      tablePreviwText = domConstruct.create("table", {
+        "cellspacing": "0",
+        "cellpadding": "0"
+      }, symbolNode);
+      trPreviewText = domConstruct.create("tr", { "style": "height:30px" }, tablePreviwText);
       tdPreviewText = domConstruct.create("td", {}, trPreviewText);
       divPreviewText = domConstruct.create("div", {
         "innerHTML": this.nls.symbolPickerPreviewText,
@@ -347,7 +352,8 @@ define([
     _createColorPicker: function () {
       var tablePreviwText, trPreviewText, tdPreviewText, tdSymbolNode,
         divPreviewText, colorPickerDivNode;
-      tablePreviwText = domConstruct.create("table", { "cellspacing": "0",
+      tablePreviwText = domConstruct.create("table", {
+        "cellspacing": "0",
         "cellpadding": "0"
       }, this.colorPickerNode);
       trPreviewText = domConstruct.create("tr", { "style": "height:30px" }, tablePreviwText);
@@ -449,6 +455,8 @@ define([
       var i, imgPath, searchLayers = [];
       this.precinctLayerInfo = precinctLayerInfo;
       this.pollingPlaceLayerInfo = pollingPlaceLayerInfo;
+      //Update the layerDetails from the current webmap
+      this._updateConfig(this.precinctLayerInfo, this.pollingPlaceLayerInfo);
       //Show selected layers in UI
       searchLayers.push(precinctLayerInfo);
       searchLayers.push(pollingPlaceLayerInfo);
@@ -481,76 +489,6 @@ define([
           }, divLayerList);
         }
       }
-    },
-
-
-    /**
-    * This function gets selected layer details from map
-    * @return {object} Object of config
-    * @memberOf widgets/DistrictLookup/setting/Setting
-    **/
-    _getLayerDetailsFromMap: function (baseURL, relatedLayerId) {
-      var selectedLayer = {};
-      //check if valid webmap details
-      if (this.map && this.map.webMapResponse && this.map.webMapResponse
-        .itemInfo && this.map.webMapResponse.itemInfo.itemData &&
-        this.map.webMapResponse.itemInfo.itemData.operationalLayers) {
-        //iterate through all operational layers of the webmap and get the required properties
-        array.forEach(this.map.webMapResponse.itemInfo.itemData.operationalLayers,
-          lang.hitch(this, function (layer) {
-            if (layer.layerObject) {
-              if (layer.layerType === "ArcGISMapServiceLayer" ||
-                layer.layerType === "ArcGISTiledMapServiceLayer") {
-                if (baseURL.substring(0, baseURL.length - 1) ===
-                  layer.url) {
-                  array.forEach(layer.resourceInfo.layers, lang.hitch(
-                    this,
-                    function (subLayer) {
-                      if (subLayer.id === parseInt(
-                          relatedLayerId, 10)) {
-                        selectedLayer.title = subLayer.name;
-                        return;
-                      }
-                    }));
-                  array.forEach(layer.layers, lang.hitch(this,
-                    function (subLayer) {
-                      if (subLayer.id === parseInt(
-                          relatedLayerId, 10)) {
-                        if (subLayer.name) {
-                          selectedLayer.title = subLayer.name;
-                        }
-                        selectedLayer.popupInfo = subLayer.popupInfo;
-                        //set layer's definitionExpression
-                        if (subLayer.layerDefinition &&
-                          subLayer.layerDefinition.definitionExpression
-                        ) {
-                          selectedLayer.definitionExpression =
-                            subLayer.layerDefinition.definitionExpression;
-                        }
-                        return;
-                      }
-                    }));
-                }
-              } else {
-                //check if layer url matches
-                if (layer.url.replace(/.*?:\/\//g, "") === (
-                    baseURL + relatedLayerId).replace(/.*?:\/\//g,
-                    "")) {
-                  selectedLayer.title = layer.title;
-                  selectedLayer.popupInfo = layer.popupInfo;
-                  //set layer's definitionExpression
-                  if (layer.layerDefinition && layer.layerDefinition
-                    .definitionExpression) {
-                    selectedLayer.definitionExpression = layer.layerDefinition
-                      .definitionExpression;
-                  }
-                  return;
-                }
-              }
-            }
-          }));
-      }
-      return selectedLayer;
     }
   });
 });

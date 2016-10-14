@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 define([
+  'dojo/Evented',
   'dojo/_base/declare',
   'dijit/_WidgetBase',
   'dijit/_TemplatedMixin',
@@ -34,10 +35,10 @@ define([
   './_FilterSet',
   './LoadingIndicator'
 ],
-function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
+function(Evented, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
   template, filterUtils, jimuUtils, registry, lang, html, array, aspect,
   query, Deferred, esriRequest, SingleFilter, FilterSet) {
-  return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, filterUtils], {
+  return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, filterUtils, Evented], {
     templateString: template,
     baseClass: 'jimu-filter',
     declaredClass: 'jimu.dijit.Filter',
@@ -493,6 +494,8 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
         var cName = (index + 1) % 2 === 0 ? "even-filter" : "odd-filter";
         html.addClass(filterDom, cName);
       }));
+
+      this.emit("filter-number-change");
     },
 
     _showErrorOptions:function(strError){

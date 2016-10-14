@@ -9,7 +9,8 @@ define({
     measureWidgetLabel: "Measure height",
     intialScaleLabel: "Select initial scale for oblique imagery",
     smallBuildingLabel: "Urban Area: Small Building",
-    buildingLabel: "Urban Area: Building"
+    buildingLabel: "Urban Area: Building",
+    azimuthChangeNotification: "No data in selected direction."
   }),
   "ar": 1,
   "cs": 1,

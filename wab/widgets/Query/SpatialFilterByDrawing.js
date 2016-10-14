@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -135,6 +135,24 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, on, Eve
       this._clearBufferLayer();
     },
 
+    hideTempLayers: function(){
+      if(this.bufferLayer){
+        this.bufferLayer.hide();
+      }
+      if(this.drawBox){
+        this.drawBox.hideLayer();
+      }
+    },
+
+    showTempLayers: function(){
+      if(this.bufferLayer){
+        this.bufferLayer.show();
+      }
+      if(this.drawBox){
+        this.drawBox.showLayer();
+      }
+    },
+
     deactivate: function(){
       if(this.drawBox){
         this.drawBox.deactivate();
@@ -236,7 +254,13 @@ function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, on, Eve
         if(geometry){
           var data = this.searchDistance.getData();
           geometry = geometryEngine.simplify(geometry);
-          var bufferGeometry = geometryEngine.buffer(geometry, data.distance, data.bufferUnit, true);
+          var sr = geometry.spatialReference;
+          var bufferGeometry = null;
+          if(sr.isWebMercator() || sr.wkid === 4326){
+            bufferGeometry = geometryEngine.geodesicBuffer(geometry, data.distance, data.bufferUnit, true);
+          }else{
+            bufferGeometry = geometryEngine.buffer(geometry, data.distance, data.bufferUnit, true);
+          }
           var bufferGraphic = new Graphic(bufferGeometry);
           this.bufferLayer.add(bufferGraphic);
         }

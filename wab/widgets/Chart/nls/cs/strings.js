@@ -43,5 +43,7 @@ define({
   "yards": "Yardy",
   "nauticalMiles": "Námořní míle",
   "back": "Zpět",
-  "execute": "Spustit"
+  "execute": "Spustit",
+  "enlarge": "Zvětšit",
+  "setting": "Nastavení"
 });

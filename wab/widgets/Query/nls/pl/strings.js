@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Kryteria atrybutowe",
   "spatialFilter": "Filtr przestrzenny",
   "value": "WARTOŚĆ",
-  "noAttributeSpatialFilterTip": "Nie zdefiniowano filtrów. Zostaną zwrócone wszystkie obiekty."
+  "noAttributeSpatialFilterTip": "Nie zdefiniowano filtrów. Zostaną zwrócone wszystkie obiekty.",
+  "showAllRelatedRecords": "Pokaż wszystkie powiązane rekordy"
 });

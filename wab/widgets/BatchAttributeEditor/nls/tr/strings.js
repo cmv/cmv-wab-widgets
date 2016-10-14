@@ -24,6 +24,7 @@ define({
   "filterPopup": "Katmanı Filtrele",
   "cancel": "İptal",
   "noValue": "Değer Yok",
+  "emptyString": "Boş Dize",
   "existingValue": "Mevcut Veriyi Tut",
   "newDate": "Yeni Tarih",
   "valueChooser": "Bir Değer Seçin/Yazın",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "${1} kimlikli ${0} katmanı haritada bulunamadı, araç yapılandırmasından sonra harita değiştirilmiş olabilir",
     "queryNullID": "${0} detayı geçersiz bir kimlik döndürdü",
     "noSelectedLayers": "Güncellenecek kayıt içeren seçili katman yok",
-    "inputValueError": "Formda geçersiz değer var"
+    "inputValueError": "Formda geçersiz değer var",
+    "saveError": "${0} detay kaydedilemedi, ayrıntılar konsola eklendi",
+    "requiredValue": "Gerekli Değer"
   }
 });

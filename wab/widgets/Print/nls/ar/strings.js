@@ -4,6 +4,8 @@ define({
   "format": "تنسيق",
   "layout": "المخطط",
   "settings": "متقدم",
+  "labels": "تسميات",
+  "showLabels": "إظهار لافتات التسمية",
   "mapScaleExtent": "مقياس رسم/نطاق الخريطة",
   "preserve": "المحافظة على",
   "mapScale": "مقياس رسم الخريطة",

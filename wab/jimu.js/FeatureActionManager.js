@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -160,8 +160,15 @@ define(['dojo/_base/declare',
 
         var defs = [];
         array.forEach(widgetJson.featureActions, function(action){
+          var uri;
+          if(widgetJson.isRemote){
+            uri = widgetJson.amdFolder + action.uri + '.js';
+          }else{
+            uri = widgetJson.amdFolder + action.uri;
+          }
+
           defs.push(this.registerAction({
-            uri: widgetJson.amdFolder + action.uri,
+            uri: uri,
             widgetId: widgetJson.id,
             name: action.name,
             label: widgetJson.manifest['i18nLabels_featureAction_' + action.name][window.dojoConfig.locale] ||

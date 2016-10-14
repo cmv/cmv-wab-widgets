@@ -12,7 +12,7 @@ define({
   "addUrl": "URL hinzufügen",
   "autoCheck": "Automatisch überprüfen",
   "checking": "Wird überprüft...",
-  "result": "Speichern erfolgreich",
+  "result": "Erfolgreich gespeichert",
   "spError": "Alle Grundkarten, die der Galerie hinzugefügt wurden, müssen denselben Raumbezug aufweisen.",
   "invalidTitle1": "Die Grundkarte '",
   "invalidTitle2": "' ist bereits vorhanden. Wählen Sie einen anderen Titel aus.",

@@ -8,7 +8,7 @@ define({
   "includeFieldNames": "Pasirinkite laukus",
   "fieldNames": "Laukų pavadinimai",
   "lifecyclePhaseFieldName": "LIFECYCLEPHASE",
-  "setSource": "Grupė",
+  "setSource": "Nustatyti",
   "defaultFieldName": "rimtumas",
   "warning": "Klaidinga įvestis",
   "includeDefaultFieldName": "Reikia pasirinkti numatytąjį lauko pavadinimą",

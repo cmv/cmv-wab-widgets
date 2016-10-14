@@ -796,8 +796,9 @@ define(["dojo/_base/declare",
 
       _formatNumber: function(num) {
         var roundNum;
-        if (num > -1000 && num < 1000) {
-          roundNum = num.toFixed(2);
+        if (num > -100 && num < 100) {
+          //roundNum = num.toFixed(2);
+          roundNum = number.round(num * 100) / 100;
           num = number.format(roundNum, {
             places: 2
           });

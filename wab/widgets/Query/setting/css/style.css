@@ -1,5 +1,16 @@
 @import url("list.css");
 
+.jimu-widget-query-setting > .content{
+  bottom: 25px;
+}
+
+.jimu-widget-query-setting > .jimu-checkbox{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5px;
+}
+
 .jimu-widget-query-setting .stress{
   /*font-family: 'Avenir Medium';*/
   font-size: 14px;

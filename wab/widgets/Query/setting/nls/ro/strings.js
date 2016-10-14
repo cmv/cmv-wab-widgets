@@ -122,5 +122,6 @@ define({
   "uploadImage": "Încărcaţi o imagine",
   "attributeCriteira": "Atribuiţi criterii",
   "specifyFilterAtRuntimeTip": "Utilizatorii vor trebui să specifice parametri pentru această expresie.",
-  "value": "VALOARE"
+  "value": "VALOARE",
+  "hideLayersTip": "Dezactivaţi straturile tematice cu rezultate la interogări atunci când este închis widgetul."
 });

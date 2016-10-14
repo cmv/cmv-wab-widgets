@@ -6,6 +6,7 @@ define({
     "yes": "예",
     "no": "아니요",
     "next": "다음",
+    "previous": "이전",
     "back": "뒤로",
     "selected": "선택함",
     "name": "이름",
@@ -52,7 +53,11 @@ define({
     "view": "보기",
     "newText": "새로 만들기",
     "edit": "편집",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "테이블",
+    "zoomIn": "확대",
+    "zoomOut": "축소",
+    "continue1": "계속"
   },
   "errorCode": "코드",
   "errorMessage": "메시지",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "대소문자 구분",
     "notSupportCaseSensitiveTip": "호스팅된 서비스는 대소문자 구분 쿼리를 지원하지 않습니다.",
-    "setFilterTip": "필터를 올바르게 설정하세요."
+    "setFilterTip": "필터를 올바르게 설정하세요.",
+    "cascadeFilterTip": "이전 식으로 필터링된 값만 보여 줍니다."
   },
   "featureLayerSource": {
     "layer": "레이어",
@@ -323,7 +329,7 @@ define({
     "cropImage": "이미지 자르기",
     "exceed": "파일 크기는 1024KB를 넘을 수 없습니다.",
     "enableFlash": "TODO: 깜박이기를 활성화하세요.",
-    "cropWaining": "${width} x ${height} 픽셀 이상의 사진을 선택하세요.",
+    "cropWaining": "${가로} x ${세로} 픽셀 이상의 사진을 선택하세요.",
     "toolTip": "최상의 결과를 얻으려면 이미지의 폭은 ${width}픽셀, 높이는 ${height}픽셀이어야 합니다. 그 밖의 다른 크기는 맞게 조정됩니다. PNG, GIF 및 JPEG 형식의 이미지를 사용할 수 있습니다."
   },
   "simpleTable": {
@@ -347,6 +353,7 @@ define({
     "restoreMap": "작업을 중지한 지점의 맵 범위와 레이어 가시성을 복원하려면 클릭하세요."
   },
   "featureActions": {
+    "featureActions": "피처 동작",
     "ZoomTo": "확대/축소",
     "PanTo": "이동",
     "Flash": "깜박이기",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "선택에 추가",
     "removeSelectionTip": "선택 영역에서 제거",
     "selectFromCurrentSelectionTip": "현재 선택에서 다시 선택",
-    "unselectAllSelectionTip": "현재 선택한 모든 피처 선택 해제"
+    "unselectAllSelectionTip": "현재 선택한 모든 피처 선택 해제",
+    "selectByPolygon": "폴리곤으로 선택",
+    "selectByCircle": "원으로 선택",
+    "selectByLine": "라인으로 선택",
+    "chooseSelectingTools": "선택 도구 선택",
+    "darw": "그리기",
+    "drawShap": "도형 그리기"
   },
   "widgetManager": {
     "createWidgetError": "위젯 생성 오류",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D 웹 앱이 브라우저에서 지원되지 않습니다."
+  },
+  "map": {
+    "basemapNotAvailable": "베이스맵을 사용할 수 없습니다.",
+    "displayDefaultBasemap": "기본 베이스맵을 대신 표시합니다."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "맵의 선택한 영역 내에 너무 많은 피처가 있습니다. 모든 데이터를 검색하는 데 긴 시간이 걸릴 수 있습니다.",
+    "askForContinue": "계속하시겠습니까?"
   }
 });

@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Izmeri visinu",
   "intialScaleLabel": "Izaberi početni razmer za kose snimke",
   "smallBuildingLabel": "Gradsko područje: mala zgrada",
-  "buildingLabel": "Gradsko područje: zgrada"
+  "buildingLabel": "Gradsko područje: zgrada",
+  "azimuthChangeNotification": "Nema podataka u izabranom pravcu."
 });

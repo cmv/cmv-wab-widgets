@@ -4,6 +4,8 @@ define({
   "format": "Formāts",
   "layout": "Izkārtojums",
   "settings": "Augsts",
+  "labels": "Apzīmējumi",
+  "showLabels": "Rādīt apzīmējumus",
   "mapScaleExtent": "Kartes mērogs/pārklājums",
   "preserve": "Saglabāt",
   "mapScale": "kartes mērogs",

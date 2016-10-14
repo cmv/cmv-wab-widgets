@@ -2,20 +2,32 @@ define({
   "configText": "Ihre Filtergruppen unten definieren",
   "labels": {
     "groupName": "Name des Filtersatzes:",
+    "groupNameTip": "Name des Filters, anhand dessen der Benutzer eine Auswahl trifft",
     "groupDesc": "Beschreibung:",
+    "groupDescTip": "Beschreibung des festgelegten Filters",
     "groupOperator": "Voreingestellter Operator",
-    "groupDefault": "Voreingestellter Wert:"
+    "groupOperatorTip": "Option zum Vordefinieren des Operators des Filters. Wenn kein voreingestellter Operator ausgewählt ist, verwendet der Filter den Operator \"Gleich\".",
+    "groupDefault": "Voreingestellter Wert:",
+    "groupDefaultTip": "Option zum Auswählen eines Wertes aus einem vorhandenen Layer",
+    "sameLayerAppend": "Wenn ein Layer mehrmals aufgelistet ist, verwenden Sie den folgenden Operator zwischen Feldern:",
+    "sameLayerConjunc": "Anhängen mit:"
   },
   "buttons": {
     "addNewGroup": "Eine neue Gruppe hinzufügen",
-    "addLayer": "Layer hinzufügen"
+    "addNewGroupTip": "Neuen Filtersatz hinzufügen",
+    "addLayer": "Layer hinzufügen",
+    "addLayerTip": "Dem Filtersatz einen Layer hinzufügen"
   },
   "inputs": {
-    "groupName": "Ihrer Gruppe einen Namen geben",
-    "groupDesc": "Beschreibung Ihrer Gruppe",
+    "groupName": "Name der Gruppe",
+    "groupDesc": "Beschreibung der Gruppe",
     "groupDefault": "Einen vordefinierten Wert eingeben",
     "simpleMode": "In einfacher Ansicht starten",
+    "simpleModeTip": "Option zum Vereinfachen der Benutzeroberfläche des konfigurierten Widgets. Wenn diese Option aktiviert ist, werden die Dropdown-Liste \"Operator\" und die Schaltfläche \"Kriterien\" von der Benutzeroberfläche entfernt.",
+    "webmapAppendMode": "Filter an vorhandenen Webkartenfilter anhängen mit ",
+    "webmapAppendModeTip": "Option zum Anhängen des Filtersatzes an einen vorhandenen Webkartenfilter. Zu den unterstützten Operatoren zählen \"OR\" und \"AND\".",
     "optionsMode": "Widget-Optionen ausblenden",
+    "optionsModeTip": "Option zum Bereitstellen zusätzlicher Widget-Einstellungen. Wenn diese Option aktiviert ist, werden die Funktionen zum Speichern und Laden definierter Filter und zum Beibehalten des Filters nach dem Schließen des Widgets von der Benutzeroberfläche entfernt.",
     "optionOR": "ODER",
     "optionAND": "UND",
     "optionEQUAL": "GLEICH",
@@ -26,15 +38,21 @@ define({
     "optionLESSTHANEQUAL": "KLEINER ODER GLEICH",
     "optionSTART": "BEGINNT MIT",
     "optionEND": "ENDET MIT",
-    "optionLIKE": "CONTAINS",
+    "optionLIKE": "ENTHÄLT",
     "optionNOTLIKE": "ENTHÄLT NICHT",
-    "optionNONE": "KEINE"
+    "optionNONE": "KEIN"
   },
   "tables": {
     "layer": "Layer",
+    "layerTip": "Name des Layers gemäß der Definition in der Karte",
     "field": "Felder",
+    "fieldTip": "Feld, nach dem der Layer gefiltert wird",
     "value": "Wert verwenden",
-    "action": "Löschen"
+    "valueTip": "Option zum Verwenden der Dropdown-Listenwerte aus dem Layer. Wenn kein Layer diesen Parameter verwendet, wird dem Benutzer ein Textfeld angezeigt.",
+    "zoom": "Zoom",
+    "zoomTip": "Option zum Zoomen auf die Ausdehnung der Features, nachdem der Filter angewendet wurde. Es kann nur ein Layer zum Zoomen ausgewählt werden.",
+    "action": "Löschen",
+    "actionTip": "Layer aus dem Filtersatz entfernen"
   },
   "popup": {
     "label": "Einen Wert auswählen"
@@ -49,7 +67,10 @@ define({
   "picker": {
     "description": "Verwenden Sie dieses Formular, um einen voreingestellten Wert für diese Gruppe zu suchen.",
     "layer": "Einen Layer auswählen",
+    "layerTip": "Name des Layers gemäß der Definition in der Webkarte",
     "field": "Ein Feld auswählen",
-    "value": "Einen Wert auswählen"
+    "fieldTip": "Feld, in dem der voreingestellte Wert festgelegt wird",
+    "value": "Einen Wert auswählen",
+    "valueTip": "Als Standardwert des Widgets festgelegter Wert"
   }
 });

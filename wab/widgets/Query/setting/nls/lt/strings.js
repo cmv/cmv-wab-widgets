@@ -3,7 +3,7 @@ define({
   "addNew": "Pridėti naują",
   "newQuery": "Nauja užklausa",
   "queryLayer": "Užklausos sluoksnis",
-  "setSource": "Grupė",
+  "setSource": "Nustatyti",
   "setDataSource": "Nustatykite duomenų šaltinį",
   "name": "Pavadinimas",
   "querySource": "Duomenų šaltinis",
@@ -122,5 +122,6 @@ define({
   "uploadImage": "Įkelti paveikslėlį",
   "attributeCriteira": "Atributo kriterijai",
   "specifyFilterAtRuntimeTip": "Vartotojai turės nurodyti šios sąlygos parametrus.",
-  "value": "REIKŠMĖ"
+  "value": "REIKŠMĖ",
+  "hideLayersTip": "Išjungti užklausos rezultatų sluoksnius, kai valdiklis uždarytas."
 });

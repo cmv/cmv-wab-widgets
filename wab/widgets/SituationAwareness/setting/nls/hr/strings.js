@@ -45,7 +45,7 @@ define({
   "save_label": "Opcije spremanja",
   "save_checkbox": "Omogući spremanje",
   "csv_label": "Opcije CSV-a",
-  "csv_checkbox": "Izvezite sva polja u sloju.",
+  "csv_checkbox": "Izvezi sva polja u sloju",
   "display_label": "Opcije prikaza",
   "display_checkbox": "Prikaži geoobjekte sažetka",
   "must_select_template": "Odaberite jedan od predložaka za uređivanje u opcijama za spremanje.",

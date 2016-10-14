@@ -130,8 +130,8 @@ define([
             results.push(gra);
           }
           //graphics.sort(this._compareDistance);
-          this._processResults(results);
         }
+        this._processResults(results);
       }), lang.hitch(this, this._processError));
     },
 

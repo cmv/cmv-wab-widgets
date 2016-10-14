@@ -45,7 +45,7 @@ define({
   "save_label": "Salvestamise valikud",
   "save_checkbox": "Luba salvestamine",
   "csv_label": "CSV valikud",
-  "csv_checkbox": "Ekspordi kõik kihi väljad.",
+  "csv_checkbox": "Ekspordi kõik kihi väljad",
   "display_label": "Kuvamisvalikud",
   "display_checkbox": "Kuva kokkuvõtte objektid",
   "must_select_template": "Valige üks salvestamise valikute muutmise mall.",

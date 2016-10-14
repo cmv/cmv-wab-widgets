@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////
+﻿///////////////////////////////////////////////////////////////////////////
 // Copyright © 2015 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
@@ -15,6 +15,7 @@
 ///////////////////////////////////////////////////////////////////////////
 define([
     'dojo',
+    'dijit',
     'dojo/_base/declare',
     'dijit/_WidgetsInTemplateMixin',
     'dijit/form/Button',
@@ -35,20 +36,23 @@ define([
     'dojo/dom-class',
     'dojo/query',
     'dojo/promise/all',
+    'dojo/Deferred',
     'dojo/string',
     'dojo/store/Memory',
     'dojo/dom-attr',
     'dojo/dnd/Moveable',
     'dojo/when',
     "dojox/html/entities",
+    'dojo/date/locale',
     'jimu/BaseWidget',
     'jimu/MapManager',
     'jimu/dijit/SimpleTable',
     'jimu/dijit/LoadingIndicator',
     'jimu/dijit/Filter',
     'jimu/dijit/Popup',
-     'esri/dijit/Popup',
+    'esri/dijit/Popup',
     'jimu/utils',
+    'jimu/LayerInfos/LayerInfos',
     'esri',
     'esri/graphic',
     'esri/InfoTemplate',
@@ -62,12 +66,16 @@ define([
     'esri/geometry/scaleUtils',
     'esri/geometry/Polygon',
     'dojox/timing',
-     'jimu/dijit/Message',
+    'jimu/dijit/Message',
+    'jimu/portalUrlUtils',
     './customDrawBox',
-    './layerSyncDetails'
+    './layerSyncDetails',
+    './utils',
+    './PrivilegeUtil'
 ],
 function (dojo,
-  declare,
+          dijit,
+          declare,
           _WidgetsInTemplateMixin,
           Button,
           TextBox,
@@ -87,12 +95,14 @@ function (dojo,
           domClass,
           query,
           all,
+          Deferred,
           string,
           Memory,
           domAttr,
           Moveable,
           when,
           entities,
+          locale,
           BaseWidget,
           MapManager,
           SimpleTable,
@@ -101,6 +111,7 @@ function (dojo,
           Popup,
           jimuPopup,
           utils,
+          LayerInfos,
           esri,
           Graphic,
           InfoTemplate,
@@ -115,8 +126,11 @@ function (dojo,
           Polygon,
           Timer,
           Message,
+          portalUrlUtils,
           DrawBox,
-          layerSyncDetails
+          layerSyncDetails,
+          editUtils,
+          PrivilegeUtil
           ) {
   return declare([BaseWidget, _WidgetsInTemplateMixin], {
     baseClass: 'solutions-widget-batcheditor',
@@ -137,32 +151,19 @@ function (dojo,
     drawnGrph: null,
     clickList: null,
     editPopup: null,
+    _jimuLayerInfos: null,
+    _userHasPrivilege: false,
     startup: function () {
       this.inherited(arguments);
-
+      this.editPopup = new jimuPopup(null, html.create("div",
+                                                        { "class": "jimu-widget-edit-infoWindow" },
+                                                        null,
+                                                        this.map.root));
     },
     postCreate: function () {
       this.inherited(arguments);
       this.nls = lang.mixin(this.nls, window.jimuNls.common);
-
-      if (this.config.updateLayers.length > 0) {
-        this.editPopup = new jimuPopup(null, html.create("div",
-                                                  { "class": "jimu-widget-edit-infoWindow" },
-                                                  null,
-                                                  this.map.root));
-        this.expressionLayers = [];
-        this.clickList = [];
-        this._configureWidget();
-        this._initSelectLayer();
-        this.createLayerTable();
-        this.loadLayerTable();
-        this._addHelperLayer();
-        this._createAttributeInspector();
-        this._createQueryParams();
-        this._setTheme();
-        this.timer = new Timer.Timer(20000);
-        this.own(aspect.after(this.timer, "onTick", lang.hitch(this, this._timerComplete), this));
-      }
+      this.checkValidPermission();
 
     },
     _initSelectLayer: function () {
@@ -201,11 +202,15 @@ function (dojo,
     /*jshint unused:true */
     _setTheme: function () {
       if (this.appConfig.theme.name === "BoxTheme" ||
-          this.appConfig.theme.name === "DartTheme" ||
-          this.appConfig.theme.name === "LaunchpadTheme") {
+          this.appConfig.theme.name === "DartTheme") {
         utils.loadStyleLink('dartOverrideCSS', this.folderUrl + "/css/dartTheme.css", null);
+      } else if (this.appConfig.theme.name === "LaunchpadTheme") {
+        utils.loadStyleLink('luanchOverrideCSS', this.folderUrl + "/css/launchPadTheme.css", null);
+      } else {
+
       }
     },
+
     _configureWidget: function () {
       draw.addPoint = this.nls.drawBox.addPointToolTip;
       draw.addShape = this.nls.drawBox.addShapeToolTip;
@@ -293,7 +298,16 @@ function (dojo,
       });
     },
     _selectInShape: function (shape, searchValue) {
-      this._clearResults(true);
+      this._clearResults(true, false);
+      if (this.selectByLayer && this.selectByLayer !== null) {
+        if (this.selectByLayer.layerObject && this.selectByLayer.layerObject !== null) {
+          this.clickList.push(on(this.selectByLayer.layerObject, 'click', lang.hitch(this, function () {
+
+            this.map.infoWindow.show(this.mouseClickPos, this.map.getInfoWindowAnchor(this.mouseClickPos));
+          })));
+        }
+      }
+
       var defs = {};
       var rowData;
       var q = new EsriQuery();
@@ -338,8 +352,18 @@ function (dojo,
               console.log("field not found in layer");
             }
           }
-          var def = layer.layerObject.selectFeatures(q, FeatureLayer.SELECTION_NEW);
-          defs[layer.id] = def;
+          var deferred = new Deferred();
+          layer.layerObject.selectFeatures(q, FeatureLayer.SELECTION_NEW,
+            function (features) {
+              deferred.resolve({ "features": features });
+            }, function (error) {
+              deferred.resolve({
+                "features": [],
+                "error": error
+              });
+            });
+          //def.then(this._callback(deferred), this._errorback(deferred));
+          defs[layer.id] = deferred;
         }
       }, this);
       if (this.isEmptyObject(defs)) {
@@ -389,6 +413,7 @@ function (dojo,
             this._selectInShape(null, searchValue);
           }
         } else {
+
           this._selectInShape(results[0].geometry);
         }
       } else {
@@ -404,10 +429,11 @@ function (dojo,
       var syncCell;
       array.forEach(this.layersTable.getRows(), function (row) {
 
-        labelCell = query('.label', row).shift();
+        labelCell = query('.layerLabel', row).shift();
         countCell = query('.numSelected', row).shift();
         syncCell = query('.syncStatus', row).shift();
         html.removeClass(labelCell, 'maxRecordCount');
+        html.removeClass(labelCell, 'errorSelecting');
         html.removeClass(countCell, 'maxRecordCount');
         html.removeClass(syncCell, 'syncComplete');
         html.removeClass(syncCell, 'syncProcessing');
@@ -426,11 +452,13 @@ function (dojo,
       var editData;
       var labelCell;
       var countCell;
+      var selectResults = null;
       array.forEach(this.layersTable.getRows(), function (row) {
 
         rowData = this.layersTable.getRowData(row);
         if (results.hasOwnProperty(rowData.ID)) {
-          layerRes = results[rowData.ID];
+          selectResults = results[rowData.ID];
+          layerRes = selectResults.features;
           layer = this.map.getLayer(rowData.ID);
           features = features.concat(layerRes);
           editData = {
@@ -438,7 +466,7 @@ function (dojo,
           };
 
           this.layersTable.editRow(row, editData);
-          labelCell = query('.label', row).shift();
+          labelCell = query('.layerLabel', row).shift();
           countCell = query('.numSelected', row).shift();
 
           if (layerRes.length > 0) {
@@ -454,7 +482,14 @@ function (dojo,
             html.removeClass(labelCell, 'maxRecordCount');
             html.removeClass(countCell, 'maxRecordCount');
           }
-
+          if (selectResults.hasOwnProperty('error')) {
+            console.log("Error selecting data from " + labelCell.innerText.toString().trim() + ": " +
+              selectResults.error.toString());
+            html.addClass(labelCell, 'errorSelecting');
+          }
+          else {
+            html.removeClass(countCell, 'errorSelecting');
+          }
           if (layerRes.length > 0) {
             this.clickList.push(on(layer, 'click', lang.hitch(this, function () {
 
@@ -626,7 +661,7 @@ function (dojo,
         name: 'label',
         title: this.nls.layerTable.colLabel,
         type: 'text',
-        'class': 'label'
+        'class': 'layerLabel'
       }, {
         name: 'syncStatus',
         type: 'text',
@@ -750,9 +785,9 @@ function (dojo,
 
       array.forEach(fields, function (field) {
         if (field.type !== "esriFieldTypeOID") {
+          field.addnullable = field.nullable;
           field.nullable = true;
         }
-
         if (field.domain !== undefined && field.domain !== null) {
           if (field.domain.type !== undefined && field.domain.type !== null) {
             if (field.domain.type === 'range') {
@@ -820,28 +855,50 @@ function (dojo,
 
       return objField;
     },
+    _getDefaultFieldInfos: function (layerId) {
+      return editUtils.getFieldInfosFromWebmap(layerId, this._jimuLayerInfos);
+    },
     // Generate the field Infos used in the Attribute Inspector
     // returns fieldInfos
     _generateHelperLayerFieldsInfos: function (layer, fields) {
       var fieldInfos = [];
       this.baeFields = {};
-      var fieldNames = array.map(fields, function (field) {
-        return field.name;
+      var fieldMapping = [];
+      array.forEach(fields, function (field) {
+        fieldMapping[field.name] = field;
       });
-      var fieldTypes = array.map(fields, function (field) {
-        return field.typeOrigin;
-      });
-      array.forEach(layer.layerObject.infoTemplate.info.fieldInfos, function (field) {
-        if (fieldNames.indexOf(field.fieldName) > -1) {
-          if (field.fieldName.toUpperCase() === 'OBJECTID' || (field.fieldName === layer.layerObject.objectIdField)) {
+      //var fieldNames = array.map(fields, function (field) {
+      //  return field.name;
+      //});
+      //var fieldTypes = array.map(fields, function (field) {
+      //  return field.typeOrigin;
+      //});
+      //var fieldDomains = array.map(fields, function (field) {
+      //  return field.domain;
+      //});
+      //layer.layerObject.infoTemplate.info.fieldInfos
+      var fieldInfo = this._getDefaultFieldInfos(layer.id);
+      array.forEach(fieldInfo, function (field) {
+        //if (fieldNames.indexOf(field.fieldName) > -1) {
+        if (fieldMapping.hasOwnProperty(field.fieldName)) {
+          if (field.fieldName.toUpperCase() === 'OBJECTID' ||
+            (field.fieldName === layer.layerObject.objectIdField)) {
             field.isEditable = false;
             field.visible = false;
-            field.typeOrigin = fieldTypes[fieldNames.indexOf(field.fieldName)];
+            //field.typeOrigin = fieldTypes[fieldNames.indexOf(field.fieldName)];
+            field.typeOrigin = fieldMapping[field.fieldName].typeOrigin;
           } else {
-            this.baeFields[field.fieldName] = field.label;
+            this.baeFields[field.fieldName] = field.label.toString().trim() !== "" ?
+              field.label : field.fieldName;
             field.isEditable = true;
+            field.domain = fieldMapping[field.fieldName].domain === undefined ?
+              null : fieldMapping[field.fieldName].domain;
+            field.length = fieldMapping[field.fieldName].length === undefined ?
+             null : fieldMapping[field.fieldName].length;
+            field.addnullable = fieldMapping[field.fieldName].addnullable === undefined ?
+             null : fieldMapping[field.fieldName].addnullable;
             field.visible = true;
-            field.typeOrigin = fieldTypes[fieldNames.indexOf(field.fieldName)];
+            field.typeOrigin = fieldMapping[field.fieldName].typeOrigin;
             fieldInfos.push(field);
           }
         }
@@ -878,7 +935,7 @@ function (dojo,
       return function (evt) {
         if (evt === "") {
           evtData.fieldValue = "";
-          evtData.dataType = "string";
+
           this._attrInspectorAttrChange(evtData);
 
         }
@@ -951,8 +1008,10 @@ function (dojo,
                 newItem._S = stateStore._arrayOfAllItems[stateStore._arrayOfAllItems.length - 1]._S;
                 newItem.id = [];
                 newItem.name = [];
-                newItem.id[0] = this.nls.noValue;
-                newItem.name[0] = this.nls.noValue;
+                if (currentFeatureValue.addnullable && currentFeatureValue.addnullable === true) {
+                  newItem.id[0] = this.nls.noValue;
+                  newItem.name[0] = this.nls.noValue;
+                }
                 stateStore._arrayOfAllItems.push(newItem);
                 if (currentFeatureValue.values.length === 1) {
                   if (currentFeatureValue.values[0] !== null) {
@@ -962,63 +1021,39 @@ function (dojo,
                         return true;
                       }
                     });
-                    /* jshint ignore:start */
-                    //when(stateStore.query(function (object) {
-                    //  return object.id === currentFeatureValue.values[0];
-                    //}),
-                    //function (results) {
-                    //  inputDijit.set("value", stateStore.getIdentity(results[0]));
-                    //});
-
-                    //when(stateStore.query(function (item, index, items) {
-                    //  return index === 0;
-                    //}),
-                    //function (results) {
-                    //  inputDijit.set("value", stateStore.getIdentity(results[0]));
-                    //});
-                    /* jshint ignore:end */
                   }
                 }
-
+                inputDijit.set("labelType", "html");
+                var valueMap = [];
+                array.forEach(stateStore._arrayOfAllItems, function (item) {
+                  if (array.indexOf(currentFeatureValue.values, item.id[0]) >= 0) {
+                    valueMap.push(item.name[0]);
+                  }
+                });
+                inputDijit.set("labelFunc", lang.hitch(this, this._formatCombobox(valueMap)));
               }
               else {
 
                 var defaultVal = '';
-                var dataType = "String";
+                var dataType = currentFeatureValue.type;
                 var dataStruct = [];
-
+                var maxlength = null;
                 switch (currentFeatureValue.type) {
-                  case "esriFieldTypeInteger":
-                    dataType = "Number";
-                    break;
-                  case "esriFieldTypeSmallInteger":
-                    dataType = "Number";
-                    break;
-                  case "esriFieldTypeDouble":
-                    dataType = "Float";
-                    break;
-                  case "esriFieldTypeSingle":
-                    dataType = "Float";
-                    break;
+
                   case "esriFieldTypeString":
-                    dataType = "String";
+                    if (currentFeatureValue.length &&
+                      Number(currentFeatureValue.length) &&
+                      Number(currentFeatureValue.length) > 0) {
+                      maxlength = currentFeatureValue.length;
+                    }
+
                     break;
                   case "esriFieldTypeDate":
                     if (currentFeatureValue.format &&
                       currentFeatureValue.format !== null) {
                       if (currentFeatureValue.format.dateFormat &&
                       currentFeatureValue.format.dateFormat !== null) {
-
-                        if (currentFeatureValue.format.dateFormat ===
-                          "shortDateShortTime" ||
-                          currentFeatureValue.format.dateFormat ===
-                          "shortDateLongTime" ||
-                          currentFeatureValue.format.dateFormat ===
-                          "shortDateShortTime24" ||
-                          currentFeatureValue.format.dateFormat ===
-                          "shortDateLEShortTime" ||
-                          currentFeatureValue.format.dateFormat ===
-                          "shortDateLEShortTime24") {
+                        if (currentFeatureValue.format.dateFormat.toString().toUpperCase().indexOf("TIME") >= 0) {
                           dataType = "DateTime";
                         }
                         else {
@@ -1034,144 +1069,423 @@ function (dojo,
                     }
 
                     break;
-                  case "esriFieldTypeGeometry":
-                    break;
-                  case "esriFieldTypeOID":
-                    break;
-                  case "esriFieldTypeBlob":
-                    break;
-                  case "esriFieldTypeGlobalID":
-                    dataType = "String";
-                    break;
-                  case "esriFieldTypeRaster":
-                    break;
-                  case "esriFieldTypeGUID":
-                    dataType = "String";
-                    break;
-                  case "esriFieldTypeXML":
-                    break;
-
                 }
 
+                var defDate = null;
+                var nullInRecord = false;
                 array.forEach(currentFeatureValue.values, lang.hitch(this, function (value) {
+                  var d = null;
+                  var dStr = null;
+                  var localeFormat = null;
                   if (value !== null && value !== "null") {
-                    if (dataType === "Date" || dataType === "DateTime") {
-                      var d = new Date(value * 1);
-                      dataStruct.push({ name: d.toLocaleString(), id: d.toLocaleString() });
-                    } else {
-                      dataStruct.push({ name: value, id: value });
+                    if (dataType === "DateTime") {
+                      d = new Date(value * 1);
+                      //console.log(d);
+                      dStr = locale.format(d, { fullYear: true });
+                      localeFormat = locale.format(d, { fullYear: true, datePattern: "yyyy-MM-dd, HH:mm:ss a" });
+                      //dataStruct.push({ name: dStr, id: dStr, localValue: d.toLocaleString(), utc: d.toUTCString() });
+                      dataStruct.push({ name: dStr, id: dStr, value: value });
+                      if (defDate === null) {
+                        defDate = d;
+                      }
+                    } else if (dataType === "Date") {
+                      d = new Date(value * 1);
+                      //console.log(d);
+                      dStr = locale.format(d, { selector: 'date', fullYear: true });
+                      //dataStruct.push({ name: d.toLocaleDateString(), id: d.toLocaleDateString() });
+                      //dataStruct.push({ name: dStr, id: dStr, localValue: d.toLocaleDateString(), utc: d.toUTCString() });
+                      localeFormat = locale.format(d, { fullYear: true, datePattern: "yyyy-MM-dd" });
+                      dataStruct.push({ name: dStr, id: dStr, value: value });
+                      if (defDate === null) {
+                        defDate = d;
+                      }
                     }
+                    else {
+                      dataStruct.push({ name: value, id: value, value: value });
+                    }
+                  }
+                  else {
+                    nullInRecord = true;
                   }
 
                 }));
-
-                dataStruct.push({ name: this.nls.noValue, id: this.nls.noValue });
+                if (currentFeatureValue.addnullable && currentFeatureValue.addnullable === true) {
+                  dataStruct.push(
+                    {
+                      name: this.nls.noValue,
+                      id: this.nls.noValue
+                    });
+                }
                 if (dataType === "Date" || dataType === "DateTime") {
                   dataStruct.push({ name: this.nls.newDate, id: this.nls.newDate });
                 }
-
                 stateStore = new Memory({
                   data: dataStruct
                 });
-
-                //defaultVal = inputDijit.get('value');
-
+                if (dataType === "DateTime") {
+                  if (typeof (defDate) !== 'undefined' && defDate !== null) {
+                    if (currentFeatureValue.addnullable && currentFeatureValue.addnullable === true) {
+                      if (stateStore.data.length === 3) {
+                        if (nullInRecord === false) {
+                          defaultVal = locale.format(defDate, { selector: 'date', fullYear: true });
+                          this._createTimePickerExisting({ 'row': row, 'textCell': textCell, 'date': defDate });
+                        }
+                      }
+                    }
+                    else {
+                      if (stateStore.data.length === 2) {
+                        if (nullInRecord === false) {
+                          defaultVal = locale.format(defDate, { selector: 'date', fullYear: true });
+                          this._createTimePickerExisting({ 'row': row, 'textCell': textCell, 'date': defDate });
+                        }
+                      }
+                    }
+                  }
+                }
+                else if (dataType === "Date") {
+                  if (typeof (defDate) !== 'undefined' && defDate !== null) {
+                    if (currentFeatureValue.addnullable && currentFeatureValue.addnullable === true) {
+                      if (stateStore.data.length <= 3) {
+                        if (nullInRecord === false) {
+                          defaultVal = locale.format(defDate, { selector: 'date', fullYear: true });
+                        }
+                      }
+                    }
+                    else {
+                      if (stateStore.data.length === 2) {
+                        if (nullInRecord === false) {
+                          defaultVal = locale.format(defDate, { selector: 'date', fullYear: true });
+                        }
+                      }
+                    }
+                  }
+                }
                 var comboBox = new ComboBox({
                   name: "cbbox" + i,
                   'class': 'bae-attCombo',
                   value: defaultVal,
                   store: stateStore,
                   searchAttr: "name",
-                  placeHolder: this.nls.existingValue//this.nls.valueChooser
+                  placeHolder: this.nls.existingValue,
+                  maxlength: maxlength,
+                  labelType: "html",
+                  labelFunc: lang.hitch(this, this._formatCombobox(null))
                 }, inputCell);
                 comboBox.startup();
                 inputDijit = comboBox;
-                if (currentFeatureValue.values.length === 1) {
-                  if (currentFeatureValue.values[0] !== null) {
-                    /* jshint ignore:start */
+                if (dataType !== "Date" && dataType !== "DateTime") {
+                  if (currentFeatureValue.values.length === 1 && nullInRecord === false) {
+                    if (currentFeatureValue.values[0] !== null) {
+                      /* jshint ignore:start */
 
-                    when(stateStore.query(function (item, index, items) {
-                      return index === 0;
-                    }),
-                    function (results) {
-                      inputDijit.set("value", stateStore.getIdentity(results[0]));
-                    });
-                    /* jshint ignore:end */
+                      when(stateStore.query(function (item, index, items) {
+                        return index === 0;
+                      }),
+                      lang.hitch(this, function (results) {
+                        inputDijit.set("value", stateStore.getIdentity(results[0]));
+                      }));
+                      /* jshint ignore:end */
+                    }
                   }
                 }
-
-                on(comboBox, 'change', lang.hitch(this, function (evt) {
-                  if (evt === this.nls.newDate) {
-                    this._createDatePicker({ 'row': row, 'evt': evt, 'textCell': textCell, 'dataType': dataType });
-                  } else {
-                    this._destroyDatePicker({ 'row': row });
-                    var valid = true;
-                    if (dataType === "Number") {
-                      if (evt !== this.nls.existingValue && evt !== this.nls.noValue) {
-                        if (isNaN(Number(evt))) {
-                          valid = false;
-                          domClass.add(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
-                            "dijitError", "dijitValidationTextBoxError"]);
-                        } else if (Number(evt) % 1 !== 0) {
-                          valid = false;
-                          domClass.add(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
-                            "dijitError", "dijitValidationTextBoxError"]);
-                        } else {
-                          domClass.remove(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
-                            "dijitError", "dijitValidationTextBoxError"]);
-                        }
-                      } else {
-                        domClass.remove(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
-                         "dijitError", "dijitValidationTextBoxError"]);
-                      }
-                    }
-                    else if (dataType === "Float") {
-                      if (evt !== this.nls.existingValue && evt !== this.nls.noValue) {
-                        if (isNaN(Number(evt))) {
-                          valid = false;
-                          domClass.add(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
-                            "dijitError", "dijitValidationTextBoxError"]);
-                        } else {
-                          domClass.remove(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
-                            "dijitError", "dijitValidationTextBoxError"]);
-                        }
-                      } else {
-                        domClass.remove(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
-                         "dijitError", "dijitValidationTextBoxError"]);
-                      }
-                    }
-                    else if (dataType === "Date" || dataType === "DateTime") {
-                      if (evt !== this.nls.existingValue && evt !== this.nls.noValue && evt !== "") {
-                        var dtValue = new Date(evt);
-                        if (dtValue !== "Invalid Date") {
-                          evt = dtValue.setDate(dtValue.getDate());
-                        }
-                        if (dtValue === "Invalid Date" || isNaN(dtValue) === true) {
-                          valid = false;
-                          domClass.add(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
-                            "dijitError", "dijitValidationTextBoxError"]);
-                        } else {
-                          domClass.remove(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
-                            "dijitError", "dijitValidationTextBoxError"]);
-                        }
-                      } else {
-                        domClass.remove(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
-                          "dijitError", "dijitValidationTextBoxError"]);
-                      }
-                    }
-                    this._getComboBoxVal({ 'valid': valid, 'evt': evt, 'textCell': textCell, 'dataType': dataType });
-                  }
-                }));
-
+                on(comboBox, 'change', lang.hitch(this, this._comboChange(comboBox, row, textCell, dataType,
+                  currentFeatureValue.domain, currentFeatureValue.length)));
+                //on(comboBox, 'blur', lang.hitch(this, this._comboChange(comboBox, row, textCell, dataType)));
               }
-
-
-
             }));
           }
         }
       }, 1000));
 
+    },
+    _formatCombobox: function (values) {
+      return function (item) {
+        var displayVal = '';
+        if (item.hasOwnProperty("name")) {
+
+          if (Object.prototype.toString.call(item.name) === '[object Array]') {
+            if (item.name.length > 0) {
+              displayVal = item.name[0];
+            }
+          }
+          else if (typeof item.name === 'object') {
+            if (item.name > 0) {
+              displayVal = item.name[0];
+            }
+          }
+          else if (typeof item.name === 'string') {
+            displayVal = item.name;
+          }
+          else if (typeof item.name === 'number') {
+            displayVal = item.name;
+          }
+          else {
+            displayVal = item.name;
+          }
+        }
+        if (displayVal === this.nls.noValue ||
+          displayVal === this.nls.existingValue ||
+          displayVal === this.nls.newDate) {
+          return "<b><i>" + displayVal + "</i></b>";
+        }
+        else if (array.indexOf(values, displayVal) >= 0) {
+          return "<ins>" + displayVal + "</ins>";
+        }
+        else {
+          return displayVal;
+        }
+      };
+    },
+    isSingle: function (value) {
+      return value === value;
+      //return value == Math.fround(value);
+    },
+    isGuid: function (value) {
+      if (value && value === null){
+        return false;
+      }
+      //if (value[0] !== "{" || value[value.length - 1] !== "}")
+      //{
+      //  return false;
+      //}
+      if (value[0] === "{") {
+        value = value.substring(1, value.length - 1);
+      }
+      var regexGuid = /^(\{){0,1}[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\}){0,1}$/gi;
+      return regexGuid.test(value);
+    },
+    isShortInt: function (value) {
+      return (Number(value) >= -32768 && Number(value) <= 32767);
+    },
+    _comboChange: function (comboBox, row, textCell, dataType, domain, length) {
+
+      return function (evt) {
+        if (evt === undefined || evt === null) {
+          evt = comboBox.value;
+        }
+        var dtValue = null;
+        var evtJustDate;
+        var existDate;
+        var valid = true;
+        if (evt === this.nls.newDate) {
+          this._destroyTimePickerExt({ 'row': row });
+          this._createDatePicker({ 'row': row, 'evt': evt, 'textCell': textCell, 'dataType': dataType });
+        } else {
+          this._destroyDatePicker({ 'row': row });
+          var currentTimeVal = this._destroyTimePickerExt({ 'row': row });
+          /*"esriFieldTypeGeometry":
+          "esriFieldTypeOID":
+          "esriFieldTypeBlob":
+          "esriFieldTypeGlobalID":
+          "esriFieldTypeRaster":
+          "esriFieldTypeGUID":
+          "esriFieldTypeGlobalID";
+          "esriFieldTypeXML":
+          */
+          if (dataType === "esriFieldTypeGUID") {
+            if (evt !== this.nls.existingValue && evt !== this.nls.noValue && evt !== "") {
+
+              if (this.isGuid(evt) === false) {
+                valid = false;
+              }
+              else {
+                if (evt[0] !== "{" || evt[evt.length - 1] !== "}") {
+                  evt = "{" + evt + "}";
+                  comboBox.set("value", evt, false);
+                }
+              }
+
+            }
+          } else if (dataType === "esriFieldTypeString") {
+            if (evt !== this.nls.existingValue && evt !== this.nls.noValue && evt !== "") {
+              if (length !== null) {
+                if (isNaN(Number(length)) === false) {
+                  if (evt.length > Number(length)) {
+                    valid = false;
+                  }
+                }
+              }
+            }
+          }
+          else if (dataType === "esriFieldTypeSmallInteger") {
+            if (evt !== this.nls.existingValue && evt !== this.nls.noValue && evt !== "") {
+              if (isNaN(Number(evt))) {
+                valid = false;
+
+              } else if (Number(evt) % 1 !== 0) {
+                valid = false;
+              } else if (this.isShortInt(evt) === false) {
+                valid = false;
+              }
+              else if (domain && domain !== null) {
+                if (domain.type === "range") {
+                  if (Number(evt) > domain.maxValue || Number(evt) < domain.minValue) {
+                    valid = false;
+                  }
+                }
+              }
+            }
+          }
+          else if (dataType === "esriFieldTypeInteger") {
+            if (evt !== this.nls.existingValue && evt !== this.nls.noValue && evt !== "") {
+              if (isNaN(Number(evt))) {
+                valid = false;
+
+              } else if (Number(evt) % 1 !== 0) {
+                valid = false;
+              }
+              else if (domain && domain !== null) {
+                if (domain.type === "range") {
+                  if (Number(evt) > domain.maxValue || Number(evt) < domain.minValue) {
+                    valid = false;
+                  }
+                }
+              }
+            }
+          }
+          else if (dataType === "esriFieldTypeSingle") {
+            if (evt !== this.nls.existingValue && evt !== this.nls.noValue && evt !== "") {
+              if (isNaN(Number(evt))) {
+                valid = false;
+              }
+              else if (this.isSingle(evt) === false) {
+                valid = false;
+              }
+              else if (domain && domain !== null) {
+                if (domain.type === "range") {
+                  if (Number(evt) > domain.maxValue || Number(evt) < domain.minValue) {
+                    valid = false;
+                  }
+                }
+              }
+            }
+          }
+          else if (dataType === "esriFieldTypeDouble") {
+            if (evt !== this.nls.existingValue && evt !== this.nls.noValue && evt !== "") {
+              if (isNaN(Number(evt))) {
+                valid = false;
+              }
+              else if (domain && domain !== null) {
+                if (domain.type === "range") {
+                  if (Number(evt) > domain.maxValue || Number(evt) < domain.minValue) {
+                    valid = false;
+                  }
+                }
+              }
+            }
+          }
+          else if (dataType === "DateTime") {
+            if (evt && evt !== this.nls.existingValue && evt !== this.nls.noValue && evt !== "") {
+              existDate = false;
+              if (comboBox.item !== null) {
+                if (comboBox.item.hasOwnProperty("value")) {
+                  dtValue = new Date(comboBox.item.value);
+                  existDate = true;
+                  comboBox.set('timeVal', dtValue.getTime());
+                }
+                else {
+                  dtValue = new Date(evt);
+                }
+              }
+              else {
+                dtValue = new Date(evt);
+              }
+              if (dtValue.toString() === "Invalid Date" && comboBox.get('timeVal') !== undefined &&
+                comboBox.get('timeVal') !== null) {
+
+                dtValue = new Date(comboBox.get('timeVal'));
+                comboBox.set('timeVal', null);
+              }
+              if (dtValue.toString() === "Invalid Date" || isNaN(dtValue) === true) {
+                valid = false;
+                comboBox.set('timeVal', null);
+              } else {
+
+                evtJustDate = locale.format(dtValue, { selector: 'date', fullYear: true });
+                if (comboBox.get('value') !== evtJustDate && existDate === false) {
+                  valid = false;
+                }
+                else {
+                  if (currentTimeVal && currentTimeVal !== null && existDate === false) {
+                    dtValue.setHours(currentTimeVal.getHours());
+                    dtValue.setMinutes(currentTimeVal.getMinutes());
+                    dtValue.setSeconds(currentTimeVal.getSeconds());
+                  }
+                  this._getTimePickerExt({ 'row': row, 'textCell': textCell, 'date': dtValue });
+                  comboBox.set('value', evtJustDate);
+                  if (existDate === true) {
+                    this._setTimePickerExt({ 'row': row }, dtValue);
+                  }
+
+                  evt = dtValue.getTime();
+                }
+              }
+            }
+            else {
+              this._destroyTimePickerExt({ 'row': row });
+            }
+          }
+          else if (dataType === "Date") {
+            if (evt && evt !== this.nls.existingValue && evt !== this.nls.noValue && evt !== "") {
+              existDate = false;
+              if (comboBox.item !== null) {
+                if (comboBox.item.hasOwnProperty("value")) {
+                  dtValue = new Date(comboBox.item.value);
+                  existDate = true;
+                  comboBox.set('timeVal', dtValue.getTime());
+                }
+                else {
+                  dtValue = new Date(evt);
+                }
+              }
+              else {
+                dtValue = new Date(evt);
+              }
+              if (dtValue.toString() === "Invalid Date" && comboBox.get('timeVal') !== undefined &&
+                comboBox.get('timeVal') !== null) {
+                dtValue = new Date(comboBox.get('timeVal'));
+                comboBox.set('timeVal', null);
+              }
+              if (dtValue.toString() === "Invalid Date" || isNaN(dtValue) === true) {
+                valid = false;
+                comboBox.set('timeVal', null);
+
+              } else {
+                evtJustDate = locale.format(dtValue, { selector: 'date', fullYear: true });
+                if (comboBox.get('value') !== evtJustDate && existDate === false) {
+                  valid = false;
+                }
+                else {
+                  evt = dtValue.getTime();
+                }
+              }
+            }
+            else {
+              this._destroyTimePickerExt({ 'row': row });
+            }
+            if (valid === true && domain && domain !== null) {
+              if (domain.type === "range") {
+                if (dtValue.getTime() > domain.maxValue || dtValue.getTime() < domain.minValue) {
+                  valid = false;
+                }
+              }
+            }
+          }
+          if (valid === false) {
+            domClass.add(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
+                 "dijitError", "dijitValidationTextBoxError"]);
+          } else {
+
+            domClass.remove(comboBox.domNode, ["dijitTextBoxError", "dijitComboBoxError",
+             "dijitError", "dijitValidationTextBoxError"]);
+          }
+          this._getComboBoxVal({
+            'valid': valid, 'evt': evt, 'textCell': textCell,
+            'dataType': dataType, 'domain': domain
+          });
+        }
+
+      };
     },
     _getRowInfo: function (row) {
       var valueCell = row.parentNode.childNodes[1].childNodes[0];
@@ -1219,44 +1533,142 @@ function (dojo,
         'class': 'newDateCell'
       });
       domConstruct.place(dateHolderNode, pParams.row);
-      var d = new Date();
-      var defaultDate = (d.getMonth() + 1) + "/" + d.getDate() + "/" + d.getFullYear();
+      //var d = new Date();
+      //var defaultDate = d.toLocaleDateString();
+      var defaultDate = locale.format(new Date(), { selector: 'date', fullYear: true });
       var txtDate = new DateTextBox({
         value: defaultDate,
-        placeHolder: defaultDate
+        placeHolder: this.nls.errors.requiredValue
       }).placeAt(dateHolderNode);
       txtDate.startup();
-      on(txtDate, 'change', lang.hitch(this, function (evt) {
-        html.removeClass(saveBtn, 'jimu-state-disabled');
-        if (evt === "") {
-          evt = defaultDate;
-        }
-        if (pParams.dataType === "DateTime") {
-          this._createTimePicker(pParams);
-        }
 
-        this._getComboBoxVal({ 'valid': true, 'evt': evt, 'textCell': pParams.textCell, 'dataType': pParams.dataType });
+      txtDate.set('displayedValue', defaultDate);
+      on(txtDate, 'change', lang.hitch(this, function (evt) {
+        var enableSave = true;
+        if (evt !== undefined && evt !== null) {
+
+          if (evt === "") {
+            evt = defaultDate;
+          }
+          if (evt) {
+            try {
+              var newDate = new Date(evt);
+              if (newDate) {
+                evt = newDate.getTime();
+              }
+              newDate = null;
+            }
+            catch (err) {
+              console.log(err);
+            }
+          }
+          else {
+            enableSave = false;
+          }
+          if (pParams.dataType === "DateTime") {
+            if (this._createTimePicker(pParams) === null) {
+              enableSave = false;
+            }
+            else {
+              enableSave = true;
+            }
+          }
+          this._getComboBoxVal({
+            'valid': true, 'evt': evt, 'textCell': pParams.textCell,
+            'dataType': pParams.dataType
+          });
+          if (enableSave) {
+            html.removeClass(saveBtn, 'jimu-state-disabled');
+          }
+          else {
+            html.addClass(saveBtn, 'jimu-state-disabled');
+          }
+        } else {
+          html.addClass(saveBtn, 'jimu-state-disabled');
+        }
       }));
+    },
+    _createTimePickerExisting: function (pParams) {
+      var saveBtn = dom.byId('attrInspectorSaveBtn');
+      html.addClass(saveBtn, 'jimu-state-disabled');
+      if (typeof (pParams.date) !== 'undefined' && pParams.date !== null &&
+        pParams.date.toString() !== "Invalid Date") {
+        var dateNodes = query(".newTimeCellExt", pParams.row);
+        if (dateNodes.length > 0) {
+          return;
+        }
+        var dateHolderNode = domConstruct.create("div", {
+          'class': 'newTimeCellExt'
+        });
+        var defaultTime = locale.format(pParams.date, { selector: 'date', fullYear: true });
+        if (pParams.hasOwnProperty("defaultBlank")) {
+          if (pParams.defaultBlank === true) {
+            defaultTime = "";
+          }
+        }
+        domConstruct.place(dateHolderNode, pParams.row);
+        var timeNode = new TimeTextBox({
+          "class": "ee-inputField",
+          constraints: { formatLength: "medium" },
+          value: defaultTime,
+          placeHolder: this.nls.errors.requiredValue
+        }).placeAt(dateHolderNode);
+        timeNode.startup();
+        timeNode.set('displayedValue', locale.format(pParams.date, { selector: "time", formatLength: "medium" }));
+        on(timeNode, 'change', lang.hitch(this, function (evt) {
+          if (evt !== null) {
+            html.removeClass(saveBtn, 'jimu-state-disabled');
+            if (evt === "") {
+              evt = defaultTime;
+            }
+            this._getComboBoxVal({ 'valid': true, 'evt': evt, 'textCell': pParams.textCell, 'dataType': "Time" });
+          } else {
+            html.addClass(saveBtn, 'jimu-state-disabled');
+          }
+        }));
+        return timeNode.value;
+      }
+      return null;
     },
 
     _createTimePicker: function (pParams) {
+      var saveBtn = dom.byId('attrInspectorSaveBtn');
+      html.addClass(saveBtn, 'jimu-state-disabled');
+      var dateNodes = query(".newTimeCell", pParams.row);
+      if (dateNodes.length > 0) {
+        var currentVal = null;
+        array.forEach(dateNodes, function (dateNode) {
+          var timeTextBox = query(".dijitReset.dijitInputInner", dateNode);
+          if (timeTextBox.length > 0) {
+            currentVal = dijit.byId(timeTextBox[0].id).value;
+          }
+        });
+        return currentVal;
+      }
       var dateHolderNode = domConstruct.create("div", {
-        'class': 'newDateCell'
+        'class': 'newTimeCell'
       });
       var d = new Date();
       var defaultTime = d.toLocaleTimeString();
       domConstruct.place(dateHolderNode, pParams.row);
       var timeNode = new TimeTextBox({
         "class": "ee-inputField",
+        constraints: { formatLength: "medium" },
         value: defaultTime,
-        placeHolder: defaultTime
+        placeHolder: this.nls.errors.requiredValue
       }).placeAt(dateHolderNode);
       timeNode.startup();
+      timeNode.set('displayedValue', locale.format(d, { selector: "time", formatLength: "medium" }));
       on(timeNode, 'change', lang.hitch(this, function (evt) {
-        if (evt === "") {
-          evt = defaultTime;
+        if (evt !== null) {
+          html.removeClass(saveBtn, 'jimu-state-disabled');
+          if (evt === "") {
+            evt = defaultTime;
+          }
+          this._getComboBoxVal({ 'valid': true, 'evt': evt, 'textCell': pParams.textCell, 'dataType': "Time" });
+        } else {
+          html.addClass(saveBtn, 'jimu-state-disabled');
         }
-        this._getComboBoxVal({ 'valid': true, 'evt': evt, 'textCell': pParams.textCell, 'dataType': "Time" });
       }));
     },
 
@@ -1268,8 +1680,63 @@ function (dojo,
           domConstruct.destroy(dateNode);
         });
       }
+      dateNodes = query(".newTimeCell", pParams.row);
+      if (dateNodes.length > 0) {
+        array.forEach(dateNodes, function (dateNode) {
+          domConstruct.empty(dateNode);
+          domConstruct.destroy(dateNode);
+        });
+      }
     },
+    _setTimePickerExt: function (pParams, newVal) {
+      var currentVal = null;
+      var dateNodes = query(".newTimeCellExt", pParams.row);
+      if (dateNodes.length > 0) {
+        array.forEach(dateNodes, function (dateNode) {
+          var timeTextBox = query(".dijitReset.dijitInputInner", dateNode);
+          if (timeTextBox.length > 0) {
+            dijit.byId(timeTextBox[0].id).set("value", newVal);
 
+          }
+        });
+      }
+      return currentVal;
+    },
+    _getTimePickerExt: function (pParams) {
+      var currentVal = null;
+      var dateNodes = query(".newTimeCellExt", pParams.row);
+      if (dateNodes.length > 0) {
+        array.forEach(dateNodes, function (dateNode) {
+          var timeTextBox = query(".dijitReset.dijitInputInner", dateNode);
+          if (timeTextBox.length > 0) {
+            if (dijit.byId(timeTextBox[0].id).value && dijit.byId(timeTextBox[0].id).value !== null) {
+              currentVal = dijit.byId(timeTextBox[0].id).value;
+            }
+          }
+        });
+      }
+      else {
+        currentVal = this._createTimePickerExisting(pParams);
+      }
+      return currentVal;
+    },
+    _destroyTimePickerExt: function (pParams) {
+      var currentVal = null;
+      var dateNodes = query(".newTimeCellExt", pParams.row);
+      if (dateNodes.length > 0) {
+        array.forEach(dateNodes, function (dateNode) {
+          var timeTextBox = query(".dijitReset.dijitInputInner", dateNode);
+          if (timeTextBox.length > 0) {
+            if (dijit.byId(timeTextBox[0].id).value && dijit.byId(timeTextBox[0].id).value !== null) {
+              currentVal = dijit.byId(timeTextBox[0].id).value;
+            }
+          }
+          domConstruct.empty(dateNode);
+          domConstruct.destroy(dateNode);
+        });
+      }
+      return currentVal;
+    },
     _getComboBoxVal: function (pParams) {
       var saveBtn = dom.byId('attrInspectorSaveBtn');
       if (pParams.valid) {
@@ -1277,25 +1744,16 @@ function (dojo,
         dataStruct.fieldValue = pParams.evt;
         dataStruct.dataType = pParams.dataType;
         array.forEach(this.currentLayerInfos[0].fieldInfos, lang.hitch(this, function (fieldInfo) {
-          if (fieldInfo.label === pParams.textCell.innerHTML ||
-            (fieldInfo.label === pParams.textCell.innerText)) {
+          var fieldLabel = fieldInfo.label.toString().trim() !== "" ?
+              fieldInfo.label : fieldInfo.fieldName;
+          if (fieldLabel === pParams.textCell.innerHTML ||
+            (fieldLabel === pParams.textCell.innerText)) {
             dataStruct.fieldName = fieldInfo.fieldName;
           }
 
 
         }));
-        //array.forEach(this.updateLayers, lang.hitch(this, function (layer) {
-        //  array.forEach(layer.layerObject.getSelectedFeatures(), lang.hitch(this, function (feature) {
-        //    array.forEach(this.currentLayerInfos.fieldInfos, lang.hitch(this, function (fieldInfo) {
-        //      if (fieldInfo.fieldName === pParams.textCell.innerHTML) {
-        //        dataStruct.fieldName = field.fieldName;
-        //      }
-        //    }));
-        //  }));
-        //}));
-
         this._attrInspectorAttrChange(dataStruct);
-        html.removeClass(saveBtn, 'jimu-state-disabled');
       } else {
         html.addClass(saveBtn, 'jimu-state-disabled');
       }
@@ -1305,11 +1763,18 @@ function (dojo,
     // inspector.
     // returns: nothing
     _attrInspectorAttrChange: function (evt) {
+      if (evt.dataType === undefined || evt.dataType === null) {
+        array.some(this.currentLayerInfos[0].fieldInfos, lang.hitch(this, function (fieldInfo) {
+          if (fieldInfo.fieldName === evt.fieldName) {
+            evt.dataType = fieldInfo.typeOrigin;
+          }
+        }));
+      }
       this._changeList[evt.fieldName] = evt.fieldValue;
       var saveBtn = dom.byId('attrInspectorSaveBtn');
 
       //hacky way to check if fields arent validated.
-      if (this.attrInspector.domNode.innerHTML.indexOf('Error') < 0) {
+      if (this.attrInspector.domNode.innerHTML.indexOf('dijitError') < 0) {
         html.removeClass(saveBtn, 'jimu-state-disabled');
       } else {
         html.addClass(saveBtn, 'jimu-state-disabled');
@@ -1319,12 +1784,33 @@ function (dojo,
           if (evt.fieldValue !== this.nls.editorPopupMultipleValues) {
             if (typeof (evt.dataType) !== 'undefined') {
               if (evt.dataType === "Time") {
-                var curVal = new Date(feature.attributes[evt.fieldName]);
-                var newVal = new Date(curVal.setHours((evt.fieldValue).getHours()));
-                newVal = new Date(newVal.setMinutes((evt.fieldValue).getMinutes()));
-                newVal = new Date(newVal.setSeconds((evt.fieldValue).getSeconds()));
-                feature.attributes[evt.fieldName] = newVal;
-              } else {
+                if (evt.fieldValue && evt.fieldValue !== null) {
+                  var curVal = new Date(feature.attributes[evt.fieldName]);
+                  var newVal = new Date(curVal.setHours((evt.fieldValue).getHours()));
+                  newVal = new Date(newVal.setMinutes((evt.fieldValue).getMinutes()));
+                  newVal = new Date(newVal.setSeconds((evt.fieldValue).getSeconds())).getTime();
+                  feature.attributes[evt.fieldName] = newVal;
+                }
+              }
+              else if (evt.dataType === "Date" || evt.dataType === "DateTime" || evt.dataType === "esriFieldTypeDate") {
+                if (evt.fieldValue && evt.fieldValue !== null) {
+
+                  if (evt.fieldValue === this.nls.noValue) {
+                    feature.attributes[evt.fieldName] = evt.fieldValue;
+                  }
+                  else {
+                    var newDate = new Date(Number(evt.fieldValue));
+                    if (newDate && newDate !== null && newDate.toString() !== "Invalid Date") {
+                      feature.attributes[evt.fieldName] = newDate.getTime();
+                    }
+                    else {
+                      feature.attributes[evt.fieldName] = null;
+                    }
+                  }
+
+                }
+              }
+              else {
                 feature.attributes[evt.fieldName] = evt.fieldValue;
               }
             } else {
@@ -1376,6 +1862,29 @@ function (dojo,
       retArr.push(l.slice(n * newn - newn));
       return retArr;
     },
+    _checkValuesTypes: function (feat, k) {
+      return function (fieldInfo) {
+        if (fieldInfo.fieldName === k) {
+          if (fieldInfo.typeOrigin === "esriFieldTypeDate") {
+            if (typeof feat.attributes[k] === 'string' ||
+              feat.attributes[k] instanceof String) {
+              feat.attributes[k] = Number(feat.attributes[k]);
+            }
+          } else if (fieldInfo.typeOrigin === "esriFieldTypeSingle" ||
+            fieldInfo.typeOrigin === "esriFieldTypeInteger" ||
+            fieldInfo.typeOrigin === "esriFieldTypeDouble" ||
+            fieldInfo.typeOrigin === "esriFieldTypeSmallInteger") {
+
+            if (typeof feat.attributes[k] === 'string' ||
+              feat.attributes[k] instanceof String) {
+              feat.attributes[k] = Number(feat.attributes[k]);
+            }
+
+          }
+          return true;
+        }
+      };
+    },
     // Event handler for when the Save button is clicked in the attribute inspector.
     // returns: nothing
     _attrInspectorOnSave: function (evt) {
@@ -1383,7 +1892,7 @@ function (dojo,
       if (html.hasClass(evt.target, 'jimu-state-disabled')) {
         return;
       }
-      if (this.attrInspector.domNode.innerHTML.indexOf('Error') < 0) {
+      if (this.attrInspector.domNode.innerHTML.indexOf('dijitError') < 0) {
         html.removeClass(evt.target, 'jimu-state-disabled');
       } else {
         html.addClass(evt.target, 'jimu-state-disabled');
@@ -1431,9 +1940,9 @@ function (dojo,
           var selectFeat = layer.layerObject.getSelectedFeatures();
           if (selectFeat) {
             if (selectFeat.length > 0) {
-
+              var k = null;
               array.forEach(selectFeat, lang.hitch(this, function (feat) {
-                for (var k in feat.attributes) {
+                for (k in feat.attributes) {
                   if (feat.attributes.hasOwnProperty(k)) {
                     if (this.baeFields.hasOwnProperty(k)) {
                       if (feat.attributes[k] === this.nls.existingValue) {
@@ -1461,12 +1970,13 @@ function (dojo,
 
                   }
                 }
+                for (k in feat.attributes) {
+                  array.some(this.helperEditFieldInfo, this._checkValuesTypes(feat, k));
+                }
               }));
-
               validUpdate = true;
               array.some(this.layersTable.getRows(), function (row) {
                 rowData = this.layersTable.getRowData(row);
-
                 if (rowData.ID === layer.id) {
                   this.layersTable.editRow(row, {
                     'syncStatus': 0 + " / " + selectFeat.length
@@ -1541,16 +2051,19 @@ function (dojo,
         });
         def = layer.layerObject.applyEdits(null, chunks[idx], null,
           lang.hitch(this, this.applyCallback(chunks, idx + 1, layer, syncDet)),
-          lang.hitch(this, this.applyErrorback(chunks[idx], layer))
+          lang.hitch(this, this.applyErrorback(chunks[idx], idx, layer, syncDet))
         );
         syncDet.addDeferred(def);
       } else {
         /*return function(added, updated, removed) {*/
         return function (added, updated, removed) {
           if (chunks.length > idx) {
+            array.forEach(chunks[idx], function (feat) {
+              delete feat.geometry;
+            });
             def = layer.layerObject.applyEdits(null, chunks[idx], null,
               lang.hitch(this, this.applyCallback(chunks, idx + 1, layer, syncDet)),
-              lang.hitch(this, this.applyErrorback(chunks, idx + 1, layer))
+              lang.hitch(this, this.applyErrorback(chunks, idx, layer, syncDet))
             );
             syncDet.addDeferred(def);
           }
@@ -1562,12 +2075,24 @@ function (dojo,
         };
       }
     },
-    applyErrorback: function (chunk, layer) {
+    applyErrorback: function (chunks, idx, layer, syncDet) {
 
       return function (err) {
         err.layer = layer;
-        err.chunk = chunk;
+        err.chunk = chunks[idx];
+        idx = idx + 1;
+        if (chunks.length > idx) {
+          array.forEach(chunks[idx], function (feat) {
+            delete feat.geometry;
+          });
+          var def = layer.layerObject.applyEdits(null, chunks[idx], null,
+            lang.hitch(this, this.applyCallback(chunks, idx + 1, layer, syncDet)),
+            lang.hitch(this, this.applyErrorback(chunks, idx, layer, syncDet))
+          );
+          syncDet.addDeferred(def);
+        }
         return err;
+
       };
 
     },
@@ -1595,7 +2120,7 @@ function (dojo,
           }));
         }));
         this._updateUpdatedFeaturesCount(totalComplete, total, errors);
-        this._clearResults(false);
+        this._clearResults(false, true);
 
         //this._togglePanelLoadingIcon();
         this.loading.hide();
@@ -1647,21 +2172,26 @@ function (dojo,
           var different = false;
           var attValList = [];
           var first = features[0].attributes[fieldName];
-          var fieldAlias = field.label;
+          var fieldAlias = field.label.toString().trim() !== "" ?
+              field.label : field.fieldName;
 
           this._currentFeatureValues[fieldAlias] = [];
           this._currentFeatureValues[fieldAlias].type = field.typeOrigin;
           if (field.format) {
             this._currentFeatureValues[fieldAlias].format = field.format;
           }
+
+          this._currentFeatureValues[fieldAlias].domain = field.domain;
+          this._currentFeatureValues[fieldAlias].length = field.length;
+          this._currentFeatureValues[fieldAlias].addnullable = field.addnullable;
           different = array.filter(features, function (feature) {
             return (feature.attributes[fieldName] !== first);
           }).length > 0;
 
           array.forEach(features, function (feature) {
-            if (feature.attributes[fieldName] !== null) {
-              attValList.push(feature.attributes[fieldName]);
-            }
+            //if (feature.attributes[fieldName] !== null) {
+            attValList.push(feature.attributes[fieldName]);
+            //}
           });
           attValList.sort();
           var holder;
@@ -1692,15 +2222,20 @@ function (dojo,
       }, this);
     },
     _clearResultsEvent: function () {
-      this._clearResults(true);
+      this._clearResults(true, true);
     },
-    _clearResults: function (clearResultMessage) {
+    _clearResults: function (clearResultMessage, clearSelectionLayer) {
       if (clearResultMessage === null) {
         clearResultMessage = true;
       }
       array.forEach(this.updateLayers, function (layer) {
         layer.layerObject.clearSelection();
       }, this);
+      if (this.selectByLayer && clearSelectionLayer === true) {
+        if (this.selectByLayer.layerObject) {
+          this.selectByLayer.layerObject.clearSelection();
+        }
+      }
       array.forEach(this.clickList, function (evt) {
         evt.remove();
       });
@@ -1732,8 +2267,19 @@ function (dojo,
       });
       if (errors) {
         if (errors > 0) {
-          this.resultsMessage.innerHTML = this.resultsMessage.innerHTML +
-            '<br/> <font color="red">' + this.nls.error + ": " + errors + "<font>";
+          if (this.nls.errors.hasOwnProperty('saveError')) {
+            this.resultsMessage.innerHTML = this.resultsMessage.innerHTML +
+            '<br/> <font color="red">' + string.substitute(this.nls.errors.saveError, {
+              0: errors
+            }) + "<font>";
+          }
+          else {
+            this.resultsMessage.innerHTML = this.resultsMessage.innerHTML +
+            '<br/> <font color="red">' + string.substitute("{0} errors, details in log", {
+              0: errors
+            }) + "<font>";
+          }
+
         }
       }
       this.timer.stop();
@@ -1825,14 +2371,14 @@ function (dojo,
               }
               var regEvent = on(workLayer.layerObject, "update-end", lang.hitch(this, function () {
                 if (workLayer.layerObject.getSelectedFeatures().length > 0) {
-                  this._clearResults(true);
+                  this._clearResults(true, true);
                   lang.hitch(this, this._onDrawEnd(this.drawnGrph));
                   regEvent.remove();
                 }
               }));
               expression.expr = partsObj;
 
-              var labelCell = query('.label', pTR)[1];
+              var labelCell = query('.layerLabel', pTR)[0];
               if (expression.expr.expr !== '1=1') {
                 domClass.add(labelCell, 'filtered');
               } else {
@@ -1862,42 +2408,57 @@ function (dojo,
     },
 
     onOpen: function () {
+      this.checkValidPermission();
+
       this._mapInfoStorage = {
         resetInfoWindow: null
       };
-      this.disableWebMapPopup();
+      this.widgetManager.activateWidget(this);
+      draw.addPoint = this.nls.drawBox.addPointToolTip;
+      draw.addShape = this.nls.drawBox.addShapeToolTip;
+      draw.freehand = this.nls.drawBox.freehandToolTip;
+      draw.start = this.nls.drawBox.startToolTip;
       if (this.dnd === undefined || this.dnd === null) {
         var handle = query(".title", this.map.infoWindow.domNode)[0];
         this.dnd = new Moveable(this.map.infoWindow.domNode, {
           handle: handle
         });
         // when the infoWindow is moved, hide the arrow:
-        on(this.dnd, 'FirstMove', function () {
-          // hide pointer and outerpointer (used depending on where the pointer is shown)
-          var arrowNode = query(".outerPointer", this.map.infoWindow.domNode)[0];
-          domClass.add(arrowNode, "hidden");
 
-          arrowNode = query(".pointer", this.map.infoWindow.domNode)[0];
-          domClass.add(arrowNode, "hidden");
-        }.bind(this));
       } else {
         this.dnd.skip = false;
       }
-      /*
-       esri.bundle.toolbars.draw.addPoint = this.nls.drawBox.addPointToolTip;
-       esri.bundle.toolbars.draw.addShape  = this.nls.drawBox.addShapeToolTip;
-       esri.bundle.toolbars.draw.freehand  = this.nls.drawBox.freehandToolTip;
-       esri.bundle.toolbars.draw.start  = this.nls.drawBox.startToolTip;
-       */
-      draw.addPoint = this.nls.drawBox.addPointToolTip;
-      draw.addShape = this.nls.drawBox.addShapeToolTip;
-      draw.freehand = this.nls.drawBox.freehandToolTip;
-      draw.start = this.nls.drawBox.startToolTip;
-      if (this.config.toggleLayersOnOpen === true) {
-        array.forEach(this.updateLayers, function (layer) {
-          layer.layerObject.setVisibility(true);
-        });
-      }
+      on(this.dnd, 'FirstMove', function () {
+        // hide pointer and outerpointer (used depending on where the pointer is shown)
+        var arrowNode = query(".outerPointer", this.map.infoWindow.domNode)[0];
+        domClass.add(arrowNode, "hidden");
+
+        arrowNode = query(".pointer", this.map.infoWindow.domNode)[0];
+        domClass.add(arrowNode, "hidden");
+      }.bind(this));
+      LayerInfos.getInstance(this.map, this.map.itemInfo)
+           .then(lang.hitch(this, function (operLayerInfos) {
+             this._jimuLayerInfos = operLayerInfos;
+             if (this.config.updateLayers.length > 0) {
+               this.expressionLayers = [];
+               this.clickList = [];
+               this._configureWidget();
+               this._initSelectLayer();
+               this.createLayerTable();
+               this.loadLayerTable();
+               this._addHelperLayer();
+               this._createAttributeInspector();
+               this._createQueryParams();
+               this._setTheme();
+               this.timer = new Timer.Timer(20000);
+               this.own(aspect.after(this.timer, "onTick", lang.hitch(this, this._timerComplete), this));
+             }
+             if (this.config.toggleLayersOnOpen === true) {
+               array.forEach(this.updateLayers, function (layer) {
+                 layer.layerObject.setVisibility(true);
+               });
+             }
+           }));
     },
     onClose: function () {
       if (this.dnd !== undefined && this.dnd !== null) {
@@ -1916,7 +2477,7 @@ function (dojo,
        esri.bundle.toolbars.draw.freehand = this.existingText.freehand;
        esri.bundle.toolbars.draw.start = this.existingText.start;
        */
-      this._clearResults(true);
+      this._clearResults(true, true);
       if (typeof (this.existingText) !== 'undefined') {
         draw.addPoint = this.existingText.addPoint;
         draw.addShape = this.existingText.addShape;
@@ -1941,11 +2502,13 @@ function (dojo,
       this.expressionLayers = [];
       if (this.layersTable) {
         array.forEach(this.layersTable.getRows(), lang.hitch(this, function (row) {
-          var labelCell = query('.label', row).shift();
+          var labelCell = query('.layerLabel', row).shift();
           domClass.remove(labelCell, 'filtered');
         }));
       }
-
+      if (this.drawBox) {
+        this.drawBox.destroy();
+      }
     },
 
     onDeActive: function () {
@@ -1984,6 +2547,60 @@ function (dojo,
       this.timer = null;
 
       this.inherited(arguments);
+    },
+
+    //Start Permission Checking
+    checkValidPermission: function() {
+       this.privilegeUtil = PrivilegeUtil.getInstance();
+
+       var timeoutValue;
+       if (this.appConfig.theme.name === "BoxTheme") {
+         timeoutValue = 1050;
+
+       } else {
+         timeoutValue = 1;
+       }
+       setTimeout(lang.hitch(this, function () {
+
+         this.privilegeUtil.loadPrivileges(this._getPortalUrl()).then(lang.hitch(this, function (status) {
+           var valid = true;
+           if (!status) {
+             this._userHasPrivilege = true;
+           } else {
+             if (this.privilegeUtil.userRole.canEditFeatures() === true) {
+               this._userHasPrivilege = true;
+             }
+             else if (this.privilegeUtil.userRole.canEditFeaturesFullControl === true) {
+               this._userHasPrivilege = true;
+             }
+             else {
+               this._userHasPrivilege = false;
+               this._noPrivilegeHandler(window.jimuNls.noEditPrivileges);
+             }
+           }
+           if (valid === false) {
+              this._userHasPrivilege = false;
+             this._noPrivilegeHandler(window.jimuNls.invalidConfiguration);
+           }
+
+         }), lang.hitch(this, function () {
+           this._userHasPrivilege = false;
+           this._noPrivilegeHandler(window.jimuNls.noEditPrivileges);
+         }));
+
+       }), timeoutValue);
+    },
+    _noPrivilegeHandler: function (message) {
+      this.widgetIntro.innerHTML = message;
+      domStyle.set(this.layerDrawContainer, "display", "none");
+    },
+    _getPortalUrl: function (url) {
+      if (url) {
+        return portalUrlUtils.getStandardPortalUrl(url);
+      } else {
+        return portalUrlUtils.getStandardPortalUrl(this.appConfig.portalUrl);
+      }
     }
+  //ENd Permission Checking
   });
 });

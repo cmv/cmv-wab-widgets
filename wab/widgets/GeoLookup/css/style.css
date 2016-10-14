@@ -39,7 +39,7 @@ input[type="file"] {
     font-family: proxima-nova;
     font-style: normal;
     font-size: 12px;
-    padding-bottom: 25px;
+    padding-bottom: 10px;
     width: 100%;
     position: relative;
 }
@@ -73,26 +73,26 @@ input[type="file"] {
 
 .solutions-widget-geolookup .tblActionContainer {
 	width: 100%;
-    padding-bottom: 30px;
+    padding-bottom: 15px;
+}
+
+.solutions-widget-geolookup .optionStyle {
+	padding-bottom: 5px;
 }
 
 .solutions-widget-geolookup .tdCSVButton {
-	text-align: left;
 	width: 100%;
 }
 
 .solutions-widget-geolookup .tdDownloadButton {
-	text-align: right;
 	width: 25%;
 }
 
 .solutions-widget-geolookup .tdClearButton {
-	text-align: right;
 	width: 25%;
 }
 
 .solutions-widget-geolookup .clear-CSVresult {
-    text-align: right;
     color: #51b1fe;
     font-family: proxima-nova;
     font-style: normal;
@@ -102,11 +102,10 @@ input[type="file"] {
 }
 
 .solutions-widget-geolookup .download-CSVresult {
-    text-align: left;
     color: #51b1fe;
     font-family: proxima-nova;
     font-style: normal;
-    margin: 0px 10px 0px 0px;
+    margin: 0px 15px 0px 15px;
     font-size: 14px;
     cursor:pointer;
 }

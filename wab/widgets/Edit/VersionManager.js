@@ -46,9 +46,16 @@ function(BaseVersionManager) {
       version: '2.1',
       upgrader: function(oldConfig){
         var newConfig = oldConfig;
-        newConfig.snappingTolerance = 15;
-        newConfig.popupTolerance = 5;
-        newConfig.stickyMoveTolerance = 0;
+        newConfig.editor.snappingTolerance = 15;
+        newConfig.editor.popupTolerance = 5;
+        newConfig.editor.stickyMoveTolerance = 0;
+        return newConfig;
+      }
+    }, {
+      version: '2.2',
+      upgrader: function(oldConfig){
+        var newConfig = oldConfig;
+        newConfig.editor.tableInfos = [];
         return newConfig;
       }
     }];

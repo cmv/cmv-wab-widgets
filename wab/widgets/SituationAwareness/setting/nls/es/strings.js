@@ -45,7 +45,7 @@ define({
   "save_label": "Opciones para guardar",
   "save_checkbox": "Habilitar guardar",
   "csv_label": "Opciones de CSV",
-  "csv_checkbox": "Exportar todos los campos en la capa.",
+  "csv_checkbox": "Exportar todos los campos de la capa",
   "display_label": "Opciones de visualización",
   "display_checkbox": "Mostrar entidades de resumen",
   "must_select_template": "Selecciona una de las plantillas de edición en Opciones para guardar.",

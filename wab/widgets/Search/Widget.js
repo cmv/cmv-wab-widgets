@@ -255,7 +255,7 @@ define([
         var sourceDefs = array.map(config.sources, lang.hitch(this, function(source) {
           var def = new Deferred();
           if (source && source.url && source.type === 'locator') {
-            def.resolve({
+            var _source = {
               locator: new Locator(source.url || ""),
               outFields: ["*"],
               singleLineFieldName: source.singleLineFieldName || "",
@@ -265,12 +265,17 @@ define([
               maxSuggestions: source.maxSuggestions,
               maxResults: source.maxResults || 6,
               zoomScale: source.zoomScale || 50000,
-              useMapExtent: !!source.searchInCurrentMapExtent,
-              localSearchOptions: {
-                minScale: 300000,
-                distance: 50000
-              }
-            });
+              useMapExtent: !!source.searchInCurrentMapExtent
+            };
+
+            if (source.enableLocalSearch) {
+              _source.localSearchOptions = {
+                minScale: source.localSearchMinScale,
+                distance: source.localSearchDistance
+              };
+            }
+
+            def.resolve(_source);
           } else if (source && source.url && source.type === 'query') {
             var searchLayer = new FeatureLayer(source.url || null, {
               outFields: ["*"]
@@ -369,9 +374,15 @@ define([
           var source = this.searchDijit.sources[sourceIndex];
           if (source && 'featureLayer' in source) {
             var popupInfo = this._getSourcePopupInfo(source);
-            var notFormatted = (popupInfo && popupInfo.description &&
-            popupInfo.description.match(/http(s)?:\/\//)) ||
-            (popupInfo && popupInfo.mediaInfos && popupInfo.mediaInfos.length > 0);
+            var notFormatted = (popupInfo && popupInfo.showAttachments) ||
+              (popupInfo && popupInfo.description &&
+              popupInfo.description.match(/http(s)?:\/\//)) ||
+              (popupInfo && popupInfo.mediaInfos && popupInfo.mediaInfos.length > 0);
+
+            // set a private property for select-result to get original feature from layer.
+            if (!e.feature.__attributes) {
+              e.feature.__attributes = e.feature.attributes;
+            }
 
             if (!notFormatted) {
               var formatedAttrs = this._getFormatedAttrs(
@@ -381,10 +392,6 @@ define([
                 source.featureLayer.types,
                 popupInfo
               );
-              // set a private property for select-result to get original feature from layer.
-              if (!e.feature.__attributes) {
-                e.feature.__attributes = e.feature.attributes;
-              }
 
               e.feature.attributes = formatedAttrs;
             }
@@ -614,12 +621,20 @@ define([
         } else {
           this._onClearSearch();
         }
+        // publish search results to other widgets
+        this.publishData({
+          'searchResults': evt
+        });
       },
 
-      _onSuggestResults: function() {
+      _onSuggestResults: function(evt) {
         this._resetSelectorPosition('.searchMenu');
 
         this._hideResultMenu();
+        // publish suggest results to other widgets
+        this.publishData({
+          'suggestResults': evt
+        });
       },
 
       _onSelectSearchResult: function(evt) {
@@ -665,7 +680,7 @@ define([
           if (features[0].geometry.type === "point") {
             location = features[0].geometry;
           } else {
-            location = features[0].geometry.getCenter();
+            location = features[0].geometry.getExtent().getCenter();
           }
           that.map.infoWindow.show(location, {
             closetFirst: true
@@ -714,6 +729,10 @@ define([
             this.own(handle);
           }
         }
+        // publish select result to other widgets
+        this.publishData({
+          'selectResult': e
+        });
       },
 
       _onClearSearch: function() {

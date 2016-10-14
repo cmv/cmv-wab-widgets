@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtruj warstwę",
   "cancel": "Anuluj",
   "noValue": "Brak wartości",
+  "emptyString": "Pusty ciąg",
   "existingValue": "Zachowaj istniejącą wartość",
   "newDate": "Nowa data",
   "valueChooser": "Wybierz/wprowadź wartość",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Nie znaleziono na mapie warstwy ${0} z identyfikatorem ${1}; od chwili konfiguracji widżetu mapa mogła się zmienić",
     "queryNullID": "Obiekt z ${0} zwrócił nieprawidłowy identyfikator",
     "noSelectedLayers": "Brak wybranych warstw z rekordami do uaktualnienia",
-    "inputValueError": "Nieprawidłowa wartość w formularzu"
+    "inputValueError": "Nieprawidłowa wartość w formularzu",
+    "saveError": "Liczba obiektów, dla których zapis był niemożliwy: ${0}, szczegóły dodano do konsoli",
+    "requiredValue": "Wartość wymagana"
   }
 });

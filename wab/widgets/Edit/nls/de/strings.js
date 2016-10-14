@@ -9,5 +9,8 @@ define({
   "featureLayers": "Feature-Layer",
   "searchTemplates": "Vorlagen durchsuchen",
   "noAvailableTempaltes": "Keine verfügbaren Vorlagen",
-  "noCanCreateLayerAreCurrentlyVisible": "Zurzeit sind keine erstellbaren Layer sichtbar."
+  "noCanCreateLayerAreCurrentlyVisible": "Zurzeit sind keine erstellbaren Layer sichtbar.",
+  "relatedTables": "Zugehörige Tabellen:",
+  "relatedRecords": "Zugehörige Datensätze:",
+  "noRelatedRecotds": "Keine zugehörigen Datensätze gefunden"
 });

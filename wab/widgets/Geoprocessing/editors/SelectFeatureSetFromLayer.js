@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,38 +43,35 @@ define(['dojo/_base/declare',
       this.spatialFilterByFeatures.startup();
     },
 
-    setFeatureSet: function(featureset, layer) {
-      //jshint unused:false
-      this.spatialFilterByFeatures.setSelectedLayer(layer).then(lang.hitch(this, function() {
-        this.spatialFilterByFeatures.checkSelectedFeaturesRadio();
-      }));
-    },
-
     getGPValue: function(){
-      var def = new Deferred();
+      if(this.activeViewIndex === 0) {
+        var def = new Deferred();
 
-      this.spatialFilterByFeatures.getFeatureSet(true).then(lang.hitch(this, function(featureSet){
-        def.resolve(featureSet);
-      }), lang.hitch(this, function(err){
-        if(err && err.type === SpatialFilterByFeatures.NONE_SELECTED_FEATURES_NOT_DRAW_SHAPES){
-          var layer = this.spatialFilterByFeatures.getSelectedLayer();
-          if(layer && layer.url){
-            var query = new Query();
-            query.where = '1=1';
-            layer.queryFeatures(query).then(lang.hitch(this, function(response){
-              def.resolve(response);
-            }), lang.hitch(this, function(error){
-              def.reject(error);
-            }));
+        this.spatialFilterByFeatures.getFeatureSet(true).then(lang.hitch(this, function(featureSet){
+          def.resolve(featureSet);
+        }), lang.hitch(this, function(err){
+          if(err && err.type === SpatialFilterByFeatures.NONE_SELECTED_FEATURES_NOT_DRAW_SHAPES){
+            var layer = this.spatialFilterByFeatures.getSelectedLayer();
+            if(layer && layer.url){
+              var query = new Query();
+              query.where = '1=1';
+              layer.queryFeatures(query).then(lang.hitch(this, function(response){
+                def.resolve(response);
+              }), lang.hitch(this, function(error){
+                def.reject(error);
+              }));
+            }else{
+              def.reject(err);
+            }
           }else{
             def.reject(err);
           }
-        }else{
-          def.reject(err);
-        }
-      }));
+        }));
 
-      return def;
+        return def;
+      } else {
+        return this.wrapValueToDeferred(this.getFeatureSet());
+      }
     }
   });
 

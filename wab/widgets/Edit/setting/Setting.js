@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,10 +20,12 @@ define([
     'jimu/BaseWidgetSetting',
     'jimu/dijit/SimpleTable',
     'jimu/LayerInfos/LayerInfos',
+    'jimu/dijit/LoadingIndicator',
     'dojo/_base/lang',
     'dojo/_base/html',
     'dojo/on',
     'dojo/_base/array',
+    'dojo/promise/all',
     "./EditFields",
     "../utils",
     'dijit/form/NumberSpinner'
@@ -34,10 +36,12 @@ define([
     BaseWidgetSetting,
     Table,
     LayerInfos,
+    LoadingIndicator,
     lang,
     html,
     on,
     array,
+    all,
     EditFields,
     editUtils) {
     return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
@@ -50,7 +54,9 @@ define([
 
       _jimuLayerInfos: null,
       _layersTable: null,
+      _tablesTable: null,
       _editableLayerInfos: null,
+      _editableTableInfos: null,
 
       startup: function() {
         this.inherited(arguments);
@@ -65,6 +71,7 @@ define([
       _init: function() {
         this._initToolbar();
         this._initLayersTable();
+        this._initTablesTable();
       },
 
       _initToolbar: function() {
@@ -120,12 +127,42 @@ define([
           selectable: false
         };
         this._layersTable = new Table(args);
-        this._layersTable.placeAt(this.tableLayerInfos);
+        this._layersTable.placeAt(this.layerInfosTable);
         this._layersTable.startup();
 
         this.own(on(this._layersTable,
           'actions-edit',
-          lang.hitch(this, this._onEditFieldInfoClick)));
+          lang.hitch(this, this._onEditFieldInfoClick, this._layersTable)));
+      },
+
+      _initTablesTable: function() {
+        var fields = [{
+          name: 'edit',
+          title: this.nls.edit,
+          type: 'checkbox',
+          'class': 'editable'
+        }, {
+          name: 'label',
+          title: window.jimuNls.common.table,
+          type: 'text'
+        }, {
+          name: 'actions',
+          title: this.nls.fields,
+          type: 'actions',
+          'class': 'edit-fields',
+          actions: ['edit']
+        }];
+        var args = {
+          fields: fields,
+          selectable: false
+        };
+        this._tablesTable = new Table(args);
+        this._tablesTable.placeAt(this.tableInfosTable);
+        this._tablesTable.startup();
+
+        this.own(on(this._tablesTable,
+          'actions-edit',
+          lang.hitch(this, this._onEditFieldInfoClick, this._tablesTable)));
       },
 
       setConfig: function() {
@@ -133,14 +170,60 @@ define([
         //   config.editor.layerInfos = [];
         // }
         this._editableLayerInfos = this._getEditableLayerInfos();
-        this._setLayersTable(this._editableLayerInfos);
+        this._setTable(this._editableLayerInfos, this._layersTable);
+        var loading = new LoadingIndicator({hidden: false}).placeAt(this.tableInfosLoading);
+        this._getEditableTableInfos().then(lang.hitch(this, function(editableTableInfos) {
+          loading.destroy();
+          this._editableTableInfos = editableTableInfos;
+          if(this._editableTableInfos.length > 0) {
+            this._setTable(editableTableInfos, this._tablesTable);
+            html.setStyle(this.tableInfosTable, 'display', 'block');
+          }
+        }));
       },
+
+
+      _getEditableTableInfos: function() {
+        var defs = [];
+        var editableTableInfos = [];
+        var tableInfoArray = this._jimuLayerInfos.getTableInfoArray();
+        array.forEach(tableInfoArray, function(jimuTableInfo) {
+          defs.push(jimuTableInfo.getLayerObject());
+        }, this);
+
+        return all(defs).then(lang.hitch(this, function() {
+          array.forEach(tableInfoArray, function(jimuTableInfo) {
+            var tableObject = jimuTableInfo.layerObject;
+            var capabilities = jimuTableInfo.getCapabilitiesOfWebMap();
+            var isEditableInWebMap;
+            if(capabilities && capabilities.toLowerCase().indexOf('editing') === -1) {
+              isEditableInWebMap = false;
+            } else {
+              isEditableInWebMap = true;
+            }
+
+            if (tableObject.type === "Table" &&
+                tableObject.url &&
+                tableObject.isEditable &&// todo...********
+                tableObject.isEditable() &&
+                isEditableInWebMap) {
+              var tableInfo = this._getLayerInfoFromConfiguration(tableObject);
+              if(!tableInfo) {
+                tableInfo = this._getDefaultLayerInfo(tableObject);
+              }
+              editableTableInfos.push(tableInfo);
+            }
+          }, this);
+          return editableTableInfos;
+        }));
+      },
+
 
       _getEditableLayerInfos: function() {
         // summary:
         //   get all editable layers from map.
         // description:
-        //   layerInfo will honor configuration if that layer has configured.
+        //   layerInfo will honor the configuration if that layer has been configured.
         var editableLayerInfos = [];
         for(var i = this.map.graphicsLayerIds.length - 1; i >= 0; i--) {
           var layerObject = this.map.getLayer(this.map.graphicsLayerIds[i]);
@@ -160,7 +243,10 @@ define([
 
       _getLayerInfoFromConfiguration: function(layerObject) {
         var layerInfo = null;
-        var layerInfos = this.config.editor.layerInfos;
+        var layerInfos = this.config.editor.layerInfos ? this.config.editor.layerInfos : [];
+        layerInfos = layerInfos.concat(this.config.editor.tableInfos ?
+                                       this.config.editor.tableInfos :
+                                       []);
         if(layerInfos && layerInfos.length > 0) {
           for(var i = 0; i < layerInfos.length; i++) {
             if(layerInfos[i].featureLayer &&
@@ -181,22 +267,25 @@ define([
       },
 
       _getDefaultLayerInfo: function(layerObject) {
+        var configedLayerOrTableInfos = this.config.editor.layerInfos && this.config.editor.tableInfos ?
+                                        this.config.editor.layerInfos.concat(this.config.editor.tableInfos):
+                                        null
         var layerInfo = {
           'featureLayer': {
             'id': layerObject.id
           },
           'disableGeometryUpdate': false,
           'fieldInfos': this._getSimpleFieldInfos(layerObject),
-          '_editFlag': this.config.editor.layerInfos &&
-                        this.config.editor.layerInfos.length === 0 ? true : false
+          '_editFlag': configedLayerOrTableInfos &&
+                        configedLayerOrTableInfos.length === 0 ? true : false
         };
         return layerInfo;
       },
 
-      _setLayersTable: function(layerInfos) {
-        array.forEach(layerInfos, function(layerInfo) {
-          var _jimuLayerInfo = this._jimuLayerInfos.getLayerInfoById(layerInfo.featureLayer.id);
-          var addRowResult = this._layersTable.addRow({
+      _setTable: function(layerOrTableInfos, tableDijit) {
+        array.forEach(layerOrTableInfos, function(layerInfo) {
+          var _jimuLayerInfo = this._jimuLayerInfos.getLayerOrTableInfoById(layerInfo.featureLayer.id);
+          var addRowResult = tableDijit.addRow({
             label: _jimuLayerInfo.title,
             edit: layerInfo._editFlag,
             disableGeometryUpdate: layerInfo.disableGeometryUpdate
@@ -222,48 +311,49 @@ define([
       // about fieldInfos mehtods.
       _getDefaultSimpleFieldInfos: function(layerObject) {
         var fieldInfos = [];
+        var isEditable;
+        var visible;
         for (var i = 0; i < layerObject.fields.length; i++) {
-          if(layerObject.fields[i].editable ||
-            layerObject.fields[i].name.toLowerCase() === "globalid" ||
-            //layerObject.fields[i].name.toLowerCase() === "objectid" ||
-            layerObject.fields[i].name === layerObject.objectIdField) {
-            fieldInfos.push({
-              fieldName: layerObject.fields[i].name,
-              label: layerObject.fields[i].alias || layerObject.fields[i].name,
-              isEditable: (layerObject.fields[i].name.toLowerCase() === "globalid" ||
-                          //layerObject.fields[i].name.toLowerCase() === "objectid" ||
-                          layerObject.fields[i].name === layerObject.objectIdField) &&
-                          !layerObject.fields[i].editable ?
-                          null :
-                          true,
-              visible: true
-            });
-          }
+          isEditable = !layerObject.fields[i].editable ?
+                        null :
+                        true;
+          visible = (layerObject.fields[i].name.toLowerCase() === "globalid" ||
+                    layerObject.fields[i].name === layerObject.objectIdField) &&
+                    !layerObject.fields[i].editable ?
+                    false:
+                    true;
+
+          fieldInfos.push({
+            fieldName: layerObject.fields[i].name,
+            label: layerObject.fields[i].alias || layerObject.fields[i].name,
+            isEditable: isEditable,
+            visible: (visible || isEditable) ? true : false // isEditable probably is null
+          });
         }
         return fieldInfos;
       },
 
       _getWebmapSimpleFieldInfos: function(layerObject) {
+        var isEditable;
+        var visible;
         var webmapSimpleFieldInfos = [];
         var webmapFieldInfos =
           editUtils.getFieldInfosFromWebmap(layerObject.id, this._jimuLayerInfos);
         if(webmapFieldInfos) {
           array.forEach(webmapFieldInfos, function(webmapFieldInfo) {
             if(webmapFieldInfo.isEditableOnLayer !== undefined &&
-              (webmapFieldInfo.isEditableOnLayer ||
-              webmapFieldInfo.fieldName.toLowerCase() === "globalid" ||
-              //webmapFieldInfo.fieldName.toLowerCase() === "objectid" ||
-              webmapFieldInfo.fieldName === layerObject.objectIdField)) {
+               // disable relationship's field.
+               editUtils.ignoreCaseToGetFieldKey(layerObject, webmapFieldInfo.fieldName)) {
+              isEditable = !webmapFieldInfo.isEditableOnLayer ?
+                           null :
+                           webmapFieldInfo.isEditable;
+              visible = webmapFieldInfo.visible;
+
               webmapSimpleFieldInfos.push({
                 fieldName: webmapFieldInfo.fieldName,
                 label: webmapFieldInfo.label,
-                isEditable: (webmapFieldInfo.fieldName.toLowerCase() === "globalid" ||
-                            //webmapFieldInfo.fieldName.toLowerCase() === "objectid" ||
-                            webmapFieldInfo.fieldName === layerObject.objectIdField) &&
-                            !webmapFieldInfo.isEditable ?
-                            null :
-                            webmapFieldInfo.isEditable,
-                visible: webmapFieldInfo.visible
+                isEditable: isEditable,
+                visible: (visible || isEditable) ? true : false // isEditable probably is null
               });
             }
           });
@@ -328,8 +418,8 @@ define([
         return simpleFieldInfos;
       },
 
-      _onEditFieldInfoClick: function(tr) {
-        var rowData = this._layersTable.getRowData(tr);
+      _onEditFieldInfoClick: function(table, tr) {
+        var rowData = table.getRowData(tr);
         if(rowData && rowData.edit) {
           var editFields = new EditFields({
             nls: this.nls,
@@ -367,10 +457,27 @@ define([
         this.config.editor.stickyMoveTolerance = this.stickyMoveTolerance.value;
       },
 
+
+      _getCheckedLayerOrTableInfos: function(editableLayerOrTableInfos, tableDijit) {
+        // get layerInfos or tableInfos config
+        var checkedLayerInfos = [];
+        var layersTableData =  tableDijit.getData();
+        array.forEach(editableLayerOrTableInfos, function(layerInfo, index) {
+          layerInfo._editFlag = layersTableData[index].edit;
+          layerInfo.disableGeometryUpdate = layersTableData[index].disableGeometryUpdate;
+          if(layerInfo._editFlag) {
+            delete layerInfo._editFlag;
+            checkedLayerInfos.push(layerInfo);
+          }
+        });
+        return checkedLayerInfos;
+      },
+
       getConfig: function() {
         // get toolbar config
         this._resetToolbarConfig();
 
+        /*
         // get layerInfos config
         var checkedLayerInfos = [];
         var layersTableData =  this._layersTable.getData();
@@ -382,19 +489,21 @@ define([
             checkedLayerInfos.push(layerInfo);
           }
         });
+        */
 
-        // var checkedLayerInfos = [];
-        // array.forEach(this._editableLayerInfos, function(layerInfo) {
-        //   if(layerInfo._editFlag) {
-        //     delete layerInfo._editFlag;
-        //     checkedLayerInfos.push(layerInfo);
-        //   }
-        // });
-
+        // get layerInfos config
+        var checkedLayerInfos = this._getCheckedLayerOrTableInfos(this._editableLayerInfos, this._layersTable);
         if(checkedLayerInfos.length === 0) {
           delete this.config.editor.layerInfos;
         } else {
           this.config.editor.layerInfos = checkedLayerInfos;
+        }
+        // get tableInfos config
+        var checkedTableInfos = this._getCheckedLayerOrTableInfos(this._editableTableInfos, this._tablesTable);
+        if(checkedTableInfos.length === 0) {
+          delete this.config.editor.tableInfos;
+        } else {
+          this.config.editor.tableInfos = checkedTableInfos;
         }
 
         return this.config;

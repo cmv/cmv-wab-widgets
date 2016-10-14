@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Misura altezza",
   "intialScaleLabel": "Seleziona scala iniziale per immagini oblique",
   "smallBuildingLabel": "Area urbana: edificio piccolo",
-  "buildingLabel": "Area urbana: edificio"
+  "buildingLabel": "Area urbana: edificio",
+  "azimuthChangeNotification": "Nessun dato nella direzione selezionata."
 });

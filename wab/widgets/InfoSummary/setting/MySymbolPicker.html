@@ -65,7 +65,7 @@
           </div>
         </div>
 
-        <div class="label iconOptionsText padTop20">
+        <div class="label iconOptionsText padTop20" data-dojo-attach-point="iconOptionsTextLabel">
           ${nls.iconOptionsText}
         </div>
         <hr />
@@ -74,14 +74,14 @@
           <div class="jimu-r-row padTop10" data-dojo-attach-point="grpIconOptions">
             <div data-dojo-attach-point="div_rdoLayerIcon">
               <input name="b" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="rdoLayerIcon" data-dojo-attach-event="onChange:_rdoLayerIconChanged" title="${nls.rdoLayerIcon}" />
-              <span class="label">${nls.rdoLayerIcon}</span>
+              <span class="label" data-dojo-attach-point="rdoLayerIconLabel">${nls.rdoLayerIcon}</span>
             </div>
           </div>
 
           <div class="jimu-r-row padTop10" data-dojo-attach-point="grpCustomIconOptions">
             <div class="rdoCustomSym" data-dojo-attach-point="div_rdoCustomIcon">
               <input name="b" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="rdoCustomIcon" data-dojo-attach-event="onChange:_rdoCustomIconChanged" title="${nls.rdoCustomIcon}" />
-              <span class="label">${nls.rdoCustomIcon}</span>
+              <span class="label" data-dojo-attach-point="rdoCustomIconLabel">${nls.rdoCustomIcon}</span>
             </div>
           </div>
           <div class="jimu-r-row padTop10 sHeight marginLR30">
@@ -96,7 +96,7 @@
       </div>
     </div>
     <div data-dojo-attach-point="panelFeatureDisplayContainer" class="panelFeatureContainer">
-      <div class="label iconOptionsText padTop10">
+      <div class="label iconOptionsText padTop10" data-dojo-attach-point="featureOptionsTextLabel">
         ${nls.featureOptionsText}
       </div>
       <hr />
@@ -105,14 +105,14 @@
         <span class="btn-add-label">${nls.addField}</span>
       </div>
       <div data-dojo-attach-point="fieldOptions" class="fieldOptions"></div>
-      <div class="label iconOptionsText padTop20">
+      <div class="label iconOptionsText padTop20" data-dojo-attach-point="groupOptionsTextLabel">
         ${nls.groupOptionsText}
       </div>
       <hr />
       <div data-dojo-attach-point="groupOptions" class="groupOptions">
         <div data-dojo-attach-point="div_chkGroup">
           <input data-dojo-type="dijit/form/CheckBox" data-dojo-attach-point="chkGroup" title="${nls.chkGroup}" data-dojo-attach-event="onChange:_chkGroupChanged" />
-          <span class="label">${nls.chkGroup}</span>
+          <span class="label" data-dojo-attach-point="chkGroupLabel">${nls.chkGroup}</span>
         </div>
         <div data-dojo-attach-point="groupFieldOptions" class="groupFieldOptions">
         </div>

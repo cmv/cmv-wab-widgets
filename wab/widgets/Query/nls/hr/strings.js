@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Atributni kriterij",
   "spatialFilter": "Prostorni filtar",
   "value": "VRIJEDNOST",
-  "noAttributeSpatialFilterTip": "Nema definiranih filtara. Vratit će se svi geoobjekti."
+  "noAttributeSpatialFilterTip": "Nema definiranih filtara. Vratit će se svi geoobjekti.",
+  "showAllRelatedRecords": "Prikaži sve povezane zapise"
 });

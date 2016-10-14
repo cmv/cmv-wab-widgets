@@ -122,5 +122,6 @@ define({
   "uploadImage": "Een afbeelding uploaden",
   "attributeCriteira": "Attribuutcriteria",
   "specifyFilterAtRuntimeTip": "Gebruikers moeten parameters opgeven voor deze expressie.",
-  "value": "WAARDE"
+  "value": "WAARDE",
+  "hideLayersTip": "Schakel zoekresultaatlagen uit als de widget wordt gesloten."
 });

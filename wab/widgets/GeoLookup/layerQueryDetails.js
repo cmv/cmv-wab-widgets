@@ -49,7 +49,10 @@ function(Evented,
               if (geometryEngine.intersects(gra.geometry, res.geometry)) {
                 array.forEach(this.fields, function(field) {
                   if (res.attributes[field]) {
-                    gra.attributes[field] = res.attributes[field];
+
+                    var key = this.layer.label + "_" + field;
+                    //gra.attributes[field] = res.attributes[field];
+                    gra.attributes[key] = res.attributes[field];
                   }
                 }, this);
                 gra.attributes[this.intersectField] = this.valueIn;

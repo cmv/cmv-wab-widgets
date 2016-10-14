@@ -109,7 +109,7 @@ define({
   "icon": "Ikona",
   "newTask": "Jauns uzdevums",
   "addTaskTip": "Pievienojiet logrīkam vienu vai vairākus vaicājumus un konfigurējiet parametrus katram no tiem.",
-  "webMapPopupTip": "Tīmekļa kartē izmantot slāņa uznirstošā loga vaicājumu",
+  "webMapPopupTip": "Tīmekļa kartē izmantot slāņa uznirstošā loga konfigurāciju",
   "customPopupTip": "Konfigurēt pielāgotu saturu",
   "showResultsSetActions": "Rādīt rezultātu kopas darbības",
   "zoomTo": "Pietuvināt",
@@ -122,5 +122,6 @@ define({
   "uploadImage": "Augšupielādēt attēlu",
   "attributeCriteira": "Atribūtu kritēriji",
   "specifyFilterAtRuntimeTip": "Lietotājiem būs jānorāda šīs izteiksmes parametri.",
-  "value": "VĒRTĪBA"
+  "value": "VĒRTĪBA",
+  "hideLayersTip": "Izslēgt vaicājumu rezultātu slāņus, kad logrīks ir aizvērts."
 });

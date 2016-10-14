@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ define([
       currentChartIndex: -1,
       layerDefinition: null,
       config: null,
-      featureSet: null,
+      features: null,
       map: null,// if used in setting page, it is null
       resultLayer: null,//if used in setting page, it is null
       tempGraphics: null,
@@ -82,6 +82,7 @@ define([
       showZoomIcon: false,
       isBigPreview: false,
       fontColor: "#333333",
+      tooltipColor: "green",
       floatNumberFieldDecimalPlace: null,//{fieldName: decimal place,...}
       popupFieldInfosObj: null,//{fieldName:{fieldName,label,isEditable,tooltip,visible,format...}}
 
@@ -112,10 +113,9 @@ define([
           this.chartContainer.style.maxHeight = "auto";
           html.addClass(this.domNode, 'big-preview');
         }
-      },
 
-      onClose: function(){
-        this._hideAllTooltipDialogs();
+        this.zoominIcon.title = this.nls.enlarge;
+        this.settingsIcon.title = this.nls.setting;
       },
 
       destroy: function(){
@@ -129,6 +129,8 @@ define([
           this._recreateChart(this.currentChartIndex);
         }
       },
+
+      onClose: function(){},
 
       _calculateChartBox: function(){
         var thisBox = html.getContentBox(this.domNode);
@@ -152,14 +154,14 @@ define([
       createCharts: function(args) {
         try{
           this.loading.hide();
-          //args: {config,featureSet,layerDefinition,resultLayer}
+          //args: {config,features,layerDefinition,resultLayer}
           this.clear();
 
           if(!this.map){
             //run in setting page
             var maxCount = this.maxPreviewFeaturesCount;
-            if(args.featureSet.features.length > maxCount){
-              args.featureSet.features = args.featureSet.features.slice(0, maxCount);
+            if(args.features.length > maxCount){
+              args.features = args.features.slice(0, maxCount);
             }
           }
 
@@ -172,7 +174,7 @@ define([
           }));
 
           this.config = args.config;
-          this.featureSet = args.featureSet;
+          this.features = args.features;
           this.layerDefinition = args.layerDefinition;
           this.resultLayer = args.resultLayer;
           this._updatePopupFieldInfos();
@@ -246,7 +248,7 @@ define([
           this._showChart(0);
 
           //features has been filtered
-          if(args.featureSet.features.length === 0){
+          if(args.features.length === 0){
             html.setStyle(this.resultsSection, 'display', 'none');
             html.setStyle(this.noresultsSection, 'display', 'block');
           }
@@ -327,7 +329,7 @@ define([
         array.forEach(floatNumberFields, lang.hitch(this, function(fieldName){
           floatNumberFieldValues[fieldName] = [];
         }));
-        var features = this.featureSet && this.featureSet.features;
+        var features = this.features;
         if(features && features.length > 0){
           array.forEach(features, lang.hitch(this, function(feature){
             var attributes = feature.attributes;
@@ -415,7 +417,7 @@ define([
 
       clear: function(){
         this.config = null;
-        this.featureSet = null;
+        this.features = null;
         this.layerDefinition = null;
         this.resultLayer = null;
         this.chartTitle.innerHTML = "";
@@ -764,7 +766,7 @@ define([
             feature.setSymbol(symbol);
           }));
 
-          if(this.featureSet.features.length !== features.length && geoType === 'polygon'){
+          if(this.features.length !== features.length && geoType === 'polygon'){
             array.forEach(features, lang.hitch(this, function(feature){
               this.resultLayer.remove(feature);
             }));
@@ -798,7 +800,7 @@ define([
           try{
             var a;
             //if pass "abc" into localizeNumber, it will return null
-            if(fieldName && this._isFloatNumberField(fieldName)){
+            if(fieldName && this._isNumberField(fieldName)){
               var popupFieldInfo = this.popupFieldInfosObj[fieldName];
               if(popupFieldInfo && lang.exists('format.places', popupFieldInfo)){
                 a = jimuUtils.localizeNumberByFieldInfo(value, popupFieldInfo);
@@ -806,7 +808,8 @@ define([
                 a = jimuUtils.localizeNumber(value);
               }
             }else{
-              a = jimuUtils.localizeNumber(value);
+              //#6117
+              a = value; //jimuUtils.localizeNumber(value);
             }
 
             if(typeof a === "string"){
@@ -1159,8 +1162,8 @@ define([
         var isAsc = config.sortOrder !== 'des';
 
         //filter features with number values firstly
-        /*var fs = args.featureSet.features;
-        args.featureSet.features = array.filter(fs, lang.hitch(this, function(feature){
+        /*var fs = args.features;
+        args.features = array.filter(fs, lang.hitch(this, function(feature){
           return array.every(valueFields, lang.hitch(this, function(fieldName){
             var attributes = feature.attributes;
             return attributes && this._isNumber(attributes[fieldName]);
@@ -1171,7 +1174,7 @@ define([
         //only one data feature
         var data = [];
 
-        data = array.map(args.featureSet.features, lang.hitch(this, function(feature) {
+        data = array.map(args.features, lang.hitch(this, function(feature) {
           var attributes = feature.attributes;
           var option = {
             category: attributes[labelField],
@@ -1283,8 +1286,8 @@ define([
         var isAsc = config.sortOrder !== 'des';
 
         //filter features with number values firstly
-        /*var fs = args.featureSet.features;
-        args.featureSet.features = array.filter(fs, lang.hitch(this, function(feature){
+        /*var fs = args.features;
+        args.features = array.filter(fs, lang.hitch(this, function(feature){
           return array.every(valueFields, lang.hitch(this, function(fieldName){
             var attributes = feature.attributes;
             return attributes && this._isNumber(attributes[fieldName]);
@@ -1297,7 +1300,7 @@ define([
 
         var uniqueValuesHash = {}; //{a:{valueFields:[10,100,2], dataFeatures:[f1,f2...]}}
 
-        array.forEach(args.featureSet.features, lang.hitch(this, function(feature) {
+        array.forEach(args.features, lang.hitch(this, function(feature) {
           var attributes = feature.attributes;
           var category = attributes[categoryField];
           var categoryObj = null;
@@ -1523,7 +1526,7 @@ define([
             var c = this._getBestDisplayValue(fieldName, num);
             seriesArray[i].push({
               y: num,
-              tooltip: "<div style='color:green;margin:5px 10px;'>" +
+              tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
               "<span style='white-space:nowrap'>" + a + " : " + text + "</span><br/><br/>" +
               "<span style='white-space:nowrap;'>" + aliasName + " : " + c + "</span>" +
               "</div>"
@@ -1630,7 +1633,7 @@ define([
             var c = this._getBestDisplayValue(fieldName, num);
             seriesArray[i].push({
               y: num,
-              tooltip: "<div style='color:green;margin:5px 10px;'>" +
+              tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
               "<span style='white-space:nowrap'>" + a + " : " + text + "</span><br/><br/>" +
               "<span style='white-space:nowrap;'>" + aliasName + " : " + c + "</span>" +
               "</div>"
@@ -1733,7 +1736,7 @@ define([
             var y = isNaN(num) ? 0 : num;
             seriesArray[i].push({
               y: y,
-              tooltip: "<div style='color:green;margin:5px 10px;'>" +
+              tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
               "<span style='white-space:nowrap'>" + a + " : " + text + "</span><br/><br/>" +
               "<span style='white-space:nowrap;'>" + aliasName + " : " + c + "</span>" +
               "</div>"
@@ -1845,7 +1848,7 @@ define([
             seriesArray[i].push({
               y: Math.abs(num),
               text: text,
-              tooltip: "<div style='color:green;margin:5px 10px;'>" +
+              tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
               "<span style='white-space:nowrap'>" + a + " : " + text + "</span><br/><br/>" +
               "<span style='white-space:nowrap;'>" + aliasName + " : " + c + "</span><br/><br/>" +
               "<span style='white-space:nowrap'>" + percent + "</span>" +
@@ -1899,7 +1902,7 @@ define([
 
         //{fieldValue1:{count:count1,dataFeatures:[f1,f2...]},fieldValue2...}
         var statisticsHash = {};
-        array.forEach(args.featureSet.features, lang.hitch(this, function(feature){
+        array.forEach(args.features, lang.hitch(this, function(feature){
           var attributes = feature.attributes;
           var fieldValue = attributes[categoryField];
           var fieldValueObj = null;
@@ -2048,7 +2051,7 @@ define([
           });
           series.push({
             y: num,
-            tooltip: "<div style='color:green;margin:5px 10px;'>" +
+            tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
             "<span style='white-space:nowrap;'>" + categoryAlias + " : " + text +
             "</span><br/><br/>" +
             "<span style='white-space:nowrap;'>" + this.nls.count + " : " + b + "</span>" +
@@ -2141,7 +2144,7 @@ define([
           });
           series.push({
             y: num,
-            tooltip: "<div style='color:green;margin:5px 10px;'>" +
+            tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
             "<span style='white-space:nowrap;'>" + categoryAlias + " : " + text +
             "</span><br/><br/>" +
             "<span style='white-space:nowrap;'>" + this.nls.count + " : " + b + "</span>" +
@@ -2235,7 +2238,7 @@ define([
           series.push({
             y: num,
             text: '',
-            tooltip: "<div style='color:green;margin:5px 10px;'>" +
+            tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
             "<span style='white-space:nowrap;'>" + categoryAlias + " : " + text +
             "</span><br/><br/>" +
             "<span style='white-space:nowrap;'>" + this.nls.count + " : " + b + "</span>" +
@@ -2336,7 +2339,7 @@ define([
           series.push({
             text: text,
             y: num,
-            tooltip: "<div style='color:green;margin:5px 10px;'>" +
+            tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
             "<span style='white-space:nowrap;'>" + categoryAlias + " : " + text +
             "</span><br/><br/>" +
             "<span style='white-space:nowrap;'>" + c + " : " + b + "</span><br/><br/>" +
@@ -2385,15 +2388,15 @@ define([
         var operation = config.operation;
 
         //filter features with number values firstly
-        /*var fs = args.featureSet.features;
-        args.featureSet.features = array.filter(fs, lang.hitch(this, function(feature){
+        /*var fs = args.features;
+        args.features = array.filter(fs, lang.hitch(this, function(feature){
           return array.every(valueFields, lang.hitch(this, function(fieldName){
             var attributes = feature.attributes;
             return attributes && this._isNumber(attributes[fieldName]);
           }));
         }));*/
 
-        var attributesList = array.map(args.featureSet.features, lang.hitch(this, function(feature){
+        var attributesList = array.map(args.features, lang.hitch(this, function(feature){
           return feature.attributes;
         }));
 
@@ -2489,7 +2492,7 @@ define([
             var isClick = evt.type === 'onclick';
 
             if (isOver || isOut || isClick) {
-              var features = this.featureSet && this.featureSet.features;
+              var features = this.features;
               if (evt.type === 'onmouseover') {
                 this._mouseOverChartItem(features);
               } else if (evt.type === 'onmouseout') {
@@ -2522,7 +2525,7 @@ define([
 
           series.push({
             y: num,
-            tooltip: "<div style='color:green;margin:5px 10px;'>" +
+            tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
             "<span style='white-space:nowrap;'>" + aliasName + " : " + a + "</span>" +
             "</div>"
           });
@@ -2603,7 +2606,7 @@ define([
 
           series.push({
             y: num,
-            tooltip: "<div style='color:green;margin:5px 10px;'>" +
+            tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
             "<span style='white-space:nowrap;'>" + aliasName + " : " + a + "</span>" +
             "</div>"
           });
@@ -2682,7 +2685,7 @@ define([
 
           series.push({
             y: num,
-            tooltip: "<div style='color:green;margin:5px 10px;'>" +
+            tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
             "<span style='white-space:nowrap;'>" + aliasName + " : " + a + "</span>" +
             "</div>"
           });
@@ -2769,7 +2772,7 @@ define([
           series.push({
             text: aliasName,
             y: Math.abs(num),
-            tooltip: "<div style='color:green;margin:5px 10px;'>" +
+            tooltip: "<div style='color:" + this.tooltipColor + ";margin:5px 10px;'>" +
             "<span style='white-space:nowrap;'>" + aliasName + " : " + a + "</span><br/><br/>" +
             "<span style='white-space:nowrap;'>" + percent + "</span>" +
             "</div>"

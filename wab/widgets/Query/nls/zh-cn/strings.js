@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "属性条件",
   "spatialFilter": "空间过滤器",
   "value": "值",
-  "noAttributeSpatialFilterTip": "未定义过滤器。将返回所有要素。"
+  "noAttributeSpatialFilterTip": "未定义过滤器。将返回所有要素。",
+  "showAllRelatedRecords": "显示所有相关记录"
 });

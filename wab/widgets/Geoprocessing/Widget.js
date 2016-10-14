@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -141,12 +141,24 @@ function(declare, lang, array, html, on, Deferred, all,
       this._getInputParamValues().then(lang.hitch(this, function(inputValues){
         this._showLoading();
 
-        if(this.config.isSynchronous){
-          this.gp.execute(inputValues);
-        }else{
-          this.gp.submitJob(inputValues);
-        }
-        this.tab.selectTab(this.nls.output);
+        // Send a request to service url to make it added to corsEnabledServers.
+        esriRequest({
+          url: this.config.taskUrl,
+          content: {
+            f: 'json'
+          },
+          handleAs : "json",
+          callbackParamName:'callback'
+        }).then(lang.hitch(this, function() {
+          if(this.config.isSynchronous){
+            this.gp.execute(inputValues);
+          }else{
+            this.gp.submitJob(inputValues);
+          }
+          this.tab.selectTab(this.nls.output);
+        }), lang.hitch(this, function() {
+          html.removeClass(this.exeNode, 'jimu-state-disabled');
+        }));
       }), lang.hitch(this, function() {
         html.removeClass(this.exeNode, 'jimu-state-disabled');
       }));

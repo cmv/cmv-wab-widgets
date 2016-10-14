@@ -129,6 +129,8 @@ define([
       tabNodes: [],
       currentSumLayer: null,
       currentGrpLayer: null,
+      mapBottom: null,
+      mapResize: null,
 
       Incident_Local_Storage_Key: "SAT_Incident",
       SLIDER_MAX_VALUE: 10000,
@@ -147,11 +149,13 @@ define([
         this.editTemplate = this.config.editTemplate;
         this.saveEnabled = this.config.saveEnabled;
         this.summaryDisplayEnabled = this.config.summaryDisplayEnabled;
+        this.isSafari = navigator.userAgent.indexOf("Safari") !== -1;
         this._getStyleColor();
         this._createUI();
         this._loadUI();
         this._initLayers();
         this._verifyRouting();
+        this._getAttributeTable();
 
         this.SLIDER_MAX_VALUE = this.config.bufferRange.maximum;
 
@@ -169,6 +173,10 @@ define([
         }
         this.setPosition();
         this.windowResize = on(window, "resize", lang.hitch(this, this._resize));
+        if (this.mapResize === null) {
+          this.mapResize = this.map.on("resize", lang.hitch(this, this._mapResize));
+        }
+        this._mapResize();
         this._storeInitalVisibility();
         this._initEditInfo();
         this._addActionLink();
@@ -181,6 +189,10 @@ define([
         this._toggleTabLayersOld();
         this._resetInfoWindow();
         this._removeActionLink();
+        if (this.mapResize) {
+          this.mapResize.remove();
+          this.mapResize = null;
+        }
         this.windowResize.remove();
         this.windowResize = null;
         this._clear();
@@ -189,7 +201,7 @@ define([
           this.scSignal.remove();
           this.sfSignal.remove();
         }
-        this._resetMapDiv();
+        this._mapResize();
         this._resetInitalVisibility();
         this.inherited(arguments);
       },
@@ -222,16 +234,16 @@ define([
         this.inherited(arguments);
       },
 
-      /* jshint unused: true */
       // on app config changed
-      onAppConfigChanged: function(appConfig, reason, changedData) {
+      /* jshint unused: true */
+      onAppConfigChanged: function(appConfig, reason) {
         switch (reason) {
           case 'themeChange':
           case 'layoutChange':
             // this.destroy();
             break;
           case 'styleChange':
-            this._updateUI(changedData);
+            this._updateUI();
             break;
           case 'widgetPoolChange':
             this._verifyRouting();
@@ -308,59 +320,25 @@ define([
       },
 
       // update UI
-      _updateUI: function(styleName) {
-        this._getStyleColor(styleName);
+      _updateUI: function() {
+        this._getStyleColor();
       },
 
-      // get style color
-      /*jshint loopfunc:true */
-      _getStyleColor: function(styleName) {
-        var t = this.appConfig.theme.name;
-        var s = this.appConfig.theme.styles[0];
-        var lastStyle = this.appConfig.theme.styles[this.appConfig.theme.styles.length - 1];
-        if (styleName) {
-          s = styleName;
-        }
-        var url = "./themes/" + t + "/manifest.json";
-        xhr.get({
-          url: url,
-          handleAs: "json",
-          load: lang.hitch(this, function(data) {
-            var styles = data.styles;
-            for (var i = 0; i < styles.length; i++) {
-              var st = styles[i];
-              if (st.name === s) {
-                if (s !== lastStyle) {
-                  domStyle.set(this.footerNode, "background-color", st.styleColor);
-                  this.config.color = st.styleColor;
-                } else {
-                  var bc;
-                  array.forEach(document.styleSheets, function (ss) {
-                    var rules = ss.rules ? ss.rules : ss.cssRules;
-                    if (rules) {
-                      array.forEach(rules, function (r) {
-                        if (r.selectorText === ".jimu-main-background") {
-                          bc = r.style.getPropertyValue('background-color');
-                        }
-                      });
-                    }
-                  });
-                  this.config.color = Color.fromRgb(bc).toHex();
-                }
-                this.isBlackTheme = st.name === "black" ? true : false;
-                if (this.isBlackTheme) {
-                  domClass.remove(this.tabNodes[this.curTab], "active");
-                  domClass.add(this.tabNodes[this.curTab], "activeBlack");
-                } else {
-                  domClass.remove(this.tabNodes[this.curTab], "activeBlack");
-                  domClass.add(this.tabNodes[this.curTab], "active");
-                }
-                this._setupSymbols();
-                this._bufferIncident();
-              }
-            }
-          })
-        });
+      _getStyleColor: function () {
+        setTimeout(lang.hitch(this, function () {
+          var bc = window.getComputedStyle(this.footerNode, null).getPropertyValue('background-color');
+          this.config.color = Color.fromRgb(bc).toHex();
+          this.isBlackTheme = this.config.color === "#000000" ? true : false;
+          if (this.isBlackTheme) {
+            domClass.remove(this.tabNodes[this.curTab], "active");
+            domClass.add(this.tabNodes[this.curTab], "activeBlack");
+          } else {
+            domClass.remove(this.tabNodes[this.curTab], "activeBlack");
+            domClass.add(this.tabNodes[this.curTab], "active");
+          }
+          this._setupSymbols();
+          this._bufferIncident();
+        }), 500);
       },
 
       /*jshint unused:false */
@@ -368,8 +346,8 @@ define([
         if (this.widgetActive) {
           var pos;
           var style;
-          var m;
           var controllerWidget;
+          var m = dom.byId('map');
           if (this.appConfig.theme.name === "TabTheme") {
             controllerWidget = this.widgetManager.getControllerWidgets()[0];
             var w;
@@ -393,7 +371,6 @@ define([
             if (this.started) {
               this.resize();
             }
-            m = dom.byId('map');
             m.style.bottom = "150px";
             this.map.resize(true);
 
@@ -416,7 +393,6 @@ define([
             if (this.started) {
               this.resize();
             }
-            m = dom.byId('map');
             m.style.bottom = "150px";
             this.map.resize(true);
           }
@@ -541,6 +517,12 @@ define([
               }
             }));
         }
+
+        var bml = this.map.itemInfo.itemData.baseMap.baseMapLayers[0];
+        if (bml.layerType !== "ArcGISTiledMapServiceLayer" || !bml.resourceInfo.singleFusedMapCache) {
+          this.config.defaultZoomLevel = 0.5;
+        }
+
         this._clickTab(0);
       },
 
@@ -732,7 +714,7 @@ define([
 
       _createUI: function() {
         var units = this.config.distanceUnits;
-        var lbl = utils.sanitizeHTML(this.config.bufferLabel ? this.config.bufferLabel : '');
+        var lbl = utils.stripHTML(this.config.bufferLabel ? this.config.bufferLabel : '');
         lbl += " (" + this.nls[units] + ")";
 
         this.buffer_lbl.innerHTML = lbl;
@@ -803,7 +785,7 @@ define([
           }
           var tab = domConstruct.create("div", {
             'data-dojo-attach-point': "SA_tab" + i,
-            innerHTML: utils.sanitizeHTML(label ? label : '')
+            innerHTML: utils.stripHTML(label ? label : '')
           }, pTabs);
           this.tabNodes.push(tab);
           domClass.add(tab, "SATTab");
@@ -908,21 +890,15 @@ define([
 
         this.own(on(this.horizontalSlider, "change", lang.hitch(this, this._sliderChange)));
 
-        this.own(on(this.sliderValue, "keyup", lang.hitch(this, function(event) {
+        this.own(on(this.sliderValue, "blur", lang.hitch(this, function (event) {
+          this._updateSliderValue(true);
+        })));
+
+        this.own(on(this.sliderValue, "keyup", lang.hitch(this, function (event) {
           if (event.keyCode === keys.ENTER) {
-            this._updateSliderValue();
+            this._updateSliderValue(true);
           } else {
-            var num = this.sliderValue.get("value");
-            if(isNaN(num)) {
-              this.sliderValue.set("value", this.horizontalSlider.value);
-            } else {
-              if (num < this.config.bufferRange.minimum) {
-                this.sliderValue.set("value", this.config.bufferRange.minimum);
-              }
-              if (num > this.SLIDER_MAX_VALUE) {
-                this.sliderValue.set("value", this.SLIDER_MAX_VALUE);
-              }
-            }
+            this._updateSliderValue(false);
           }
         })));
       },
@@ -1105,24 +1081,32 @@ define([
 
       _sliderTextChange: function() {
         if (this.sliderValue.value < 0 || this.sliderValue.value > this.SLIDER_MAX_VALUE) {
-          // new Message({
-          //   message: this.nls.sliderTextOutOfRange
-          // });
           this.sliderValue.set("value", this.horizontalSlider.value);
         } else {
           this.horizontalSlider.set("value", this.sliderValue.value);
         }
       },
 
-      _updateSliderValue: function() {
-        if (this.sliderValue.displayedValue < 0 ||
-          this.sliderValue.displayedValue > this.SLIDER_MAX_VALUE) {
-          // new Message({
-          //   message: this.nls.sliderTextOutOfRange
-          // });
+      _updateSliderValue: function (set) {
+        var num = this.sliderValue.get("value");
+        if (isNaN(num)) {
           this.sliderValue.set("value", this.horizontalSlider.value);
-        } else {
-          this.horizontalSlider.set("value", this.sliderValue.displayedValue);
+        }
+        if (typeof(num) === 'string') {
+          num = parseInt(num, 10);
+        }
+        if (num < this.config.bufferRange.minimum) {
+          this.sliderValue.set("value", this.config.bufferRange.minimum);
+        } else if (num > this.SLIDER_MAX_VALUE) {
+          this.sliderValue.set("value", this.SLIDER_MAX_VALUE);
+        }
+        if (set) {
+          if (this.sliderValue.displayedValue < 0 ||
+            this.sliderValue.displayedValue > this.SLIDER_MAX_VALUE) {
+            this.sliderValue.set("value", this.horizontalSlider.value);
+          } else {
+            this.horizontalSlider.set("value", this.sliderValue.displayedValue);
+          }
         }
       },
 
@@ -1268,6 +1252,10 @@ define([
             }
             this.lyrClosest.setVisibility(true);
             if (this.incident) {
+              if (tab.closestInfo && tab.closestInfo.container) {
+                tab.closestInfo.container.innerHTML = "";
+                domClass.add(tab.closestInfo.container, "loading");
+              }
               if (tab.updateFlag === false) {
                 this.lyrClosest.clear();
               }
@@ -1286,6 +1274,10 @@ define([
             }
             this.lyrProximity.setVisibility(true);
             if (this.incident && this.buffer) {
+              if (tab.proximityInfo && tab.proximityInfo.container) {
+                tab.proximityInfo.container.innerHTML = "";
+                domClass.add(tab.proximityInfo.container, "loading");
+              }
               if (tab.updateFlag === false) {
                 this.lyrProximity.clear();
               }
@@ -1359,7 +1351,7 @@ define([
       },
 
       // buffer incident
-      _bufferIncident: function(v) {
+      _bufferIncident: function (v) {
         if (this.incident === null) {
           return;
         }
@@ -1377,33 +1369,29 @@ define([
         var unitCode = this.config.distanceSettings[unit1];
 
         if (dist1 > 0) {
-
           var wkid = gra.geometry.spatialReference.wkid;
-          var bufferGeom;
-          if (wkid === 4326 || wkid === 3587 || wkid === 102100) {
-            bufferGeom = geometryEngine.geodesicBuffer(gra.geometry, dist1, unitCode);
+          var g;
+          if (wkid === 4326 || wkid === 3857 || wkid === 102100 && !this.isSafari) {
+            g = geometryEngine.geodesicBuffer(gra.geometry, dist1, unitCode);
+            this._handleBuffer(g, this.symBuffer, v);
           } else {
-            bufferGeom = geometryEngine.buffer(gra.geometry, dist1, unitCode);
+            g = geometryEngine.buffer(gra.geometry, dist1, unitCode);
+            this._handleBuffer(g, this.symBuffer, v);
           }
-          if (!v) {
-            this._locateBuffer(bufferGeom.getExtent());
-          }
-          this.buffer = new Graphic(bufferGeom, this.symBuffer);
-          this.lyrBuffer.add(this.buffer);
-          this._performAnalysis();
-
         } else {
-
           if (gra.geometry.type === "polygon") {
-            if (!v) {
-              this._locateBuffer(gra.geometry.getExtent());
-            }
-            this.buffer = new Graphic(gra.geometry, this.symPoly);
-            this.lyrBuffer.add(this.buffer);
-            this._performAnalysis();
+            this._handleBuffer(gra.geometry, this.symPoly, v);
           }
         }
+      },
 
+      _handleBuffer: function (geom, sym, v) {
+        if (!v) {
+          this._locateBuffer(geom.getExtent());
+        }
+        this.buffer = new Graphic(geom, sym);
+        this.lyrBuffer.add(this.buffer);
+        this._performAnalysis();
       },
 
       _performAnalysis: function() {
@@ -1414,30 +1402,50 @@ define([
       _verifyRouting: function() {
         if (this.config.enableRouting) {
           this.config.enableRouting = false;
-          var dirWidgetFound = this.findWidget(this.appConfig.widgetPool.widgets);
-
-          //check widgets on screen also
-          if (!dirWidgetFound) {
-            this.findWidget(this.appConfig.widgetOnScreen.widgets);
-          }
+          var widgets = this.appConfig.getConfigElementsByName("Directions");
+          array.forEach(widgets, lang.hitch(this, function (w) {
+            if (w.name === "Directions") {
+              this.dirConfig = w;
+              this.config.enableRouting = true;
+            }
+          }));
         }
       },
 
-      findWidget: function (widgets) {
-        var dirWidgetFound = false;
+      _getAttributeTable: function () {
+        var widgets = this.appConfig.getConfigElementsByName("AttributeTable");
         array.forEach(widgets, lang.hitch(this, function (w) {
-          if (w.name === "Directions") {
-            this.dirConfig = w;
-            this.config.enableRouting = true;
-            dirWidgetFound = true;
+          if (w.name === "AttributeTable") {
+            this.attributeTable = w;
           }
         }));
-        return dirWidgetFound;
       },
 
       // ZOOM TO LOCATION
-      zoomToLocation: function(loc) {
-        this.map.centerAndZoom(loc, this.config.defaultZoomLevel);
+      zoomToLocation: function (loc) {
+        var zoomExtent;
+        if (this.config.defaultZoomLevel === 0.5) {
+          var geomExtent;
+          if (this.buffer) {
+            geomExtent = this.buffer._extent;
+          } else if(this.incident.geometry.type !== "point"){
+            geomExtent = this.incident._extent;
+          }
+          if(geomExtent){
+            zoomExtent = geomExtent.expand(0.5);
+          }
+        }
+
+        if (zoomExtent) {
+          //This looks choppy
+          //this.map.setExtent(zoomExtent).then(lang.hitch(this, function () {
+          //  this.map.centerAt(loc);
+          //}));
+          this.map.setExtent(zoomExtent);
+          this.map.centerAt(loc);
+        } else {
+          this.map.centerAndZoom(loc, this.config.defaultZoomLevel);
+        }
       },
 
       // ROUTE TO INCIDENT
@@ -1448,75 +1456,25 @@ define([
           pt = null;
         }
         this.stops = [pt, loc];
-        // TODO: send data to directions widget
-        var id = this.dirConfig.id;
-        var name = this.appConfig.theme.name;
-
-        if (this.dirConfig.isOnScreen) {
-          this._showDirections(this.dirConfig);
-        } else {
-          var controllerWidget = this.widgetManager.getControllerWidgets()[0];
-          switch (name) {
-            case "BoxTheme":
-            case "DartTheme":
-              controllerWidget.setOpenedIds([id]);
-              break;
-            case "FoldableTheme":
-            case "JewelryBoxTheme":
-              var node = controllerWidget._getIconNodeById(id);
-              if (node) {
-                controllerWidget._onIconClick(node);
-              }
-              break;
-            case "TabTheme":
-              controllerWidget._hideOffPanelWidgets();
-              var tabs = controllerWidget.tabs;
-              var idx = 0;
-              for (var i = 0; i < tabs.length; i++) {
-                if (tabs[i].flag !== "more") {
-                  if (tabs[i].config.id === id) {
-                    idx = i;
-                    break;
-                  }
-                } else {
-                  idx = i;
-                  var groups = tabs[i].config.groups;
-                  for (var j = 0; j < groups.length; j++) {
-                    if (groups[j].id === id) {
-                      controllerWidget._addGroupToMoreTab(groups[j]);
-                    }
-                  }
-                }
-              }
-              controllerWidget.selectTab(idx);
-              setTimeout(lang.hitch(controllerWidget, controllerWidget._resizeToMax), 500);
-              break;
-            case "LaunchpadTheme":
-              controllerWidget.setOpenedIds([id]);
-              break;
-            default:
-              this.openWidgetById(id);
-              break;
+        this.widgetManager.triggerWidgetOpen(this.dirConfig.id).then(lang.hitch(this, function (w) {
+          if (w && w.state !== "closed") {
+            var d = w._dijitDirections;
+            if (d) {
+              this._addStops(d);
+            } else {
+              w.getDirectionsDijit().then(lang.hitch(this, function (d) {
+                this._addStops(d);
+              }));
+            }
           }
-        }
-        setTimeout(lang.hitch(this, this._addStops), 2000);
+        }));
       },
 
-      _showDirections: function (iconConfig) {
-        this.widgetManager.triggerWidgetOpen(iconConfig.id);
-      },
-
-      _addStops: function() {
-        var w = this.widgetManager.getWidgetById(this.dirConfig.id);
-        if (w && w.state !== "closed") {
-          var d = w._dijitDirections;
-          if (d) {
-            d.clearDirections();
-            d.removeStops();
-            d.reset();
-            d.addStops(this.stops);
-          }
-        }
+      _addStops: function (d) {
+        d.clearDirections();
+        d.removeStops();
+        d.reset();
+        d.addStops(this.stops);
       },
 
       // get tab layers
@@ -1634,6 +1592,52 @@ define([
         }
       },
 
+      _mapResize: function () {
+        var aHeight;
+        if (this.attributeTable) {
+          var a = dom.byId(this.attributeTable.id);
+          if (a) {
+            aHeight = parseInt(a.style.height.toString().replace('px', ''), 10);
+          }
+        }
+
+        var m = dom.byId('map');
+        var mapBottom = parseInt(m.style.bottom.toString().replace('px', ''), 10);
+
+        if (this.state === 'opened' || this.state === 'active') {
+          var _h = parseInt(this.position.height.toString().replace('px', ''), 10);
+          var _bottomPosition = parseInt(this.position.bottom.toString().replace('px', ''), 10);
+          var height = _h + _bottomPosition;
+          var refresh = false;
+          if (height > aHeight) {
+            if (this.mapBottom !== height || this.mapBottom !== mapBottom) {
+              refresh = true;
+              this.mapBottom = height;
+            }
+          } else if (aHeight > height) {
+            if (this.mapBottom !== aHeight || this.mapBottom !== mapBottom) {
+              refresh = true;
+              this.mapBottom = aHeight;
+            }
+          }
+          if (refresh) {
+            m.style.bottom = this.mapBottom.toString() + 'px';
+            this.map.resize(false);
+            this.map.reposition();
+          }
+        } else {
+          if (typeof (aHeight) !== 'undefined') {
+            m.style.bottom = aHeight.toString() + 'px';
+            this.map.resize(true);
+            this.map.reposition();
+          } else {
+            m.style.bottom = '0px';
+            this.map.resize(true);
+            this.map.reposition();
+          }
+        }
+      },
+
       _resize: function (e) {
         try {
           this._onPanelScroll(this.curTab);
@@ -1739,7 +1743,9 @@ define([
         array.forEach(this.config.tabs, lang.hitch(this, function (tab) {
           array.forEach(tab.tabLayers, lang.hitch(this, function (layer) {
             if (typeof (layer.visible) !== 'undefined') {
-              this.initalLayerVisibility[layer.id] = layer.visible;
+              if (!(layer.id in this.initalLayerVisibility)) {
+                this.initalLayerVisibility[layer.id] = layer.visible;
+              }
               layer.setVisibility(false);
             }
           }));
@@ -1766,6 +1772,7 @@ define([
             }
           }));
         }));
+        this.initalLayerVisibility = [];
       },
 
       _clearGraphics: function () {
@@ -1801,12 +1808,6 @@ define([
         if (this.map.infoWindow.isShowing) {
           this.map.infoWindow.hide();
         }
-      },
-
-      _resetMapDiv: function () {
-        var m = dom.byId('map');
-        m.style.bottom = "0px";
-        this.map.resize(true);
       },
 
       // close

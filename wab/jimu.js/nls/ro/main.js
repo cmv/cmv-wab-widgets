@@ -6,6 +6,7 @@ define({
     "yes": "Da",
     "no": "Nu",
     "next": "Următor",
+    "previous": "Anterior",
     "back": "Înapoi",
     "selected": "selectat",
     "name": "Nume",
@@ -52,7 +53,11 @@ define({
     "view": "Vizualizare",
     "newText": "Nou",
     "edit": "Editare",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Tabel",
+    "zoomIn": "Mărire",
+    "zoomOut": "Micşorare",
+    "continue1": "Continuare"
   },
   "errorCode": "Cod",
   "errorMessage": "Mesaj",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Sensibil la majuscule/minuscule",
     "notSupportCaseSensitiveTip": "Serviciile găzduite nu acceptă interogările care depind de majuscule/minuscule.",
-    "setFilterTip": "Setaţi corect filtrul."
+    "setFilterTip": "Setaţi corect filtrul.",
+    "cascadeFilterTip": "Afişaţi doar valorile filtrate de expresiile anterioare."
   },
   "featureLayerSource": {
     "layer": "Strat tematic",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Apăsaţi pentru a restaura extinderea hărţii şi vizibilitatea straturilor tematice de unde aţi rămas."
   },
   "featureActions": {
+    "featureActions": "Acţiuni obiecte spaţiale",
     "ZoomTo": "Transfocare la",
     "PanTo": "Panoramare la",
     "Flash": "Flash",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Adăugare la selecţie",
     "removeSelectionTip": "Eliminare din selecţie",
     "selectFromCurrentSelectionTip": "Selectaţi din selecţia curentă",
-    "unselectAllSelectionTip": "Deselectaţi toate obiectele spaţiale selectate curent"
+    "unselectAllSelectionTip": "Deselectaţi toate obiectele spaţiale selectate curent",
+    "selectByPolygon": "Selectaţi prin trasare poligon",
+    "selectByCircle": "Selectaţi prin trasare cerc",
+    "selectByLine": "Selectaţi prin trasare linie",
+    "chooseSelectingTools": "Alegeţi instrumentele de selectare",
+    "darw": "Trasare",
+    "drawShap": "Trasarea unei forme"
   },
   "widgetManager": {
     "createWidgetError": "Eroare creare widget",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Aplicaţiile web 3D nu sunt acceptate în browserul dvs."
+  },
+  "map": {
+    "basemapNotAvailable": "Harta fundal nu este disponibilă.",
+    "displayDefaultBasemap": "Se afişează în loc harta de fundal implicită."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "În zona selectată de pe hartă se află prea multe obiecte spaţiale. Preluarea tuturor datelor poate dura un timp mai îndelungat.",
+    "askForContinue": "Continuaţi?"
   }
 });

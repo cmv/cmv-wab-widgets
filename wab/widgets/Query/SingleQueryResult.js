@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -83,6 +83,7 @@ define([
         this.singleQueryLoader = new SingleQueryLoader(this.map, this.currentAttrs);
         this.popupMenu = PopupMenu.getInstance();
         this.featureActionManager = FeatureActionManager.getInstance();
+        this.btnFeatureAction.title = window.jimuNls.featureActions.featureActions;
       },
 
       destroy: function(){
@@ -101,6 +102,10 @@ define([
         this.inherited(arguments);
       },
 
+      _isValidNumber: function(v){
+        return typeof v === "number" && !isNaN(v);
+      },
+
       zoomToLayer: function(){
         var currentAttrs = this.getCurrentAttrs();
         var resultLayer = currentAttrs.query.resultLayer;
@@ -111,12 +116,12 @@ define([
             if(geo){
               //x and y maybe "NaN"
               if(geo.type === 'point'){
-                return typeof geo.x === "number" && typeof geo.y === "number";
+                return this._isValidNumber(geo.x) && this._isValidNumber(geo.y);
               }else if(geo.type === 'multipoint'){
                 if(geo.points && geo.points.length > 0){
                   return array.every(geo.points, lang.hitch(this, function(xyArray){
                     if(xyArray){
-                      return typeof xyArray[0] === "number" && typeof xyArray[1] === "number";
+                      return this._isValidNumber(xyArray[0]) && this._isValidNumber(xyArray[1]);
                     }else{
                       return false;
                     }
@@ -190,6 +195,48 @@ define([
         this.singleQueryLoader.executeQueryForFirstTime().then(callback, errorCallback);
 
         return def;
+      },
+
+      getResultLayer: function(){
+        var currentAttrs = this.getCurrentAttrs();
+        var resultLayer = lang.getObject("query.resultLayer", false, currentAttrs);
+        return resultLayer;
+      },
+
+      showResultLayer: function(){
+        var resultLayer = this.getResultLayer();
+        if(resultLayer){
+          resultLayer.show();
+        }
+      },
+
+      hideResultLayer: function(){
+        var resultLayer = this.getResultLayer();
+        if(resultLayer){
+          resultLayer.hide();
+        }
+      },
+
+      getRelatedLayer: function(){
+        var relatedLayer = null;
+        if(this.relatedRecordsResult){
+          relatedLayer = this.relatedRecordsResult.getLayer();
+        }
+        return relatedLayer;
+      },
+
+      showLayer: function(){
+        this.showResultLayer();
+        if(this.relatedRecordsResult){
+          this.relatedRecordsResult.showLayer();
+        }
+      },
+
+      hideLayer: function(){
+        this.hideResultLayer();
+        if(this.relatedRecordsResult){
+          this.relatedRecordsResult.hideLayer();
+        }
       },
 
       _addResultLayerToMap: function(resultLayer){
@@ -408,7 +455,7 @@ define([
           array.forEach(relationships, lang.hitch(this, function(relationship){
             //{id,name,relatedTableId}
             //var layerName = this._getLayerNameByRelationshipId(relationship.id);
-            var relationshipLayerInfo = this._getRelationshipLyaerInfo(relationship.relatedTableId);
+            var relationshipLayerInfo = this._getRelationshipLayerInfo(relationship.relatedTableId);
             var layerName = relationshipLayerInfo.name;
             var relationshipPopupTemplate = relationshipPopupTemplates[relationship.relatedTableId];
 
@@ -537,7 +584,7 @@ define([
         return null;
       },
 
-      _getRelationshipLyaerInfo: function(relatedTableId){
+      _getRelationshipLayerInfo: function(relatedTableId){
         var currentAttrs = this.getCurrentAttrs();
         var layerInfo = currentAttrs.relationshipLayerInfos[relatedTableId];
         return layerInfo;

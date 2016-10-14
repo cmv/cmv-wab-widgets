@@ -6,6 +6,7 @@ define({
     "yes": "Oui",
     "no": "Non",
     "next": "Suivant",
+    "previous": "Précédent",
     "back": "Retour",
     "selected": "Les entités sélectionnées",
     "name": "Nom",
@@ -52,7 +53,11 @@ define({
     "view": "Afficher",
     "newText": "Nouveau",
     "edit": "Modifier",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Table",
+    "zoomIn": "Zoom avant",
+    "zoomOut": "Zoom arrière",
+    "continue1": "Poursuivre"
   },
   "errorCode": "Code",
   "errorMessage": "Message",
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Respecter la casse",
     "notSupportCaseSensitiveTip": "Les services hébergés ne prennent pas en charge les requêtes respectant la casse.",
-    "setFilterTip": "Définissez le filtre correctement."
+    "setFilterTip": "Définissez le filtre correctement.",
+    "cascadeFilterTip": "Afficher uniquement les valeurs filtrées par les expressions précédentes."
   },
   "featureLayerSource": {
     "layer": "Couche",
@@ -285,7 +291,7 @@ define({
     "publicMap": "Public",
     "myOrganization": "Organisation",
     "myGroup": "Mes groupes",
-    "myContent": "Contenus",
+    "myContent": "Mon contenu",
     "count": "Effectif",
     "fromPortal": "depuis le portail",
     "fromOnline": "depuis ArcGIS.com",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Cliquez pour restaurer l’étendue de la carte et la visibilité des couches là où vous en étiez resté."
   },
   "featureActions": {
+    "featureActions": "Actions des entités",
     "ZoomTo": "Zoom",
     "PanTo": "Déplacer sur",
     "Flash": "Clignoter",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Ajouter à la sélection",
     "removeSelectionTip": "Supprimer de la sélection",
     "selectFromCurrentSelectionTip": "Sélectionner dans la sélection actuelle",
-    "unselectAllSelectionTip": "Permet de désélectionner toutes les entités actuellement sélectionnées"
+    "unselectAllSelectionTip": "Permet de désélectionner toutes les entités actuellement sélectionnées",
+    "selectByPolygon": "Sélectionner par polygone",
+    "selectByCircle": "Sélectionner par cercle",
+    "selectByLine": "Sélectionner par ligne",
+    "chooseSelectingTools": "Choisir des outils de sélection",
+    "darw": "Dessin",
+    "drawShap": "Dessiner une forme"
   },
   "widgetManager": {
     "createWidgetError": "Erreur de création du widget",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "Les applications Web 3D ne sont pas prises en charge dans votre navigateur."
+  },
+  "map": {
+    "basemapNotAvailable": "Ce fond de carte n'est pas disponible.",
+    "displayDefaultBasemap": "Affichage du fond de carte par défaut."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Votre zone sélectionnée sur la carte comporte trop d'entités. La récupération des données risque de prendre beaucoup de temps.",
+    "askForContinue": "Souhaitez-vous continuer ?"
   }
 });

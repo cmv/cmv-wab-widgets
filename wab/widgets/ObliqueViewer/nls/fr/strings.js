@@ -8,5 +8,6 @@ define({
   "measureWidgetLabel": "Mesurer la hauteur",
   "intialScaleLabel": "Sélectionner l'échelle initiale pour l'imagerie oblique",
   "smallBuildingLabel": "Zone urbaine : petit bâtiment",
-  "buildingLabel": "Zone urbaine : bâtiment"
+  "buildingLabel": "Zone urbaine : bâtiment",
+  "azimuthChangeNotification": "Aucune donnée dans la direction sélectionnée."
 });

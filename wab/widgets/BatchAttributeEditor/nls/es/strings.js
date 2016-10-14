@@ -24,6 +24,7 @@ define({
   "filterPopup": "Capa de filtro",
   "cancel": "Cancelar",
   "noValue": "Sin valor",
+  "emptyString": "Cadena de caracteres vacía",
   "existingValue": "Mantener valor existente",
   "newDate": "Nueva fecha",
   "valueChooser": "Seleccionar/escribir un valor",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "La capa ${0} con el Id. ${1} no se ha encontrado en el mapa. Es posible que el mapa haya cambiado desde la configuración de los widgets.",
     "queryNullID": "La entidad de ${0} ha devuelto un Id. no válido",
     "noSelectedLayers": "No se ha seleccionado ninguna capa con registros para actualizar",
-    "inputValueError": "Valor no válido en el formulario"
+    "inputValueError": "Valor no válido en el formulario",
+    "saveError": "No se pueden guardar ${0} entidades, se han agregado detalles a la consola",
+    "requiredValue": "Valor requerido"
   }
 });

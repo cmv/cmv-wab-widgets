@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,10 +29,11 @@ define([
   'esri/graphic',
   'esri/tasks/query',
   'esri/tasks/QueryTask',
-  'esri/layers/FeatureLayer'
+  'esri/layers/FeatureLayer',
+  'esri/symbols/jsonUtils'
 ],
 function(on, sniff, Evented, Deferred, lang, array, declare, jimuUtils, symbolUtils, SelectionManager,
-  LayerInfos, Graphic, EsriQuery, QueryTask, FeatureLayer) {
+  LayerInfos, Graphic, EsriQuery, QueryTask, FeatureLayer, symbolJsonUtils) {
 
   return declare([Evented], {
     baseClass: 'jimu-featureset-chooser-core',
@@ -90,7 +91,17 @@ function(on, sniff, Evented, Deferred, lang, array, declare, jimuUtils, symbolUt
       } else if (geometryType === 'esriGeometryPolyline') {
         middleLayerSelectionSymbol = symbolUtils.getDefaultLineSymbol();
       } else if (geometryType === 'esriGeometryPolygon') {
-        middleLayerSelectionSymbol = symbolUtils.getDefaultFillSymbol();
+        middleLayerSelectionSymbol = symbolJsonUtils.fromJson({
+          "style": "esriSFSSolid",
+          "color": [79, 129, 189, 77],
+          "type": "esriSFS",
+          "outline": {
+            "style": "esriSLSSolid",
+            "color": [54, 93, 141, 255],
+            "width": 1.5,
+            "type": "esriSLS"
+          }
+        });
       }
       this._middleFeatureLayer.setSelectionSymbol(middleLayerSelectionSymbol);
 
@@ -106,6 +117,28 @@ function(on, sniff, Evented, Deferred, lang, array, declare, jimuUtils, symbolUt
       //     this.drawBox.disable();
       //   }
       // })));
+    },
+
+    //private method
+    hideMiddleFeatureLayer: function(){
+      if(this._middleFeatureLayer){
+        this._middleFeatureLayer.hide();
+        var displayLayer = this.selectionManager.getDisplayLayer(this._middleFeatureLayer.id);
+        if(displayLayer){
+          displayLayer.hide();
+        }
+      }
+    },
+
+    //private method
+    showMiddleFeatureLayer: function(){
+      if(this._middleFeatureLayer){
+        this._middleFeatureLayer.show();
+        var displayLayer = this.selectionManager.getDisplayLayer(this._middleFeatureLayer.id);
+        if(displayLayer){
+          displayLayer.show();
+        }
+      }
     },
 
     clear: function(shouldClearSelection){

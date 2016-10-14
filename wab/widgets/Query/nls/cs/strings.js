@@ -83,5 +83,6 @@ define({
   "attributeCriteira": "Kritéria atributu",
   "spatialFilter": "Prostorový filtr",
   "value": "HODNOTA",
-  "noAttributeSpatialFilterTip": "Nejsou definovány žádné filtry. Budou vráceny všechny prvky."
+  "noAttributeSpatialFilterTip": "Nejsou definovány žádné filtry. Budou vráceny všechny prvky.",
+  "showAllRelatedRecords": "Zobrazit všechny související záznamy"
 });

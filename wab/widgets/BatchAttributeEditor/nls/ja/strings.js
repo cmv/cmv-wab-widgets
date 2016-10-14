@@ -24,6 +24,7 @@ define({
   "filterPopup": "レイヤーのフィルター",
   "cancel": "キャンセル",
   "noValue": "値がありません",
+  "emptyString": "空の文字列",
   "existingValue": "既存の値を維持",
   "newDate": "新しい日付",
   "valueChooser": "値の選択/入力",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "ID ${1} を持つレイヤー ${0} がマップに見つかりませんでした。Web マップが、ウィジェットの構成後に変更された可能性があります。",
     "queryNullID": "${0} のフィーチャが無効な ID を返しました",
     "noSelectedLayers": "更新するレコードを持つレイヤーが選択されていません",
-    "inputValueError": "フォーム内の値が無効です。"
+    "inputValueError": "フォーム内の値が無効です。",
+    "saveError": "${0} のフィーチャを保存できません。詳細がコンソールに追加されました",
+    "requiredValue": "必須の値"
   }
 });

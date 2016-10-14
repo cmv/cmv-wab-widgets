@@ -93,8 +93,8 @@ Both of these widgets have been modified from the original to provide additional
 
 
 ## Requirements
-- This method uses the soon-to-be-released version 1.40 of cmv currently in the [develop branch](https://github.com/cmv/cmv-app/tree/develop).
-- This method supports version 2.1 of the WebApp Builder released in July 2016.
+- This method uses the soon-to-be-released version 2.0 of cmv currently in the [develop branch](https://github.com/cmv/cmv-app/tree/develop).
+- This method supports version 2.2 of the WebApp Builder released in October 2016 as well as version 2.1 released in July 2016.
 - The app in this repo use a new [dojo flat theme](https://github.com/dojo/themes) which is planned for release with dojo 1.12. This replaces the old dbootstrap theme which is no longer being maintained. This is optional.
 
 

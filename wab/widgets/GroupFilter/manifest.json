@@ -4,8 +4,8 @@
   "2D": true,
   "3D": false,
   "platform": "HTML",
-  "version": "2.1",
-  "wabVersion": 2.1,
+  "version": "2.2",
+  "wabVersion": 2.2,
   "author": "Esri, Inc",
   "description": "Group Filter",
   "copyright": "Copyright 2015 Esri, Inc.",
@@ -15,6 +15,7 @@
       "hasConfig": true,
       "hasUIFile": true,
       "supportMultiInstance": false,
-      "keepConfigAfterMapSwithched": false
+      "keepConfigAfterMapSwithched": false,
+      "hasVersionManager": true
     }
 }

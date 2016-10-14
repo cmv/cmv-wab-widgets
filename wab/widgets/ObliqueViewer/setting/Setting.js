@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ define([
   'jimu/BaseWidgetSetting',
   "dojo/_base/array",
   "dojo/dom-class",
+  "dojo/dom-style",
   "dojo/html",
   "dojo/_base/lang",
   "dojo/on",
@@ -34,6 +35,7 @@ define([
                 BaseWidgetSetting,
                 array,
                 domClass,
+                domStyle,
                 html,
                 lang) {
 
@@ -52,6 +54,7 @@ define([
                 this._populateFields();
               }
               if (this.rasterInfoFieldsSelect) {
+                this._multiSelectClick();
                 this.own(this.rasterInfoFieldsSelect.on("click", lang.hitch(this, this._multiSelectClick)));
               }
               this.setConfig(this.config);
@@ -59,7 +62,10 @@ define([
             _multiSelectClick: function() {
               var values = this.rasterInfoFieldsSelect.get("value");
               if (values.length > 3) {
+                domStyle.set(this.fieldLimitLabel, "visibility", "visible");
                 this.rasterInfoFieldsSelect.set("value", values.slice(0, 3));
+              } else {
+                domStyle.set(this.fieldLimitLabel, "visibility", "hidden");
               }
             },
 

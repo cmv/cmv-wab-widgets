@@ -42,7 +42,7 @@ define(
     return declare([BaseWidgetSetting, _TemplatedMixin], {
       baseClass: "jimu-widget-smartEditor-edit-description",
       templateString: template,
-      _layerInfo: null,
+      _configInfo: null,
       _fieldValid: null,
       _fieldValidations: null,
       __layerName: null,
@@ -53,8 +53,8 @@ define(
 
       popupEditDescription: function () {
         this._editorObj.focus();
-        if (this._layerInfo.editDescription && this._layerInfo.editDescription !== null) {
-          this._editorObj.set("value", this._layerInfo.editDescription);
+        if (this._configInfo.editDescription && this._configInfo.editDescription !== null) {
+          this._editorObj.set("value", this._configInfo.editDescription);
         }
 
         var editDescPopup = new Popup({
@@ -68,7 +68,7 @@ define(
           buttons: [{
             label: this.nls.ok,
             onClick: lang.hitch(this, function () {
-              this._layerInfo.editDescription = this._getText();
+              this._configInfo.editDescription = this._getText();
 
               this._editorObj.destroy();
               editDescPopup.close();

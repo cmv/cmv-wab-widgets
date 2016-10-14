@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "레코드 저장 시 설정 집합에서 피처를 제거하는 옵션입니다. 유일한 선택 레코드인 경우 패널이 템플릿 페이지로 다시 전환됩니다.",
     "useFilterEditor": "피처 템플릿 필터 사용",
     "useFilterEditorTip": "하나의 레이어 템플릿을 확인하거나 이름별 템플릿을 검색하는 기능을 제공하는 필터 템플릿 선택기를 사용하는 옵션입니다.",
+    "listenToGroupFilter": "그룹 필터 위젯의 필터 값을 프리셋 필드에 적용합니다.",
+    "listenToGroupFilterTip": "필터가 그룹 필터 위젯에 적용되는 경우 값을 프리셋 값 목록에서 일치 필드에 적용합니다.",
+    "keepTemplateActive": "선택한 템플릿 활성 유지",
+    "keepTemplateActiveTip": "템플릿이 이전에 선택된 경우에 템플릿 선택기가 표시되면 다시 선택합니다.",
     "layerSettingsTable": {
       "allowDelete": "삭제 허용",
       "allowDeleteTip": "사용자가 피처를 삭제하도록 허용하는 옵션입니다. 레이어가 삭제를 지원하지 않는 경우 비활성화됩니다.",
@@ -29,7 +33,8 @@ define({
       "description": "설명",
       "descriptionTip": "속성 페이지 상단에 표시할 텍스트를 선택적으로 입력합니다."
     },
-    "editFieldError": "필드 수정 및 스마트 속성은 편집할 수 없는 레이어에 대해 사용할 수 없음"
+    "editFieldError": "필드 수정 및 스마트 속성은 편집할 수 없는 레이어에 대해 사용할 수 없음",
+    "noConfigedLayersError": "스마트 편집기는 편집 가능한 레이어가 하나 이상 필요합니다."
   },
   "editDescriptionPage": {
     "title": "<b>${layername}</b>에 대한 속성 개요 텍스트 정의 "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "정의된 기준에서 SQL 형식의 결과식",
       "actions": "기준",
       "actionsTip": "트리거 시 규칙 순서 변경 및 기준 정의"
+    },
+    "actions": {
+      "hide": "숨기기",
+      "required": "필수",
+      "disabled": "비활성화됨"
     }
   },
   "filterPage": {
     "submitHidden": "숨겨져 있을 때도 이 필드에 대한 속성 데이터를 제출하시겠습니까?",
-    "title": "${action} 규칙에 대한 절 구성",
+    "title": "${action} 규칙에 대한 식 구성",
     "filterBuilder": "레코드가 다음 식의 ${any_or_all}과 일치할 때 필드에 대한 작업 설정",
     "noFilterTip": "아래의 도구를 사용하여 작업이 활성 상태일 때에 대한 구문을 정의합니다."
   }

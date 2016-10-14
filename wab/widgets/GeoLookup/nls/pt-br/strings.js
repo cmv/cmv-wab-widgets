@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "Pesquisa Geográfica",
+  "_widgetLabel": "Pesquisa Geo",
   "description": "Procure ou Arraste uma <a href='./widgets/GeoLookup/data/sample.csv' tooltip='Download an example sheet' target='_blank'> planilha </a> aqui para visualizar e acrescentar dados de mapa nela.",
   "selectCSV": "Selecionar um CSV",
   "loadingCSV": "Carregando CSV",

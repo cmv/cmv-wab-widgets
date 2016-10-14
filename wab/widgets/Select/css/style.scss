@@ -1,5 +1,5 @@
-$light_font: 'Avenir-Light';
-$medium_font: 'Avenir-Medium';
+$light_font: 'Avenir Light';
+$medium_font: 'Avenir Medium';
 
 .jimu-widget-select {
   width: 100%;
@@ -37,12 +37,6 @@ $medium_font: 'Avenir-Medium';
     height: 36px;
     font-size: 12px;
     color: #000000;
-  }
-
-  .trim {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
   }
 
   .light-label {
@@ -117,7 +111,6 @@ $medium_font: 'Avenir-Medium';
 
       .layer-name {
         @extend .light-label;
-        @extend .trim;
         margin: 0 5px;
         position: absolute;
         left: 36px;
@@ -222,19 +215,9 @@ $medium_font: 'Avenir-Medium';
       .switch-back {
         width: 40px;
         height: 40px;
-        background: url(images/arrow-back_normal.svg) no-repeat center;
-        cursor: pointer;
 
-        &:hover {
-          background: url(images/arrow-back_hover.svg) no-repeat center;
-        }
-
-        .jimu-rtl & {
-          background: url(images/arrow-forward_normal.svg) no-repeat center;
-
-          &:hover {
-            background: url(images/arrow-forward_hover.svg) no-repeat center;
-          }
+        .feature-action {
+          margin: 12px;
         }
       }
 
@@ -298,7 +281,6 @@ $medium_font: 'Avenir-Medium';
             left: 36px;
             right: 36px;
             margin: 0 10px;
-            @extend .trim;
           }
         }
       }

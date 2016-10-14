@@ -6,6 +6,7 @@ define({
     "yes": "Taip",
     "no": "Ne",
     "next": "Kitas",
+    "previous": "Ankstesnis",
     "back": "Atgal",
     "selected": "pažymėta",
     "name": "Pavadinimas",
@@ -52,7 +53,11 @@ define({
     "view": "Peržiūrėti",
     "newText": "Naujas",
     "edit": "Redaguoti",
-    "wkid": "WKID"
+    "wkid": "WKID",
+    "table": "Lentelė",
+    "zoomIn": "Artinti",
+    "zoomOut": "Tolinti",
+    "continue1": "Tęsti"
   },
   "errorCode": "Kodas",
   "errorMessage": "Pranešimas",
@@ -167,7 +172,7 @@ define({
   "basicServiceChooser": {
     "validate": "Tikrinti",
     "example": "Pavyzdys",
-    "set": "Grupė"
+    "set": "Nustatyti"
   },
   "urlInput": {
     "invalidUrl": "Neleistinas URL."
@@ -236,7 +241,8 @@ define({
     },
     "caseSensitive": "Didžiosios ir mažosios raidės skirtingos",
     "notSupportCaseSensitiveTip": "Patalpintos paslaugos nepalaiko užklausos, kurioje skiriamos didžiosios ir mažosios raidės.",
-    "setFilterTip": "Nustatykite filtrą tinkamai."
+    "setFilterTip": "Nustatykite filtrą tinkamai.",
+    "cascadeFilterTip": "Rodyti tik ankstesnių išraiškų atrinktas reikšmes."
   },
   "featureLayerSource": {
     "layer": "Sluoksnis",
@@ -347,6 +353,7 @@ define({
     "restoreMap": "Spustelėkite, kad atkurtumėte naudotą žemėlapio aprėptį ir matomus sluoksnius"
   },
   "featureActions": {
+    "featureActions": "Elementų veiksmai",
     "ZoomTo": "Parodyti visą",
     "PanTo": "Pereiti į",
     "Flash": "Blykstė",
@@ -389,7 +396,13 @@ define({
     "addSelectionTip": "Pridėti prie atrankos",
     "removeSelectionTip": "Panaikinti atranką",
     "selectFromCurrentSelectionTip": "Pasirinkti iš esamos atrankos",
-    "unselectAllSelectionTip": "Panaikinti visų šiuo metu pažymėtų elementų atranką"
+    "unselectAllSelectionTip": "Panaikinti visų šiuo metu pažymėtų elementų atranką",
+    "selectByPolygon": "Pasirinkti pagal poligoną",
+    "selectByCircle": "Pasirinkti pagal apskritimą",
+    "selectByLine": "Pasirinkti pagal liniją",
+    "chooseSelectingTools": "Nurodykite pasirinkimo įrankius",
+    "darw": "Piešti",
+    "drawShap": "Piešti figūrą"
   },
   "widgetManager": {
     "createWidgetError": "Klaida kuriant valdiklį",
@@ -448,5 +461,13 @@ define({
   },
   "webSceneLoader": {
     "webglSupportTip": "3D interenetinės aplikacijos jūsų naršyklėje nepalaikomos."
+  },
+  "map": {
+    "basemapNotAvailable": "Pagrindo žemėlapis nepasiekiamas.",
+    "displayDefaultBasemap": "Vietoje to rodyti numatytąjį pagrindo žemėlapį."
+  },
+  "queryFeatures": {
+    "tooManyFeaturesTip": "Jūsų pasirinktame žemėlapio plote per daug elementų. Gali ilgai užtrukti, kol bus nuskaityti visi duomenys.",
+    "askForContinue": "Ar norite tęsti?"
   }
 });

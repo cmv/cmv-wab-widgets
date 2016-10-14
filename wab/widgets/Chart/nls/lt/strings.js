@@ -43,5 +43,7 @@ define({
   "yards": "Jardai",
   "nauticalMiles": "Jūrmylės",
   "back": "Atgal",
-  "execute": "Vykdyti"
+  "execute": "Vykdyti",
+  "enlarge": "Išplėsti",
+  "setting": "Nustatymas"
 });

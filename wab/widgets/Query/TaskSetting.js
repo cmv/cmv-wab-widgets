@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 Esri. All Rights Reserved.
+// Copyright © 2014 - 2016 Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -91,6 +91,24 @@ define([
         }));
       },
 
+      hideTempLayers: function(){
+        if(this.spatialFilterByDrawing){
+          this.spatialFilterByDrawing.hideTempLayers();
+        }
+        if(this.spatialFilterByFeatures){
+          this.spatialFilterByFeatures.hideTempLayers();
+        }
+      },
+
+      showTempLayers: function(){
+        if(this.spatialFilterByDrawing){
+          this.spatialFilterByDrawing.showTempLayers();
+        }
+        if(this.spatialFilterByFeatures){
+          this.spatialFilterByFeatures.showTempLayers();
+        }
+      },
+
       _getCleanClonedCurrentAttrs: function(currentAttrs){
         var clonedCurrentAttrs = SingleQueryLoader.getCleanCurrentAttrsTemplate();
         var fieldValue = null;
@@ -103,6 +121,7 @@ define([
           }
         }
         clonedCurrentAttrs.queryTr = currentAttrs.queryTr;
+        clonedCurrentAttrs.query.maxRecordCount = currentAttrs.query.maxRecordCount;
         return clonedCurrentAttrs;
       },
 
@@ -284,8 +303,8 @@ define([
         //init FilterParameters
         this.filterParams = new FilterParameters();
         this.filterParams.placeAt(this.sqlDiv, 'before');
-        var partsObj = lang.clone(this.currentAttrs.config.filter);
-        this.filterParams.build(this.currentAttrs.config.url, this.currentAttrs.layerInfo, partsObj);
+        var partsObj = lang.clone(config.filter);
+        this.filterParams.build(config.url, layerInfo, partsObj, config.webMapLayerId);
 
         var filterUtils = new FilterUtils();
         this.askForValues = filterUtils.isAskForValues(this.currentAttrs.config.filter);
@@ -295,6 +314,11 @@ define([
           if(this.currentAttrs.config.filter.expr){
             this.sqlDiv.innerHTML = this.currentAttrs.config.filter.expr;
           }
+          var expr = this.filterParams.getFilterExpr();
+          if (expr) {
+            this.sqlDiv.innerHTML = expr;
+          }
+
           this.own(on(this.filterParams, 'change', lang.hitch(this, function(newExpr){
             this.sqlDiv.innerHTML = "";
             if(newExpr){
@@ -383,13 +407,18 @@ define([
             this.spatialTypeSelect.set('value', spatialOption.value);
           }
           var featuresBufferOption = spatialFilter.useFeatures.buffer;
+          var ignoredFeaturelayerIds = [];
+          if(config.webMapLayerId){
+            ignoredFeaturelayerIds.push(config.webMapLayerId);
+          }
           this.spatialFilterByFeatures = new SpatialFilterByFeatures({
             map: this.map,
             nls: this.nls,
             enableBuffer: !!featuresBufferOption,
             distance: lang.getObject("defaultDistance", false, featuresBufferOption) || 0,
             unit: lang.getObject("defaultUnit", false, featuresBufferOption) || "",
-            showLoading: false
+            showLoading: false,
+            ignoredFeaturelayerIds: ignoredFeaturelayerIds
           });
           if(this.spatialFilterByFeatures.tipNode){
             html.setStyle(this.spatialFilterByFeatures.tipNode, 'display', 'block');

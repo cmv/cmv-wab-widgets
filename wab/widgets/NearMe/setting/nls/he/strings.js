@@ -66,7 +66,7 @@ define({
     "routeServiceUrl": "שירות מסלול",
     "buttonSet": "הגדר",
     "routeServiceUrlHintText": "רמז: לחץ על 'הגדר' כדי לנווט לשירות מסלול ולבחור אותו",
-    "directionLengthUnit": "יחידות אורך של כיוון",
+    "directionLengthUnit": "יחידות אורך של הוראות נסיעה",
     "unitsForRouteHintText": "רמז: משמש להצגת יחידות עבור מסלול",
     "selectRouteSymbol": "בחר סמל להצגת מסלול",
     "routeSymbolHintText": "רמז: משמש להצגת סמל קווי של המסלול",

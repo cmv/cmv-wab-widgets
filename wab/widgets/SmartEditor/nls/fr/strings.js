@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Editeur intelligent",
+  "noEditPrivileges": "Votre compte ne dispose pas des autorisations de création ou de modification des données.",
+  "widgetActive": "Activé",
+  "widgetNotActive": "Non activé",
   "pressStr": "Appuyez sur ",
   "ctrlStr": " CTRL ",
   "snapStr": " pour activer la capture",
@@ -19,5 +22,6 @@ define({
     "all": "Tous",
     "noAvailableTempaltes": "Aucun modèle disponible",
     "searchTemplates": "Rechercher des modèles"
-  }
+  },
+  "invalidConfiguration": "Le widget n'est pas configuré ou les couches de la configuration ne figurent plus sur la carte. Ouvrez l'application en mode de générateur et reconfigurez le widget."
 });

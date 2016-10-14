@@ -19,11 +19,14 @@ define([
   "dojo/_base/lang",
   'dojo/_base/Color',
   "dojo/on",
+  'dojo/_base/array',
+  'dojo/query',
+  'dojo/_base/html',
   "dijit/_WidgetsInTemplateMixin",
   "jimu/BaseWidgetSetting",
   "jimu/dijit/CheckBox",
   "jimu/dijit/ColorPickerButton"
-], function(declare, lang, Color, on, _WidgetsInTemplateMixin, BaseWidgetSetting, CheckBox) {
+], function(declare, lang, Color, on, array, query, html, _WidgetsInTemplateMixin, BaseWidgetSetting, CheckBox) {
   var PARTIAL_WITHIN = 'partial', WHOLLY_WITHIN = 'wholly';
   return declare([BaseWidgetSetting, _WidgetsInTemplateMixin], {
     baseClass: 'jimu-widget-select-setting',
@@ -31,6 +34,11 @@ define([
     selectionColor: '',
     selectionMode: '',
     allowExport: false,
+
+    postMixInProperties:function(){
+      this.inherited(arguments);
+      lang.mixin(this.nls, window.jimuNls.featureSetChooser);
+    },
 
     postCreate: function() {
       this.inherited(arguments);
@@ -82,6 +90,8 @@ define([
 
       this.allowExport = this.config.allowExport;
       this.allowExportCheckBox.setValue(this.allowExport);
+
+      this._selectDrawingTools(this.config.geometryTypes || ['EXTENT']);
     },
 
     setConfig: function(config) {
@@ -93,8 +103,54 @@ define([
       return {
         selectionColor: this.selectionColor,
         selectionMode: this.selectionMode,
-        allowExport: this.allowExport
+        allowExport: this.allowExport,
+        geometryTypes: this._getSelectedDrawingTools()
       };
+    },
+
+    _onDrawingToolsContainerClicked: function(event){
+      var target = event.target || event.srcElement;
+
+      var darwItemDom = null;
+
+      if(html.hasClass(target, 'draw-item')){
+        darwItemDom = target;
+      }else if(html.hasClass(target, 'draw-item-icon')){
+        darwItemDom = target.parentNode;
+      }
+
+      if(!darwItemDom){
+        return;
+      }
+
+      html.toggleClass(darwItemDom, 'selected');
+
+      var selectedDrawItems = query('.selected', this.drawingToolsContainer);
+
+      if(selectedDrawItems.length === 0){
+        html.addClass(darwItemDom, 'selected');
+      }
+    },
+
+    _selectDrawingTools: function(geometryTypes){
+      var drawItems = query('.draw-item', this.drawingToolsContainer);
+      array.forEach(drawItems, lang.hitch(this, function(darwItem){
+        var geoType = darwItem.getAttribute('data-geotype');
+        if(geometryTypes.indexOf(geoType) >= 0){
+          html.addClass(darwItem, 'selected');
+        }else{
+          html.removeClass(darwItem, 'selected');
+        }
+      }));
+    },
+
+    _getSelectedDrawingTools: function(){
+      var geometryTypes = [];
+      var drawItems = query(".draw-item.selected", this.drawingToolsContainer);
+      geometryTypes = array.map(drawItems, lang.hitch(this, function(darwItem){
+        return darwItem.getAttribute('data-geotype');
+      }));
+      return geometryTypes;
     }
   });
 });

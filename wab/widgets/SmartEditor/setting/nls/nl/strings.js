@@ -13,6 +13,10 @@ define({
     "removeOnSaveTip": "Optie om het object te verwijderen uit de selectie ingesteld als de record wordt opgeslagen. Als dit het enige geselecteerde record is, schakelt het paneel terug naar de template-pagina.",
     "useFilterEditor": "Gebruik objecttemplatefilter",
     "useFilterEditorTip": "Optie om de picker Filter Template te gebruiken die de mogelijkheid biedt om een lagentemplate te bekijken of op naam te zoeken naar templates.",
+    "listenToGroupFilter": "Filterwaarden van de widget Groepfilter op Vooraf ingestelde velden toepassen",
+    "listenToGroupFilterTip": "Als er een filter wordt toegepast in de widget Groepfilter, pas de waarde dan toe op een overeenkomstig veld in de lijst met Vooraf ingestelde waarden.",
+    "keepTemplateActive": "Houd geselecteerde template actief",
+    "keepTemplateActiveTip": "Als de templatekeuze weergegeven wordt, en als een template voordien geselecteerd werd, selecteer het dan nogmaals.",
     "layerSettingsTable": {
       "allowDelete": "Verwijderen toestaan",
       "allowDeleteTip": "Optie om de gebruiker een object te laten verwijderen; uitgeschakeld als de laag verwijderen niet ondersteunt",
@@ -27,9 +31,10 @@ define({
       "fields": "Velden",
       "fieldsTip": "Wijzig de velden om te bewerken en definieer Slimme attributen",
       "description": "Beschrijving",
-      "descriptionTip": "Voer optioneel tekst in die u wilt weergeven aan de bovenkant van de attribuutpagina."
+      "descriptionTip": "Optie om tekst in te voeren die u wilt weergeven aan de bovenkant van de attribuutpagina."
     },
-    "editFieldError": "Veldwijzigingen en slimme attributen zijn niet beschikbaar voor lagen die niet bewerkbaar zijn"
+    "editFieldError": "Veldwijzigingen en slimme attributen zijn niet beschikbaar voor lagen die niet bewerkbaar zijn",
+    "noConfigedLayersError": "Smart Editor vereist een of meerdere bewerkbare lagen"
   },
   "editDescriptionPage": {
     "title": "Definieer de attribuutoverzichttekst voor <b>${layername}</b> "
@@ -64,11 +69,16 @@ define({
       "expressionTip": "De resulterende expressie in SQL-indeling van de gedefinieerde criteria",
       "actions": "Criteria",
       "actionsTip": "Wijzig de volgorde van de regels en definieer de criteria als ze geactiveerd worden"
+    },
+    "actions": {
+      "hide": "Verbergen",
+      "required": "Vereist",
+      "disabled": "Uitgeschakeld"
     }
   },
   "filterPage": {
     "submitHidden": "Attribuutgegevens indienen voor dit veld ook indien verborgen?",
-    "title": "Configureer clausule voor de ${action} regel",
+    "title": "Configureer uitdrukking voor de ${action} regel",
     "filterBuilder": "Actie instellen op veld als de record overeenkomt met ${any_or_all} de volgende expressies",
     "noFilterTip": "Definieer met de onderstaande tools de verklaring voor als de actie actief is."
   }

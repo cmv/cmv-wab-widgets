@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Smart Editor",
+  "noEditPrivileges": "Uw account heeft geen machtigingen om gegevens te maken of te wijzigen.",
+  "widgetActive": "Actief",
+  "widgetNotActive": "Niet actief",
   "pressStr": "Druk op ",
   "ctrlStr": " CTRL ",
   "snapStr": " om snapping in te schakelen",
@@ -19,5 +22,6 @@ define({
     "all": "Alle",
     "noAvailableTempaltes": "Geen beschikbare templates",
     "searchTemplates": "Templates zoeken"
-  }
+  },
+  "invalidConfiguration": "Widget is niet geconfigureerd of de lagen in de configuratie zijn niet langer in de kaart. Open de app in de bouwmodus en configureer de widget opnieuw."
 });

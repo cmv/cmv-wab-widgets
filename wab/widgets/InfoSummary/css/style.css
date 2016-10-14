@@ -37,15 +37,25 @@
   cursor: pointer;
   border-bottom: 1px solid #dcdcdc;
   float: right;
-  margin: 10px 10px 10px 10px;
+  min-height: 30px;
 }
 
 .jimu-widget-InfoSummary .groupField{
-  padding: 0px 10px 5px 15px; 
   text-align: left; 
   display: table-cell;
   font-size: 14px;
   width: 100%;
+  vertical-align: middle;
+  padding-left: 5px;
+}
+
+.jimu-rtl .jimu-widget-InfoSummary .groupField{
+  text-align: right; 
+  display: table-cell;
+  font-size: 14px;
+  width: 100%;
+  vertical-align: middle;
+  padding-right: 5px;
 }
 
 .jimu-widget-InfoSummary .groupItem{
@@ -60,13 +70,25 @@
   text-align: left;
 }
 
+.jimu-rtl .jimu-widget-InfoSummary .groupItem{
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  border-bottom: 1px solid #dcdcdc;
+  float: right;
+  overflow: hidden;
+  text-align: -webkit-right;
+  text-align: -moz-right;
+  text-align: right;
+}
+
 .jimu-widget-InfoSummary .groupItemTitle:hover .groupItemImageUp{
-  background-image: url(../images/nav_up.png);
+  background-image: url(../images/_nav_up.png);
   background-color: gray;
 }
 
 .jimu-widget-InfoSummary .groupItemTitle:hover .groupItemImageDown{
-  background-image: url(../images/nav_down.png);
+  background-image: url(../images/_nav_down.png);
   background-color: gray;
 }
 
@@ -178,7 +200,23 @@
 .jimu-widget-InfoSummary .pageHeader {
   position: relative;
   width: 100%;
-  height: 280px;
+  height: 190px;
+  text-align: center;
+  display: block;
+}
+
+.jimu-widget-InfoSummary .pageHeaderRefresh {
+  position: relative;
+  width: 100%;
+  height: 210px;
+  text-align: center;
+  display: block;
+}
+
+.jimu-widget-InfoSummary .pageHeaderRefreshNoText {
+  position: relative;
+  width: 100%;
+  height: 190px;
   text-align: center;
   display: block;
 }
@@ -186,9 +224,20 @@
 .jimu-widget-InfoSummary .pageTitle {
   position: absolute;
   left: 0px;
-  bottom: 20px;
+  bottom: 8px;
   height: auto;
-  font-size: 12px;
+  font-size: 16px;
+  color: #ffffff;
+  text-align: center;
+  width: 100%;
+}
+
+.jimu-widget-InfoSummary .pageTitleRefresh {
+  position: absolute;
+  left: 0px;
+  bottom: 25px;
+  height: auto;
+  font-size: 16px;
   color: #ffffff;
   text-align: center;
   width: 100%;
@@ -214,7 +263,7 @@
   top: 40px;
   width: auto;
   height: auto;
-  bottom: 25px;
+  /*bottom: 25px;*/
   left: 15px;
   right:15px;
 }
@@ -232,7 +281,35 @@
 
 .jimu-widget-InfoSummary .pageBody {
   position: absolute;
-  top: 280px;
+  top: 190px;
+  bottom: 0px;
+  width: 100%;
+  display: block;
+  color: #000000;
+  font-size: 10px;
+  text-align: center;
+  padding: 0px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.jimu-widget-InfoSummary .pageBodyRefresh {
+  position: absolute;
+  top: 210px;
+  bottom: 0px;
+  width: 100%;
+  display: block;
+  color: #000000;
+  font-size: 10px;
+  text-align: center;
+  padding: 0px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.jimu-widget-InfoSummary .pageBodyRefreshNoText {
+  position: absolute;
+  top: 190px;
   bottom: 0px;
   width: 100%;
   display: block;
@@ -251,11 +328,6 @@
   overflow-y: hidden;
 }
 
-.jimu-widget-InfoSummary .expandArrow {
-  width: 100%;
-  height: 20px;
-}
-
 .jimu-widget-InfoSummary .rec {
   position: relative;
   width: 100%;
@@ -266,14 +338,8 @@
   cursor:pointer;
 }
 
-.jimu-widget-InfoSummary .rec:hover .expandUp {
-  background-image: url(../images/nav_up.png);
-  background-color: gray;
-}
-
-.jimu-widget-InfoSummary .rec:hover .expandDown {
-  background-image: url(../images/nav_down.png);
-  background-color: gray;
+.jimu-widget-InfoSummary .recDefault {
+  cursor: default;
 }
 
 .jimu-widget-InfoSummary .recIcon {
@@ -286,8 +352,23 @@
   -moz-border-radius: 41px;
   -webkit-border-radius: 41px;
   border-radius: 41px;
-  opacity: 0.3;
-  filter: alpha(opacity=30);
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  cursor: pointer;
+}
+
+.jimu-rtl .jimu-widget-InfoSummary .recIcon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(0,0,0,1);
+  -moz-border-radius: 41px;
+  -webkit-border-radius: 41px;
+  border-radius: 41px;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
   cursor: pointer;
 }
 
@@ -305,10 +386,15 @@
   background-color: rgba(0,0,0,0.25);
 }
 
+.jimu-rtl .jimu-widget-InfoSummary .active {
+  opacity:0.8;
+  filter:alpha(opacity=80);
+  background-color: rgba(0,0,0,0.25);
+}
+
 .jimu-widget-InfoSummary .groupCountLabel {
   line-height: 30px;
   font-size: 16px;
-  font-family: Steelfish;
   font-weight: 300;
   color: #000000;
   display: table-cell;
@@ -320,19 +406,23 @@
 .jimu-rtl .jimu-widget-InfoSummary .groupCountLabel {
   line-height: 30px;
   font-size: 16px;
-  font-family: Steelfish;
   font-weight: 300;
   color: #000000;
-  margin-left: 5px;
   display: table-cell;
   width: auto;
+  height: 100%;
+  padding-left: 10px;
+}
+
+.jimu-widget-InfoSummary .inActive {
+  opacity:0.6;
+  filter:alpha(opacity=60);
 }
 
 .jimu-widget-InfoSummary .recLabel {
   display: table-cell;
   line-height: 70px;
   font-size: 16px;
-  font-family: sans-serif;
   font-weight: 500;
   text-align: center;
   vertical-align: middle;
@@ -350,7 +440,6 @@
   display: table-cell;
   line-height: 70px;
   font-size: 16px;
-  font-family: sans-serif;
   font-weight: 500;
   text-align: center;
   vertical-align: middle;
@@ -368,7 +457,6 @@
   display: table-cell;
   line-height: 70px;
   font-size: 16px;
-  font-family: sans-serif;
   font-weight: 500;
   text-align: center;
   vertical-align: middle;
@@ -384,7 +472,6 @@
   display: table-cell;
   line-height: 70px;
   font-size: 16px;
-  font-family: sans-serif;
   font-weight: 500;
   text-align: center;
   vertical-align: middle;
@@ -396,12 +483,35 @@
   width: auto;
 }
 
+.jimu-widget-InfoSummary .recNumInActive {
+  height: 100%;
+  color: #000000;
+  text-align: center;
+  font-size: 28px;
+  margin-right: 10px;
+  float: right;
+  display: none;
+  width: 0px;
+  padding-left: 10px;
+}
+
+.jimu-rtl .jimu-widget-InfoSummary .recNumInActive {
+  height: 100%;
+  color: #000000;
+  text-align: center;
+  font-size: 28px;
+  margin-right: 10px;
+  float: left;
+  display: none;
+  width: 0px;
+  padding-left: 10px;
+}
+
 .jimu-widget-InfoSummary .recNum {
   height: 100%;
   color: #000000;
   text-align: center;
   font-size: 28px;
-  font-family: Steelfish;
   margin-right: 10px;
   float: right;
   display: table-cell;
@@ -414,7 +524,6 @@
   color: #000000;
   text-align: center;
   font-size: 28px;
-  font-family: Steelfish;
   margin-left: 10px;
   float: left;
   display: table-cell;
@@ -425,7 +534,7 @@
 .jimu-widget-InfoSummary .innerMainPanelIcon {
   background-size: contain; 
   width: 310px; 
-  height: 205px; 
+  height: 120px; 
   background-repeat: no-repeat; 
   background-position: 50% 50%; 
 }
@@ -489,7 +598,7 @@
 .jimu-widget-InfoSummary .pageLabel {
   padding-top: 10px;
   color: whitesmoke;
-  font-size: 16px;
+  font-size: 17px;
   text-align: center;
 }
 
@@ -505,12 +614,44 @@
   padding-left: 10px;
 }
 
+.jimu-rtl .jimu-widget-InfoSummary .imageDataGFX {
+  width: 15px;
+  height: 15px;
+  display: block;
+  float: right;
+  padding-right: 10px;
+}
+
+.jimu-widget-InfoSummary .expandArrow {
+  width: 100%;
+  height: 20px;
+}
+
+.jimu-widget-InfoSummary .rec:hover .expandUp {
+  background-image: url(../images/nav_up.png);
+  background-color: #f2f2f2;
+  -webkit-transform: translateZ(0);
+  -moz-transform: rotate(0);
+}
+
+.jimu-widget-InfoSummary .rec:hover .expandDown {
+  background-image: url(../images/nav_down.png);
+  background-color: #f2f2f2;
+  -webkit-transform: translateZ(0);
+  -moz-transform: rotate(0);
+}
+
+.jimu-widget-InfoSummary .rec:hover {
+  background-color: #f2f2f2;
+}
+
 .jimu-widget-InfoSummary .searching{
   height: 10px;
   width: 40px;
   background-image: url(../images/loading.gif);
   background-repeat: no-repeat;
   background-size: contain;
+  background-color: #f2f2f2;
   position: absolute;
   top: 32px;
   bottom: 0px;
@@ -523,6 +664,7 @@
   background-image: url(../images/loading.gif);
   background-repeat: no-repeat;
   background-size: contain;
+  background-color: #f2f2f2;
   position: absolute;
   top: 32px;
   bottom: 0px;
@@ -531,27 +673,78 @@
 
 .jimu-widget-InfoSummary .expandSearching{
   background-image: url(../images/loading.gif);
+  /*background-color: #f2f2f2;*/
   position: absolute;
+  background-repeat: no-repeat;
+  background-size: contain;
   bottom: 0px;
   right: 0px;
+  display: block;
+}
+
+.jimu-rtl .jimu-widget-InfoSummary .expandSearching{
+  background-image: url(../images/loading.gif);
+  /*background-color: #f2f2f2;*/
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: contain;
+  bottom: 0px;
+  left: 0px;
+  display: block;
 }
 
 .jimu-widget-InfoSummary .expand{
   width: 50px;
-  height: 11px;
+  height: 9px;
   background-repeat: no-repeat;
   background-size: contain;
   background-position: 50% 50%;
   position: absolute;
   left: 45%;
   background-color: white;
+  z-index: 1;
+    -webkit-transform: translateZ(0);
+  -moz-transform: rotate(0);
+}
+
+.jimu-rtl .jimu-widget-InfoSummary .expand{
+  width: 50px;
+  height: 9px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 50% 50%;
+  position: absolute;
+  right: 45%;
+  background-color: white;
+  z-index: 1;
+  -webkit-transform: translateZ(0);
+  -moz-transform: rotate(0);
+}
+
+.jimu-widget-InfoSummary .expandInActive{
+  opacity: 0;
+  -webkit-transform: translateZ(0);
+  -moz-transform: rotate(0);
 }
 
 .jimu-widget-InfoSummary .expandImageContainer{
   width: 25px;
   height: 12px;
-  float: right;
   margin-right: 5px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  padding-right: 5px;
+}
+
+.jimu-rtl .jimu-widget-InfoSummary .expandImageContainer{
+  width: 25px;
+  height: 12px;
+  margin-left: 5px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  padding-left: 5px;
 }
 
 .jimu-widget-InfoSummary .expandUp{
@@ -561,37 +754,27 @@
   border-top: 1px solid #dcdcdc;
   border-left: 1px solid #dcdcdc;
   border-right: 1px solid #dcdcdc;
-  -webkit-border-top-radius:6px;
-  -moz-border-top-radius:6px;
-  -o-border-top-radius:6px;
-  -ms-border-top-radius:6px;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-}
-
-.jimu-widget-InfoSummary .expandUp:hover{
-  background-image: url(../images/nav_up.png);
-  background-color: gray;
+  -webkit-border-top-radius:8px;
+  -moz-border-top-radius:8px;
+  -o-border-top-radius:8px;
+  -ms-border-top-radius:8px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  z-index: 1;
 }
 
 .jimu-widget-InfoSummary .expandDown{
   background-image: url(../images/default_nav_down.png);
-  bottom: -11px;
-  background-position-y: -2px;
+  bottom: -5px;
+  background-position-y: -1px;
   border-bottom: 1px solid #dcdcdc;
-  border-left: 1px solid #dcdcdc;
-  border-right: 1px solid #dcdcdc;
-  -webkit-border-bottom-radius:6px;
-  -moz-border-bottom-radius:6px;
-  -o-border-bottom-radius:6px;
-  -ms-border-bottom-radius:6px;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-
-.jimu-widget-InfoSummary .expandDown:hover{
-  background-image: url(../images/nav_down.png);
-  background-color: gray;
+  -webkit-border-bottom-radius:8px;
+  -moz-border-bottom-radius:8px;
+  -o-border-bottom-radius:8px;
+  -ms-border-bottom-radius:8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  z-index: 1;
 }
 
 .noselect {
@@ -631,7 +814,7 @@
       left: 0px;
       bottom: 20px;
       height: auto;
-      font-size: 12px;
+      font-size: 16px;
       color: #ffffff;
       text-align: center;
       width: 100%;
@@ -651,7 +834,6 @@
 	  font-size: 40px;
 	  height: 70px;
 	  line-height: 70px;
-	  font-family: Steelfish;
 	  border: 5px solid rgba(0,0,0,1);
 	  -moz-border-radius: 40px;
 	  -webkit-border-radius: 40px;
@@ -734,7 +916,7 @@
 	left: 0px;
 	bottom: 20px;
 	height: auto;
-	font-size: 12px;
+	font-size: 16px;
     color: #ffffff;
     text-align: center;
     width: 100%;
@@ -754,7 +936,6 @@
 	font-size: 40px;
 	height: 70px;
 	line-height: 70px;
-	font-family: Steelfish;
 	border: 5px solid rgba(0,0,0,1);
 	-moz-border-radius: 40px;
 	-webkit-border-radius: 40px;

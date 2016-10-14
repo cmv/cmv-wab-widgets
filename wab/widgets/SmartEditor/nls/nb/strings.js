@@ -1,5 +1,8 @@
 define({
   "_widgetLabel": "Smart redigering",
+  "noEditPrivileges": "Kontoen har ikke rettigheter til å opprette eller endre data.",
+  "widgetActive": "Aktiv",
+  "widgetNotActive": "Ikke aktiv",
   "pressStr": "Trykk på ",
   "ctrlStr": " CTRL ",
   "snapStr": " for å aktivere festing",
@@ -19,5 +22,6 @@ define({
     "all": "Alle",
     "noAvailableTempaltes": "Ingen tilgjengelige maler",
     "searchTemplates": "Søk i maler"
-  }
+  },
+  "invalidConfiguration": "Widgeten er ikke konfigurert eller lagene i konfigurasjonen finnes ikke i kartet lenger. Åpne appen i byggemodus, og konfigurer widgeten på nytt."
 });

@@ -1,5 +1,5 @@
 define({
-  "_widgetLabel": "Upelis",
+  "_widgetLabel": "Srautas",
   "streamControls": "Srauto valdikliai",
   "streamFilter": "Filtruoti",
   "startStreaming": "Paleisti srautą",

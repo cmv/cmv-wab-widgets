@@ -43,5 +43,7 @@ define({
   "yards": "ヤード",
   "nauticalMiles": "海里",
   "back": "戻る",
-  "execute": "実行"
+  "execute": "実行",
+  "enlarge": "拡大",
+  "setting": "設定"
 });

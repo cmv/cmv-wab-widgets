@@ -24,6 +24,7 @@ define({
   "filterPopup": "Filtrare strat tematic",
   "cancel": "Anulare",
   "noValue": "Nicio valoare",
+  "emptyString": "Şir gol",
   "existingValue": "Se păstrează valoarea curentă",
   "newDate": "Dată nouă",
   "valueChooser": "Selectaţi/introduceţi o valoare",
@@ -46,6 +47,8 @@ define({
     "layerNotFound": "Stratul tematic ${0} cu ID-ul ${1} nu a fost găsit pe hartă, este posibil ca harta să se fi schimbat de la configurarea widgeturilor",
     "queryNullID": "Stratul tematic din ${0} a returnat un ID nevalid",
     "noSelectedLayers": "Niciun strat tematic selectat cu înregistrări de actualizat",
-    "inputValueError": "Valoare nevalidă în formular"
+    "inputValueError": "Valoare nevalidă în formular",
+    "saveError": "Imposibil de salvat ${0} obiecte spaţiale, detaliile au fost adăugate la consolă",
+    "requiredValue": "Valoare necesară"
   }
 });
