@@ -93,8 +93,8 @@ Both of these widgets have been modified from the original to provide additional
 
 
 ## Requirements
-- This method uses the soon-to-be-released version 2.0 of cmv currently in the [develop branch](https://github.com/cmv/cmv-app/tree/develop).
-- This method supports version 2.2 of the WebApp Builder released in October 2016 as well as version 2.1 released in July 2016.
+- This method uses the version 2.0.0-beta.1 of cmv currently in the [develop branch](https://github.com/cmv/cmv-app/tree/develop).
+- This method supports version 2.3 of the WebApp Builder released in January 2017 as well as version 2.2 released in October 2016.
 - The app in this repo use a new [dojo flat theme](https://github.com/dojo/themes) which is planned for release with dojo 1.12. This replaces the old dbootstrap theme which is no longer being maintained. This is optional.
 
 
@@ -110,13 +110,13 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
         /* customizations for WAB widgets */
         },{
             name: 'jimu',
-            location: path + 'wab/jimu.js'
+            location: path + 'wab/2.3/jimu.js'
         },{
             name: 'libs',
-            location: path + 'wab/libs'
+            location: path + 'wab/2.3/libs'
         },{
             name: 'wabwidgets',
-            location: path + 'wab/widgets'
+            location: path + 'wab/2.3/widgets'
         /* end customizations for WAB widgets */
         ```
 
@@ -166,7 +166,7 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
 
     - Add the jimu-theme.css stylesheet:
         ``` html
-        <link rel="stylesheet" type="text/css" href="./wab/jimu.js/css/jimu-theme.css">
+        <link rel="stylesheet" type="text/css" href="./wab/2.3/jimu.js/css/jimu-theme.css">
         ```
 
     - Add an id to the main.css stylesheet:
@@ -177,8 +177,6 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
 
     - Add stylesheets to help the CMV and JIMU themes co-exist:
         ``` html
-        <!-- needed so that jimu styles play nice with cmv -->
-        <link rel="stylesheet" type="text/css" href="./css/cmv-jimu.css">
         <!-- some css tweaks for WAB widgets (optional) -->
         <link rel="stylesheet" type="text/css" href="./css/cmv-wab.css">
         ```
@@ -186,7 +184,7 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
     - Some WAB widgets require another lib added globally:
         ``` html
         <!-- needed by some wab widgets like Print -->
-        <script src="./wab/libs/caja-html-sanitizer-minified.js"></script>
+        <script src="./wab/2.3/libs/caja-html-sanitizer-minified.js"></script>
         ```
 
 ## Adding WAB widgets to your cmv configuration
