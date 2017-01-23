@@ -1,17 +1,7 @@
-define([
-    'dojo/_base/declare',
-    'dijit/Dialog'
-], function (declare, Dialog) {
-    'use strict';
+/*  ConfigurableMapViewerCMV
+ *  version 2.0.0-beta.1
+ *  Project: http://cmv.io/
+ */
 
-    return declare([Dialog], {
-        declaredClass: 'gis.dijit.FloatingWidget',
-        title: 'Floating Widget',
-        draggable: true,
-        'class': 'floatingWidget',
-        close: function () {
-            this.hide();
-        },
-        focus: function () {}
-    });
-});
+define(["dojo/_base/declare","dijit/Dialog"],function(a,b){return a([b],{declaredClass:"gis.dijit.FloatingWidget",title:"Floating Widget",draggable:!0,class:"floatingWidget",close:function(){this.hide()},focus:function(){}})});
+//# sourceMappingURL=FloatingWidgetDialog.js.map

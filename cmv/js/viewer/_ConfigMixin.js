@@ -1,61 +1,7 @@
-define([
-    'dojo/_base/declare',
-    'dojo/_base/lang',
-    'dojo/Deferred'
-], function (
-    declare,
-    lang,
-    Deferred
-) {
+/*  ConfigurableMapViewerCMV
+ *  version 2.0.0-beta.1
+ *  Project: http://cmv.io/
+ */
 
-    return declare(null, {
-
-        initConfigAsync: function () {
-            var returnDeferred = new Deferred();
-            // get the config file from the url if present
-            var file = 'config/viewer',
-                s = window.location.search,
-                q = s.match(/config=([^&]*)/i);
-            if (q && q.length > 0) {
-                file = q[1];
-                if (file.indexOf('/') < 0) {
-                    file = 'config/' + file;
-                }
-            }
-            require([file], function (config) {
-                returnDeferred.resolve(config);
-            });
-            return returnDeferred;
-        },
-
-        initConfigSuccess: function (config) {
-            this.config = config;
-
-            if (config.isDebug) {
-                window.app = this; //dev only
-            }
-
-            // setup the map click mode
-            this.mapClickMode = {
-                current: config.defaultMapClickMode,
-                defaultMode: config.defaultMapClickMode
-            };
-
-            // in _LayoutMixin
-            this.initLayout();
-
-            // in _MapMixin
-            this.initMapAsync().then(
-                lang.hitch(this, 'initMapComplete'),
-                lang.hitch(this, 'initMapError')
-            );
-        },
-
-        initConfigError: function (err) {
-            this.handleError({
-                source: 'Controller',
-                error: err
-            });
-        }
-    });
-});
+define(["dojo/_base/declare","dojo/_base/lang","dojo/Deferred"],function(a,b,c){return a(null,{initConfigAsync:function(){var a=new c,b="config/viewer",d=window.location.search,e=d.match(/config=([^&]*)/i);return e&&e.length>0&&(b=e[1],b.indexOf("/")<0&&(b="config/"+b)),require([b],function(b){a.resolve(b)}),a},initConfigSuccess:function(a){this.config=a,this.createWidgets(["loading"]),a.isDebug&&(window.app=this),this.mapClickMode={current:a.defaultMapClickMode,defaultMode:a.defaultMapClickMode},this.initLayout(),this.createWidgets(["layout"]),this.initMapAsync().then(b.hitch(this,"initMapComplete"),b.hitch(this,"initMapError"))},initConfigError:function(a){this.handleError({source:"Controller",error:a})}})});
+//# sourceMappingURL=_ConfigMixin.js.map

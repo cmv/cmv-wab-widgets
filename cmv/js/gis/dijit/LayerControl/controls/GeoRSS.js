@@ -1,25 +1,7 @@
-define([
-    'dojo/_base/declare',
-    'dijit/_WidgetBase',
-    'dijit/_TemplatedMixin',
-    'dijit/_Contained',
-    './_Control' // layer control base class
-], function (
-    declare,
-    _WidgetBase,
-    _TemplatedMixin,
-    _Contained,
-    _Control
-) {
-    'use strict';
+/*  ConfigurableMapViewerCMV
+ *  version 2.0.0-beta.1
+ *  Project: http://cmv.io/
+ */
 
-    var GeoRSSControl = declare([_WidgetBase, _TemplatedMixin, _Contained, _Control], {
-        _layerType: 'vector', // constant
-        _esriLayerType: 'georss', // constant
-        _layerTypeInit: function () {
-            this._expandRemove();
-            // legend or no legend???
-        }
-    });
-    return GeoRSSControl;
-});
+define(["dojo/_base/declare","dijit/_WidgetBase","dijit/_TemplatedMixin","dijit/_Contained","./_Control"],function(a,b,c,d,e){var f=a([b,c,d,e],{_layerType:"vector",_esriLayerType:"georss",_layerTypeInit:function(){this._expandRemove()}});return f});
+//# sourceMappingURL=GeoRSS.js.map

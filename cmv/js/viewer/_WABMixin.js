@@ -31,7 +31,14 @@ define([
 
         wabWidgetManager: null,
 
-        configureWAB: function () {
+        _setWABWidgetManager: function () {
+            if (!this.wabWidgetManager) {
+                this._configureWAB();
+            }
+            return this.wabWidgetManager;
+        },
+
+        _configureWAB: function () {
             //minimal configuration of global vars
             // polluting the global namespace is bad! ;)
             window.jimuConfig = {
@@ -49,7 +56,7 @@ define([
 
             // make the map look like a "webmap"
             if (!this.map.itemInfo) {
-                this.createMapItemInfo();
+                this._createMapItemInfo();
             }
             LayerInfos.getInstance(this.map, this.map.itemInfo);
 
@@ -69,7 +76,7 @@ define([
             this.wabWidgetManager.appConfig = cm.getAppConfig();
         },
 
-        createMapItemInfo: function () {
+        _createMapItemInfo: function () {
             var basemap = this.map.getBasemap();
             this.map.itemInfo = {
                 item: {
@@ -78,17 +85,17 @@ define([
                 },
                 itemData: {
                     baseMap: {
-                        baseMapLayers: this.getBaseMapLayers(),
+                        baseMapLayers: this._getBaseMapLayers(),
                         title: basemap
                     },
-                    operationLayers: this.getOperationalLayers(),
+                    operationLayers: this._getOperationalLayers(),
                     bookmarks: []
                 }
             };
         },
 
         // get all the operational layers
-        getOperationalLayers: function () {
+        _getOperationalLayers: function () {
             var layers = [], layer;
             array.forEach(this.config.operationalLayers, lang.hitch(this, function (opLayer) {
                 layer = this.map.getLayer(opLayer.options.id);
@@ -106,7 +113,7 @@ define([
         },
 
         // get the basemap layer(s)
-        getBaseMapLayers: function () {
+        _getBaseMapLayers: function () {
             var layers = [], layer;
             array.forEach(this.map.basemapLayerIds, lang.hitch(this, function (layerId) {
                 layer = this.map.getLayer(layerId);
