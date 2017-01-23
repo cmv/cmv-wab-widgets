@@ -7,20 +7,20 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         <title></title>
-        <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.17/esri/css/esri.css">
+        <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.19/esri/css/esri.css">
         <!-- jimu stylesheet needed for WAB widgets -->
-        <link rel="stylesheet" type="text/css" href="./wab/jimu.js/css/jimu-theme.css">
+        <link rel="stylesheet" type="text/css" href="./wab/2.3/jimu.js/css/jimu-theme.css">
         <link rel="stylesheet" type="text/css" href="./cmv/css/theme/flat/flat.css">
         <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
         <link id="theme_cmv_style_common" rel="stylesheet" type="text/css" href="./cmv/css/main.css">
         <!-- make the flat theme look more like the original dbootstrap (optional) -->
-        <link rel="stylesheet" type="text/css" href="./css/cmv-flat.css">
+        <link id="theme_cmv_style_common" rel="stylesheet" type="text/css" href="./cmv/css/cmv-theme-overrides.css">
         <!-- needed so that jimu styles play nice with cmv -->
         <link rel="stylesheet" type="text/css" href="./css/cmv-jimu.css">
         <!-- some css tweaks for WAB widgets (optional) -->
         <link rel="stylesheet" type="text/css" href="./css/cmv-wab.css">
     </head>
-    <body class="dbootstrap cmv flat">
+    <body class="cmv flat">
         <div class="appHeader">
             <div class="headerLogo">
                 <img alt="logo" src="./cmv/images/rocket-logo.png" height="54" />
@@ -41,9 +41,9 @@
         <!--[if lt IE 9]>
             <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/4.0.3/es5-shim.min.js"></script>
         <![endif]-->
-        <script type="text/javascript" src="https://js.arcgis.com/3.17/"></script>
+        <script type="text/javascript" src="https://js.arcgis.com/3.19/"></script>
         <script src="./config/app.js"></script>
         <!-- needed by some wab widgets like Print -->
-        <script src="./wab/libs/caja-html-sanitizer-minified.js"></script>
+        <script src="./wab/2.3/libs/caja-html-sanitizer-minified.js"></script>
     </body>
 </html>
