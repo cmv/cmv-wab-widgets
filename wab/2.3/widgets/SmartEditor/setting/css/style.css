@@ -1,0 +1,220 @@
+.jimu-widget-smartEditor-setting {
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+}
+
+
+    .jimu-widget-smartEditor-setting .edit-description-box {
+        width: 100%;
+        height:215px;
+        margin-bottom:20px;
+        position: relative;
+       
+        padding-top: 5px;
+    }
+
+    .jimu-widget-smartEditor-setting .edit-description-title {
+        padding-top: 10px;
+    }
+
+    .jimu-widget-smartEditor-setting .dijitEditorIFrameContainer {
+        background-color: #ffffff;
+        border: none !important;
+        width: 100% !important;
+        height: 132px !important;
+    }
+
+    /*CSS for Layers config tables*/
+    .jimu-widget-smartEditor-setting .editable {
+        width: 100px;
+    }
+
+    .jimu-widget-smartEditor-setting .layer {
+        width: auto;
+    }
+
+    .jimu-widget-smartEditor-setting .update {
+        width: 125px;
+    }
+
+    .jimu-widget-smartEditor-setting .disable {
+        width: 220px;
+    }
+
+    .jimu-widget-smartEditor-setting .actions {
+        width: 70px;
+        padding-right: 1px !important;
+    }
+
+    .jimu-widget-smartEditor-setting .description {
+        width: 90px;
+    }
+/*CSS for fields config tables*/
+.jimu-widget-smartEditor-setting-fields .required {
+    width: 7px;
+    color: red;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.jimu-widget-smartEditor-setting-fields .editable {
+    width: 120px;
+}
+
+.jimu-widget-smartEditor-setting-fields .visible {
+    width: 90px;
+}
+
+.jimu-widget-smartEditor-setting-fields .preset {
+    width: 120px;
+}
+
+.jimu-widget-smartEditor-setting-fields .fieldName {
+      width: 190px;
+}
+
+.jimu-widget-smartEditor-setting-fields .fieldLabel {
+}
+
+.jimu-widget-smartEditor-setting-fields .settingsDesc {
+    padding-bottom: 10px;
+    font-size: 14px;
+}
+
+.jimu-widget-smartEditor-setting-fields .settingsNotes {
+    padding-top: 10px;
+    font-size: 14px;
+}
+
+.jimu-widget-smartEditor-setting-fields .actions {
+    width: 80px;
+    padding-right: 2px !important;
+}
+/*CSS for fields rule tables*/
+.jimu-widget-smartEditor-rule-table .rule {
+    width: 185px;
+}
+
+.jimu-widget-smartEditor-rule-table .expression {
+    overflow: hidden;
+}
+
+.jimu-widget-smartEditor-rule-table .actions {
+    width: 100px;
+}
+
+.jimu-widget-smartEditor-rule-table .settingsDesc {
+    font-size: 14px;
+    padding-bottom: 10px;
+}
+
+.jimu-widget-smartEditor-setting .setting-table {
+    width: 100%;
+}
+
+    .jimu-widget-smartEditor-setting .setting-table > thead > tr > th,
+    .jimu-widget-smartEditor-setting .setting-table > tbody > tr > td {
+        height: 40px;
+        line-height: 40px;
+        vertical-align: middle;
+    }
+
+.jimu-widget-smartEditor-setting .input-table > tbody > tr > .first {
+    width: auto;
+    min-width: 160px;
+    text-align: left;
+}
+
+.jimu-rtl .jimu-widget-smartEditor-setting .input-table > tbody > tr > .first {
+    text-align: right;
+}
+
+.jimu-widget-smartEditor-setting .input-table > tbody > tr > .second {
+    width: auto;
+}
+
+
+    .jimu-widget-smartEditor-setting .input-table > tbody > tr > .second > span {
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+    }
+
+.jimu-widget-smartEditor-setting .dijitArrowButtonContainer {
+    width: 17px;
+}
+
+.jimu-widget-smartEditor-setting .dijitSelect {
+    height: 30px;
+    width: 100%;
+}
+
+.jimu-widget-smartEditor-setting .checkOption {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+}
+
+.jimu-widget-smartEditor-setting .check {
+    margin-left: 15px;
+}
+
+.jimu-widget-smartEditor-setting .generalSettings {
+    padding-bottom: 5px;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.jimu-widget-smartEditor-setting .generalSettingsOptions {
+    border: solid;
+    border-color: rgb(181, 188, 199);
+    border-width: thin;
+    margin-top: 5px;
+}
+
+.jimu-widget-smartEditor-setting .generalSettingsTitle {
+}
+
+.jimu-widget-smartEditor-setting .layerTable {
+    margin-top: 5px;
+}
+
+/*Required for the image uploader in the editor rich text*/
+
+.jimu-widget-smartEditor-setting .jimu-image-chooser {
+    right: inherit !important;
+}
+
+.jimu-widget-smartEditor-setting .editor-container .uploaderInsideNode embed {
+    display: none;
+}
+
+jimu-widget-smartEditor-edit-description .jimu-image-chooser {
+    right: inherit !important;
+}
+
+jimu-widget-smartEditor-edit-description .editor-container .uploaderInsideNode embed {
+    display: none;
+}
+
+.jimu-widget-smartEditor-setting a.attDescrip {
+    width: 20px;
+    height: 20px    ;
+    display: block;
+    background: transparent url(../images/desc.png) center center no-repeat;
+    text-align: center;
+    vertical-align: middle;
+    z-index: 9999;
+    
+}
+jimu-widget-smartEditor-setting a.attDescrip:hover {
+
+    background-image: url(../images/descHover.png);
+
+}
+
+.jimu-widget-smartEditor-filter-page .submithide {
+    padding-left:4px;
+    font-size:12px;
+}
