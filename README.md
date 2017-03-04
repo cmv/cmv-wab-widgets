@@ -1,6 +1,6 @@
 # cmv-wab-widgets
 
-[![Code Climate](https://codeclimate.com/github/tmcgee/cmv-wab-widgets/badges/gpa.svg)](https://codeclimate.com/github/tmcgee/cmv-wab-widgets) [![Join the chat at https://gitter.im/tmcgee/cmv-wab-widgets](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tmcgee/cmv-wab-widgets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Code Climate](https://codeclimate.com/github/cmv/cmv-wab-widgets/badges/gpa.svg)](https://codeclimate.com/github/cmv/cmv-wab-widgets) [![Join the chat at https://gitter.im/cmv/cmv-wab-widgets](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cmv/cmv-wab-widgets?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Using widgets from the Esri WebApp Builder in [CMV](https://github.com/cmv/cmv-app).
 
@@ -20,7 +20,7 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 ## Examples
 ### Out-of-the-box WAB Widgets
 
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab)
+- [Demo](https://cmv.github.io/cmv-wab-widgets/demo.html?config=wab)
 
 ### Includes the following widgets:
 - Basemap Gallery
@@ -37,60 +37,60 @@ A couple of the custom WAB widgets included in this repo were modified. None of 
 - Print
 - Query
 
-![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab.jpg)
+<img src="images/wab.jpg">
 
 
 ### Custom `AddLayer` Widget
 
-- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-addlayer.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-addlayer)
+- [Config file](https://github.com/cmv/cmv-wab-widgets/blob/master/config/wab-addlayer.js)
+- [Demo](https://cmv.github.io/cmv-wab-widgets/demo.html?config=wab-addlayer)
 - [Original Widget Source](https://github.com/softwhere/AddLayer-Widget)
 
-![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-addlayer.jpg)
+<img src="images/wab-addlayer.jpg">
 
 
 ### Custom `Aloha Threat Zone` Widget
 
-- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-alohathreatzone.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-alohathreatzone)
+- [Config file](https://github.com/cmv/cmv-wab-widgets/blob/master/config/wab-alohathreatzone.js)
+- [Demo](https://cmv.github.io/cmv-wab-widgets/demo.html?config=wab-alohathreatzone)
 - [Original Widget Source](https://geonet.esri.com/docs/DOC-7733)
 
-![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-alohathreatzone.jpg)
+<img src="images/wab-alohathreatzone.jpg">
 
 
 ### Custom `Draw & Measure` and `SaveSession` Widgets
 Both of these widgets have been modified from the original to provide additional functionality
 
-- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-measure.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-measure)
+- [Config file](https://github.com/cmv/cmv-wab-widgets/blob/master/config/wab-measure.js)
+- [Demo](https://cmv.github.io/cmv-wab-widgets/demo.html?config=wab-measure)
 - [Original Measure Widget Source](https://geonet.esri.com/docs/DOC-3209)
 - [Original SaveSession Source](https://github.com/softwhere/SaveSession-Widget)
 
-![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-measure.jpg)
+<img src="images/wab-measure.jpg">
 
 
 ### Custom `Enhanced Bookmarks` Widget
-- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-ebookmarks.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-ebookmarks)
+- [Config file](https://github.com/cmv/cmv-wab-widgets/blob/master/config/wab-ebookmarks.js)
+- [Demo](https://cmv.github.io/cmv-wab-widgets/demo.html?config=wab-ebookmarks)
 - [Original Widget Source](https://geonet.esri.com/docs/DOC-6889)
 
-![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-ebookmarks.jpg)
+<img src="images/wab-ebookmarks.jpg">
 
 
 ### Custom `Enhanced Query` Widget
-- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-enhancedquery.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-enhancedquery)
+- [Config file](https://github.com/cmv/cmv-wab-widgets/blob/master/config/wab-enhancedquery.js)
+- [Demo](https://cmv.github.io/cmv-wab-widgets/demo.html?config=wab-enhancedquery)
 - [Original Widget Source](https://github.com/kevinsagis/EnhancedQuery)
 
-![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-enhancedquery.jpg)
+<img src="images/wab-enhancedquery.jpg">
 
 
 ### Custom `Wikipedia Search` Widget
-- [Config file](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/wab-wikipediasearch.js)
-- [Demo](https://tmcgee.github.io/cmv-wab-widgets/demo.html?config=wab-wikipediasearch)
+- [Config file](https://github.com/cmv/cmv-wab-widgets/blob/master/config/wab-wikipediasearch.js)
+- [Demo](https://cmv.github.io/cmv-wab-widgets/demo.html?config=wab-wikipediasearch)
 - [Original Widget Source](https://github.com/kevinsagis/EnhancedQuery)
 
-![Screenshot](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/images/wab-wikipediasearch.jpg)
+<img src="images/wab-wikipediasearch.jpg">
 
 
 ## Requirements
@@ -102,9 +102,9 @@ Both of these widgets have been modified from the original to provide additional
 ## Changes to your CMV application
 Currently, the process requires 3 simple changes to your CMV application. I anticipate these changes will be incorporated into the main cmv-app project and so most of these steps will be eliminated and it will be a simple configuration exercise to use WAB widgets in CMV.
 
-1. Add the new [_WABMixin.js](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/_WABMixin.js) controller mixin to your app. I placed mine in the config folder.
+1. Add the new [_WABMixin.js](https://github.com/cmv/cmv-wab-widgets/blob/master/config/_WABMixin.js) controller mixin to your app. I placed mine in the config folder.
 
-2. Modification to [app.js](https://github.com/tmcgee/cmv-wab-widgets/blob/master/config/app.js):
+2. Modification to [app.js](https://github.com/cmv/cmv-wab-widgets/blob/master/config/app.js):
 
     - Add packages for jimu, lib and widgets folders from WAB to dojoConfig:
         ``` javascript
@@ -163,7 +163,7 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
         });
         ```
 
-3. Modifications to the [html](https://github.com/tmcgee/cmv-wab-widgets/blob/master/demo.html):
+3. Modifications to the [html](https://github.com/cmv/cmv-wab-widgets/blob/master/demo.html):
 
     - Add the jimu-theme.css stylesheet:
         ``` html
@@ -454,4 +454,4 @@ You can find WAB widgets:
 
 ## License
 
-[MIT](https://raw.githubusercontent.com/tmcgee/cmv-wab-widgets/master/LICENSE.md)
+[MIT](https://raw.githubusercontent.com/cmv/cmv-wab-widgets/master/LICENSE.md)
