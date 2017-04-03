@@ -1,0 +1,67 @@
+<div style="width:100%;">
+    <div data-dojo-attach-point="firstPageDiv">
+        <div>
+            ${nls.layersPage.layerSettings}
+
+            <div class="layerTable" data-dojo-attach-point="tableLayerInfos"></div>
+        </div>
+
+        <div class="generalSettings">
+            <div class="generalSettingsTitle">
+                ${nls.layersPage.generalSettings}
+            </div>
+            <div class="generalSettingsOptions">
+                <div class="checkOption">
+
+                    <input class="check" data-dojo-attach-point="useFilterEditor" id="useFilterEditor"
+                           data-dojo-type="dijit/form/CheckBox" title="${nls.layersPage.useFilterEditorTip}" />
+                    <label class="checkLabel" for="useFilterEditor" title="${nls.layersPage.useFilterEditor}">${nls.layersPage.useFilterEditor}</label>
+
+                </div>
+                <div class="checkOption">
+
+                    <input class="check" data-dojo-attach-point="displayPromptOnSave" id="displayPromptOnSave"
+                           data-dojo-type="dijit/form/CheckBox" title="${nls.layersPage.promptOnSaveTip}" />
+                    <label class="checkLabel" for="displayPromptOnSave" title="${nls.layersPage.promptOnSaveTip}">${nls.layersPage.promptOnSave}</label>
+
+                </div>
+
+                <div class="checkOption">
+
+                    <input class="check" data-dojo-attach-point="displayPromptOnDelete" id="displayPromptOnDelete"
+                           data-dojo-type="dijit/form/CheckBox" title="${nls.layersPage.promptOnDeleteTip}" />
+                    <label class="checkLabel" for="displayPromptOnDelete" title="${nls.layersPage.promptOnDelete}">${nls.layersPage.promptOnDelete}</label>
+
+                </div>
+
+                <div class="checkOption">
+
+                    <input class="check" data-dojo-attach-point="removeOnSave" id="removeOnSave"
+                           data-dojo-type="dijit/form/CheckBox" title="${nls.layersPage.removeOnSaveTip}" />
+                    <label class="checkLabel" for="removeOnSave" title="${nls.layersPage.removeOnSaveTip}">${nls.layersPage.removeOnSave}</label>
+
+                </div>
+                <div class="checkOption">
+
+                    <input class="check" data-dojo-attach-point="listenToGF" id="listenToGF"
+                           data-dojo-type="dijit/form/CheckBox" title="${nls.layersPage.listenToGroupFilterTip}" />
+                    <label class="checkLabel" for="listenToGF" title="${nls.layersPage.listenToGroupFilterTip}">${nls.layersPage.listenToGroupFilter}</label>
+
+                </div>
+                <div class="checkOption">
+
+                    <input class="check" data-dojo-attach-point="keepTemplateSelected" id="keepTemplateSelected"
+                           data-dojo-type="dijit/form/CheckBox" title="${nls.layersPage.keepTemplateActiveTip}" />
+                    <label class="checkLabel" for="keepTemplateSelected" title="${nls.layersPage.keepTemplateActiveTip}">${nls.layersPage.keepTemplateActive}</label>
+
+                </div>
+            </div>
+        </div>
+        <div class="edit-description-title" title="${nls.layersPage.editDescriptionTip}">${nls.layersPage.editDescription}</div>
+
+        <div class="edit-description-box">
+            <div data-dojo-attach-point="editorDescription"></div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,271 @@
+.jimu-widget-SAT-setting .main-section {
+  width: 100%;
+  height: 100%;
+}
+
+.jimu-widget-SAT-setting .tabs-section-Label {
+  font-weight: bold;
+}
+
+.jimu-widget-SAT-setting .general-setting-Label {
+  padding-top: 15px;
+  font-weight: bold;
+}
+
+.jimu-widget-SAT-setting .currentlySelectedLayer {
+  padding-top: 15px; 
+  padding-left:15px;
+}
+
+.jimu-widget-SAT-setting .pad-row15 {
+  padding-top: 15px;
+}
+
+.jimu-widget-SAT-setting .pad-row0 {
+  padding-top: 0px;
+}
+
+.jimu-widget-SAT-setting .selectUnits {
+  margin-left: 10px;
+}
+
+/*.jimu-widget-SAT-setting .tpd {
+  margin-right: 15px;
+}*/
+
+.jimu-widget-SAT-setting .chk_display {
+  padding-top: 15px; 
+  padding-bottom: 15px;
+}
+
+.jimu-widget-SAT-setting .display-checkbox {
+  padding-bottom: 15px;
+}
+
+.jimu-widget-SAT-setting .chk_snapshot {
+  padding-top: 15px; 
+  padding-bottom: 15px;
+}
+
+.jimu-widget-SAT-setting .snapshot-checkbox {
+  padding-bottom: 15px;
+}
+
+.jimu-widget-SAT-setting .maximum-distance-lbl {
+  width: 60px;
+}
+
+.jimu-widget-SAT-setting .btn-add-section {
+  display: inline-block;
+  overflow: hidden;
+  height: 24px;
+  margin-left: 1px;
+  margin-bottom: 3px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #538ec8;
+  margin-top: 8px;
+}
+
+.jimu-widget-SAT-setting .btn-add-disabled {
+  opacity: .6;
+  cursor: default;
+}
+
+.jimu-widget-SAT .validationBox {
+
+}
+
+.jimu-widget-SAT .validationBox2 {
+
+}
+
+
+.jimu-widget-SAT-setting .btn-add-section .btn-add-icon {
+  height: 100%;
+  width: 14px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: url(images/add.png);
+  display: inline-block;
+  vertical-align: top;
+}
+
+.jimu-widget-SAT-setting .btn-add-section .btn-add-label {
+  height: 100%;
+  line-height: 24px;
+  margin-left: 7px;
+  text-decoration: underline;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.jimu-widget-SAT-setting .settingAlign{
+  padding-top: 4px; 
+  margin-left: 80px;
+}
+
+.jimu-rtl .jimu-widget-SAT-setting .settingAlign{
+  padding-top: 4px; 
+  margin-right: 80px;
+}
+
+.jimu-widget-SAT-setting .claro .dojoxCheckedMultiSelect .dojoxCheckedMultiSelectWrapper {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.jimu-widget-SAT-setting .footer {
+  text-align: right;
+}
+
+.jimu-widget-SAT-setting .field-picker-footer {
+  text-align: right;
+}
+
+.jimu-widget-SAT-setting .removeButtonWithIcon {
+  background-image: url("../images/filterdialog_icons.png");
+  background-repeat: no-repeat;
+  background-position: -30px 0;
+  width: 15px;
+  height: 15px;
+  margin: 0px 0px;
+  display: block;
+}
+
+.jimu-widget-SAT-setting .upButton {
+  background-image: url("../../../../jimu.js/css/images/up_enabled.png");
+  background-repeat: no-repeat;
+  width: 15px;
+  height: 15px;
+  margin: 0px 0px;
+  display: block;
+}
+
+.jimu-widget-SAT-setting .downButton {
+  background-image: url("../../../../jimu.js/css/images/down_enabled.png");
+  background-repeat: no-repeat;
+  width: 15px;
+  height: 15px;
+  margin: 0px 0px;
+  display: block;
+}
+
+.jimu-widget-SAT-setting .colorButton {
+  width: 15px;
+  height: 15px;
+  margin: 0px 0px;
+  display: block;
+  background-color: #00ff00;
+}
+
+.jimu-widget-SAT-setting .footer {
+  padding-top: 5px;
+  width: 100%;
+  height: 30px;
+}
+
+.jimu-widget-SAT-setting .field-picker-footer {
+  padding-top: 5px;
+  width: 100%;
+  height: 30px;
+}
+
+.jimu-widget-SAT-setting .jimu-simple-table .simple-table-cell{
+  line-height: 26px;
+}
+
+.jimu-widget-SAT-setting .dojoxCheckedMultiSelect .dojoxCheckedMultiSelectWrapper {
+  height: 400px;
+}
+
+.jimu-widget-SAT-setting .dojoxMultiSelectItem {
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+.jimu-widget-SAT-setting .longSelect .dijitSelectLabel {
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 390px;
+}
+
+.jimu-widget-SAT-setting .medSelect .dijitSelectLabel {
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 340px;
+}
+
+.jimu-widget-SAT-setting .shortSelect .dijitSelectLabel {
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 190px;
+}
+
+.jimu-widget-SAT-setting .shortTypeSelect .dijitSelectLabel {
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 155px;
+    min-width: 155px;
+}
+
+.jimu-widget-SAT-setting .display-options{
+  display: inline-block;
+  margin-right: 30px;
+  vertical-align: middle;
+}
+
+.jimu-widget-SAT-setting .display-on{
+  display: block;
+}
+
+.jimu-widget-SAT-setting .display-off{
+  display: none;
+}
+
+.jimu-widget-SAT-setting .visDivLength {
+  position: absolute;
+  visibility: hidden;
+  width: auto;
+}
+
+.jimu-widget-SAT-setting .field-picker-main {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+.jimu-widget-SAT-setting .pad-top20 {
+  padding-top: 20px;
+}
+
+.jimu-widget-SAT-setting .div_edit_options {
+  padding-left: 10px;
+}
+
+.jimu-rtl .jimu-widget-SAT-setting .div_edit_options {
+  padding-right: 10px;
+}
+
+.jimu-widget-SAT-setting .edit_options {
+  padding-top: 15px;
+}
+
+.jimu-widget-SAT-setting .td-padding {
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+
+.jimu-rtl .jimu-widget-SAT-setting .td-padding {
+  padding-bottom: 10px;
+  padding-right: 10px;
+}
+
+.jimu-widget-SAT-setting .select-width {
+  width: 100%;
+}
+
