@@ -2,6 +2,7 @@ define([
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/array',
+    'dojo/aspect',
 
     'jimu/WidgetManager',
     'jimu/ConfigManager',
@@ -16,6 +17,7 @@ define([
     declare,
     lang,
     array,
+    aspect,
 
     WidgetManager,
     ConfigManager,
@@ -31,11 +33,17 @@ define([
 
         wabWidgetManager: null,
 
-        _setWABWidgetManager: function () {
-            if (!this.wabWidgetManager) {
-                this._configureWAB();
+        startup: function () {
+            this.inherited(arguments);
+            if (this.mapDeferred) {
+                this.mapDeferred.then(lang.hitch(this, '_configureWAB'));
             }
-            return this.wabWidgetManager;
+            aspect.after(this, '_setWidgetOptions', function (options) {
+                if (options.widgetManager && this.wabWidgetManager) {
+                    options.widgetManager = this.wabWidgetManager;
+                }
+                return options;
+            });
         },
 
         _configureWAB: function () {

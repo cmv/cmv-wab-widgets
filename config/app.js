@@ -5,21 +5,19 @@
         async: true,
         packages: [{
             name: 'viewer',
-            location: path + 'cmv/js/viewer'
+            location: 'https://cdn.rawgit.com/cmv/cmv-app/v2.0.0-beta.1/viewer/js/viewer'
         }, {
             name: 'gis',
-            location: path + 'cmv/js/gis'
+            location: 'https://cdn.rawgit.com/cmv/cmv-app/v2.0.0-beta.1/viewer/js/gis'
+        }, {
+            name: 'proj4js',
+            location: '//cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15'
+        }, {
+            name: 'flag-icon-css',
+            location: '//cdnjs.cloudflare.com/ajax/libs/flag-icon-css/2.8.0'
         }, {
             name: 'widgets',
             location: path + 'widgets'
-        }, {
-            name: 'put-selector',
-            main: 'put',
-            location: 'https://cdn.rawgit.com/kriszyp/put-selector/v0.3.6'
-        }, {
-            name: 'xstyle',
-            main: 'css',
-            location: 'https://cdn.rawgit.com/kriszyp/xstyle/v0.3.2'
         /* customizations for WAB widgets */
         }, {
             name: 'jimu',
@@ -51,7 +49,7 @@
         'viewer/_MapMixin', // build and manage the Map
         'viewer/_WidgetsMixin', // build and manage the Widgets
 
-        'viewer/_WABMixin' // cusom mix-in to use WAB widgets
+        'config/_WABMixin' // cusom mix-in to use WAB widgets
 
     ], function (
         declare,
@@ -65,14 +63,19 @@
         _WABMixin
 
     ) {
-        var controller = new (declare([
-            _ControllerBase,
-            _ConfigMixin,
+        var App = declare([
             _LayoutMixin,
-            _MapMixin,
             _WidgetsMixin,
-            _WABMixin
-        ]))();
-        controller.startup();
+            _MapMixin,
+
+            _WABMixin,
+
+            _ConfigMixin,
+
+            _ControllerBase
+
+        ]);
+        var app = new App();
+        app.startup();
     });
 })();
