@@ -23,13 +23,13 @@
         /* customizations for WAB widgets */
         }, {
             name: 'jimu',
-            location: path + 'wab/2.3/jimu.js'
+            location: path + 'wab/2.4/jimu.js'
         }, {
             name: 'libs',
-            location: path + 'wab/2.3/libs'
+            location: path + 'wab/2.4/libs'
         }, {
             name: 'wabwidgets',
-            location: path + 'wab/2.3/widgets'
+            location: path + 'wab/2.4/widgets'
         /* end customizations for WAB widgets */
         }, {
             name: 'config',
