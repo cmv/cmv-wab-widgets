@@ -6,8 +6,6 @@ Using widgets from the Esri WebApp Builder in [CMV](https://github.com/cmv/cmv-a
 
 
 ## Introduction
-***This is a work-in-progress.***
-
 Widgets created for the Esri WebApp Builder are very similar to widgets used by CMV. The primary difference between them is WAB widgets rely on the jimu.js library provided by Esri. Since both WAB and CMV widgets are based on the dojo toolkit, any WAB widget could be converted to a CMV widget removing the dependency on jimu.js. That conversion process can be simple or very involved depeding on the complexity of the widget. This repo provides a solution where no conversion is required and WAB widgets can be used directly in CMV without modification.
 
 Another important difference between WAB and CMV is applications developed with the Esri WebApp Builder are dependent on Esri web apps hosted at ArcGIS On-line or within your own implementation of Portal for ArcGIS Server. Both ArcGis Online and Portal require subscriptions at an additional cost. No subscription is required to use the WAB widgets within CMV. Applications developed with CMV use the REST services provided by ArcGIS Server to access AGS resources.
@@ -94,8 +92,14 @@ Both of these widgets have been modified from the original to provide additional
 
 
 ## Requirements
-- This method uses the version 2.0.0-beta.1 of cmv currently in the [develop branch](https://github.com/cmv/cmv-app/tree/develop).
-- This method supports version 2.3 of the WebApp Builder released in January 2017 as well as version 2.2 released in October 2016.
+- This method uses the version [2.0.0-beta.1 release of cmv](https://github.com/cmv/cmv-app/releases/tag/v2.0.0-beta.1).
+
+- This method supports the following versions of the WebApp Builder:
+
+    - version 2.4 released March 2017
+    - version 2.3 released January 2017
+    - version 2.2 released October 2016
+
 - The app in this repo use a new [dojo flat theme](https://github.com/dojo/themes) which is planned for release with dojo 1.12. This replaces the old dbootstrap theme which is no longer being maintained. This is optional.
 
 
@@ -111,13 +115,13 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
         /* customizations for WAB widgets */
         },{
             name: 'jimu',
-            location: path + 'wab/2.3/jimu.js'
+            location: path + 'wab/2.4/jimu.js'
         },{
             name: 'libs',
-            location: path + 'wab/2.3/libs'
+            location: path + 'wab/2.4/libs'
         },{
             name: 'wabwidgets',
-            location: path + 'wab/2.3/widgets'
+            location: path + 'wab/2.4/widgets'
         /* end customizations for WAB widgets */
         ```
 
@@ -151,15 +155,16 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
             _WABMixin
 
         ) {
-            var controller = new (declare([
-                _ControllerBase,
-                _ConfigMixin,
+            var App = declare([
                 _LayoutMixin,
-                _MapMixin,
                 _WidgetsMixin,
-                _WABMixin
-            ]))();
-            controller.startup();
+                _MapMixin,
+                _WABMixin,
+                _ConfigMixin,
+                _ControllerBase
+            ]);
+            var app = new App();
+            app.startup();
         });
         ```
 
@@ -167,7 +172,7 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
 
     - Add the jimu-theme.css stylesheet:
         ``` html
-        <link rel="stylesheet" type="text/css" href="./wab/2.3/jimu.js/css/jimu-theme.css">
+        <link rel="stylesheet" type="text/css" href="./wab/2.4/jimu.js/css/jimu-theme.css">
         ```
 
     - Add an id to the main.css stylesheet:
@@ -185,7 +190,7 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
     - Some WAB widgets require another lib added globally:
         ``` html
         <!-- needed by some wab widgets like Print -->
-        <script src="./wab/2.3/libs/caja-html-sanitizer-minified.js"></script>
+        <script src="./wab/2.4/libs/caja-html-sanitizer-minified.js"></script>
         ```
 
 ## Adding WAB widgets to your cmv configuration
@@ -446,7 +451,7 @@ At least 2 areas still need some work:
 - Currently, `off-panel` Widgets are loaded within a `BaseWidgetPanel`. This is probably unnecessary.
 
 
-##Sources of WAB Widgets
+## Sources of WAB Widgets
 You can find WAB widgets:
 - [Widgets included with WAB](https://developers.arcgis.com/web-appbuilder/api-reference/about.htm)
 - [Custom WAB Widgets](http://gavinr.github.io/wab-widget-search/)
