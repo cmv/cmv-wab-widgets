@@ -2,6 +2,7 @@ define([
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/array',
+    'dojo/topic',
     'dojo/aspect',
 
     'jimu/WidgetManager',
@@ -17,6 +18,7 @@ define([
     declare,
     lang,
     array,
+    topic,
     aspect,
 
     WidgetManager,
@@ -82,6 +84,18 @@ define([
             this.wabWidgetManager = WidgetManager.getInstance();
             this.wabWidgetManager.map = this.map;
             this.wabWidgetManager.appConfig = cm.getAppConfig();
+
+            // tap into the map's infoWindowOnClick method
+            if (this.mapClickMode.defaultMode === 'identify') {
+                aspect.after(this.map, 'setInfoWindowOnClick', lang.hitch(this, function () {
+                    var enabled = this.map._params.showInfoWindowOnClick;
+                    if (enabled) {
+                        topic.publish('mapClickMode/setDefault');
+                    } else {
+                        topic.publish('mapClickMode/setCurrent', 'none');
+                    }
+                }));
+            }
         },
 
         _createMapItemInfo: function () {
