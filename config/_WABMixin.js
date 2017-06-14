@@ -77,13 +77,13 @@ define([
             cm.appConfig = cm._addDefaultValues(wabConfig);
 
             var mm = MapManager.getInstance({
-                appConfig: cm.getAppConfig()
+                appConfig: cm.appConfig
             });
             mm.map = this.map;
 
             this.wabWidgetManager = WidgetManager.getInstance();
             this.wabWidgetManager.map = this.map;
-            this.wabWidgetManager.appConfig = cm.getAppConfig();
+            this.wabWidgetManager.appConfig = cm.appConfig;
 
             // tap into the map's infoWindowOnClick method
             if (this.mapClickMode.defaultMode === 'identify') {
