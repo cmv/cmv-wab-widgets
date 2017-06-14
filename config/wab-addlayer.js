@@ -39,6 +39,7 @@ define([
                 type: 'titlePane',
                 position: 0,
                 title: 'Add Layer',
+                iconClass: 'fa-plus',
                 canFloat: true,
                 resizable: true,
                 open: true,

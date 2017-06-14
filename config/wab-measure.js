@@ -34,6 +34,7 @@ define([], function () {
                 type: 'titlePane',
                 position: 0,
                 title: 'Enhanced Measure',
+                iconClass: 'fa-expand',
                 open: true,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -54,6 +55,7 @@ define([], function () {
                 type: 'titlePane',
                 position: 0,
                 title: 'Save Session',
+                iconClass: 'fa-save',
                 open: true,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
