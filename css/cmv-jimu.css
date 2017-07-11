@@ -11,6 +11,10 @@
 .cmv .jimu-widget-frame.jimu-container {
     overflow: hidden;
 }
+.cmv .dijitTitlePaneContentInner .jimu-widget-frame.jimu-container {
+    padding: 5px;
+}
+
 .cmv .map .jimu-panel,
 .cmv .map .jimu-widget-frame.jimu-container {
     padding: 0;

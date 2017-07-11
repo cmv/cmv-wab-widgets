@@ -5,10 +5,10 @@
         async: true,
         packages: [{
             name: 'viewer',
-            location: 'https://cdn.rawgit.com/cmv/cmv-app/v2.0.0-beta.1/viewer/js/viewer'
+            location: 'https://cdn.rawgit.com/cmv/cmv-app/v2.0.0-beta.2/viewer/js/viewer'
         }, {
             name: 'gis',
-            location: 'https://cdn.rawgit.com/cmv/cmv-app/v2.0.0-beta.1/viewer/js/gis'
+            location: 'https://cdn.rawgit.com/cmv/cmv-app/v2.0.0-beta.2/viewer/js/gis'
         }, {
             name: 'proj4js',
             location: '//cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15'
@@ -48,6 +48,7 @@
         'viewer/_LayoutMixin', // build and manage the Page Layout and User Interface
         'viewer/_MapMixin', // build and manage the Map
         'viewer/_WidgetsMixin', // build and manage the Widgets
+        'viewer/_SidebarMixin', // for mobile sidebar
 
         'config/_WABMixin' // cusom mix-in to use WAB widgets
 
@@ -59,11 +60,15 @@
         _LayoutMixin,
         _MapMixin,
         _WidgetsMixin,
+        _SidebarMixin,
 
         _WABMixin
 
     ) {
         var App = declare([
+            // Mixin for Mobile Sidebar
+            _SidebarMixin,
+
             _LayoutMixin,
             _WidgetsMixin,
             _MapMixin,

@@ -1,6 +1,7 @@
 define([
-    'esri/units'
-], function (esriUnits) {
+    'esri/units',
+    'dojo/sniff'
+], function (esriUnits, has) {
 
     return {
 
@@ -21,7 +22,7 @@ define([
 
         panes: {
             left: {
-                splitter: true,
+                splitter: !has('touch'),
                 style: 'width:340px;'
             }
         },
