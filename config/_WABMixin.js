@@ -8,6 +8,7 @@ define([
     'jimu/WidgetManager',
     'jimu/ConfigManager',
     'jimu/MapManager',
+    'jimu/utils',
     'jimu/LayerInfos/LayerInfos',
 
     'dojo/i18n!jimu/nls/main',
@@ -24,6 +25,7 @@ define([
     WidgetManager,
     ConfigManager,
     MapManager,
+    jimuUtils,
     LayerInfos,
 
     mainBundle,
@@ -70,20 +72,20 @@ define([
             }
             LayerInfos.getInstance(this.map, this.map.itemInfo);
 
-            // create a minimal configuration
-            var cm = new ConfigManager();
             //wabConfig.map.layers = this.getOperationalLayers();
             wabConfig.map.mapOptions = this.config.mapOptions;
-            cm.appConfig = cm._addDefaultValues(wabConfig);
+
+            // create a minimal configuration
+            var appConfig = this._createAppConfig();
 
             var mm = MapManager.getInstance({
-                appConfig: cm.appConfig
+                appConfig: appConfig
             });
             mm.map = this.map;
 
             this.wabWidgetManager = WidgetManager.getInstance();
             this.wabWidgetManager.map = this.map;
-            this.wabWidgetManager.appConfig = cm.appConfig;
+            this.wabWidgetManager.appConfig = appConfig;
 
             // tap into the map's infoWindowOnClick method
             if (this.mapClickMode.defaultMode === 'identify') {
@@ -96,6 +98,25 @@ define([
                     }
                 }));
             }
+        },
+
+        _createAppConfig: function () {
+            var cm = new ConfigManager();
+            var appConfig = cm._addDefaultValues(wabConfig);
+            appConfig.getConfigElementById = lang.hitch(cm, function (id) {
+                return jimuUtils.getConfigElementById(this, id);
+            });
+
+            appConfig.getConfigElementsByName = lang.hitch(cm, function (name) {
+                return jimuUtils.getConfigElementsByName(this, name);
+            });
+
+            appConfig.visitElement = lang.hitch(cm, function (cb) {
+                jimuUtils.visitElement(this, cb);
+            });
+            cm.appConfig = appConfig;
+
+            return appConfig;
         },
 
         _createMapItemInfo: function () {

@@ -1,5 +1,5 @@
 define({
-    'wabVersion': '2.4',
+    'wabVersion': '2.5',
     'theme': {
         'name': 'cmv'
     },

@@ -92,16 +92,14 @@ Both of these widgets have been modified from the original to provide additional
 
 
 ## Requirements
-- This method uses the version [2.0.0-beta.1 release of cmv](https://github.com/cmv/cmv-app/releases/tag/v2.0.0-beta.1).
+- This method uses version [2.0.0-beta.2 release of cmv](https://github.com/cmv/cmv-app/releases/tag/v2.0.0-beta.2).
 
 - This method supports the following versions of the WebApp Builder:
 
+    - version 2.5 released July 2017
     - version 2.4 released March 2017
     - version 2.3 released January 2017
     - version 2.2 released October 2016
-
-- The app in this repo use a new [dojo flat theme](https://github.com/dojo/themes) which is planned for release with dojo 1.12. This replaces the old dbootstrap theme which is no longer being maintained. This is optional.
-
 
 ## Changes to your CMV application
 Currently, the process requires 3 simple changes to your CMV application. I anticipate these changes will be incorporated into the main cmv-app project and so most of these steps will be eliminated and it will be a simple configuration exercise to use WAB widgets in CMV.
@@ -110,22 +108,27 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
 
 2. Modification to [app.js](https://github.com/cmv/cmv-wab-widgets/blob/master/config/app.js):
 
+    - Add a locale to dojoConfig:
+        ``` javascript
+        locale: 'en-us',
+        ```
+
     - Add packages for jimu, lib and widgets folders from WAB to dojoConfig:
         ``` javascript
         /* customizations for WAB widgets */
         },{
             name: 'jimu',
-            location: path + 'wab/2.4/jimu.js'
+            location: path + 'wab/2.5/jimu.js'
         },{
             name: 'libs',
-            location: path + 'wab/2.4/libs'
+            location: path + 'wab/2.5/libs'
         },{
             name: 'wabwidgets',
-            location: path + 'wab/2.4/widgets'
+            location: path + 'wab/2.5/widgets'
         /* end customizations for WAB widgets */
         ```
 
-    - Add the new mixin to the Controller:
+    - Add the new mixin to the Controller. JavaScript and css files specific to jimu and wab are loaded here as well.
         ``` javascript
         require(window.dojoConfig, [
             'dojo/_base/declare',
@@ -141,9 +144,20 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
             'viewer/_MapMixin', // build and manage the Map
             'viewer/_WidgetsMixin', // build and manage the Widgets
 
-            'config/_WABMixin' // cusom mix-in to use WAB widgets
+            'config/_WABMixin', // cusom mix-in to use WAB widgets
 
-        ], function (
+            // needed by some wab widgets like Print
+            'libs/caja-html-sanitizer-minified',
+
+            // jimu stylesheet needed for WAB widgets
+            'xstyle/css!jimu/css/jimu-theme.css',
+
+            // needed so that jimu styles play nice with cmv
+            'xstyle/css!./css/cmv-jimu.css',
+            // some css tweaks for WAB widgets (optional)
+            'xstyle/css!./css/cmv-wab.css'
+
+            ], function (
             declare,
 
             _ControllerBase,
@@ -170,28 +184,7 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
 
 3. Modifications to the [html](https://github.com/cmv/cmv-wab-widgets/blob/master/demo.html):
 
-    - Add the jimu-theme.css stylesheet:
-        ``` html
-        <link rel="stylesheet" type="text/css" href="./wab/2.4/jimu.js/css/jimu-theme.css">
-        ```
-
-    - Add an id to the main.css stylesheet:
-        ``` html
-        <link id="theme_cmv_style_common" rel="stylesheet" type="text/css" href="./cmv/css/main.css">
-        ```
-        All widget-specific stylesheets will be loaded above this stylesheet in the HEAD.
-
-    - Add stylesheets to help the CMV and JIMU themes co-exist:
-        ``` html
-        <!-- some css tweaks for WAB widgets (optional) -->
-        <link rel="stylesheet" type="text/css" href="./css/cmv-wab.css">
-        ```
-
-    - Some WAB widgets require another lib added globally:
-        ``` html
-        <!-- needed by some wab widgets like Print -->
-        <script src="./wab/2.4/libs/caja-html-sanitizer-minified.js"></script>
-        ```
+    - As of July 2017, modifications to the html are no longer required. All modifications are now contained within app.js
 
 ## Adding WAB widgets to your cmv configuration
 Adding WAB widgets to your CMV application is very similar to adding CMV widgets. Below are several examples with comments to identify the differences needed for WAB widgets.
