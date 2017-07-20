@@ -1,0 +1,21 @@
+define({
+  "serviceUrl": "Servis url’si ayarla:",
+  "minIntSpacingLabel": "Minimum Aralık Boşluğu",
+  "lineOpacityLabel": "Çizgi Opaklığı",
+  "labelOpacityLabel": "Etiket Opaklığı",
+  "centerLabelOpacityLabel": "Etiket Opaklığını Ortala",
+  "gridZonePlacementLabel": "Kılavuz Alanı Etiket Değişimi",
+  "verticalLineLabels": "Dikey Çizgi Etiketleri",
+  "styleHeaderLabel": "Stil",
+  "indexHeaderLabel": "Dizin",
+  "colorHeaderLabel": "Renkli",
+  "fontSizeHeaderLabel": "Yazı Tipi Boyutu",
+  "lineWidthHeaderLabel": "Çizgi Genişliği",
+  "horizontalLabel": "Yatay",
+  "verticalLabel": "Dikey",
+  "upperLeftLabel": "Sol Üst",
+  "upperRightLabel": "Sağ Üst",
+  "lowerLeftLabel": "Sol Alt",
+  "lowerRightLabel": "Sağ Alt",
+  "centerLabel": "Orta"
+});

@@ -1,0 +1,51 @@
+﻿
+
+.jimu-widget-smartEditor .esriTemplatePicker * {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+.jimu-widget-smartEditor .templatePicker * {
+    /*background-color: transparent !important;*/
+}
+
+.jimu-widget-smartEditor .ee-presetValueHeaderTable {
+    color: #ffffff !important;
+    background-color: darkgray !important;
+}
+
+.claro .dijitDateTextBox .dijitArrowButton:before {
+    content: none !important;
+}
+
+.jimu-widget-smartEditor .dijitEditorIFrameContainer {
+    background-color: transparent !important;
+}
+
+.jimu-widget-smartEditor .dijitEditorIFrame {
+    background-color: transparent !important;
+}
+
+.jimu-widget-smartEditor .attwarning {
+    color: brown;
+}
+
+.jimu-widget-sefilterEditor .flDropDown {
+    background-color: transparent !important;
+    color: white !important;
+}
+
+    .jimu-widget-sefilterEditor .flDropDown option {
+        background-color: #4c4c4c !important;
+        color: white !important;
+    }
+
+.jimu-widget-sefilterEditor .searchtextbox {
+    background-color: transparent !important;
+    color: white !important;
+}
+
+.widgetIndicator {
+    left: -15px !important;
+    width: 125% !important;
+}

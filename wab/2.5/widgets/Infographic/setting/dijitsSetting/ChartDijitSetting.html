@@ -1,0 +1,76 @@
+<div>
+  <div style="font-size: 14px;">${nls.chartSettings}</div>
+  <div class="section data-section" data-dojo-attach-point="dataSection">
+    <div class="section-item chart-mode-section-item feature-mode category-mode count-mode field-mode average-align">
+      <div>${nls.displayMode}</div>
+      <select data-dojo-attach-point="chartModeSelect" data-dojo-type="dijit/form/Select" data-dojo-attach-event="change:_onChartModeChnaged" class="restrict-select-width"></select>
+    </div>
+
+    <div class="section-item label-field-section-item feature-mode average-align">
+      <div>${nls.labelField}</div>
+      <select data-dojo-attach-point="labelFieldSelect" data-dojo-type="dijit/form/Select" data-dojo-attach-event="change:_onLabelFieldChanged" class="restrict-select-width"></select>
+    </div>
+
+    <div class="section-item category-field-section-item category-mode count-mode average-align">
+      <div>${nls.categoryField}</div>
+      <select data-dojo-attach-point="categoryFieldSelect" data-dojo-type="dijit/form/Select" data-dojo-attach-event="change:_onCategoryFieldChanged" class="restrict-select-width"></select>
+    </div>
+
+    <div class="section-item operation-section-item category-mode field-mode average-align">
+      <div>${nls.operation}</div>
+      <select data-dojo-attach-point="operationSelect" data-dojo-type="dijit/form/Select" data-dojo-attach-event="change:_onOperationSelectChanged" class="restrict-select-width">
+        <option value="sum">${nls.sumOption}</option>
+        <option value="average">${nls.averageOption}</option>
+        <option value="min">${nls.minOption}</option>
+        <option value="max">${nls.maxOption}</option>
+      </select>
+    </div>
+
+    <div class="section-item value-fields-section-item feature-mode category-mode field-mode average-align">
+      <div>${nls.valueFields}</div>
+      <div>
+        <div data-dojo-attach-point="valueFields" data-dojo-type="jimu/dijit/_DataFields" data-dojo-attach-event="change:_onValueFieldsChanged"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section display-section" data-dojo-attach-point="displaySection">
+    <div class="section-item column-type bar-type pie-type line-type average-align">
+      <div>${nls.backgroundColor}</div>
+      <div data-dojo-attach-point="bgColor" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/ChartColorSetting" data-dojo-attach-event="change:_onBgColorChanged"></div>
+    </div>
+
+    <div class="section-item column-type bar-type pie-type line-type average-align">
+      <div>${nls.chartColor}</div>
+      <div data-dojo-attach-point="chartColor" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/ChartColorSetting" data-dojo-attach-event="change:_onChartColorChanged"></div>
+    </div>
+
+    <div data-dojo-attach-point="legendTogglePocketContent">
+      <div class="average-align">
+        <div>${nls.textColor}</div>
+        <div data-dojo-attach-point="legendTextColor" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/ChartColorSetting" data-dojo-attach-event="change:_onLegendTextColorChanged"></div>
+      </div>
+    </div>
+
+    <div data-dojo-attach-point="horTogglePocketContent">
+      <div class="average-align">
+        <div>${nls.textColor}</div>
+        <div data-dojo-attach-point="horTextColor" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/ChartColorSetting" data-dojo-attach-event="change:_onHorColorChanged"></div>
+      </div>
+    </div>
+
+    <div data-dojo-attach-point="verTogglePocketContent">
+      <div class="average-align">
+        <div>${nls.textColor}</div>
+        <div data-dojo-attach-point="verTextColor" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/ChartColorSetting" data-dojo-attach-event="change:_onVerColorChanged"></div>
+      </div>
+    </div>
+
+    <div data-dojo-attach-point="dataLabelTogglePocketContent">
+      <div class="average-align">
+        <div>${nls.textColor}</div>
+        <div data-dojo-attach-point="dataLabelTextColor" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/ChartColorSetting" data-dojo-attach-event="change:_onDataLabelColorChanged"></div>
+      </div>
+    </div>
+  </div>
+</div>

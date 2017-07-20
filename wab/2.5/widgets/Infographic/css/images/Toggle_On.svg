@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="14px" viewBox="0 0 26 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>Toggle Button</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Setting-3New" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Gauge4-Display_Data-Range&amp;Target-Value" transform="translate(-1135.000000, -628.000000)">
+            <g id="configuration" transform="translate(240.000000, 126.000000)">
+                <g id="Settings" transform="translate(502.000000, 332.000000)">
+                    <g id="Indicators" transform="translate(0.000000, 167.000000)">
+                        <g id="Toggle-Button" transform="translate(393.000000, 4.000000)">
+                            <rect id="Rectangle-5" fill="#24B5CC" x="0" y="4" width="24" height="4"></rect>
+                            <circle id="Oval" stroke="#24B5CC" fill="#FFFFFF" cx="19" cy="6" r="6"></circle>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

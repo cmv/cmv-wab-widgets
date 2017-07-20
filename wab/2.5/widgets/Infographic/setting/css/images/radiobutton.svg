@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 44.1 (41455) - http://www.bohemiancoding.com/sketch -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M8,16 C3.6,16 0,12.4 0,8 C0,3.6 3.6,0 8,0 C12.4,0 16,3.6 16,8 C16,12.4 12.4,16 8,16 L8,16 Z" id="path-1"></path>
+    </defs>
+    <g id="Setting-3New" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Number1-Data" transform="translate(-960.000000, -458.000000)">
+            <g id="configuration" transform="translate(240.000000, 126.000000)">
+                <g id="Settings" transform="translate(502.000000, 287.000000)">
+                    <g id="DataType" transform="translate(0.000000, 45.000000)">
+                        <g id="unselected" transform="translate(218.000000, 0.000000)">
+                            <g id="Shape">
+                                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                                <path stroke="#999999" stroke-width="1" d="M8,15.5 C12.1238576,15.5 15.5,12.1238576 15.5,8 C15.5,3.87614237 12.1238576,0.5 8,0.5 C3.87614237,0.5 0.5,3.87614237 0.5,8 C0.5,12.1238576 3.87614237,15.5 8,15.5 Z"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,21 @@
+define({
+  "serviceUrl": "Imposta url servizio:",
+  "minIntSpacingLabel": "Spaziatura intervallo minima",
+  "lineOpacityLabel": "Opacità linea",
+  "labelOpacityLabel": "Opacità etichetta",
+  "centerLabelOpacityLabel": "Opacità etichetta al centro",
+  "gridZonePlacementLabel": "Posizione etichetta zona griglia",
+  "verticalLineLabels": "Etichette linee verticali",
+  "styleHeaderLabel": "Stile",
+  "indexHeaderLabel": "Indice",
+  "colorHeaderLabel": "Colore",
+  "fontSizeHeaderLabel": "Dimensione carattere",
+  "lineWidthHeaderLabel": "Larghezza linea",
+  "horizontalLabel": "Orizzontale",
+  "verticalLabel": "Verticale",
+  "upperLeftLabel": "Sopra a sinistra",
+  "upperRightLabel": "Superiore Destra",
+  "lowerLeftLabel": "In basso a sinistra",
+  "lowerRightLabel": "Inferiore destra",
+  "centerLabel": "Al centro"
+});

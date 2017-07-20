@@ -1,0 +1,21 @@
+define({
+  "serviceUrl": "تعيين عنوان url للخدمة:",
+  "minIntSpacingLabel": "الحد الأدنى لمسافة الفاصل الزمني",
+  "lineOpacityLabel": "معدل شفافية الخط",
+  "labelOpacityLabel": "معدل شفافية لافتة التسمية",
+  "centerLabelOpacityLabel": "معدل شفافية لافتة تسمية المركز",
+  "gridZonePlacementLabel": "موضع لافتة تسمية منطقة الشبكة",
+  "verticalLineLabels": "لافتات تسمية الخط الرأسي",
+  "styleHeaderLabel": "نمط",
+  "indexHeaderLabel": "فهرس",
+  "colorHeaderLabel": "لون",
+  "fontSizeHeaderLabel": "حجم الخط",
+  "lineWidthHeaderLabel": "عرض الخط",
+  "horizontalLabel": "أفقياً",
+  "verticalLabel": "عمودي",
+  "upperLeftLabel": "أعلى اليسار",
+  "upperRightLabel": "أعلى اليمين",
+  "lowerLeftLabel": "أدنى اليسار",
+  "lowerRightLabel": "أدنى اليمين",
+  "centerLabel": "المركز"
+});

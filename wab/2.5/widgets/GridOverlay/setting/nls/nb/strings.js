@@ -1,0 +1,21 @@
+define({
+  "serviceUrl": "Angi URL for tjeneste:",
+  "minIntSpacingLabel": "Minste intervallavstand",
+  "lineOpacityLabel": "Gjennomsiktighet for linje",
+  "labelOpacityLabel": "Gjennomsiktighet for etikett",
+  "centerLabelOpacityLabel": "Gjennomsiktighet midten av etikett",
+  "gridZonePlacementLabel": "Plassering av etiketter i rutenettsonen",
+  "verticalLineLabels": "Etiketter for vertikal linje",
+  "styleHeaderLabel": "Stil",
+  "indexHeaderLabel": "Indeks",
+  "colorHeaderLabel": "Farge",
+  "fontSizeHeaderLabel": "Skriftstørrelse",
+  "lineWidthHeaderLabel": "Linjebredde",
+  "horizontalLabel": "Vannrett",
+  "verticalLabel": "Loddrett",
+  "upperLeftLabel": "Øvre venstre",
+  "upperRightLabel": "Øvre høyre",
+  "lowerLeftLabel": "Nedre venstre",
+  "lowerRightLabel": "Nedre høyre",
+  "centerLabel": "Senter"
+});

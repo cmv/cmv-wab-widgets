@@ -1,0 +1,29 @@
+<div style="height: 98%;">
+    <div class="esriCTListContainer" data-dojo-attach-point="chartListContainer">
+        <div class="esriCTListHeader" style="overflow: hidden;">
+            <div class="jimu-float-leading">
+            </div>
+            <div class="jimu-float-trailing">
+                <div class="add-with-icon" data-dojo-attach-event="onclick:_onAddNewClicked">
+                    <span class="jimu-icon jimu-icon-add"></span><span class="add-label">${nls.addNewLabel}</span>
+                </div>
+            </div>
+        </div>
+        <div class="esriCTListContent">
+            <div class="esriCTListTable" data-dojo-attach-point="chartListPanel">
+            </div>
+            <div class="esriCTGeneralSettingButton jimu-btn jimu-float-trailing jimu-leading-margin1"
+                data-dojo-attach-point="generalSettingButton">
+                ${nls.generalSettingLabel}</div>
+        </div>
+    </div>
+    <div class="esriCTChartSettingsContainer">
+        <div class="esriCTHidden esriCTFullHeight" data-dojo-attach-point="chartSettingsContainer">
+        </div>
+        <div class="esriCTHidden esriCTFullHeight esriCTGeneralSettingsContainer" data-dojo-attach-point="generalSettingsContainer">
+        </div>
+    </div>
+    <div data-dojo-attach-point="loadingIndicator" data-dojo-type="jimu/dijit/LoadingShelter"
+        hidden="true">
+    </div>
+</div>

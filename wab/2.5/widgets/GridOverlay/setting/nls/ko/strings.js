@@ -1,0 +1,21 @@
+define({
+  "serviceUrl": "서비스 URL 설정:",
+  "minIntSpacingLabel": "최소 간격",
+  "lineOpacityLabel": "라인 불투명도",
+  "labelOpacityLabel": "레이블 불투명도",
+  "centerLabelOpacityLabel": "가운데 레이블 불투명도",
+  "gridZonePlacementLabel": "그리드 구역 레이블 배치",
+  "verticalLineLabels": "수직 라인 레이블",
+  "styleHeaderLabel": "스타일",
+  "indexHeaderLabel": "색인",
+  "colorHeaderLabel": "색상",
+  "fontSizeHeaderLabel": "글꼴 크기",
+  "lineWidthHeaderLabel": "라인 너비",
+  "horizontalLabel": "수평",
+  "verticalLabel": "수직",
+  "upperLeftLabel": "왼쪽 상단",
+  "upperRightLabel": "오른쪽 상단",
+  "lowerLeftLabel": "왼쪽 하단",
+  "lowerRightLabel": "오른쪽 하단",
+  "centerLabel": "가운데"
+});

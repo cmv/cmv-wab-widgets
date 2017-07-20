@@ -1,0 +1,21 @@
+define({
+  "serviceUrl": "Setare URL serviciu:",
+  "minIntSpacingLabel": "Spaţiere interval minimă",
+  "lineOpacityLabel": "Opacitate linie",
+  "labelOpacityLabel": "Opacitate etichetă",
+  "centerLabelOpacityLabel": "Opacitate etichetă centrală",
+  "gridZonePlacementLabel": "Plasare etichetă pentru zona grilă",
+  "verticalLineLabels": "Etichete linii verticale",
+  "styleHeaderLabel": "Stil",
+  "indexHeaderLabel": "Index",
+  "colorHeaderLabel": "Culoare",
+  "fontSizeHeaderLabel": "Dimensiune font",
+  "lineWidthHeaderLabel": "Grosime linie",
+  "horizontalLabel": "Orizontal",
+  "verticalLabel": "Vertical",
+  "upperLeftLabel": "Stânga sus",
+  "upperRightLabel": "Dreapta sus",
+  "lowerLeftLabel": "Stânga jos",
+  "lowerRightLabel": "Dreapta jos",
+  "centerLabel": "Centru"
+});

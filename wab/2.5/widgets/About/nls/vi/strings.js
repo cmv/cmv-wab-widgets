@@ -1,0 +1,3 @@
+define({
+  "_widgetLabel": "Về"
+});
