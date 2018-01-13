@@ -115,7 +115,6 @@ define([
                 path: 'jimu/BaseWidgetPanel',
                 options: {
                     widgetManager: true,
-                    style: 'min-height: 200px;',
                     config: {
                         widgets: [
                             {

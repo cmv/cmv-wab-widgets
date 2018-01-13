@@ -1,0 +1,147 @@
+{
+  "helperServices": {
+    "asyncClosestFacility": {
+      "url": "https://logistics.arcgis.com/arcgis/rest/services/World/ClosestFacility/GPServer/FindClosestFacilities",
+      "defaultTravelMode": "FEgifRtFndKNcJMJ"
+    },
+    "asyncLocationAllocation": {
+      "url": "https://logistics.arcgis.com/arcgis/rest/services/World/LocationAllocation/GPServer",
+      "defaultTravelMode": "FEgifRtFndKNcJMJ"
+    },
+    "asyncRoute": {
+      "url": "https://logistics.arcgis.com/arcgis/rest/services/World/Route/GPServer",
+      "defaultTravelMode": "FEgifRtFndKNcJMJ"
+    },
+    "asyncServiceArea": {
+      "url": "https://logistics.arcgis.com/arcgis/rest/services/World/ServiceAreas/GPServer/GenerateServiceAreas",
+      "defaultTravelMode": "FEgifRtFndKNcJMJ"
+    },
+    "asyncVRP": {
+      "url": "https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblem/GPServer/SolveVehicleRoutingProblem",
+      "defaultTravelMode": "FEgifRtFndKNcJMJ"
+    },
+    "closestFacility": {
+      "url": "https://route.arcgis.com/arcgis/rest/services/World/ClosestFacility/NAServer/ClosestFacility_World",
+      "defaultTravelMode": "FEgifRtFndKNcJMJ"
+    },
+    "defaultElevationLayers": [
+      {
+        "url": "http://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer",
+        "id": "globalElevation",
+        "layerType": "ArcGISTiledElevationServiceLayer"
+      }
+    ],
+    "elevation": {
+      "url": "http://elevation.arcgis.com/arcgis/rest/services/Tools/Elevation/GPServer"
+    },
+    "elevationSync": {
+      "url": "http://elevation.arcgis.com/arcgis/rest/services/Tools/ElevationSync/GPServer"
+    },
+    "geocode": [
+      {
+        "url": "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+        "northLat": "Ymax",
+        "southLat": "Ymin",
+        "eastLon": "Xmax",
+        "westLon": "Xmin",
+        "name": "Esri World Geocoder",
+        "suggest": true
+      },
+      {
+        "singleLineFieldName": "SingleLine",
+        "url": "http://tmelectric.esri.com/arcgis/rest/services/AssetLocator/GeocodeServer",
+        "suggest": true,
+        "name": "tmelectric",
+        "placeholder": "tmelectric",
+        "placefinding": true,
+        "batch": true,
+        "zoomScale": 10000
+      }
+    ],
+    "geometry": {
+      "url": "http://utility.arcgisonline.com/arcgis/rest/services/Geometry/GeometryServer"
+    },
+    "hydrology": {
+      "url": "http://hydro.arcgis.com/arcgis/rest/services/Tools/Hydrology/GPServer"
+    },
+    "printTask": {
+      "url": "http://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+    },
+    "route": {
+      "url": "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World",
+      "defaultTravelMode": "FEgifRtFndKNcJMJ"
+    },
+    "routingUtilities": {
+      "url": "http://logistics.arcgis.com/arcgis/rest/services/World/Utilities/GPServer"
+    },
+    "serviceArea": {
+      "url": "https://route.arcgis.com/arcgis/rest/services/World/ServiceAreas/NAServer/ServiceArea_World",
+      "defaultTravelMode": "FEgifRtFndKNcJMJ"
+    },
+    "syncVRP": {
+      "url": "https://logistics.arcgis.com/arcgis/rest/services/World/VehicleRoutingProblemSync/GPServer/EditVehicleRoutingProblem",
+      "defaultTravelMode": "FEgifRtFndKNcJMJ"
+    },
+    "traffic": {
+      "url": "http://traffic.arcgis.com/arcgis/rest/services/World/Traffic/MapServer"
+    },
+    "analysis": {
+      "url": "http://analysis1.arcgis.com/arcgis/rest/services/tasks/GPServer"
+    },
+    "geoenrichment": {
+      "url": "http://geoenrich.arcgis.com/arcgis/rest/services/World/GeoenrichmentServer"
+    }
+  },
+  "isPortal": false,
+  "user": {
+    "username": "jianwang",
+    "fullName": "Jian Wang",
+    "firstName": "Jian",
+    "lastName": "Wang",
+    "preferredView": null,
+    "description": "",
+    "email": "Jian_Wang@esri.com",
+    "userType": "arcgisonly",
+    "idpUsername": null,
+    "favGroupId": "2c17c97aeb254815893424a46b92d85e",
+    "lastLogin": 1458544147000,
+    "mfaEnabled": false,
+    "access": "org",
+    "storageUsage": 22879836106,
+    "storageQuota": 2199023255552,
+    "orgId": "oC086ufSSQ6Avnw2",
+    "role": "org_publisher",
+    "privileges": [
+      "features:user:edit",
+      "opendata:user:designateGroup",
+      "opendata:user:openDataAdmin",
+      "portal:publisher:publishFeatures",
+      "portal:publisher:publishScenes",
+      "portal:publisher:publishTiles",
+      "portal:user:createGroup",
+      "portal:user:createItem",
+      "portal:user:joinGroup",
+      "portal:user:joinNonOrgGroup",
+      "portal:user:shareGroupToOrg",
+      "portal:user:shareGroupToPublic",
+      "portal:user:shareToGroup",
+      "portal:user:shareToOrg",
+      "portal:user:shareToPublic",
+      "premium:user:demographics",
+      "premium:user:elevation",
+      "premium:user:geocode",
+      "premium:user:geoenrichment",
+      "premium:user:networkanalysis",
+      "premium:user:spatialanalysis"
+    ],
+    "disabled": false,
+    "tags": [],
+    "culture": "en",
+    "region": "WO",
+    "units": "english",
+    "thumbnail": null,
+    "created": 1418369231000,
+    "modified": 1436765839000,
+    "provider": "arcgis"
+  }
+}

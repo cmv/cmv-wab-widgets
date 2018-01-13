@@ -1,0 +1,23 @@
+define({
+  "serviceUrl": "Atur url service:",
+  "minIntSpacingLabel": "Jarak Interval Minimum",
+  "lineOpacityLabel": "Keburaman Garis",
+  "labelOpacityLabel": "Keburaman Label",
+  "centerLabelOpacityLabel": "Keburaman Label Pusat",
+  "gridZonePlacementLabel": "Penempatan Label Zona Grid",
+  "verticalLineLabels": "Label Garis Vertikal",
+  "styleHeaderLabel": "Gaya",
+  "indexHeaderLabel": "Indeks",
+  "colorHeaderLabel": "Warna",
+  "fontSizeHeaderLabel": "Ukuran Font",
+  "lineWidthHeaderLabel": "Lebar Garis",
+  "horizontalLabel": "Horisontal",
+  "verticalLabel": "Vertikal",
+  "upperLeftLabel": "Kiri Atas",
+  "upperRightLabel": "Kanan Atas",
+  "lowerLeftLabel": "Kiri Bawah",
+  "lowerRightLabel": "Kanan Bawah",
+  "centerLabel": "Pusat",
+  "errorMessage": "Halaman konfigurasi berisi kesalahan. Harap perbaiki sebelum menyimpan.",
+  "checkBoxLabel": "Tampilkan grid ketika widget ditutup"
+});

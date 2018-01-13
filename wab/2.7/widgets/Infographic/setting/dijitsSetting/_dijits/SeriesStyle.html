@@ -1,0 +1,28 @@
+<div style="width: 100%;flex: 0 0 100%;">
+
+	<div style="margin-bottom: 15px" class="top">
+		<div class="flex-lr-balance title">${nls.chartColor}</div>
+      <div data-dojo-attach-point="singleColorDiv"></div>
+	</div>
+
+	<div data-dojo-attach-point="radioPanel" class="radio-panel">
+		<div class="single-radio-panel">
+		   <input data-dojo-attach-point="useLayerSymbolRadio" data-dojo-attach-event="change:_onUseLayerSymbolChange" type="radio" name="chartColor" data-dojo-type="dijit/form/RadioButton">
+   		<label class="marginleft10 text-over radio-label" title="${nls.useLayerSymbology}">${nls.useLayerSymbology}</label>
+		</div>
+
+      <div style="margin-top: 2px" class="color-radio-panel">
+         <div class="single-radio-panel flex-lr-balance">
+            <input data-dojo-attach-point="setColorRadio" type="radio" name="chartColor" data-dojo-type="dijit/form/RadioButton">
+            <label class="marginleft10 text-over radio-label" title="${nls.setColor}">${nls.setColor}</label>
+         </div>
+
+         <div data-dojo-attach-point="radioSingleColorDiv" class="radio-single-color-div flex-lr-balance"></div>
+      </div>
+		
+	</div>
+
+   <div data-dojo-attach-point="fieldColors" class="field-colors">
+   </div>
+
+</div>

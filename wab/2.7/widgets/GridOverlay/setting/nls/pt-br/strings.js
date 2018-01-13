@@ -1,0 +1,23 @@
+define({
+  "serviceUrl": "Configurar url de serviço:",
+  "minIntSpacingLabel": "Espaçamento de Intervalo Mínimo",
+  "lineOpacityLabel": "Opacidade da Linha",
+  "labelOpacityLabel": "Opacidade do Rótulo",
+  "centerLabelOpacityLabel": "Opacidade do Rótulo Central",
+  "gridZonePlacementLabel": "Posicionamento de Rótulo na Zona da Grade",
+  "verticalLineLabels": "Rótulos de Linha Vertical",
+  "styleHeaderLabel": "Estilo",
+  "indexHeaderLabel": "Índice",
+  "colorHeaderLabel": "Cor",
+  "fontSizeHeaderLabel": "Tamanho da Fonte",
+  "lineWidthHeaderLabel": "Largura da Linha",
+  "horizontalLabel": "Horizontal",
+  "verticalLabel": "Vertical",
+  "upperLeftLabel": "Superior Esquerdo",
+  "upperRightLabel": "Superior Direito",
+  "lowerLeftLabel": "Inferior Esquerdo",
+  "lowerRightLabel": "Inferior Direito",
+  "centerLabel": "Centralizar",
+  "errorMessage": "A página de configuração contém erros. Repare antes de salvar.",
+  "checkBoxLabel": "Grade de exibição quando o widget está fechado"
+});

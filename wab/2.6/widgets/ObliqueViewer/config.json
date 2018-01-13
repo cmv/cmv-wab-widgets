@@ -1,0 +1,11 @@
+{
+  "ObliqueViewer": {
+    "layerTitle": "",
+    "azimuthAngle" : 0,
+    "azimuthField": "",
+    "elevationField": "",
+    "rasterInfoFields": [],
+    "showThumbnail": true,
+    "autoSync": true
+  }
+}

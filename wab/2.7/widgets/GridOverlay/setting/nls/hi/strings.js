@@ -1,0 +1,23 @@
+define({
+  "serviceUrl": "सेवा url सेट करें:",
+  "minIntSpacingLabel": "न्यूनतम अंतराल स्पेसिंग",
+  "lineOpacityLabel": "पंक्ति की अस्पष्टता",
+  "labelOpacityLabel": "लेबल की अस्पष्टता",
+  "centerLabelOpacityLabel": "केंद्रीय लेबल की अस्पष्टता",
+  "gridZonePlacementLabel": "ग्रिड क्षेत्र लेबल प्लेसमेंट",
+  "verticalLineLabels": "लंबक्षेत्र पंक्ति लेबल",
+  "styleHeaderLabel": "शैली",
+  "indexHeaderLabel": "इंडेक्स",
+  "colorHeaderLabel": "रंग",
+  "fontSizeHeaderLabel": "फॉन्ट आकार",
+  "lineWidthHeaderLabel": "रेखा चौड़ाई",
+  "horizontalLabel": "क्षैतिज",
+  "verticalLabel": "लंबवत",
+  "upperLeftLabel": "ऊपरी बायाँ",
+  "upperRightLabel": "ऊपरी दायाँ",
+  "lowerLeftLabel": "निचला बायाँ",
+  "lowerRightLabel": "निचला दायाँ",
+  "centerLabel": "केंद्र",
+  "errorMessage": "कॉन्फ़िगरेशन पृष्ठ में त्रुटियां हैं। कृपया सहेजने से पहले उन्हें ठीक करें।",
+  "checkBoxLabel": "विजेट के बंद होने पर ग्रिड प्रदर्शित करें"
+});

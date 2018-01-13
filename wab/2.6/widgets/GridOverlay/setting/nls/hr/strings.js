@@ -1,0 +1,23 @@
+define({
+  "serviceUrl": "Postavite url usluge:",
+  "minIntSpacingLabel": "Minimalni razmak intervala",
+  "lineOpacityLabel": "Neprozirnost linije",
+  "labelOpacityLabel": "Neprozirnost oznake",
+  "centerLabelOpacityLabel": "Neprozirnost središnje oznake",
+  "gridZonePlacementLabel": "Položaj oznake mrežaste zone",
+  "verticalLineLabels": "Oznake okomite linije",
+  "styleHeaderLabel": "Stil",
+  "indexHeaderLabel": "Indeks",
+  "colorHeaderLabel": "Boja",
+  "fontSizeHeaderLabel": "Veličina fonta",
+  "lineWidthHeaderLabel": "Širina linije",
+  "horizontalLabel": "Vodoravno",
+  "verticalLabel": "Uspravno",
+  "upperLeftLabel": "Gore lijevo",
+  "upperRightLabel": "Gore desno",
+  "lowerLeftLabel": "Dolje lijevo",
+  "lowerRightLabel": "Dolje desno",
+  "centerLabel": "Sredina",
+  "errorMessage": "Stranica za konfiguraciju sadrži pogreške. Ispravite ih prije spremanja.",
+  "checkBoxLabel": "Prikaži rešetku kada je widget zatvoren"
+});

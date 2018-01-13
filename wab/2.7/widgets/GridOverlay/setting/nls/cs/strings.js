@@ -1,0 +1,23 @@
+define({
+  "serviceUrl": "Nastavte adresu URL služby:",
+  "minIntSpacingLabel": "Minimální rozpětí intervalu",
+  "lineOpacityLabel": "Neprůhlednost linie",
+  "labelOpacityLabel": "Neprůhlednost popisku",
+  "centerLabelOpacityLabel": "Neprůhlednost středního popisku",
+  "gridZonePlacementLabel": "Umístění popisku zóny mřížky",
+  "verticalLineLabels": "Popisky svislé linie",
+  "styleHeaderLabel": "Styl",
+  "indexHeaderLabel": "Index",
+  "colorHeaderLabel": "Barva",
+  "fontSizeHeaderLabel": "Velikost písma",
+  "lineWidthHeaderLabel": "Šířka linie",
+  "horizontalLabel": "Vodorovný",
+  "verticalLabel": "Svislý",
+  "upperLeftLabel": "Levý horní",
+  "upperRightLabel": "Pravý horní",
+  "lowerLeftLabel": "Levý dolní",
+  "lowerRightLabel": "Pravý dolní",
+  "centerLabel": "Střed",
+  "errorMessage": "Stránka konfigurace obsahuje chyby. Před uložením je prosím opravte.",
+  "checkBoxLabel": "Po zavření widgetu zobrazit mřížku."
+});

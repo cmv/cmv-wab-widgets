@@ -4,7 +4,7 @@
     // make it easier to update the demo. optional
     var versions = {
         cmv: 'v2.0.0-beta.2',
-        wab: '2.5'
+        wab: '2.6'
     };
 
     window.dojoConfig = {
@@ -61,6 +61,12 @@
 
         // needed by some wab widgets like Print
         'libs/caja-html-sanitizer-minified',
+
+        // needed by some wab widgets like Bookmarks (WAB v 2.6)
+        'libs/Sortable',
+
+        // needed by some wab widgets like Chart (WAB v 2.6)
+        'libs/moment/twix',
 
         // jimu stylesheet needed for WAB widgets
         'xstyle/css!jimu/css/jimu-theme.css',

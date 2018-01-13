@@ -1,0 +1,23 @@
+define({
+  "serviceUrl": "Задать URL сервиса:",
+  "minIntSpacingLabel": "Расстояние минимального интервала",
+  "lineOpacityLabel": "Непрозрачность линии",
+  "labelOpacityLabel": "Непрозрачность подписи",
+  "centerLabelOpacityLabel": "Непрозрачность центральной подписи",
+  "gridZonePlacementLabel": "Размещение подписи зоны сетки",
+  "verticalLineLabels": "Подписи вертикальных линий",
+  "styleHeaderLabel": "Стиль",
+  "indexHeaderLabel": "Индекс",
+  "colorHeaderLabel": "Цвет",
+  "fontSizeHeaderLabel": "Размер шрифта",
+  "lineWidthHeaderLabel": "Ширина линии",
+  "horizontalLabel": "Горизонтальная",
+  "verticalLabel": "Вертикальная",
+  "upperLeftLabel": "Верхний левый",
+  "upperRightLabel": "Верхний правый",
+  "lowerLeftLabel": "Нижний левый",
+  "lowerRightLabel": "Нижний правый",
+  "centerLabel": "По центру",
+  "errorMessage": "Страница настройки содержит ошибки. Исправьте их перед сохранением.",
+  "checkBoxLabel": "Показать сетку, когда виджет закрыт"
+});

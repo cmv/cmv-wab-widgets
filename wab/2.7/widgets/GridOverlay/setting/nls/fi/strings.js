@@ -1,0 +1,23 @@
+define({
+  "serviceUrl": "Määritä palvelun URL-osoite:",
+  "minIntSpacingLabel": "Vähimmäisväli",
+  "lineOpacityLabel": "Viivan peittävyys",
+  "labelOpacityLabel": "Tunnustekstin peittävyys",
+  "centerLabelOpacityLabel": "Keskitunnustekstin peittävyys",
+  "gridZonePlacementLabel": "Ruudukon alueen tunnustekstin paikka",
+  "verticalLineLabels": "Pystyviivan tunnustekstit",
+  "styleHeaderLabel": "Tyyli",
+  "indexHeaderLabel": "Hakemisto",
+  "colorHeaderLabel": "Väri",
+  "fontSizeHeaderLabel": "Fontin koko",
+  "lineWidthHeaderLabel": "Viivan leveys",
+  "horizontalLabel": "Vaaka",
+  "verticalLabel": "Pysty",
+  "upperLeftLabel": "Ylhäällä vasemmalla",
+  "upperRightLabel": "Ylhäällä oikealla",
+  "lowerLeftLabel": "Alhaalla vasemmalla",
+  "lowerRightLabel": "Alhaalla oikealla",
+  "centerLabel": "Keskitä",
+  "errorMessage": "Määrityssivu sisältää virheitä. Korjaa ennen käyttöä.",
+  "checkBoxLabel": "Näytä ruudukko, kun pienoisohjelma suljetaan"
+});

@@ -1,0 +1,23 @@
+define({
+  "serviceUrl": "Skonfiguruj adres URL usługi:",
+  "minIntSpacingLabel": "Minimalne odstępy między okresami",
+  "lineOpacityLabel": "Przezroczystość linii",
+  "labelOpacityLabel": "Przezroczystość etykiety",
+  "centerLabelOpacityLabel": "Przezroczystość etykiety centralnej",
+  "gridZonePlacementLabel": "Pozycja etykiety strefy siatki",
+  "verticalLineLabels": "Etykiety linii pionowych",
+  "styleHeaderLabel": "Nadaj styl",
+  "indexHeaderLabel": "Indeks",
+  "colorHeaderLabel": "Kolor",
+  "fontSizeHeaderLabel": "Rozmiar czcionki",
+  "lineWidthHeaderLabel": "Szerokość linii",
+  "horizontalLabel": "Poziomo",
+  "verticalLabel": "Pionowo",
+  "upperLeftLabel": "Górny lewy",
+  "upperRightLabel": "Górny prawy",
+  "lowerLeftLabel": "Dolny lewy",
+  "lowerRightLabel": "Dolny prawy",
+  "centerLabel": "Środek",
+  "errorMessage": "Ta strona konfiguracji zawiera błędy. Usuń je przed zapisaniem.",
+  "checkBoxLabel": "Wyświetl siatkę po zamknięciu widżetu"
+});

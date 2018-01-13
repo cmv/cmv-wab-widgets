@@ -1,0 +1,23 @@
+define({
+  "serviceUrl": "Iestatīt servisa URL:",
+  "minIntSpacingLabel": "Minimālā intervālu atstarpe",
+  "lineOpacityLabel": "Līniju necaurredzamība",
+  "labelOpacityLabel": "Kartes teksta necaurredzamība",
+  "centerLabelOpacityLabel": "Centrālā kartes nosaukuma necaurredzamība",
+  "gridZonePlacementLabel": "Tīkla zonu nosaukumu izvietojums",
+  "verticalLineLabels": "Vertikālo līniju nosaukums",
+  "styleHeaderLabel": "Stils",
+  "indexHeaderLabel": "Indekss",
+  "colorHeaderLabel": "Krāsa",
+  "fontSizeHeaderLabel": "Fonta izmērs",
+  "lineWidthHeaderLabel": "Līnijas platums",
+  "horizontalLabel": "Horizontāls",
+  "verticalLabel": "Vertikāls",
+  "upperLeftLabel": "Augšējais kreisais",
+  "upperRightLabel": "Augšējais labais",
+  "lowerLeftLabel": "Apakšējais kreisais",
+  "lowerRightLabel": "Apakšējais labais",
+  "centerLabel": "Centrs",
+  "errorMessage": "Konfigurēšanas lapa satur kļūdas. Pirms saglabāšanas novērsiet kļūdas.",
+  "checkBoxLabel": "Rādīt tīklu, ja logrīks ir aizvērts"
+});

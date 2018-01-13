@@ -1,0 +1,23 @@
+define({
+  "serviceUrl": "הגדר URL של שירות:",
+  "minIntSpacingLabel": "מרווחי ריווח מינימליים",
+  "lineOpacityLabel": "אטימות קו",
+  "labelOpacityLabel": "אטימות תווית",
+  "centerLabelOpacityLabel": "אטימות תווית מרכזית",
+  "gridZonePlacementLabel": "מיקום תווית באזורי רשת",
+  "verticalLineLabels": "תוויות קו מאונכות",
+  "styleHeaderLabel": "סגנון",
+  "indexHeaderLabel": "אינדקס",
+  "colorHeaderLabel": "צבע",
+  "fontSizeHeaderLabel": "גודל גופן",
+  "lineWidthHeaderLabel": "רוחב קו",
+  "horizontalLabel": "אופקי",
+  "verticalLabel": "אנכי",
+  "upperLeftLabel": "שמאלית עליונה",
+  "upperRightLabel": "ימנית עליונה",
+  "lowerLeftLabel": "שמאלית תחתונה",
+  "lowerRightLabel": "ימנית תחתונה",
+  "centerLabel": "מרכז",
+  "errorMessage": "דף התצורה מכיל שגיאות. יש לתקן אותן לפני השמירה.",
+  "checkBoxLabel": "הצג גריד כאשר הווידג'ט סגור"
+});

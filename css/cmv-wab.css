@@ -31,3 +31,7 @@
 .cmv .jimu-widget-measure .dijitNumberTextBox {
     width: 70px !important;
 }
+
+.cmv .jimu-widget-bookmark {
+    min-height: 300px;
+}
