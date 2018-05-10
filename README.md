@@ -96,6 +96,7 @@ Both of these widgets have been modified from the original to provide additional
 
 - This method supports the following versions of the WebApp Builder:
 
+    - version 2.8 released April 2018
     - version 2.7 released January 2018
     - version 2.6 released October 2017
 
@@ -186,10 +187,6 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
             app.startup();
         });
         ```
-
-3. Modifications to the [html](https://github.com/cmv/cmv-wab-widgets/blob/master/demo.html):
-
-    - As of July 2017, modifications to the html are no longer required. All modifications are now contained within app.js
 
 ## Adding WAB widgets to your cmv configuration
 Adding WAB widgets to your CMV application is very similar to adding CMV widgets. Below are several examples with comments to identify the differences needed for WAB widgets.
@@ -443,9 +440,6 @@ saveSession: {
 ```
 
 ## To-Do
-At least 2 areas still need some work:
-
-- A few widgets (like Bookmarks) might need some additional css tweaks to style properly.
 - Currently, `off-panel` Widgets are loaded within a `BaseWidgetPanel`. This is probably unnecessary.
 
 
