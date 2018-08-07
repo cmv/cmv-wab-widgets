@@ -116,6 +116,8 @@ define([
             });
             cm.appConfig = appConfig;
 
+            window.appConfig = appConfig;
+
             return appConfig;
         },
 
