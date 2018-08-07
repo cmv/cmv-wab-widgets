@@ -11,6 +11,13 @@ define([
     'jimu/utils',
     'jimu/LayerInfos/LayerInfos',
 
+    'jimu/DataSourceManager',
+    'jimu/FeatureActionManager',
+    'jimu/FilterManager',
+    'jimu/PopupManager',
+    'jimu/SelectionManager',
+    'jimu/SyncManager',
+
     'dojo/i18n!jimu/nls/main',
 
     'config/wabapp-config'
@@ -27,6 +34,13 @@ define([
     MapManager,
     jimuUtils,
     LayerInfos,
+
+    DataSourceManager,
+    FilterManager,
+    FeatureActionManager,
+    PopupManager,
+    SelectionManager,
+    SyncManager,
 
     mainBundle,
 
@@ -53,17 +67,21 @@ define([
         _configureWAB: function () {
             //minimal configuration of global vars
             // polluting the global namespace is bad! ;)
-            window.jimuConfig = {
+            window.jimuConfig = window.jimuConfig || {
                 layoutId: this.config.layout.map || 'mapCenter',
                 breakPoints: [0]
             };
-            window.jimuNls = mainBundle;
-            window.isRTL = wabConfig.isRTL;
+            window.jimuNls = window.jimuNls || mainBundle;
+            window.isRTL = window.isRTL || wabConfig.isRTL;
 
             var pathparts = window.location.pathname.split('/');
             pathparts.pop();
             window.appInfo = {
                 appPath: pathparts.join('/') + '/'
+            };
+
+            window.queryObject = window.queryObject || {
+                ismain: true
             };
 
             // make the map look like a "webmap"
@@ -77,6 +95,7 @@ define([
 
             // create a minimal configuration
             var appConfig = this._createAppConfig();
+            window.appConfig = appConfig;
 
             var mm = MapManager.getInstance({
                 appConfig: appConfig
@@ -84,8 +103,22 @@ define([
             mm.map = this.map;
 
             this.wabWidgetManager = WidgetManager.getInstance();
-            this.wabWidgetManager.map = this.map;
-            this.wabWidgetManager.appConfig = appConfig;
+            this.wabWidgetManager._onAppConfigLoaded(appConfig);
+            this.wabWidgetManager._onMapLoaded(this.map);
+
+            // Initialize all the jimu "Managers"
+            var managers = [DataSourceManager, FeatureActionManager, FilterManager, PopupManager, SelectionManager, SyncManager];
+            array.forEach(managers, lang.hitch(this, function (manager) {
+                var mgr = manager.getInstance();
+                if (mgr._onAppConfigLoaded) {
+                    mgr._onAppConfigLoaded(appConfig);
+                }
+                if (mgr._onMapLoaded) {
+                    mgr._onMapLoaded(this.map);
+                } else if (mgr.onMapLoadedOrChanged) { // For PopupManager
+                    mgr.onMapLoadedOrChanged(this.map);
+                }
+            }));
 
             // tap into the map's infoWindowOnClick method
             if (this.mapClickMode.defaultMode === 'identify') {
@@ -114,9 +147,11 @@ define([
             appConfig.visitElement = lang.hitch(cm, function (cb) {
                 jimuUtils.visitElement(this, cb);
             });
-            cm.appConfig = appConfig;
+            appConfig.dataSource = {
+                dataSources: []
+            };
 
-            window.appConfig = appConfig;
+            cm.appConfig = appConfig;
 
             return appConfig;
         },
