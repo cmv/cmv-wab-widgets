@@ -19,6 +19,7 @@ define([
     'jimu/SyncManager',
 
     'dojo/i18n!jimu/nls/main',
+    'esri/main',
 
     'config/wabapp-config'
 
@@ -43,6 +44,7 @@ define([
     SyncManager,
 
     mainBundle,
+    esriMain,
 
     wabConfig
 ) {
@@ -72,7 +74,9 @@ define([
                 breakPoints: [0]
             };
             window.jimuNls = window.jimuNls || mainBundle;
+            window.apiNls = window.apiNls || esriMain.bundle;
             window.isRTL = window.isRTL || wabConfig.isRTL;
+            window.deployVersion = wabConfig.wabVersion;
 
             var pathparts = window.location.pathname.split('/');
             pathparts.pop();

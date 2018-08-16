@@ -1,0 +1,79 @@
+﻿<div class="pad-left-5 no-select" style="height: 100%">
+  <table class="page-table" cellpading="0" data-dojo-attach-point="reviewRowTable">
+    <tbody>
+
+      <tr>
+        <td colspan="3" class="panel-title-td">
+          <div class="panel-title-text">${nls.review.reviewData}</div>
+        </td>
+      </tr>
+      <tr class="bottom-border-bold task-instruction-row">
+        <td colspan="3">
+          <div class="instruction panel-title-hint-td" data-dojo-attach-point="reviewDataHint"></div>
+        </td>
+      </tr>
+
+      <tr class="pad-bottom-10 task-row" data-dojo-attach-point="unMatchedControlRow" data-dojo-attach-event="onclick:_reviewUnMatched">
+        <td class="field-control-td width-100">
+          <div class="task-text">${nls.review.reviewUnMatched}</div>
+        </td>
+        <td class="pad-right-15 float-right main-text field-control-td">
+          <div data-dojo-attach-point="unMatchedCount">
+          </div>
+        </td>
+        <td class="width-15">
+          <div class="next-arrow float-right next-arrow-img"></div>
+        </td>
+      </tr>
+      <tr class="bottom-border pad-bottom-10 task-instruction-row" data-dojo-attach-point="unMatchedHintRow">
+        <td colspan="3" data-dojo-attach-point="unMatchedHintTd">
+          <div class="instruction instruction-padding">${nls.review.reviewUnMatchedHint}</div>
+        </td>
+      </tr>
+
+      <tr class="pad-bottom-10 task-row" data-dojo-attach-point="duplicateControlRow" data-dojo-attach-event="onclick:_reviewDuplicate">
+        <td class="field-control-td width-100">
+          <div class="task-text">${nls.review.reviewDuplicate}</div>
+        </td>
+        <td class="pad-right-15 float-right main-text field-control-td">
+          <div data-dojo-attach-point="duplicateCount">
+          </div>
+        </td>
+        <td class="width-15">
+          <div class="next-arrow float-right next-arrow-img"></div>
+        </td>
+      </tr>
+      <tr class="bottom-border pad-bottom-10 task-instruction-row" data-dojo-attach-point="duplicateHintRow">
+        <td colspan="3" data-dojo-attach-point="duplicateHintTd">
+          <div class="instruction instruction-padding" data-dojo-attach-point="reviewDuplicateHint"></div>
+        </td>
+      </tr>
+
+      <tr class="pad-bottom-10 task-row" data-dojo-attach-point="matchedControlRow" data-dojo-attach-event="onclick:_reviewMatched">
+        <td class="field-control-td width-100">
+          <div class="task-text">${nls.review.reviewMatched}</div>
+        </td>
+        <td class="pad-right-15 float-right main-text field-control-td">
+          <div data-dojo-attach-point="matchedCount">
+          </div>
+        </td>
+        <td class="width-15">
+          <div class="next-arrow float-right next-arrow-img">
+          </div>
+        </td>
+      </tr>
+      <tr class="bottom-border pad-bottom-10 task-instruction-row" data-dojo-attach-point="matchedHintRow">
+        <td colspan="3">
+          <div class="instruction instruction-padding">${nls.review.reviewMatchedHint}</div>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <div class="pad-top-10">
+    <div class="jimu-btn float-right" data-dojo-attach-point="submitButton" data-dojo-attach-event="onclick:_submit">${nls.buttons.submit}</div>
+    <div class="float-right bg-loading-img bg-loading pad-top-10 display-none" data-dojo-attach-point="progressNode"></div>
+    <div class="jimu-btn float-right margin-right-15" data-dojo-attach-point="downloadButton" data-dojo-attach-event="onclick:_download">${nls.buttons.download}</div>
+  </div>
+</div>

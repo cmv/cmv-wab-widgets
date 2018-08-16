@@ -1,0 +1,13 @@
+.jimu-widget-Measurement .operations{
+  margin-top: 20px;
+  text-align: center;
+}
+
+.jimu-widget-Measurement .operations .jimu-btn{
+  padding: 0 18px;
+  height: 32px;
+  line-height: 33px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  min-width: 10px;
+}

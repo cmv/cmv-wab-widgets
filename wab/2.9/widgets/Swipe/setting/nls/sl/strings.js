@@ -1,0 +1,23 @@
+define({
+  "styleText": "Izberite slog orodja za podrsanje",
+  "vertical": "Vertikalna vrstica",
+  "horizontal": "Horizontalna vrstica",
+  "scope": "Lupa",
+  "barColor": "Barva vrstice",
+  "swipeMode": "Drsni način",
+  "singleLayer": "Enojni sloj",
+  "MultipleLayers": "Več slojev",
+  "allowToSwipe": "Dovoli drsenje",
+  "layer": "Sloj",
+  "swipeByDefault": "Privzeto podrsni",
+  "defaultLayerMustBeVisible": "privzeti sloj mora biti viden",
+  "noDefaultLayer": "Nastavite sloje, ki jih boste privzeto podrsnili",
+  "defaultLayerHolder": "Kliknite za izbiro",
+  "selectLayers": "Izberi sloje",
+  "layerText": "Izberite sloje, ki jih želite privzeto podrsniti",
+  "spyglassText": "Izberite sloj, ki se bo privzeto pokazal znotraj lupe",
+  "layerHint": "Opomba: Če je sloj prekrit z zgornjimi sloji, podrsanje ne bo imelo učinka.",
+  "isZoom": "Približaj na sloj za drsenje",
+  "isZooms": "Približaj na sloje za drsenje",
+  "layersAvailable": "Izberi sloje za drsenje:"
+});

@@ -1,0 +1,23 @@
+define({
+  "styleText": "Trieu un estil per a l'eina de comparativa",
+  "vertical": "Barra vertical",
+  "horizontal": "Barra horitzontal",
+  "scope": "Lupa",
+  "barColor": "Color de les barres",
+  "swipeMode": "Mode del Swipe",
+  "singleLayer": "Una sola capa",
+  "MultipleLayers": "Diverses capes",
+  "allowToSwipe": "Permet passar el dit",
+  "layer": "Capa",
+  "swipeByDefault": "Passa el dit per defecte",
+  "defaultLayerMustBeVisible": "la capa per defecte ha de ser visible",
+  "noDefaultLayer": "Definiu les capes on voleu passar el dit per defecte",
+  "defaultLayerHolder": "Feu clic per seleccionar",
+  "selectLayers": "Seleccioneu les capes",
+  "layerText": "Seleccioneu les capes on voleu passar el dit per defecte",
+  "spyglassText": "Seleccioneu la capa que voleu que aparegui dins de la lupa per defecte.",
+  "layerHint": "Nota: si una capa queda amagada per les capes superiors, passar el dit no tindrà cap efecte.",
+  "isZoom": "Aplica el zoom a la capa de comparativa",
+  "isZooms": "Aplica el zoom a les capes de comparativa",
+  "layersAvailable": "Trieu les capes on voleu passar el dit:"
+});

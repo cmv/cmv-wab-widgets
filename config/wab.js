@@ -144,7 +144,7 @@ define([
                             {
                                 id: 'WABChart',
                                 uri: 'wabwidgets/Chart/Widget',
-                                version: '2.1',
+                                version: 2.8,
                                 config: 'config/chart.json'
                             }
                         ]

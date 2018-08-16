@@ -1,0 +1,53 @@
+<div>
+	<div class="mark-row">
+		<div class="mark-col">${nls.valueString}</div>
+		<div class="mark-col">
+			<input class="mark-input"  data-dojo-type="dijit/form/NumberTextBox" required data-dojo-attach-point="valueInput" data-dojo-attach-event="change:_onValueChanged" />
+		</div>
+	</div>
+
+	<div class="mark-row">
+		<div class="mark-col">${nls.labelString}</div>
+		<div class="mark-col">
+			<input class="mark-input" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="labelInput" data-dojo-attach-event="change:_onChange" />
+		</div>
+	</div>
+
+	<div class="mark-row">
+		<div class="mark-col">${nls.labelColor}</div>
+		<div class="mark-col">
+			<div data-dojo-attach-point="labelColor" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/ChartColorSetting"  data-dojo-attach-event="change:_onChange"></div>
+		</div>
+	</div>
+
+	<div class="mark-row">
+		<div class="mark-col">${nls.labelPosition}</div>
+		<div class="mark-col">
+			<div class="flex-center-sb line-pos">
+				<div data-dojo-attach-point="posStart" data-dojo-attach-event="click:_onPosStartClicked" class="box box-3 box-style textOverFlow jimu-auto-vertical" title="${nls.start}">${nls.start}</div>
+				<div data-dojo-attach-point="posMiddle" data-dojo-attach-event="click:_onPosMiddleClicked" class="box box-3 box-style textOverFlow jimu-auto-vertical" title="${nls.middle}">${nls.middle}</div>
+				<div data-dojo-attach-point="posEnd" data-dojo-attach-event="click:_onPosEndClicked" class="box box-3 box-style textOverFlow jimu-auto-vertical" title="${nls.end}">${nls.end}</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="mark-row">
+		<div class="mark-col">${nls.lineColor}</div>
+		<div class="mark-col">
+			<div data-dojo-attach-point="lineColor" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/ChartColorSetting" data-dojo-attach-event="change:_onChange"></div>
+		</div>
+	</div>
+
+	<div class="mark-row">
+		<div class="mark-col">${nls.lineWidth}</div>
+		<div data-dojo-attach-point="lineWidthSliderDiv" class="mark-col"></div>
+	</div>
+
+	<div class="mark-row">
+		<div class="mark-col">${nls.dashType}</div>
+		<div class="mark-col">
+			<div data-dojo-attach-point="dashType" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/Mark/DashTypeSelect" data-dojo-props="folderUrl:'${folderUrl}'" data-dojo-attach-event="change:_onChange"></div>
+		</div>
+	</div>
+
+</div>

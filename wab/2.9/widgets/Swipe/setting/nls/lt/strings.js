@@ -1,0 +1,23 @@
+define({
+  "styleText": "Pasirinkite keitiklio įrankio stilių",
+  "vertical": "Vertikali juosta",
+  "horizontal": "Horizontali juosta",
+  "scope": "Didinamasis stiklas",
+  "barColor": "Stulpelio spalva",
+  "swipeMode": "Keitiklio režimas",
+  "singleLayer": "Vienas sluoksnis",
+  "MultipleLayers": "Keli sluoksniai",
+  "allowToSwipe": "Leisti keisti",
+  "layer": "Sluoksnis",
+  "swipeByDefault": "Keisti pagal numatytuosius parametrus",
+  "defaultLayerMustBeVisible": "numatytasis sluoksnis turi būti matomas",
+  "noDefaultLayer": "Nustatykite sluoksnius, kurie bus keičiami pagal numatytuosius nustatymus",
+  "defaultLayerHolder": "Spustelėkite, norėdami pasirinkti",
+  "selectLayers": "Pasirinkite sluoksnius",
+  "layerText": "Pasirinkite sluoksnį (-ius), kurį (-iuos) norite keisti pagal numatytuosius nustatymus",
+  "spyglassText": "Pasirinkite sluoksnį, kuris atsiras po didinamuoju stiklu pagal nutylėjimą.",
+  "layerHint": "Pastaba: Jei sluoksnis paslėptas po aukščiau esančiais sluoksniais, keitiklis neturės jokio poveikio.",
+  "isZoom": "Priartinti slenkamą sluoksnį",
+  "isZooms": "Priartinti slenkamą sluoksnį (-ius)",
+  "layersAvailable": "Pasirinkite, kuriuos sluoksnius slinkti:"
+});

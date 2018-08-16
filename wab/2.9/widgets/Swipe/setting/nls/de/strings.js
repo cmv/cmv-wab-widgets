@@ -1,0 +1,23 @@
+define({
+  "styleText": "Style für das Werkzeug \"Vergleichen\" auswählen",
+  "vertical": "Vertikaler Balken",
+  "horizontal": "Horizontaler Balken",
+  "scope": "Fernglas",
+  "barColor": "Balkenfarbe",
+  "swipeMode": "Modus \"Ausblenden\"",
+  "singleLayer": "Einzelner Layer",
+  "MultipleLayers": "Mehrere Layer",
+  "allowToSwipe": "Ausblenden erlauben",
+  "layer": "Layer",
+  "swipeByDefault": "Standardmäßig ausblenden",
+  "defaultLayerMustBeVisible": "Standard-Layer muss sichtbar sein",
+  "noDefaultLayer": "Legen Sie die standardmäßig auszublendenden Layer fest.",
+  "defaultLayerHolder": "Zum Auswählen klicken",
+  "selectLayers": "Layer auswählen",
+  "layerText": "Wählen Sie die Layer aus, die standardmäßig ausgeblendet werden sollen.",
+  "spyglassText": "Layer auswählen, der standardmäßig im Fernglas angezeigt werden soll.",
+  "layerHint": "Hinweis: Wenn der Layer von darüber liegenden Layern verdeckt wird, hat \"Ausblenden“ keine Wirkung.",
+  "isZoom": "Auf ausgeblendeten Layer zoomen",
+  "isZooms": "Auf auszublendende(n) Layer zoomen",
+  "layersAvailable": "Auszublendenden Layer auswählen:"
+});

@@ -1,0 +1,23 @@
+define({
+  "styleText": "Escolha um estilo para a ferramenta de swipe",
+  "vertical": "Barra vertical",
+  "horizontal": "Barra horizontal",
+  "scope": "Lupa",
+  "barColor": "Cores das barras",
+  "swipeMode": "Modo de Varrimento",
+  "singleLayer": "Camada única",
+  "MultipleLayers": "Múltiplas camadas",
+  "allowToSwipe": "Permitir varrimento",
+  "layer": "Camada",
+  "swipeByDefault": "Varrimento por defeito",
+  "defaultLayerMustBeVisible": "a camada padrão tem de encontrar-se visível",
+  "noDefaultLayer": "Por favor, defina as camadas para varrer por defeito",
+  "defaultLayerHolder": "Clicar para selecionar.",
+  "selectLayers": "Selecionar camadas",
+  "layerText": "Selecionar a(s) camada(s) que pretende varrer por defeito",
+  "spyglassText": "Selecione a camada que aparece dentro da lupa por defeito.",
+  "layerHint": "Nota: Se a camada está escondida em camadas superiores, fazer swipe não terá qualquer efeito.",
+  "isZoom": "Efetuar Zoom para a camada de varrimento",
+  "isZooms": "Efetuar Zoom para a(s) camada(s) de varrimento",
+  "layersAvailable": "Selecionar a que camadas aplicar varrimento"
+});

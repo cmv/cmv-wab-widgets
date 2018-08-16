@@ -1,0 +1,23 @@
+define({
+  "styleText": "Zvolte styl nástroje překrývání.",
+  "vertical": "Svislý pruh",
+  "horizontal": "Vodorovný pruh",
+  "scope": "Lupa",
+  "barColor": "Barva sloupce",
+  "swipeMode": "Režim překrývání",
+  "singleLayer": "Jedna vrstva",
+  "MultipleLayers": "Několik vrstev",
+  "allowToSwipe": "Povolit překrývání",
+  "layer": "Vrstva",
+  "swipeByDefault": "Překrývání jako výchozí nastavení",
+  "defaultLayerMustBeVisible": "výchozí vrstva musí být viditelná",
+  "noDefaultLayer": "Nastavte prosím výchozí vrstvy pro překrývání",
+  "defaultLayerHolder": "Kliknutím vyberte",
+  "selectLayers": "Vybrat vrstvy",
+  "layerText": "Vyberte výchozí vrstvu pro překrývání.",
+  "spyglassText": "Vyberte výchozí vrstvu lupy.",
+  "layerHint": "Poznámka: Pokud je vrstva zakrytá svrchnějšími vrstvami, překrývání se nijak neprojeví.",
+  "isZoom": "Přiblížit na vrstvu překryvu",
+  "isZooms": "Přiblížit na vrstvu překryvu",
+  "layersAvailable": "Vyberte, které vrstvy překrýt:"
+});

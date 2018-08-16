@@ -1,0 +1,22 @@
+define({
+  "_widgetLabel": "Quadre de comandaments del Reviewer",
+  "spatialFilterSelection": "Filtra els resultats per geografia",
+  "drawSelectionArea": "Dibuixa una àrea de selecció de resultats al mapa",
+  "currentSelection": "Mostra els resultats només de l'extensió de mapa actual",
+  "censusBlockGroup": "Mostra els resultats per geografia",
+  "noSpatialFilter": " Utilitza un filtre no espacial",
+  "reviewerSessionFilter": "Filtra els resultats per sessió del Reviewer",
+  "selectAttributeFilters": "Seleccioneu la informació que vulgueu visualitzar",
+  "phaseFieldName": "lifecyclephase",
+  "statusFieldName": "lifecyclestatus",
+  "allSessions": "Totes les sessions",
+  "dashboardTab": "Quadre de comandaments",
+  "filtersTab": "Configuració",
+  "noResults": "No s'ha trobat cap resultat",
+  "resultsBy": "Resultats per: ",
+  "reviewed": "Revisió",
+  "corrected": "Correcció",
+  "verified": "Verificació",
+  "OtherCategory": "Altres",
+  "backButton": "Enrere"
+});

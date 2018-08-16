@@ -1,0 +1,174 @@
+<div style="width:100%;">
+    <div data-dojo-attach-point="tabDiv">
+        <div data-dojo-attach-point="firstPageDiv">
+            <div data-dojo-attach-point="layerSettingTabNode">
+                <div data-dojo-attach-point="breadCrumbContainer" class="breadCrumbContainer">
+                </div>
+                <div class="layerTable" data-dojo-attach-point="tableLayerInfos"></div>
+            </div>
+
+            <div class="generalSettings" data-dojo-attach-point="generalSettingTabNode">
+                <div class="buttonSection">
+                    <div class="jimu-btn jimu-trailing-margin1" data-dojo-attach-point="presetSettings">${nls.layersPage.presetValueText}</div>
+                    <div class="jimu-btn jimu-trailing-margin1" data-dojo-attach-point="geocoderSettings">${nls.layersPage.geocoderSettingsText}</div>
+                </div>
+                <div class="generalSettingsOptions">
+                    <fieldset class="esriCTFieldSet">
+                        <legend class="esriCTFieldSetLegend">${nls.layersPage.featureTemplateLegendLabel}</legend>
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="displayShapeSelector" id="displayShapeSelector" data-dojo-type="dijit/form/CheckBox"
+                                title="${nls.layersPage.displayShapeSelectorTip}" />
+                            <label class="checkLabel" for="displayShapeSelector" title="${nls.layersPage.displayShapeSelectorTip}">${nls.layersPage.displayShapeSelector}</label>
+
+                        </div>
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="displayPresetTop" id="displayPresetTop" data-dojo-type="dijit/form/CheckBox"
+                                title="${nls.layersPage.displayPresetTopTip}" />
+                            <label class="checkLabel" for="displayPresetTop" title="${nls.layersPage.displayPresetTopTip}">${nls.layersPage.displayPresetTop}</label>
+
+                        </div>
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="useFilterEditor" id="useFilterEditor" data-dojo-type="dijit/form/CheckBox" title="${nls.layersPage.useFilterEditorTip}"
+                            />
+                            <label class="checkLabel" for="useFilterEditor" title="${nls.layersPage.useFilterEditorTip}">${nls.layersPage.useFilterEditor}</label>
+
+                        </div>
+
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="keepTemplateSelected" id="keepTemplateSelected" data-dojo-type="dijit/form/CheckBox"
+                                title="${nls.layersPage.keepTemplateActiveTip}" />
+                            <label class="checkLabel" for="keepTemplateSelected" title="${nls.layersPage.keepTemplateActiveTip}">${nls.layersPage.keepTemplateActive}</label>
+
+                        </div>
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="listenToGF" id="listenToGF" data-dojo-type="dijit/form/CheckBox" title="${nls.layersPage.listenToGroupFilterTip}"
+                            />
+                            <label class="checkLabel" for="listenToGF" title="${nls.layersPage.listenToGroupFilterTip}">${nls.layersPage.listenToGroupFilter}</label>
+
+                        </div>
+
+
+                    </fieldset>
+                    <fieldset class="esriCTFieldSet">
+                        <legend class="esriCTFieldSetLegend">${nls.layersPage.saveSettingsLegendLabel}</legend>
+
+                        <div class="esriCTButtonPositionsLabel">${nls.layersPage.buttonPositionsLabel}</div>
+                        <div class="esriCTRadioBtnContainer">
+                            <div class="esriCTRadioBtn">
+                                <input data-dojo-type="jimu/dijit/RadioBtn" id="positionOfSaveButtonBelow"  data-dojo-props="group: 'g1'" type="radio" name="jimuradiobtn" checked="true"
+                                    data-dojo-attach-point="positionOfSaveButtonBelow">
+                                <label class="esriCTRadioLabel" for="positionOfSaveButtonBelow">
+                                    ${nls.layersPage.belowEditLabel}
+                                </label>
+                            </div>
+                            <div class="esriCTRadioBtn">
+                                <input data-dojo-type="jimu/dijit/RadioBtn" id="positionOfSaveButtonAbove"  data-dojo-props="group: 'g1'" type="radio" name="jimuradiobtn" data-dojo-attach-point="positionOfSaveButtonAbove">
+                                <label class="esriCTRadioLabel" for="positionOfSaveButtonAbove">
+                                    ${nls.layersPage.aboveEditLabel}
+                                </label>
+                            </div>
+
+
+                        </div>
+
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="displayPromptOnSave" id="displayPromptOnSave" data-dojo-type="dijit/form/CheckBox"
+                                title="${nls.layersPage.promptOnSaveTip}" />
+                            <label class="checkLabel" for="displayPromptOnSave" title="${nls.layersPage.promptOnSaveTip}">${nls.layersPage.promptOnSave}</label>
+
+                        </div>
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="displayPromptOnDelete" id="displayPromptOnDelete" data-dojo-type="dijit/form/CheckBox"
+                                title="${nls.layersPage.promptOnDeleteTip}" />
+                            <label class="checkLabel" for="displayPromptOnDelete" title="${nls.layersPage.promptOnDeleteTip}">${nls.layersPage.promptOnDelete}</label>
+
+                        </div>
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="autoSaveEdits" id="autoSaveEdits" data-dojo-type="dijit/form/CheckBox" title="${nls.layersPage.autoSaveEdits}"
+                            />
+                            <label class="checkLabel" for="autoSaveEdits" title="${nls.layersPage.autoSaveEdits}">${nls.layersPage.autoSaveEdits}</label>
+
+                        </div>
+
+
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="removeOnSave" id="removeOnSave" data-dojo-type="dijit/form/CheckBox" title="${nls.layersPage.removeOnSaveTip}"
+                            />
+                            <label class="checkLabel" for="removeOnSave" title="${nls.layersPage.removeOnSaveTip}">${nls.layersPage.removeOnSave}</label>
+
+                        </div>
+
+                    </fieldset>
+                    <fieldset class="esriCTFieldSet">
+                        <legend class="esriCTFieldSetLegend">${nls.layersPage.geometrySettingsLegendLabel}</legend>
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="editGeometryDefault" id="editGeometryDefault" data-dojo-type="dijit/form/CheckBox"
+                                title="${nls.layersPage.geometryEditDefault}" />
+                            <label class="checkLabel" for="editGeometryDefault" title="${nls.layersPage.geometryEditDefault}">${nls.layersPage.geometryEditDefault}</label>
+
+                        </div>
+
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="enableAttributeUpdates" id="enableAttributeUpdates" data-dojo-type="dijit/form/CheckBox"
+                                title="${nls.layersPage.enableAttributeUpdates}" />
+                            <label class="checkLabel" for="enableAttributeUpdates" title="${nls.layersPage.enableAttributeUpdates}">${nls.layersPage.enableAttributeUpdates}</label>
+
+                        </div>
+
+                        <div class="checkOption" style="text-indent: 25px;">
+
+                            <input class="check" data-dojo-attach-point="enableAutomaticAttributeUpdates" id="enableAutomaticAttributeUpdates" data-dojo-type="dijit/form/CheckBox"
+                                title="${nls.layersPage.enableAutomaticAttributeUpdates}" />
+                            <label class="checkLabel" for="enableAutomaticAttributeUpdates" title="${nls.layersPage.enableAutomaticAttributeUpdates}">${nls.layersPage.enableAutomaticAttributeUpdates}</label>
+                        </div>
+
+
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="enableLockingMapNavigation" id="enableLockingMapNavigation" data-dojo-type="dijit/form/CheckBox"
+                                title="${nls.layersPage.enableLockingMapNavigation}" />
+                            <label class="checkLabel" for="enableLockingMapNavigation" title="${nls.layersPage.enableLockingMapNavigation}">${nls.layersPage.enableLockingMapNavigation}</label>
+
+                        </div>
+
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="enableMovingSelectedFeatureToGPS" id="enableMovingSelectedFeatureToGPS" data-dojo-type="dijit/form/CheckBox"
+                                title="${nls.layersPage.enableMovingSelectedFeatureToGPS}" />
+                            <label class="checkLabel" for="enableMovingSelectedFeatureToGPS" title="${nls.layersPage.enableMovingSelectedFeatureToGPS}">${nls.layersPage.enableMovingSelectedFeatureToGPS}</label>
+
+                        </div>
+
+
+                        <div class="checkOption">
+
+                            <input class="check" data-dojo-attach-point="enableMovingSelectedFeatureToXY" id="enableMovingSelectedFeatureToXY" data-dojo-type="dijit/form/CheckBox"
+                                 title="${nls.layersPage.enableMovingSelectedFeatureToXY}" />
+                            <label class="checkLabel" for="enableMovingSelectedFeatureToXY" title="${nls.layersPage.enableMovingSelectedFeatureToXY}">${nls.layersPage.enableMovingSelectedFeatureToXY}</label>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="edit-description-title" title="${nls.layersPage.editDescriptionTip}">${nls.layersPage.editDescription}</div>
+
+                <div class="edit-description-box">
+                    <div data-dojo-attach-point="editorDescription"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="tableInfos-loading" data-dojo-attach-point="tableInfosLoading"></div>
+</div>

@@ -1,0 +1,23 @@
+define({
+  "styleText": "스와이프 도구에 대한 스타일을 선택",
+  "vertical": "수직 막대",
+  "horizontal": "수평 막대",
+  "scope": "확대 렌즈",
+  "barColor": "막대 색상",
+  "swipeMode": "스와이프 모드",
+  "singleLayer": "단일 레이어",
+  "MultipleLayers": "다중 레이어",
+  "allowToSwipe": "스와이프 허용",
+  "layer": "레이어",
+  "swipeByDefault": "기본 설정에 따라 스와이프",
+  "defaultLayerMustBeVisible": "기본 레이어는 보여야 함",
+  "noDefaultLayer": "기본 설정에 따라 스와이프하도록 레이어를 설정하세요.",
+  "defaultLayerHolder": "선택하려면 클릭",
+  "selectLayers": "레이어 선택",
+  "layerText": "기본 설정에 따라 스와이프할 레이어 선택",
+  "spyglassText": "기본 설정에 따라 확대 렌즈 내에 나타낼 레이어를 선택합니다.",
+  "layerHint": "참고: 레이어가 상위 레이어로 숨겨진 경우 스와이프가 영향을 미치지 않습니다.",
+  "isZoom": "스와이프 레이어 확대",
+  "isZooms": "스와이프 레이어 확대/축소",
+  "layersAvailable": "스와이프할 레이어 선택:"
+});

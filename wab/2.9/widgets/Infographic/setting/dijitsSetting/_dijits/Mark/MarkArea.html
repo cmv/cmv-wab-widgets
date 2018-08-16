@@ -1,0 +1,55 @@
+<div>
+	<div class="mark-row">
+		<div class="mark-col">${nls.valueString}</div>
+		<div class="mark-col">
+			<div class="text-2-text">
+				<input class="mark-input text-2" data-dojo-type="dijit/form/NumberTextBox" required  data-dojo-attach-point="valInput1" data-dojo-attach-event="change:_onValueChanged" />
+				<div class="t-to-t textOverFlow" title="${nls.toString}">${nls.toString}</div>
+				<input class="mark-input text-2" data-dojo-type="dijit/form/NumberTextBox" required  data-dojo-attach-point="valInput2" data-dojo-attach-event="change:_onValueChanged" />
+			</div>
+		</div>
+	</div>
+
+	<div class="mark-row">
+		<div class="mark-col">${nls.labelString}</div>
+		<div class="mark-col">
+			<input class="mark-input" data-dojo-type="dijit/form/TextBox" data-dojo-attach-point="labelInput" data-dojo-attach-event="change:_onChange" />
+		</div>
+	</div>
+
+	<div class="mark-row">
+		<div class="mark-col">${nls.labelColor}</div>
+		<div class="mark-col">
+			<div data-dojo-attach-point="labelColor" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/ChartColorSetting" data-dojo-attach-event="change:_onChange"></div>
+		</div>
+	</div>
+
+	<div class="mark-row">
+		<div class="mark-col">${nls.labelPosition}</div>
+		<div class="mark-col flex-center-sb">
+			<div class="left-pos">
+				<select data-dojo-attach-point="posSelect" data-dojo-type="dijit/form/Select" data-dojo-attach-event="change:_onChange" class="restrict-select-width mark-select-width">
+					<option value="left">${nls.left}</option>
+					<option value="top">${nls.top}</option>
+					<option value="right">${nls.right}</option>
+					<option value="bottom">${nls.bottom}</option>
+				</select>
+			</div>
+			<div class="right-loc flex-center-sb">
+				<div data-dojo-attach-point="insideBtn" data-dojo-attach-event="click:_oninsideClicked" class="box box-2 box-style textOverFlow jimu-auto-vertical" title="${nls.inString}">${nls.inString}</div>
+				<div data-dojo-attach-event="click:_onoutsideClicked" data-dojo-attach-point="outsideBtn" class="box box-2 box-style clear-left-border textOverFlow jimu-auto-vertical" title="${nls.outString}">${nls.outString}</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="mark-row">
+		<div class="mark-col">${nls.areaColor}</div>
+		<div class="mark-col flex-center-sb">
+			<div class="left-clr">
+				<div data-dojo-attach-point="areaColor" data-dojo-type="widgets/Infographic/setting/dijitsSetting/_dijits/ChartColorSetting" data-dojo-attach-event="change:_onChange"></div>
+			</div>
+			<div data-dojo-attach-point="opacityDiv" class="right-opa"></div>
+		</div>
+	</div>
+
+</div>

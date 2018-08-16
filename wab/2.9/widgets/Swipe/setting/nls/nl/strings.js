@@ -1,0 +1,23 @@
+define({
+  "styleText": "Kies een stijl voor de swipe tool",
+  "vertical": "Verticale balk",
+  "horizontal": "Horizontale balk",
+  "scope": "Verrekijker",
+  "barColor": "Staafkleur",
+  "swipeMode": "Swipe-modus",
+  "singleLayer": "Enkele laag",
+  "MultipleLayers": "Meerdere lagen",
+  "allowToSwipe": "Swipen toestaan",
+  "layer": "Kaartlaag",
+  "swipeByDefault": "Standaard swipen",
+  "defaultLayerMustBeVisible": "standaardlaag moet zichtbaar zijn",
+  "noDefaultLayer": "Stel de lagen standaard in op swipen",
+  "defaultLayerHolder": "Klik om te selecteren",
+  "selectLayers": "Lagen selecteren",
+  "layerText": "Selecteer de la(a)g(en) waarop swipe standaard moet worden toegepast",
+  "spyglassText": "Selecteer de laag die standaard binnen de verrekijker moet verschijnen.",
+  "layerHint": "Opmerking: Als de laag door bovenliggende lagen verborgen wordt, heeft swipe geen effect.",
+  "isZoom": "Zoom om laag te swipen",
+  "isZooms": "Zoom om la(a)g(en) te swipen",
+  "layersAvailable": "Kies welke lagen geswipet moeten worden:"
+});

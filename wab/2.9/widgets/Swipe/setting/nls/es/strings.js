@@ -1,0 +1,23 @@
+define({
+  "styleText": "Selecciona un estilo para la herramienta swipe",
+  "vertical": "Barra vertical",
+  "horizontal": "Barra horizontal",
+  "scope": "Lupa",
+  "barColor": "Color de barra",
+  "swipeMode": "Modo swipe",
+  "singleLayer": "Una sola capa",
+  "MultipleLayers": "Varias capas",
+  "allowToSwipe": "Permitir swipe",
+  "layer": "Capa",
+  "swipeByDefault": "Swipe de forma predeterminada",
+  "defaultLayerMustBeVisible": "la capa predeterminada debe estar visible",
+  "noDefaultLayer": "Configure las capas para que usen la función swipe de forma predeterminada",
+  "defaultLayerHolder": "Clic para seleccionar",
+  "selectLayers": "Seleccionar capas",
+  "layerText": "Seleccione la(s) capa(s) con función swipe predeterminada",
+  "spyglassText": "Selecciona la capa que deseas que aparezca dentro de la lupa de manera predeterminada.",
+  "layerHint": "Nota: Si las capas superiores ocultan la capa, el barrido no surtirá efecto.",
+  "isZoom": "Acercar a la capa de barrido",
+  "isZooms": "Acercar a la(s) capa(s) con función swipe",
+  "layersAvailable": "Elegir las capas que se deben barrer:"
+});
