@@ -1,0 +1,48 @@
+<div class="main-settings">
+  <div class="main-section">
+
+    <!--=Layer Options-->
+    <div class="pad-bottom-20" style="overflow: hidden;" data-dojo-attach-point="layerListNode"></div>
+
+    <!--Geocode Options-->
+    <fieldset class="settings-field-set">
+      <legend class="settings-field-set-legend">
+        ${nls.geocodeTabLabel}
+      </legend>
+      <div data-dojo-attach-point="geocodeTabNode">
+        <div class="geocode-node">
+          <div data-dojo-attach-point="locatorOptions" style="display:block;">
+            <div class="add-button" role="button" data-dojo-attach-event="click:_onAddClick">
+              <div class="button">
+                <span class="button-text">${nls.add}</span>
+              </div>
+            </div>
+            <div class="sources">
+              <div class="source-list jimu-float-leading">
+                <div class="source-list-table" data-dojo-attach-point="sourceList"></div>
+              </div>
+              <div class="source-setting jimu-float-trailing" data-dojo-attach-point="sourceSettingNode"></div>
+              <table class="xy-table" cellspacing="0">
+                <tbody>
+                  <tr>
+                    <td colspan="1" style="padding-top:22px;">
+                      <div>
+                        <div class="field-option-label" data-dojo-attach-point="enableXYField" title="${nls.configureXYFields}"></div>
+                        <div data-dojo-attach-point="editXYFields" class="edit-fields"></div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="1">
+                      <span class="tip">${nls.xyFieldHint}</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>

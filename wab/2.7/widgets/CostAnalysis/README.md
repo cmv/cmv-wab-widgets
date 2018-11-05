@@ -1,1 +1,0 @@
-Cost analysis WAB widget

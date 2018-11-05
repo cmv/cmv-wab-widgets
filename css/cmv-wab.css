@@ -36,9 +36,29 @@
     min-height: 300px;
 }
 
+.cmv .jimu-widget-edit {
+    min-height: 200px;
+}
+
+.cmv .jimu-widget-edit .esriDrawingToolbar {
+    min-height: 25px;
+}
+
+.cmv .jimu-widget-mylocation,
+.cmv .jimu-widget-homebutton {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-width: 0;
+}
+
+.cmv .jimu-widget-mylocation .place-holder,
+.cmv .jimu-widget-homebutton .HomeButton .home {
+    background-color: transparent;
+}
+
 .cmv .jimu-single-filter-parameter .dijit-form-FilteringSelect {
     height: 24px;
 }
+
 .cmv .jimu-single-filter-parameter .dijit-form-FilteringSelect > div.dijitArrowButton.dijitDownArrowButton {
     padding: 2px 0;
 }

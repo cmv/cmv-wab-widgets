@@ -1,0 +1,23 @@
+define({
+  "styleText": "Izaberite stil alatke za brzo prevlačenje",
+  "vertical": "Vertikalna traka",
+  "horizontal": "Horizontalna traka",
+  "scope": "Lupa",
+  "barColor": "Boja trake",
+  "swipeMode": "Režim prevlačenja",
+  "singleLayer": "Jedan sloj",
+  "MultipleLayers": "Više slojeva",
+  "allowToSwipe": "Omogući prevlačenje",
+  "layer": "Sloj",
+  "swipeByDefault": "Podrazumevano prevlači",
+  "defaultLayerMustBeVisible": "podrazumevani sloj mora da bude vidljiv",
+  "noDefaultLayer": "Postavite podrazumevano prevlačenje slojeva",
+  "defaultLayerHolder": "Kliknite da biste selektovali",
+  "selectLayers": "Selektujte slojeve",
+  "layerText": "Izaberite sloj(eve) koji(-e) želite podrazumevano da prevučete",
+  "spyglassText": "Izaberite sloj koji će se kao podrazumevani prikazati u lupi.",
+  "layerHint": "Napomena: ako je sloj sakriven ispod gornjih slojeva, prevlačenje neće imati nikakvog efekta.",
+  "isZoom": "Zumirajte da prevučete sloj",
+  "isZooms": "Zumirajte da prevučete sloj(eve)",
+  "layersAvailable": "Odaberite sloj za prevlačenje:"
+});

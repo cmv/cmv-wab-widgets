@@ -1,0 +1,22 @@
+define({
+  "drsSOEURL": "Adatellenőrző szerver URL-címe",
+  "chartSection": "Szeletek/sávok száma a diagramon",
+  "selectByGeography": "Földrajzi terület szerinti szűrés",
+  "selectUrl": "Szolgáltatásréteg a földrajzi hely szűréshez",
+  "selectMapUrl": "Szolgáltatás a földrajzi hely szűréshez",
+  "geometryServiceURL": "Geometriai adatszolgáltatás URL-címe",
+  "includeFieldNames": "Mezők kiválasztása",
+  "fieldNames": "Mezőnevek",
+  "lifecyclePhaseFieldName": "Életciklus-státusz",
+  "setSource": "Beállítás",
+  "defaultFieldName": "súlyosság",
+  "warning": "Helytelen adatbevitel",
+  "includeDefaultFieldName": "Az alapértelmezett mezőnevet ki kell választani",
+  "selectFieldWarning": "Legalább egy mező legyen látható",
+  "defaultFieldNotVisible": "Az alapértelmezett mezőnek láthatónak kell lennie",
+  "batchJobCheckGroup": "batchjobcheckgroup",
+  "defaultColumn": "Alapértelmezett",
+  "visibleColumn": "Látható",
+  "fieldNameColumn": "Dashboard-mező neve",
+  "aliasColumn": "Aliasnév"
+});

@@ -1,0 +1,14 @@
+{
+  "showTitle": true,
+  "showBasemap": false,
+  "showLegend": true,
+  "expandAllLayersByDefault": false,
+  "contextMenu": {
+	"ZoomTo": true,
+	"Transparency": true,
+	"EnableOrDisablePopup": true,
+	"MoveupOrMovedown": true,
+	"OpenAttributeTable": true,
+	"DescriptionOrShowItemDetailsOrDownload": true
+  }
+}

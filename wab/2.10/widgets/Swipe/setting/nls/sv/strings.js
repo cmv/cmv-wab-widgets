@@ -1,0 +1,23 @@
+define({
+  "styleText": "Välj en stil för svepverktyget",
+  "vertical": "Lodrät stapel",
+  "horizontal": "Vågrät stapel",
+  "scope": "Kikare",
+  "barColor": "Stapelfärg",
+  "swipeMode": "Svepläge",
+  "singleLayer": "Enstaka lager",
+  "MultipleLayers": "Flera lager",
+  "allowToSwipe": "Tillåt svep",
+  "layer": "Lager",
+  "swipeByDefault": "Svep som standard",
+  "defaultLayerMustBeVisible": "standardlagret måste vara synligt",
+  "noDefaultLayer": "Ange de lager som ska svepas som standard",
+  "defaultLayerHolder": "Klicka för att välja",
+  "selectLayers": "Välj lager",
+  "layerText": "Välj de lager som ska svepas som standard",
+  "spyglassText": "Välj det lager som ska visas som standard i kikaren.",
+  "layerHint": "Obs! Om lagret är dolt av högre lager har det ingen effekt när du sveper.",
+  "isZoom": "Zooma till sveplagret",
+  "isZooms": "Zooma för att svepa lager",
+  "layersAvailable": "Välj vilka lager som ska svepas:"
+});

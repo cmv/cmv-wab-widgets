@@ -1,0 +1,23 @@
+define({
+  "styleText": "為此撥動工具選擇樣式",
+  "vertical": "垂直列",
+  "horizontal": "水平列",
+  "scope": "望遠鏡",
+  "barColor": "軸顏色",
+  "swipeMode": "撥動模式",
+  "singleLayer": "單一圖層",
+  "MultipleLayers": "多個圖層",
+  "allowToSwipe": "允許撥動",
+  "layer": "圖層",
+  "swipeByDefault": "預設撥動",
+  "defaultLayerMustBeVisible": "預設圖層必須可見",
+  "noDefaultLayer": "請將圖層設定為預設撥動",
+  "defaultLayerHolder": "按一下以選擇",
+  "selectLayers": "選擇圖層",
+  "layerText": "選擇您希望預設撥動的圖層",
+  "spyglassText": "選擇預設顯示在望遠鏡中的圖層。",
+  "layerHint": "注意: 如果上面的圖層隱藏了該圖層，則撥動功能不會生效。",
+  "isZoom": "縮放以撥動圖層",
+  "isZooms": "縮放以撥動圖層",
+  "layersAvailable": "選擇要撥動的圖層:"
+});

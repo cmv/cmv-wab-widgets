@@ -96,6 +96,7 @@ Both of these widgets have been modified from the original to provide additional
 
 - This method supports the following versions of the WebApp Builder:
 
+    - version 2.10 released October 2018
     - version 2.9 released July 2018
     - version 2.8 released April 2018
 

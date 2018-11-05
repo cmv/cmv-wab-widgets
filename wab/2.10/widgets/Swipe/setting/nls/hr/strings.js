@@ -1,0 +1,23 @@
+define({
+  "styleText": "Izaberite stil za alat klizača",
+  "vertical": "Okomita traka",
+  "horizontal": "Vodoravna traka",
+  "scope": "Povećalo",
+  "barColor": "Boja trake",
+  "swipeMode": "Način klizanja",
+  "singleLayer": "Jedan sloj",
+  "MultipleLayers": "Više slojeva",
+  "allowToSwipe": "Omogući klizanje",
+  "layer": "Sloj",
+  "swipeByDefault": "Klizanje prema zadanim postavkama",
+  "defaultLayerMustBeVisible": "zadani sloj mora biti vidljiv",
+  "noDefaultLayer": "Postavite slojeve za klizanje prema zadanim postavkama",
+  "defaultLayerHolder": "Kliknite za odabir",
+  "selectLayers": "Odaberite slojeve",
+  "layerText": "Odaberite slojeve za koje želite omogućiti klizanje prema zadanim postavkama",
+  "spyglassText": "Odaberite sloj koji će se pojaviti unutar povećala prema zadanim postavkama.",
+  "layerHint": "Napomena: ako je sloj skriven gornjim slojevima, klizač neće imati nikakvog učinka.",
+  "isZoom": "Uvećaj sloj klizača",
+  "isZooms": "Uvećajte slojeve za klizanje",
+  "layersAvailable": "Odaberite slojeve koje ćete kliznuti:"
+});

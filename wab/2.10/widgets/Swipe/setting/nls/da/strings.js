@@ -1,0 +1,23 @@
+define({
+  "styleText": "Vælg en typografi til swipe-værktøjet",
+  "vertical": "Lodret linje",
+  "horizontal": "Vandret bjælke",
+  "scope": "Kikkert",
+  "barColor": "Bjælkefarve",
+  "swipeMode": "Swipe-tilstand",
+  "singleLayer": "Enkelt lag",
+  "MultipleLayers": "Flere lag",
+  "allowToSwipe": "Tillad swipe",
+  "layer": "Lag",
+  "swipeByDefault": "Swipe som standard",
+  "defaultLayerMustBeVisible": "standardlaget skal være synligt",
+  "noDefaultLayer": "Indstil lagene til swipe som standard",
+  "defaultLayerHolder": "Klik for at vælge",
+  "selectLayers": "Vælg lag",
+  "layerText": "Vælg det eller de lag, der skal swipe som standard",
+  "spyglassText": "Vælg det lag, der som standard skal vises i kikkerten.",
+  "layerHint": "Bemærk: Hvis laget er skjult af lag oven på det, har swipe ingen virkning.",
+  "isZoom": "Zoom til swipe-laget",
+  "isZooms": "Zoom til swipe-lag",
+  "layersAvailable": "Vælg, hvilke lag der skal swipes:"
+});
