@@ -7,6 +7,8 @@ define([
 
         isDebug: true,
 
+        defaultMapClickMode: 'identify',
+
         mapOptions: {
             basemap: 'hybrid',
             center: [-96.59179687497497, 39.09596293629694],
@@ -30,8 +32,19 @@ define([
 
         operationalLayers: [
             {
-                type: 'dynamic',
-                url: 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/MapServer',
+                type: 'feature',
+                url: 'http://services1.arcgis.com/6bXbLtkf4y11TosO/arcgis/rest/services/Restaurants/FeatureServer/0',
+                title: 'Restaurants',
+                options: {
+                    id: 'restaurants',
+                    opacity: 1.0,
+                    visible: true,
+                    outFields: ['*'],
+                    mode: 0
+                },
+            }, {
+                type: 'feature',
+                url: 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/MapServer/0',
                 title: 'Damage Assessment',
                 options: {
                     id: 'DamageAssessment',
@@ -42,6 +55,15 @@ define([
         ],
 
         widgets: {
+            identify: {
+                include: true,
+                id: 'identify',
+                type: 'invisible',
+                path: 'gis/dijit/Identify',
+                title: 'Identify',
+                options: 'config/identify'
+            },
+
             coordinates: {
                 include: true,
                 id: 'coordinates',
@@ -89,7 +111,7 @@ define([
                 type: 'titlePane',
                 position: 0,
                 title: 'Basemap Gallery',
-                iconClass: 'fa-map',
+                iconClass: 'fa fa-map',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -110,7 +132,7 @@ define([
                 type: 'titlePane',
                 position: 0,
                 title: 'Bookmarks',
-                iconClass: 'fa-bookmark',
+                iconClass: 'fa fa-bookmark',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -131,7 +153,7 @@ define([
                 type: 'titlePane',
                 position: 1,
                 title: 'Charts',
-                iconClass: 'fa-bar-chart',
+                iconClass: 'fa fa-bar-chart',
                 open: false,
                 canFloat: true,
                 resizable: true,
@@ -157,7 +179,7 @@ define([
                 type: 'titlePane',
                 position: 2,
                 title: 'Directions',
-                iconClass: 'fa-map-signs',
+                iconClass: 'fa fa-map-signs',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -192,7 +214,7 @@ define([
                 type: 'titlePane',
                 position: 3,
                 title: 'Draw',
-                iconClass: 'fa-paint-brush',
+                iconClass: 'fa fa-paint-brush',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -213,7 +235,7 @@ define([
                 type: 'titlePane',
                 position: 4,
                 title: 'LayerList',
-                iconClass: 'fa-th-list',
+                iconClass: 'fa fa-th-list',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -235,7 +257,7 @@ define([
                 type: 'titlePane',
                 position: 5,
                 title: 'Legend',
-                iconClass: 'fa-picture-o',
+                iconClass: 'fa fa-picture-o',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -263,7 +285,7 @@ define([
                 type: 'titlePane',
                 position: 6,
                 title: 'Measurement',
-                iconClass: 'fa-expand',
+                iconClass: 'fa fa-expand',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -290,7 +312,7 @@ define([
                 type: 'titlePane',
                 position: 7,
                 title: 'Print',
-                iconClass: 'fa-print',
+                iconClass: 'fa fa-print',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -313,13 +335,35 @@ define([
                     }
                 }
             },
+            edit: {
+                include: true,
+                id: 'edit',
+                type: 'titlePane',
+                position: 8,
+                title: 'Edit',
+                iconClass: 'fa fa-pencil',
+                open: false,
+                path: 'jimu/BaseWidgetPanel',
+                options: {
+                    widgetManager: true,
+                    config: {
+                        widgets: [
+                            {
+                                id: 'WABEdit',
+                                uri: 'wabwidgets/SmartEditor/Widget'
+                            }
+                        ]
+                    }
+                }
+            },
+
             query: {
                 include: true,
                 id: 'query',
                 type: 'titlePane',
-                position: 8,
+                position: 9,
                 title: 'Query',
-                iconClass: 'fa-search',
+                iconClass: 'fa fa-search',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -397,6 +441,29 @@ define([
                                         }
                                     ]
                                 }
+                            }
+                        ]
+                    }
+                }
+            },
+            filter: {
+                include: true,
+                id: 'filter',
+                type: 'titlePane',
+                iconClass: 'fa fa-filter',
+                position: 10,
+                title: 'Filter',
+                path: 'jimu/BaseWidgetPanel',
+                canFloat: true,
+                open: false,
+                options: {
+                    widgetManager: true,
+                    config: {
+                        widgets: [
+                            {
+                                id: 'WABFilter',
+                                uri: 'wabwidgets/Filter/Widget',
+                                config: 'config/filter.json'
                             }
                         ]
                     }

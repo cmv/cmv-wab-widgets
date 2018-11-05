@@ -61,6 +61,11 @@ define([
             aspect.after(this, '_setWidgetOptions', function (options) {
                 if (options.widgetManager && this.wabWidgetManager) {
                     options.widgetManager = this.wabWidgetManager;
+                    if (options.parentWidget && options.parentWidget.toggleable) {
+                        aspect.after(options.parentWidget, 'toggle', lang.hitch(this, function () {
+                            this._toggleWABChildWidgets(options);
+                        }));
+                    }
                 }
                 return options;
             });
@@ -96,6 +101,9 @@ define([
 
             //wabConfig.map.layers = this.getOperationalLayers();
             wabConfig.map.mapOptions = this.config.mapOptions;
+            if (!window.portalUrl && wabConfig.map.portalUrl) {
+                window.portalUrl = wabConfig.map.portalUrl;
+            }
 
             // create a minimal configuration
             var appConfig = this._createAppConfig();
@@ -105,6 +113,7 @@ define([
                 appConfig: appConfig
             });
             mm.map = this.map;
+            mm.resetInfoWindow(true);
 
             this.wabWidgetManager = WidgetManager.getInstance();
             this.wabWidgetManager._onAppConfigLoaded(appConfig);
@@ -172,7 +181,7 @@ define([
                         baseMapLayers: this._getBaseMapLayers(),
                         title: basemap
                     },
-                    operationLayers: this._getOperationalLayers(),
+                    operationalLayers: this._getOperationalLayers(),
                     bookmarks: []
                 }
             };
@@ -211,6 +220,17 @@ define([
                 }
             }));
             return layers;
+        },
+
+        _toggleWABChildWidgets: function (options) {
+            var widgets = (options.config && options.config.widgets) ? options.config.widgets : [];
+            array.forEach(widgets, lang.hitch(this, function (widget) {
+                if (options.parentWidget.open) {
+                    options.widgetManager.openWidget(widget.id);
+                } else {
+                    options.widgetManager.closeWidget(widget.id);
+                }
+            }));
         }
     });
 });

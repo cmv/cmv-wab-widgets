@@ -1,0 +1,52 @@
+{
+    "filters": [{
+        "url": "https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/MapServer/0",
+        "layerId": "DamageAssessment",
+        "name": "Damage Assessment",
+        "filter": {
+            "logicalOperator": "AND",
+            "parts": [{
+                "fieldObj": {
+                    "name": "inspector",
+                    "label": "Inspector Name",
+                    "shortType": "string",
+                    "type": "esriFieldTypeString"
+                },
+                "operator": "stringOperatorIs",
+                "valueObj": {
+                    "isValid": true,
+                    "type": "unique",
+                    "value": ""
+                },
+                "interactiveObj": {
+                    "prompt": "Inspector Name",
+                    "hint": "",
+                    "cascade": "none"
+                },
+                "caseSensitive": false
+            }, {
+                "fieldObj": {
+                    "name": "typdamage",
+                    "label": "Type of Damage",
+                    "shortType": "string",
+                    "type": "esriFieldTypeString"
+                },
+                "operator": "stringOperatorIs",
+                "valueObj": {
+                    "isValid": true,
+                    "type": "unique",
+                    "value": ""
+                },
+                "interactiveObj": {
+                    "prompt": "Type of Damage",
+                    "hint": "",
+                    "cascade": "none"
+                },
+                "caseSensitive": false
+            }],
+            "expr": ""
+        },
+        "icon": "",
+        "enableMapFilter": true
+    }]
+}
