@@ -195,10 +195,11 @@ define([
                 if (layer) {
                     layers.push({
                         id: layer.id,
+                        layerObject: layer,
                         opacity: layer.opacity,
                         title: opLayer.title,
                         url: layer.url,
-                        visibility: layer.visibility
+                        visibility: layer.visible
                     });
                 }
             }));
@@ -213,6 +214,7 @@ define([
                 if (layer) {
                     layers.push({
                         id: layer.id,
+                        layerObject: layer,
                         opacity: layer.opacity,
                         url: layer.url,
                         visibility: layer.visibility

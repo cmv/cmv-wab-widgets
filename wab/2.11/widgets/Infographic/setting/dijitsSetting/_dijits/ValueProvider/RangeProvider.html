@@ -1,0 +1,25 @@
+<div>
+	<div data-dojo-attach-point="title" class="title"></div>
+	<div class="content">
+		<div data-dojo-attach-point="typeContainer" class="row value-type">
+			<div class="col-2">
+				<span class="label">${nls.valueType}</span>
+			</div>
+			<div class="col-2">
+				<div class="btn-group-2" data-dojo-attach-event="click:_onValueTypeChanged">
+					<div data-dojo-attach-point="fixedBtn" data-name="fixed" class="btn jimu-auto-vertical textOverFlow selected" title="${nls.fixed}">${nls.fixed}</div>
+					<div data-dojo-attach-point="statBtn" data-name="stat" class="btn jimu-auto-vertical textOverFlow" title="${nls.statistic}">${nls.statistic}</div>
+				</div>
+			</div>
+		</div>
+		<div data-dojo-attach-point="valueContainer" class="row fixed-value-container">
+			<div class="col-2">
+				<span class="label">${nls.valueString}</span>
+			</div>
+			<div class="col-2">
+				<input data-dojo-props="intermediateChanges:true"  data-dojo-attach-event="change:_onValueInputChanged" class="value-input" data-dojo-type="dijit/form/NumberTextBox" required data-dojo-attach-point="fixedValue"/>
+			</div>
+		</div>
+		<div class="hide" data-dojo-attach-point="statContainer"></div>
+	</div>
+</div>

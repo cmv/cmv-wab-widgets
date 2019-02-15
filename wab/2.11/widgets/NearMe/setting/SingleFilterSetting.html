@@ -1,0 +1,23 @@
+<div>
+	<div class="esriCTFilterLabel esriCTLabelMargin"> ${jimuNls.common.layer}</div>
+	<div class="esriCTFilterLabel" data-dojo-attach-point="layerTd"></div>
+	<div data-dojo-attach-point="tabsNode" class="esriCTTabsNode">
+		<div data-dojo-attach-point="infoTabNode">
+			<div class="esriCTFilterLabel esriCTLabelMargin" style="margin-top: 20px">${jimuNls.common.label}</div>
+			<div data-dojo-attach-point="nameTextBox" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-event="change:_onNameTextBoxChanged"
+			 data-dojo-props='required:true,trim:true' style="width:100%;"></div>
+			<div class="esriCTFilterLabel esriCTLabelMargin" style="margin-top: 20px">${jimuNls.common.icon}</div>
+			<div data-dojo-attach-point="symbolPicker" data-dojo-type="jimu/dijit/SymbolPicker" data-dojo-props="cropImage:true,customZIndex:2000"></div>
+		</div>
+		<div data-dojo-attach-point="expressionsTabNode">
+			<div style="margin-top:10px;">
+				<div class="esriCTFilterLabel"></div>
+				<div data-dojo-attach-point="filterDiv" class="filter-div"></div>
+			</div>
+		</div>
+		<div data-dojo-attach-point="optionsTabNode" style="margin-top: 20px">
+			<div class="esriCTFilterOptionsNode" data-dojo-attach-point="useMapFilterNode"></div>
+			<div class="esriCTFilterOptionsNode" data-dojo-attach-point="autoApplyWhenWidgetOpenNode"></div>
+		</div>
+	</div>
+</div>

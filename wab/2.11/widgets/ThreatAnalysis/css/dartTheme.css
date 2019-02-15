@@ -1,0 +1,219 @@
+.dijitSelect .dijitArrowButton {
+  background-color: #fafafc;
+  border-color: #fafafc;
+}
+
+.jimu-widget-threatAnalysis .dijitSelect .dijitButtonContents {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.jimu-widget-threatAnalysis .jimu-draw-box .draw-items .draw-item {
+  background-color: transparent;
+}
+
+.jimu-widget-threatAnalysis .dijitSelectDisabled,
+.jimu-widget-threatAnalysis .dijitTextBoxDisabled,
+.jimu-widget-threatAnalysis .dijitTextBoxDisabled .dijitInputContainer,
+.jimu-widget-threatAnalysis .dijitTextBoxDisabled {
+  background-color: #4c4c4c;
+}
+
+.claro .dartThemeClaroDijitTooltipContainerOverride .dijitTooltipContainer {
+  background-color: #4c4c4c;
+  background-image: -webkit-linear-gradient(bottom, rgb(76, 76, 76) 0px, #4c4c4c 10px);
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+.claro .dartThemeClaroDijitTooltipContainerOverride .dijitTooltipConnector {
+  background-image: url(images/tooltip.png);
+}
+
+/* dojo color picker */
+.jimu-colorpalette {
+  background-color: #4c4c4c;
+}
+
+.jimu-color-picker-dialog .dijitTooltipContainer {
+  background-color: #4c4c4c !important;
+}
+
+.claro .dojoxColorPicker,
+.claro .dijitColorPalette {
+  background: #4c4c4c;
+}
+
+/*dojo dialog box*/
+.claro .dijitDialog {
+  background-color: #4c4c4c;
+}
+
+.claro .dijitDialogTitle {
+  color: #fff;
+}
+
+.claro .dijitDialogPaneActionBar {
+  background-color: #4c4c4c;
+  border-top: none;
+}
+
+.claro .jimu-widget-subtitle {
+  color: #ffffff;
+}
+
+.claro .dijitDialogTitleBar {
+  border: 0px solid #222;
+  border-bottom: 1px solid #000;
+  background-color: #222;
+  background-image: none;
+}
+
+.claro .dijitDialogPaneContent {
+  background-color: #4c4c4c;
+  border: 0px solid #222;
+  color: #fff;
+}
+
+.claro .dijitDialogPaneContent {
+  float: right;
+}
+
+/*Button*/
+.claro .dijitButton .dijitButtonNode {
+  color: #ffffff !important;
+  border: 0px solid #000000;
+  background-image: none;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  padding: 5px 18px 8px 18px;
+  font-size: 14px;
+}
+
+.claro .dijitButtonHover .dijitButtonNode {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsDownButton {
+  background: url("./images/arrow-down_white.png") no-repeat;
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsDownButton:hover {
+  background: url("./images/arrow-down_white_hover.png") no-repeat;
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsRightButton {
+  background: url("./images/arrow-right_white.png") no-repeat;
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsRightButton:hover {
+  background: url("./images/arrow-right_white_hover.png") no-repeat;
+}
+
+.jimu-widget-threatAnalysis .ItemLeftArrow {
+  background-image: url('./images/left-arrow_white.png');
+}
+
+.jimu-widget-threatAnalysis .ItemLeftArrow:hover {
+  background-image: url('./images/left-arrow_white_hover.png');
+}
+
+.jimu-widget-threatAnalysis .SettingsIcon {
+  background-image: url('./images/settings_white.png');
+}
+
+.jimu-widget-threatAnalysis .SettingsIcon:hover {
+  background-image: url('./images/settings_white_hover.png');
+  background-repeat: no-repeat;
+}
+
+.jimu-widget-threatAnalysis .settingBtn {
+  background: url(./images/settings_white.png);
+}
+
+.jimu-widget-threatAnalysis .settingBtn:hover {
+  background: url('./images/settings_white_hover.png');
+}
+
+.jimu-widget-threatAnalysis .editBtn {
+  float: right;
+  background: url(./images/draw_white.png);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  width: 16px;
+  height: 16px;
+  margin-top: 7px;
+}
+
+.jimu-widget-threatAnalysis .editBtn:hover {
+  background: url('./images/draw_white_hover.png');
+  background-repeat: no-repeat;
+}
+
+.jimu-widget-threatAnalysis .jimu-edit-active {
+  background: url('./images/draw_white_hover.png');
+  background-repeat: no-repeat;
+  border: none;
+}
+
+.jimu-widget-threatAnalysis .helpBtn {
+  float: right;
+  background: url(./images/help_white.png);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  width: 16px;
+  height: 16px;
+  margin-top: 6px;
+}
+
+.jimu-widget-threatAnalysis .helpBtn:hover {
+  background: url(./images/help_white_hover.png);
+}
+
+.jimu-widget-threatAnalysis .dijitSliderThumbHover {
+  background-image: url("../images/sliderball_white.svg");
+  background-position: 0 0;
+}
+
+.jimu-widget-threatAnalysis .dijitSliderImageHandle.dijitSliderImageHandleH {
+  background-image: url("../images/sliderball_white.svg");
+  background-position: 0 0;
+}
+
+.jimu-widget-threatAnalysis .dijitSliderImageHandle.dijitSliderImageHandleH.dojoMoveItem {
+  background-image: url("../images/sliderball_white.svg");
+  background-position: 0 0;
+}
+
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderProgressBarH,
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderLeftBumper {
+  border-color: #fff;
+  background-color: #fff;
+  background-image: -webkit-linear-gradient(top, #fff 0px, #fff 1px, rgba(255, 255, 255, 0) 2px);
+  background-image: -o-linear-gradient(top, #fff 0px, #fff 1px, rgba(255, 255, 255, 0) 2px);
+  background-image: linear-gradient(top, #fff 0px, #fff 1px, rgba(255, 255, 255, 0) 2px);
+}
+
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderRemainingBarH,
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderRightBumper {
+  border-color: #000;
+  background-color: #000;
+}
+
+.claro .dijitSliderImageHandle,
+.claro .dijitSliderImageHandle:after {
+  background: transparent;
+  margin-top: 0px;
+}
+
+.easy-autocomplete input {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.easy-autocomplete-container ul {
+  background: none repeat scroll 0 0 #4c4c4c;
+}
+
+.easy-autocomplete-container ul li.selected {
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
+}

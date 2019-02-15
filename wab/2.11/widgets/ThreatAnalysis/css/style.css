@@ -1,0 +1,768 @@
+.jimu-widget-threatAnalysis .MainContainer {
+  min-width: 222px;
+  height: 100%;
+}
+
+.jimu-widget-threatAnalysis .FullHeight {
+  height: 100%;
+  /* padding-top: 10px; */
+}
+
+.jimu-widget-threatAnalysis .FullWidth {
+  width: 100%;
+}
+
+.jimu-widget-threatAnalysis .HalfWidthContainer {
+  display: flex;
+}
+
+.jimu-widget-threatAnalysis .HalfWidthLeft {
+  width: 50%;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .HalfWidthLeft {
+  padding-left: 2px;
+}
+
+.jimu-widget-threatAnalysis .HalfWidthRight {
+  padding-left: 10px;
+  width: 50%;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .HalfWidthRight {
+  padding: 0px 2px 0px 0px;
+}
+
+.jimu-widget-threatAnalysis .Ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jimu-widget-threatAnalysis .Pointer {
+  cursor: pointer;
+}
+
+.jimu-widget-threatAnalysis .MainPageRow {
+  width: calc(100% - 20px);
+  margin: 10px 10px 10px 10px;
+  display: inline-block;
+}
+
+.jimu-widget-threatAnalysis .InputLabel {
+  float: left;
+  line-height: 28px;
+  padding: 5px 0px 0px 0px;
+  width: 100%;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .InputLabel {
+  padding: 5px 2px 0px 0px;
+}
+
+.jimu-widget-threatAnalysis .InputLabelSettings {
+  float: left;
+  line-height: 28px;
+  padding: 5px 0px 0px 0px;
+}
+
+.jimu-widget-threatAnalysis .PublishMessage {
+  line-height: 16px;
+  padding: 18px 0px 0px 0;
+  font-weight: bold;
+  display: inline-block;
+  word-break: normal;
+}
+
+.jimu-widget-threatAnalysis .claro .dijitSelect,
+.claro .dijitSelect .dijitButtonContents,
+.claro .dijitTextBox {
+  width: calc(100% - 60px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jimu-widget-threatAnalysis .noResize .dijitSelectLabel,
+.jimu-widget-threatAnalysis .noResize .dijitTextBox .dijitInputInner,
+.jimu-widget-threatAnalysis .noResize .dijitValidationTextBox .dijitValidationContainer {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 80px;
+  text-align: left;
+}
+
+.jimu-widget-threatAnalysis .NewHeader {
+  float: left;
+  height: 30px;
+  border-bottom: 1px solid #464646;
+  padding: 0px 10px;
+}
+
+.jimu-widget-threatAnalysis .SettingsIcon {
+  background-image: url('./images/settings_black.png');
+  height: 16px;
+  width: 16px;
+  background-size: 16px;
+  float: right;
+  background-repeat: no-repeat;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .SettingsIcon {
+  float: left;
+}
+
+.jimu-widget-threatAnalysis .SettingsIcon:hover {
+  background-image: url('./images/settings_black_hover_black.png');
+  background-repeat: no-repeat;
+}
+
+.jimu-widget-threatAnalysis .dijitTextBox .dijitInputInner {
+  font-size: 11px;
+  padding-right: 0px !important;
+}
+
+.jimu-widget-threatAnalysis .dijitTextBoxFocused .dijitInputContainer {
+  background: transparent;
+}
+
+.jimu-widget-threatAnalysis .Hidden {
+  display: none;
+}
+
+.claro .dijitTextBox {
+  width: calc(100% - 45px);
+}
+
+.jimu-widget-threatAnalysis .SettingsRow {
+  width: 100%;
+  display: inline-flex;
+}
+
+.jimu-widget-threatAnalysis .SettingsButtonIcon {
+  margin-top: 13px;
+  height: 16px;
+  width: 16px;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .SettingsButtonIcon {
+  margin-top: 9px;
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsDownButton {
+  background: url("./images/arrow-down_black.png") no-repeat;
+  margin-top: 15px;
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsDownButton:hover {
+  background: url("./images/arrow-down_black_hover.png") no-repeat;
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsRightButton {
+  background: url("./images/arrow-right_black.png") no-repeat;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .LabelSettingsRightButton {
+  transform: rotate(180deg);
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsRightButton:hover {
+  background: url("./images/arrow-right_black_hover.png") no-repeat;
+}
+
+.jimu-widget-threatAnalysis .SettingsNode {
+  width: 100%;
+  height: calc(100% - 30px);
+  display: inline-block;
+  overflow-y: auto;
+}
+
+.jimu-widget-threatAnalysis .SettingsContainer {
+  margin: 10px;
+  display: inline-block;
+  width: calc(100% - 20px);
+}
+
+.jimu-widget-threatAnalysis .SettingFirstRow {
+  padding-top: 12px;
+  padding-bottom: 6px;
+}
+
+.jimu-widget-threatAnalysis .SettingRow {
+  padding-bottom: 6px;
+}
+
+.jimu-widget-threatAnalysis .SelectStyle {
+  height: 30px;
+  color: #7d7d7d;
+  padding-left: 5px;
+  font-size: 13px;
+  width: 100%;
+  font-family: 'Avenir Medium';
+}
+
+.jimu-widget-threatAnalysis .SelectStyle.SelectStyleMini {
+  width: calc(100% - 45px);
+  float: left;
+}
+
+.jimu-widget-threatAnalysis .SettingRowPaddingTop20 {
+  padding-top: 20px;
+}
+
+.jimu-widget-threatAnalysis .SettingHeader {
+  float: left;
+  height: 30px;
+  border-bottom: 1px solid #464646;
+  padding: 0px 10px;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .SettingHeader {
+  float: none;
+  padding: 0px;
+}
+
+.jimu-widget-threatAnalysis .BackButton {
+  width: 20px;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .BackButton {
+  float: right;
+}
+
+.jimu-widget-threatAnalysis .MainTitleDiv {
+  line-height: 10px;
+  font-weight: bold;
+  text-align: left;
+  width: calc(100% - 50px);
+  padding: 5px;
+  display: inline-block;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .MainTitleDiv {
+  text-align: right;
+}
+
+.jimu-widget-threatAnalysis .TitleDiv {
+  line-height: 10px;
+  font-weight: bold;
+  text-align: center;
+  width: calc(100% - 50px);
+  padding: 5px;
+  display: inline-block;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .TitleDiv {
+  padding-top: 10px;
+}
+
+.jimu-widget-threatAnalysis .ItemLeftArrow {
+  background-image: url('./images/left-arrow_black.png');
+  float: left;
+  margin: 0px 5px 0px 0px;
+  width: 15px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .ItemLeftArrow {
+  float: none;
+  margin: 0px;
+  transform: rotate(180deg);
+}
+
+.jimu-widget-threatAnalysis .ItemLeftArrow:hover {
+  background-image: url('./images/left-arrow_black_hover.png');
+}
+
+.jimu-widget-threatAnalysis .dijitSelect .dijitButtonContents {
+  border-style: none none none none;
+  background-color: #ffffff;
+}
+
+.jimu-widget-threatAnalysis .dijitSelect .dijitButtonContentsDartTheme {
+  background-color: inherit;
+}
+
+.jimu-widget-threatAnalysis .dijitSelect .dijitArrowButton {
+  background-color: #fafafc;
+  background-image: none;
+  border-color: #fafafc;
+}
+
+.jimu-widget-threatAnalysis .dijitSelect .dijitArrowButtonDartTheme {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.jimu-widget-threatAnalysis .dijitMenuItem {
+  color: #7989a0;
+}
+
+.jimu-widget-threatAnalysis .dijitSelect .dijitInputField {
+  margin-right: 8px;
+}
+
+.jimu-widget-threatAnalysis .switch-toggle-group {
+  padding: 5px;
+}
+
+.jimu-widget-threatAnalysis .switch-toggle-group .checkbox-inline {
+  padding-left: 36px;
+  vertical-align: top;
+}
+
+.jimu-widget-threatAnalysis .switch-toggle-group .switch-toggle.dijitCheckBox {
+  margin-left: -36px;
+}
+
+.jimu-widget-threatAnalysis .switch-toggle.dijitCheckBox {
+  height: 16px;
+  width: 28px;
+  border: 0 none;
+  background: #adadad;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-top: 6px;
+}
+
+.jimu-widget-threatAnalysis .switch-toggle.dijitCheckBox:before {
+  content: "";
+  background: #f8f8f8;
+  position: absolute;
+  padding: 0;
+  height: 12px;
+  width: 12px;
+  left: auto;
+  right: 14px;
+  top: 2px;
+  z-index: 1;
+  -webkit-transition: right 0.3s;
+  -moz-transition: right 0.3s;
+  -o-transition: right 0.3s;
+  transition: right 0.3s;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+
+.jimu-widget-threatAnalysis .switch-toggle.dijitCheckBox input {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  z-index: 2;
+}
+
+.jimu-widget-threatAnalysis .switch-toggle.dijitCheckBox.dijitCheckBoxChecked {
+  background: #50ad4e;
+}
+
+.jimu-widget-threatAnalysis .switch-toggle.dijitCheckBox.dijitCheckBoxChecked:before {
+  right: 2px;
+}
+
+.jimu-widget-threatAnalysis .dijitTextBox .dijitPlaceHolder {
+  font-size: 12px;
+}
+
+.jimu-widget-threatAnalysis .dijitTextBoxError {
+  border-color: #d9dde0 !important;
+  box-shadow: inset 0 0 0 2px #d46464;
+}
+
+.SubTitle {
+  font-weight: bold;
+}
+
+.jimu-widget-threatAnalysis .editBtn {
+  float: right;
+  background: url(./images/draw_black.png);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  width: 16px;
+  height: 16px;
+  margin-top: 7px;
+}
+
+.jimu-widget-threatAnalysis .editBtn:hover {
+  background: url('./images/draw_black_hover.png');
+  background-repeat: no-repeat;
+}
+
+.jimu-widget-threatAnalysis .jimu-edit-active {
+  background: url('./images/draw_black_hover.png');
+  background-repeat: no-repeat;
+  border: none;
+}
+
+.jimu-widget-threatAnalysis .helpBtn {
+  float: right;
+  background: url(./images/help_black.png);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  width: 16px;
+  height: 16px;
+  margin-top: 6px;
+}
+
+.jimu-widget-threatAnalysis .helpBtn:hover {
+  background: url(./images/help_black_hover.png);
+}
+
+.jimu-widget-threatAnalysis .add-with-icon {
+  height: 30px;
+}
+
+.btnContainer {
+  text-align: right;
+  margin-top: 15px;
+}
+
+.jimu-widget-threatAnalysis .BtnContainer {
+  text-align: right;
+  margin-top: 15px;
+  display: grid;
+}
+
+.jimu-widget-threatAnalysis .controlGroupHidden {
+  display: none;
+}
+
+.jimu-widget-threatAnalysis .controlItem {
+  display: flex;
+}
+
+.jimu-widget-threatAnalysis .jimu-btn {
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+/*------------------------- Styles for colorPickerEditor  -----------------------*/
+.jimu-widget-threatAnalysis .dijitSlider {
+  width: calc(100% - 268px);
+  margin-left: 5px;
+  margin-right: auto;
+  margin-top: 4px;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .dijitSlider {
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderImageHandleH {
+  top: -10px;
+  width: 20px;
+  height: 20px;
+}
+
+.jimu-widget-threatAnalysis .colorPickerEditor {
+  padding-top: 5px;
+  padding-bottom: 8px;
+  min-width: 350px;
+}
+
+@media screen and (-ms-high-contrast: active),
+screen and (-ms-high-contrast: none) {
+  .jimu-widget-threatAnalysis .colorPickerEditor {
+    padding-top: 5px;
+    padding-bottom: 8px;
+    width: 100%;
+    display: inline-flex;
+  }
+}
+
+.jimu-widget-threatAnalysis .colorPickerEditor .jimu-color-picker {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+}
+
+@media screen and (-ms-high-contrast: active),
+screen and (-ms-high-contrast: none) {
+  .jimu-widget-threatAnalysis .colorPickerEditor .jimu-color-picker {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    margin-top: 26px;
+  }
+}
+
+.jimu-widget-threatAnalysis .colorPickerEditor .dijitSpinner.dijitNumberTextBox.dijitValidationTextBox {
+  width: 70px;
+  height: 30px;
+}
+
+@media screen and (-ms-high-contrast: active),
+screen and (-ms-high-contrast: none) {
+  .jimu-widget-threatAnalysis .colorPickerEditor .dijitSpinner.dijitNumberTextBox.dijitValidationTextBox {
+    width: 66px;
+    height: 30px;
+    margin-top: 25px;
+  }
+}
+
+.jimu-widget-threatAnalysis .dijitSliderImageHandleH {
+  top: -7px;
+}
+
+.jimu-widget-threatAnalysis .dijitSliderThumbHover {
+  background-image: url("../images/sliderball.svg");
+  background-position: 0 0;
+}
+
+.jimu-widget-threatAnalysis .dijitSliderImageHandle.dijitSliderImageHandleH {
+  background-image: url("../images/sliderball.svg");
+  background-position: 0 0;
+}
+
+.jimu-widget-threatAnalysis .dijitSliderImageHandle.dijitSliderImageHandleH.dojoMoveItem {
+  background-image: url("../images/sliderball.svg");
+  background-position: 0 0;
+}
+
+/*left*/
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderProgressBarH,
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderLeftBumper {
+  border-color: #000;
+  background-color: #000;
+  background-image: -webkit-linear-gradient(top, #000 0px, #000 1px, rgba(255, 255, 255, 0) 2px);
+  background-image: -o-linear-gradient(top, #000 0px, #000 1px, rgba(255, 255, 255, 0) 2px);
+  background-image: linear-gradient(top, #000 0px, #000 1px, rgba(255, 255, 255, 0) 2px);
+}
+
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderRemainingBarH,
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderRightBumper {
+  border-color: #d7d7d7;
+  background-color: #d7d7d7;
+}
+
+.jimu-widget-threatAnalysis .colorPickerEditor .trans {
+  font-family: "Avenir Light";
+  font-size: 12px;
+  padding: 0 5px 0 5px;
+  letter-spacing: 0.33px;
+}
+
+.jimu-widget-threatAnalysis .sliderbar {
+  width: 60px;
+}
+
+.jimu-widget-threatAnalysis .styleSelectSection {
+  display: inline-grid;
+  vertical-align: bottom;
+}
+
+@supports (-ms-ime-align: auto) {
+  .jimu-widget-threatAnalysis .styleSelectSection {
+    display: -ms-inline-grid;
+    vertical-align: bottom;
+  }
+}
+
+.jimu-widget-threatAnalysis .styleSelect {
+  width: 150px
+}
+
+@media screen and (-ms-high-contrast: active),
+screen and (-ms-high-contrast: none) {
+  .jimu-widget-threatAnalysis .styleSelectSection {
+    display: inline-grid;
+    vertical-align: bottom;
+    margin: 8px 10px 0 10px;
+  }
+}
+
+.dijitRuleLabelH {
+  left: -12%;
+}
+
+/*
+ * easy-autocomplete
+ * jQuery plugin for autocompletion
+ *
+ * @author Łukasz Pawełczak (http://github.com/pawelczak)
+ * @version 1.3.5
+ * Copyright  License:
+ **/
+.easy-autocomplete {
+  position: relative;
+}
+
+.easy-autocomplete input {
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 1px;
+  color: #555;
+  float: none;
+  padding: 6px 12px;
+}
+
+.easy-autocomplete input:hover,
+.easy-autocomplete input:focus {
+  box-shadow: none;
+}
+
+.easy-autocomplete a {
+  display: inline-flex;
+}
+
+.easy-autocomplete a:hover {
+  cursor: help;
+}
+
+.easy-autocomplete-container ul {
+  background: none repeat scroll 0 0 #ffffff;
+  border-top: 1px dotted #ccc;
+  display: none;
+  margin-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  position: relative;
+  top: -1px;
+}
+
+.easy-autocomplete-container ul li,
+.easy-autocomplete-container ul .eac-category {
+  background: inherit;
+  border-color: #ccc;
+  border-image: none;
+  border-style: solid;
+  border-width: 0 1px;
+  display: block;
+  font-size: 14px;
+  font-weight: normal;
+  padding: 4px 12px;
+}
+
+.easy-autocomplete-container ul li:last-child {
+  border-radius: 0 0 2px 2px;
+  border-width: 0 1px 1px;
+}
+
+.easy-autocomplete-container ul li.selected {
+  background: none repeat scroll 0 0 #ebebeb;
+  cursor: pointer;
+}
+
+/* Weather */
+.jimu-widget-threatAnalysis .weatherPanel {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  display: inline-flex;
+  width: 100%;
+  border: 1px solid #d9dde0;
+  padding: 10px;
+  height: 100px;
+}
+
+.jimu-widget-threatAnalysis .Col {
+  float: left;
+  height: 80px;
+  width: 220px;
+  border-left: none;
+  border-right: 1px solid #ffffff;
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  margin-left: 0;
+  padding: 0 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .Col {
+  float: right;
+  border-left: 1px solid #ffffff;
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: none;
+}
+
+.jimu-widget-threatAnalysis .ColSmall,
+.jimu-widget-threatAnalysis .ColSmallUnknown {
+  float: left;
+  height: 100%;
+  width: calc(100% / 3);
+  border-left: none;
+  border-right: 1px solid #afaeae;
+  margin-left: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.jimu-widget-threatAnalysis .ColSmallUnknown {
+  padding: 0;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .ColSmall {
+  float: right;
+  border-left: 1px solid #ffffff;
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: none;
+}
+
+.jimu-widget-threatAnalysis .ColLast {
+  border-left: none;
+  border-right: none;
+}
+
+.jimu-widget-threatAnalysis .Col .label,
+.jimu-widget-threatAnalysis .ColSmall .label {
+  font-size: 13px;
+  padding: 2px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.jimu-widget-threatAnalysis .loading {
+  background-image: url('images/loading.gif');
+  background-repeat: no-repeat;
+  background-position: center 10px;
+}
+
+.jimu-widget-threatAnalysis .jimu-coordinate-control textarea {
+  width: 100%;
+  height: 30px;
+  border: 1px solid #ccc;
+  padding: 7px 0px 10px 14px;
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .jimu-coordinate-control textarea {
+  padding: 7px 4px 10px 14px;
+}
+
+.jimu-widget-threatAnalysis .coordInput {
+  width: calc(100% - 60px);
+}
+
+.jimu-rtl .jimu-widget-threatAnalysis .coordInput {
+  width: calc(100% - 60px);
+}
+
+.jimu-widget-threatAnalysis .tabsContainer {
+  border: 1px solid #838383;
+}
+
+.jimu-widget-threatAnalysis .jimu-tab3 .tab-item-td {
+  border-bottom: 0px;
+}
+
+.jimu-widget-threatAnalysis .jimu-tab3 .tab-item-td.jimu-state-active {
+  border: 1px solid #24B5CC;
+  background-color: transparent !important;
+}
+
+.LaunchpadTheme .jimu-widget-threatAnalysis .dijitSliderImageHandle.dijitSliderImageHandleH {
+  background-image: none;
+  width: 16px;
+  height: 16px;
+  top: -5px;
+}
+
+.LaunchpadTheme .jimu-widget-threatAnalysis .dijitSliderImageHandle.dijitSliderImageHandleH.dojoMoveItem {
+  background-image: none;
+}

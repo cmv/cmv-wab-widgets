@@ -1,0 +1,22 @@
+define({
+  "drsSOEURL": "URL del servidor del Data Reviewer",
+  "chartSection": "Nombre de porcions o barres del gràfic",
+  "selectByGeography": "Inclou el filtre per geografia",
+  "selectUrl": "Capa de servei de filtre per geografia",
+  "selectMapUrl": "Servei de filtre per geografia",
+  "geometryServiceURL": "URL del servei de geometria",
+  "includeFieldNames": "Seleccioneu els camps",
+  "fieldNames": "Noms de camp",
+  "lifecyclePhaseFieldName": "LIFECYCLEPHASE",
+  "setSource": "Defineix",
+  "defaultFieldName": "gravetat",
+  "warning": "Entrada incorrecta",
+  "includeDefaultFieldName": "S'ha de seleccionar un nom de camp per defecte",
+  "selectFieldWarning": "Almenys un camp ha de ser visible",
+  "defaultFieldNotVisible": "El camp per defecte ha de ser visible",
+  "batchJobCheckGroup": "batchjobcheckgroup",
+  "defaultColumn": "Per defecte",
+  "visibleColumn": "Visible",
+  "fieldNameColumn": "Nom de camp del quadre de comandaments",
+  "aliasColumn": "Àlies"
+});

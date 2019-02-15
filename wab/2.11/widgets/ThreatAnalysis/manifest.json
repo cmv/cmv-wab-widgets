@@ -1,0 +1,20 @@
+{
+  "name": "ThreatAnalysis",
+  "label": "Threat Analysis",
+  "platform": "HTML",
+  "version": "2.11",
+  "wabVersion": "2.11",
+  "author": "Esri",
+  "description": "Threat Analysis Widget",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {
+    "keepConfigAfterMapSwithched": false,
+    "supportMultiInstance": false,
+    "hasVersionManager": false,
+    "hasSettingPage": true,
+    "hasSettingUIFile": true,
+    "hasSettingLocale": true,
+    "hasSettingStyle": true
+  }
+}

@@ -92,16 +92,17 @@ Both of these widgets have been modified from the original to provide additional
 
 
 ## Requirements
-- This method uses version [2.0.0-beta.2 release of cmv](https://github.com/cmv/cmv-app/releases/tag/v2.0.0-beta.2).
+- This method uses the [develop branch of cmv](https://github.com/cmv/cmv-app/).
 
 - This method supports the following versions of the WebApp Builder:
 
+    - version 2.11 released January 2019
     - version 2.10 released October 2018
     - version 2.9 released July 2018
-    - version 2.8 released April 2018
 
 - The following versions of the WebApp Builder may also work but are no longer supported:
 
+    - version 2.8 released April 2018
     - version 2.7 released January 2018
     - version 2.6 released October 2017
     - version 2.5 released July 2017
@@ -126,13 +127,13 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
         /* customizations for WAB widgets */
         },{
             name: 'jimu',
-            location: path + 'wab/2.5/jimu.js'
+            location: path + 'wab/2.11/jimu.js'
         },{
             name: 'libs',
-            location: path + 'wab/2.5/libs'
+            location: path + 'wab/2.11/libs'
         },{
             name: 'wabwidgets',
-            location: path + 'wab/2.5/widgets'
+            location: path + 'wab/2.11/widgets'
         /* end customizations for WAB widgets */
         ```
 

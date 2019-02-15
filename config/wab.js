@@ -33,15 +33,19 @@ define([
         operationalLayers: [
             {
                 type: 'feature',
-                url: 'http://services1.arcgis.com/6bXbLtkf4y11TosO/arcgis/rest/services/Restaurants/FeatureServer/0',
+                url: 'https://services.arcgis.com/doC3DvW5p9jGtDST/arcgis/rest/services/RestaurantInspections_April2018/FeatureServer/0/',
                 title: 'Restaurants',
                 options: {
                     id: 'restaurants',
                     opacity: 1.0,
                     visible: true,
                     outFields: ['*'],
+                    featureReduction: has('phone') ? null : {
+                        type: 'cluster',
+                        clusterRadius: 10
+                    },
                     mode: 0
-                },
+                }
             }, {
                 type: 'feature',
                 url: 'https://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessment/MapServer/0',
@@ -67,8 +71,8 @@ define([
             coordinates: {
                 include: true,
                 id: 'coordinates',
-                type: 'domNode',
-                srcNodeRef: 'mapInfoDijit',
+                type: 'ui',
+                placeAt: '.cmv-ui-map .cmv-ui-bottom-left',
                 path: 'jimu/BaseWidgetPanel',
                 options: {
                     widgetManager: true,
@@ -85,8 +89,8 @@ define([
             mapButtons: {
                 include: true,
                 id: 'mapButtons',
-                type: 'domNode',
-                srcNodeRef: 'homeButton',
+                type: 'ui',
+                placeAt: 'top-left',
                 path: 'jimu/BaseWidgetPanel',
                 options: {
                     widgetManager: true,

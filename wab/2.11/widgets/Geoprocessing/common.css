@@ -1,0 +1,57 @@
+.jimu-gp-editor-base{
+  display: inline-block;
+}
+
+.jimu-gp-editor-multivalue .single-input{
+  margin-top: 5px;
+  display: flex;
+}
+.jimu-gp-editor-multivalue .jimu-gp-editor-base {
+  width: calc(100% - 33px) !important;
+}
+.jimu-gp-editor-multivalue .remove{
+  background-color: #24B9F0;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 19px;
+  margin-left: auto;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+}
+.jimu-rtl .jimu-gp-editor-multivalue .remove{
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.jimu-gp-editor-multivalue .add-input{
+  text-align: initial;
+  display: flex;
+}
+.jimu-gp-editor-multivalue .add-input .add-btn{
+  background-color: #24B9F0;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 19px;
+  margin-left: auto;
+  display: inline-block;
+  cursor: pointer;
+  text-align: center;
+}
+.jimu-rtl .jimu-gp-editor-multivalue .add-input .add-btn{
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.jimu-gp-editor-sffl{
+  height: 30px;
+  position: relative;
+}

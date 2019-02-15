@@ -46,13 +46,23 @@
 
 .cmv .jimu-widget-mylocation,
 .cmv .jimu-widget-homebutton {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.3);
     border-width: 0;
+    margin-bottom: 10px;
+}
+
+.cmv .jimu-widget-mylocation:hover,
+.cmv .jimu-widget-homebutton:hover {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .cmv .jimu-widget-mylocation .place-holder,
-.cmv .jimu-widget-homebutton .HomeButton .home {
+.cmv .jimu-widget-homebutton .HomeButton .home,
+.cmv .jimu-widget-homebutton .HomeButton .home:hover {
     background-color: transparent;
+    border-width: 0;
+    color: rgba(255, 255, 255, 0.8);
+    height: 30px;
 }
 
 .cmv .jimu-single-filter-parameter .dijit-form-FilteringSelect {

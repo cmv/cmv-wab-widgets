@@ -1,0 +1,247 @@
+﻿<div class="esriCTFullHeight">
+    <!-- Settings tab -->
+    <div data-dojo-attach-point="settingsTabNode" class="esriCTFullHeight">
+        <div class="esriCTChartSettingsNode">
+            <div class="esriCTmainContainer">
+                <!-- Section Title -->
+                <div>
+                    <div class="esriCTChartTitleDiv esriCTChartTitleDivContainer">
+                        <div class="esriCTChartSettingLabel" title="${nls.ChartSetting.sectionTitle}">
+                            ${nls.ChartSetting.sectionTitle}
+                        </div>
+                        <div class="esriCTFieldInput">
+                            <div class="esriCTControlWidth" data-dojo-attach-point="sectionTitleTextBox" data-dojo-type="dijit/form/ValidationTextBox"
+                                required="true" trim="true" data-dojo-attach-event="change:_onSectionTitleChanged">
+                            </div>
+                            <div class="esriCTHint" title="${nls.ChartSetting.sectionTitleHintText}">
+                                ${nls.ChartSetting.sectionTitleHintText}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Chart Title -->
+                <div>
+                    <div class="esriCTChartTitleDiv esriCTChartTitleDivContainer">
+                        <div class="esriCTChartSettingLabel" title="${nls.ChartSetting.chartTitle}">
+                            ${nls.ChartSetting.chartTitle}
+                        </div>
+                        <div class="esriCTFieldInput">
+                            <div class="esriCTControlWidth" data-dojo-attach-point="chartTitleTextBox" data-dojo-type="dijit/form/ValidationTextBox">
+                            </div>
+                            <div class="esriCTHint" title="${nls.ChartSetting.chartTitleHintText}">
+                                ${nls.ChartSetting.chartTitleHintText}
+                            </div>
+                        </div>
+                        <div class="esriCTFieldSelectorDiv" data-dojo-attach-point="titleFieldSelectorDiv">
+                        </div>
+                    </div>
+                </div>
+                <!-- Chart Description -->
+                <div>
+                    <div class="esriCTChartDescriptionDiv">
+                        <div class="esriCTChartSettingLabel esriCTChartDescriptionLabel" title="${nls.ChartSetting.chartDescription}">
+                            ${nls.ChartSetting.chartDescription}
+                        </div>
+                    </div>
+                    <div class="esriCTChartDescriptionDiv">
+                        <div class="esriCTFieldInput editorDescriptionContainer">
+                            <textarea class="esriCTChartDescription" data-dojo-attach-point="chartDescriptionInput" rows="5"></textarea>
+                            <div class="esriCTHint" title="${nls.ChartSetting.chartDescriptionHintText}">
+                                ${nls.ChartSetting.chartDescriptionHintText}
+                            </div>
+                        </div>
+                        <div class="esriCTFieldSelectorDiv" data-dojo-attach-point="descriptionFieldSelectorDiv">
+                        </div>
+                    </div>
+                </div>
+                <!-- Select chart type-->
+                <div class="esriCTChartChartTypeDiv esriCTFieldRow">
+                    <div class="esriCTChartSettingLabel" data-dojo-attach-point="chartTypeLabelNode" title="${nls.ChartSetting.chartType}">
+                        ${nls.ChartSetting.chartType}
+                    </div>
+                    <div class="esriCTFieldInput">
+                        <div class="esriCTMarginRight">
+                            <input class="esriCTCursorPointer jimu-radio-btn" checked="checked" value="rdoBarChart" type="radio" data-dojo-type="dijit/form/RadioButton"
+                                name="chart" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="rdoBarChart" />
+                            <label class="esriCTChartTypeEllipsis esriCTCursorPointer" for="rdoBarChart" data-dojo-attach-point="barLabel" title="${nls.ChartSetting.barChart}">
+                                ${nls.ChartSetting.barChart}</label>
+                        </div>
+                        <div class="esriCTMarginRight">
+                            <input class="esriCTCursorPointer jimu-radio-btn" value="rdoPieChart" type="radio" data-dojo-type="dijit/form/RadioButton" name="chart"
+                                data-dojo-attach-point="rdoPieChart" data-dojo-attach-event="change:_onChartTypeChanged" />
+                            <label class="esriCTChartTypeEllipsis esriCTCursorPointer" for="rdoPieChart" data-dojo-attach-point="pieLabel" title="${nls.ChartSetting.pieChart}">
+                                ${nls.ChartSetting.pieChart}</label>
+                        </div>
+                        <div class="esriCTMarginRight">
+                            <input class="esriCTCursorPointer jimu-radio-btn" value="rdoPolarChart" type="radio" data-dojo-type="dijit/form/RadioButton" name="chart"
+                                data-dojo-attach-point="rdoPolarChart" data-dojo-attach-event="change:_onChartTypeChanged" />
+                            <label class="esriCTChartTypeEllipsis esriCTCursorPointer" for="rdoPolarChart" data-dojo-attach-point="polarLabel" title="${nls.ChartSetting.polarChart}">
+                                ${nls.ChartSetting.polarChart}</label>
+                        </div>
+                        <!-- Line chart -->
+                        <div class="esriCTMarginRight">
+                            <input class="esriCTCursorPointer jimu-radio-btn" value="rdoLineChart" type="radio" data-dojo-type="dijit/form/RadioButton" name="chart"
+                                data-dojo-attach-point="rdoLineChart" data-dojo-attach-event="change:_onChartTypeChanged" />
+                            <label class="esriCTChartTypeEllipsis esriCTCursorPointer" for="rdoLineChart" data-dojo-attach-point="polarLabel" title="${nls.ChartSetting.lineChart}">
+                                ${nls.ChartSetting.lineChart}</label>
+                        </div>
+                    </div>
+                </div>
+                <div data-dojo-attach-point="labelSection">
+                    <!-- Data Series Field - Bar, Pie & Polar chart -->
+                    <div class="esriCTControlWidth esriCTLeftAlign esriCTFieldRow">
+                        <div class="esriCTChartDescriptionDiv">
+                            <div class="esriCTChartSettingLabel" title="${nls.ChartSetting.dataSeriesField}" data-dojo-attach-point="dataSeriesFieldLabel">
+                                ${nls.ChartSetting.dataSeriesField}
+                            </div>
+                            <div class="esriCTFieldInput">
+                                <div data-dojo-attach-point="dataSeriesFieldDropdownParentContainer">
+                                    <select style="width: 232px;" data-dojo-attach-point="dataSeriesFieldDropdown" data-dojo-type="dijit/form/Select">
+                                    </select>
+                                </div>
+                                <!-- For line chart -->
+                                <div class="esriCTHidden" data-dojo-attach-point="dataSeriesFieldPickerLineChart">
+                                    <div class="esriCTlineChartValueFieldsContainer" data-dojo-attach-point="lineChartValueFieldsContainer">
+                                        <div class="esriCTlineChartValueFields" data-dojo-attach-point="lineChartValueFieldsTextbox" data-dojo-type="dijit/form/ValidationTextBox"
+                                            data-dojo-props="required:true,trim:true,disabled:true"></div>
+                                    </div>
+                                    <div class="esriCTlineChartValueFieldsSelector jimu-float-trailing" data-dojo-attach-point="lineChartFieldsSelectorNode"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Label Field - Bar, Pie & Polar chart -->
+                    <div class="esriCTControlWidth esriCTLeftAlign esriCTFieldRow esriCTChartChartTypeDiv">
+                        <div class="esriCTChartDescriptionDiv">
+                            <div class="esriCTChartSettingLabel" title="${nls.ChartSetting.labelField}" data-dojo-attach-point="labelSeriesField">
+                                ${nls.ChartSetting.labelField}
+                            </div>
+                            <div class="esriCTFieldInput">
+                                <!-- Bar, Pie & Polar chart label dropdown  -->
+                                <div class="esriCTLabelSeriesFieldDropdown" data-dojo-attach-point="labelSeriesFieldDropdownContainer">
+                                    <select style="width: 232px;" data-dojo-attach-point="labelSeriesFieldDropdown" data-dojo-type="dijit/form/Select">
+                                    </select>
+                                </div>
+                                <!-- Line chart value dropdown -->
+                                <div class="esriCTLineLabelSeriesFieldDropdown esriCTHidden" data-dojo-attach-point="lineValueSeriesFieldDropdownContainer">
+                                    <select style="width: 232px;" data-dojo-attach-point="lineSequenceSeriesFieldDropdown" data-dojo-type="dijit/form/Select">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Chart Color -->
+                <div>
+                    <div>
+                        <div class="esriCTChartSettingLabel" title=" ${nls.ChartSetting.chartColor}">
+                            ${nls.ChartSetting.chartColor}
+                        </div>
+                        <div class="esriCTFieldInput">
+                            <div class="esriCTChartColorMargin esriCTSingleColorContainer">
+                                <div class="jimu-trailing-margin2 esriCTLeftAlign esriCTChartColorWidth">
+                                    <input class="esriCTCursorPointer jimu-radio-btn" checked="checked" value="rdoSingleColor" type="radio" data-dojo-type="dijit/form/RadioButton"
+                                        name="ChartColor" data-dojo-attach-point="rdoSingleColor" />
+                                    <label class="esriCTChartColorEllipsis esriCTCursorPointer" for="rdoSingleColor" title="${nls.ChartSetting.singleColor}">
+                                        ${nls.ChartSetting.singleColor}</label>
+                                </div>
+                                <div class="esriCTColorPicker" data-dojo-attach-point="colorPicker" data-dojo-type="jimu/dijit/ColorPicker">
+                                </div>
+                            </div>
+                            <div class="esriCTChartColorMargin esriCTChartColorHeight">
+                                <div class="jimu-trailing-margin2 esriCTLeftAlign esriCTChartColorWidth esriCTColorByThemeContainer">
+                                    <input class="esriCTCursorPointer jimu-radio-btn" value="rdoColorByTheme" type="radio" data-dojo-type="dijit/form/RadioButton" name="ChartColor"
+                                        data-dojo-attach-point="rdoColorByTheme" data-dojo-attach-event="change:_onChartColorChanged"
+                                    />
+                                    <label class="esriCTChartColorEllipsis esriCTCursorPointer" for="rdoColorByTheme" title="${nls.ChartSetting.colorByTheme}">
+                                        ${nls.ChartSetting.colorByTheme}</label>
+                                </div>
+                                <div class="esriCTThemeSelectorDiv" data-dojo-attach-point="themeSelectorDiv">
+                                </div>
+                            </div>
+                            <div class="esriCTChartColorMargin esriCTHidden" data-dojo-attach-point="colorByFieldContainer">
+                                <div class="jimu-trailing-margin2 esriCTLeftAlign esriCTChartColorWidth">
+                                    <input class="esriCTCursorPointer jimu-radio-btn" value="rdoColorByFieldValue" type="radio" data-dojo-type="dijit/form/RadioButton" name="ChartColor"
+                                        data-dojo-attach-point="rdoColorByFieldValue" data-dojo-attach-event="change:_onChartColorChanged"
+                                    />
+                                    <label class="esriCTChartColorEllipsis esriCTCursorPointer" for="rdoColorByFieldValue" title="${nls.ChartSetting.colorByFieldValue}">
+                                        ${nls.ChartSetting.colorByFieldValue}</label>
+                                </div>
+                                <select style="width: 232px;" data-dojo-attach-point="colorByFieldValueDropdown" data-dojo-type="dijit/form/Select">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="esriCTColorByFieldContainer esriCTHidden" data-dojo-attach-point="colorByFieldTableContainer">
+                        <div class="esriCTChartTypeDiv">
+                            <div data-dojo-attach-point="colorByFieldTablePanel">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-dojo-attach-point="axisSection">
+                    <!-- X-axis label -->
+                    <div data-dojo-attach-point="xAxisArea">
+                        <div class="esriCTChartTitleDiv">
+                            <div class="esriCTChartSettingLabel" title="${nls.ChartSetting.xAxisTitle}">
+                                ${nls.ChartSetting.xAxisTitle}
+                            </div>
+                            <div class="esriCTFieldInput">
+                                <div class="esriCTControlWidth" data-dojo-attach-point="xAxisTextBox" data-dojo-type="dijit/form/ValidationTextBox">
+                                </div>
+                                <div class="esriCTHint" title="${nls.ChartSetting.xAxisHintText}">
+                                    ${nls.ChartSetting.xAxisHintText}
+                                </div>
+                            </div>
+                            <div class="esriCTFieldSelectorDiv" data-dojo-attach-point="xAxisFieldSelectorDiv">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Y-axis label -->
+                    <div data-dojo-attach-point="yAxisArea">
+                        <div class="esriCTChartTitleDiv">
+                            <div class="esriCTChartSettingLabel" title="${nls.ChartSetting.yAxisTitle}">
+                                ${nls.ChartSetting.yAxisTitle}
+                            </div>
+                            <div class="esriCTFieldInput">
+                                <div class="esriCTControlWidth" data-dojo-attach-point="yAxisTextBox" data-dojo-type="dijit/form/ValidationTextBox">
+                                </div>
+                                <div class="esriCTHint" title="${nls.ChartSetting.yAxisHintText}">
+                                    ${nls.ChartSetting.yAxisHintText}
+                                </div>
+                            </div>
+                            <div class="esriCTFieldSelectorDiv" data-dojo-attach-point="yAxisFieldSelectorDiv">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-dojo-attach-point="polarChartSection" class="esriCTHidden esriCTPolarChartSection">
+                    <div>
+                        <div class="esriCTChartTitleDiv">
+                            <div class="esriCTChartSettingLabel" title="${nls.ChartSetting.polarChartPolygonFillLabel}">
+                                ${nls.ChartSetting.polarChartPolygonFillLabel}
+                            </div>
+                            <div class="esriCTFieldInput">
+                                <div class="esriCTCheckBox" checked="true" data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="polarChartFillColor">
+                                </div>
+                                <div class="esriCTHint esriCTHintInline" title="${nls.ChartSetting.polarChartPolygonFillHintText}">
+                                    ${nls.ChartSetting.polarChartPolygonFillHintText}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-dojo-attach-point="polarChartFieldInfos">
+                    </div>
+                    <div class="esriCTHint" title="${nls.ChartSetting.polarChartSelectFieldsHintText}">
+                        ${nls.ChartSetting.polarChartSelectFieldsHintText}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="esriCTViewLayoutButton jimu-btn jimu-float-trailing jimu-leading-margin1" data-dojo-attach-event="onclick:_updatePreview"
+        data-dojo-attach-point="viewLayoutButton">
+        ${nls.ChartSetting.viewLayoutLabel}
+    </div>
+</div>

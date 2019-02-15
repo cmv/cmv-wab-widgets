@@ -1,5 +1,5 @@
 define({
-    'wabVersion': '2.8',
+    'wabVersion': '2.11',
     'theme': {
         'name': 'cmv'
     },
@@ -20,5 +20,6 @@ define({
         '3D': false,
         'itemId': '8bf7167d20924cbf8e25e7b11c7c502c', // ESRI Streets Basemap
         'portalUrl': 'https://www.arcgis.com/'
-    }
+    },
+    'portalUrl': 'https://www.arcgis.com/'
 });

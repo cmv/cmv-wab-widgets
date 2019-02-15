@@ -1,0 +1,163 @@
+.jimu-widget-edit-setting{
+  margin:0;
+  padding:0;
+  font-size:15px;
+}
+.jimu-widget-edit-setting .editable{
+  width: 100px;
+}
+
+.jimu-widget-edit-setting .edit-fields{
+  width: 100px;
+}
+
+.jimu-widget-edit-setting .update{
+  width: 200px;
+}
+
+
+.jimu-widget-edit-setting .general-settings-title {
+  font-size: 14px;
+  font-family: "Avenir Heavy";
+}
+
+.jimu-widget-edit-setting .setting-table {
+  margin-left: 20px;
+}
+
+.jimu-rtl .jimu-widget-edit-setting .setting-table {
+  margin-right: 20px;
+  margin-left: auto;
+}
+
+.jimu-widget-edit-setting .setting-table > thead > tr > th,
+.jimu-widget-edit-setting .setting-table > tbody > tr > td{
+  /*
+  height:40px;
+  line-height:40px;
+  vertical-align:middle;
+  */
+}
+
+.jimu-rtl .jimu-widget-edit-setting .setting-table input{
+  text-align: left;
+}
+
+.jimu-widget-edit-setting .input-table > tbody > tr > .first{
+  width:auto;
+  min-width: 160px;
+  /*max-width: 400px;*/
+  text-align: left;
+  line-height: 18px;
+  padding: 10px 0 10px 0;
+}
+
+.jimu-rtl .jimu-widget-edit-setting .input-table > tbody > tr > .first{
+  text-align: right;
+  padding: 10px 0 10px 10px;
+}
+
+.jimu-widget-edit-setting .input-table > tbody > tr > .second{
+  width: auto;
+  padding-right: 10px;
+}
+
+.jimu-rtl .jimu-widget-edit-setting .input-table > tbody > tr > .second{
+  padding-left: 10px;
+  padding-right: 0;
+}
+
+.jimu-widget-edit-setting .input-table > tbody > tr > .second > span{
+  padding-left: 2px;
+  padding-right: 30px;
+  vertical-align: 2px;
+}
+
+.jimu-trl .jimu-widget-edit-setting .input-table > tbody > tr > .second > span{
+  padding-left: 20px;
+  padding-right: 5px;
+}
+
+.jimu-widget-edit-setting .input-table .checkbox-wrap-div{
+  /*height: 16px;*/
+}
+
+.jimu-widget-edit-setting .input-table .check-box-div {
+  margin-top: 2px;
+}
+
+.jimu-widget-edit-setting .input-table .toolbar-option {
+  display: inline-block;
+}
+
+.jimu-widget-edit-setting .dijitArrowButtonContainer{
+  width: 17px;
+}
+.jimu-widget-edit-setting .dijitSelect{
+  height: 30px;
+  width: 100%;
+}
+
+.jimu-widget-edit-setting .toolbar-options-tr {
+  position: relative;
+}
+
+.jimu-widget-edit-setting .toolbar-options-tr.disable {
+  opacity: 0.4;
+}
+
+.jimu-widget-edit-setting .toolbar-options-coverage{
+  position: absolute;
+  width: 600px;
+  height: 40px;
+  z-index: 1;
+}
+
+.jimu-widget-edit-setting .dijitTextBoxFocused{
+  border-color: #406b9b !important;
+  box-shadow: 0 0 0;
+}
+
+/**************layerInfos and tableInfos table*************/
+
+.jimu-widget-edit-setting .editalbe-layers-setting-title{
+  font-size: 14px;
+  font-family: "Avenir Heavy";
+  margin-top: 10px;
+}
+
+.jimu-widget-edit-setting .custom-setting-radio-part{
+  margin-left: 20px;
+}
+
+.jimu-rtl .jimu-widget-edit-setting .custom-setting-radio-part{
+  margin-right: 20px;
+  margin-left: auto;
+}
+
+.jimu-widget-edit-setting .custom-setting-radio-part .custom-setting-radio{
+  margin:10px 0 10px 0;
+}
+
+.jimu-widget-edit-setting .layers-settings-part{
+  margin-left: 20px;
+}
+
+.jimu-widget-edit-setting .layers-settings-part.disable{
+  display: none;
+}
+
+.jimu-widget-edit-setting .tableInfos-loading{
+  top: 65px;
+  position: relative;
+}
+
+.jimu-widget-edit-setting .tableInfos-table{
+  display: none;
+  margin-top: 30px;
+  margin-bottom: 5px;
+  position: relative;
+}
+
+
+/********************tooltip****************************/

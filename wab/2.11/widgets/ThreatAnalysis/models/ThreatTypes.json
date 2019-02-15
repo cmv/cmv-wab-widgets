@@ -1,0 +1,81 @@
+[{
+    "ID": 1,
+    "Threat": "Pipe Bomb",
+    "Capacity": 5,
+    "Capacity_Unit": "LBS",
+    "Bldg_Dist": 70,
+    "Outdoor_Dist": 1200,
+    "Icon_URL": "name.png",
+    "Unit": "Feet"
+  },
+  {
+    "ID": 2,
+    "Threat": "Suicide Bomb",
+    "Capacity": 20,
+    "Capacity_Unit": "LBS",
+    "Bldg_Dist": 110,
+    "Outdoor_Dist": 1700,
+    "Icon_URL": "name.png",
+    "Unit": "Feet"
+  },
+  {
+    "ID": 3,
+    "Threat": "Briefcase",
+    "Capacity": 50,
+    "Capacity_Unit": "LBS",
+    "Bldg_Dist": 150,
+    "Outdoor_Dist": 1850,
+    "Icon_URL": "name.png",
+    "Unit": "Feet"
+  },
+  {
+    "ID": 4,
+    "Threat": "Car",
+    "Capacity": 500,
+    "Capacity_Unit": "LBS",
+    "Bldg_Dist": 320,
+    "Outdoor_Dist": 1900,
+    "Icon_URL": "name.png",
+    "Unit": "Feet"
+  },
+  {
+    "ID": 5,
+    "Threat": "SUV/VAN",
+    "Capacity": 1000,
+    "Capacity_Unit": "LBS",
+    "Bldg_Dist": 400,
+    "Outdoor_Dist": 2400,
+    "Icon_URL": "name.png",
+    "Unit": "Feet"
+  },
+  {
+    "ID": 6,
+    "Threat": "Small Delivery Truck",
+    "Capacity": 4000,
+    "Capacity_Unit": "LBS",
+    "Bldg_Dist": 640,
+    "Outdoor_Dist": 3800,
+    "Icon_URL": "name.png",
+    "Unit": "Feet"
+  },
+  {
+    "ID": 7,
+    "Threat": "Container/Water Truck",
+    "Capacity": 10000,
+    "Capacity_Unit": "LBS",
+    "Bldg_Dist": 860,
+    "Outdoor_Dist": 5100,
+    "Icon_URL": "name.png",
+    "Unit": "Feet"
+  },
+  {
+    "ID": 8,
+    "Threat": "Semi-Trailer",
+    "Capacity": 60000,
+    "Capacity_Unit": "LBS",
+    "Bldg_Dist": 1570,
+    "Outdoor_Dist": 9300,
+    "Icon_URL": "name.png",
+    "Unit": "Feet"
+  }
+]
