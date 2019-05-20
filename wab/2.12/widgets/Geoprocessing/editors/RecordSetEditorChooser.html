@@ -1,0 +1,13 @@
+<div>
+  <div class="field">
+    <input id="gpRecordModeJSON" name="mode" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="jsonMode" data-dojo-attach-event="onclick: _onJSONModeSelect" class="jimu-leading-margin10">
+    <label for="gpRecordModeJSON" style="width: auto;" class="jimu-leading-margin025">${nls.inputJSONString}</label>
+  </div>
+  <div class="field">
+    <input id="gpRecordModeTable" name="mode" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="tableMode" data-dojo-attach-event="onclick: _onTableModeSelect" class="jimu-leading-margin10">
+    <label for="gpRecordModeTable" style=" width: auto;" class="jimu-leading-margin025">${nls.selectTable}</label>
+  </div>
+  <div style="margin-top:5px;display:none;" data-dojo-attach-point="defaultJSONDiv">
+    <div data-dojo-attach-point="jsonEditorDiv"></div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="colorPickerEditor">
+  <div class="colorPicker" data-dojo-attach-point="colorPicker"></div>
+  <div class="sliderWrapper">
+    <div class="sliderbar" data-dojo-attach-point="sliderBar">
+      <ol data-dojo-type="dijit/form/HorizontalRuleLabels" style="height:2.5em;" container="topDecoration">
+        <li>${nls.transparencyLabel}</li>
+        <li></li>
+      </ol>
+    </div>
+  </div>
+  <input type="text" data-dojo-type="dijit/form/NumberSpinner" value="0" data-dojo-attach-point="spinner"
+    data-dojo-props="smallDelta:10,intermediateChanges:true,constraints: {min:0,max:100}">
+  <div class='styleSelectSection'>
+    <label for="${id}_select">${nls.style}</label>
+    <select class="styleSelect" data-dojo-type="dijit/form/Select" data-dojo-attach-point="dropdown" />
+  </div>
+</div>

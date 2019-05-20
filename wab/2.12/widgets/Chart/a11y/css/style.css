@@ -1,0 +1,9 @@
+.jimu-widget-chart .charts:focus,
+.jimu-widget-chart .params-container:focus,
+.jimu-widget-chart .params-back:focus,
+.jimu-widget-chart .apply:focus,
+.jimu-widget-chart .results-container:focus,
+.jimu-widget-chart .params-back:focus,
+.jimu-widget-chart .btn-clear-all:focus{
+  outline-offset: -2px !important;
+}

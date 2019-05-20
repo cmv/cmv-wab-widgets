@@ -1,0 +1,30 @@
+<div>
+  <div class="field" data-dojo-attach-point="mapModeWrapper">
+    <input id="gpFSModeMap" name="mode" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="mapMode" class="jimu-leading-margin10">
+    <label for="gpFSModeMap" style="width: auto;" class="jimu-leading-margin025">${nls.useCurrentMapExtent}</label>
+  </div>
+  <div class="field">
+    <input id="gpFSModeDraw" name="mode" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="drawMode" class="jimu-leading-margin10">
+    <label for="gpFSModeDraw" style="width: auto;" class="jimu-leading-margin025">${nls.drawOnMap}</label>
+  </div>
+  <div class="field">
+    <input id="gpFSModeFile" name="mode" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="fileMode" class="jimu-leading-margin10">
+    <label for="gpFSModeFile" style=" width: auto;" class="jimu-leading-margin025">${nls.useShapefile}</label>
+  </div>
+  <div class="field">
+    <input id="gpFSModeLayer" name="mode" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="layersMode" class="jimu-leading-margin10">
+    <label for="gpFSModeLayer" style=" width: auto;" class="jimu-leading-margin025">${nls.selectLayer}</label>
+  </div>
+  <div class="field" style="height: 60px;">
+    <input id="gpFSModeURL" name="mode" data-dojo-type="dijit/form/RadioButton" data-dojo-attach-point="urlMode" class="jimu-leading-margin10">
+    <label for="gpFSModeURL" style="width: auto" class="jimu-leading-margin025">${nls.url}</label>
+    <div style="margin-top:5px;display:none;" data-dojo-attach-point="urlOptionsDiv">
+      <input name="mode" data-dojo-type="jimu/dijit/URLInput" data-dojo-attach-point="featureSetUrl" class="jimu-leading-margin10" style="display: inline-block;">
+      <div data-dojo-attach-point="visibleCheckboxDiv" style="display: inline-block;"></div>
+    </div>
+  </div>
+  <div data-dojo-attach-point="symbolChooserSection">
+    <label>${nls.symbol}:</label>
+    <div data-dojo-attach-point="symbolChooserNode"></div>
+  </div>
+</div>

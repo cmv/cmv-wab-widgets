@@ -1,0 +1,56 @@
+<div>
+
+  <div class="jimu-r-row" title="${nls.modifyValues}">
+    <div data-dojo-attach-point="chkModifyDIV"></div>
+  </div>
+
+  <table class="field-option-table">
+    <tbody>
+      <tr>
+        <td>
+          <div>
+            <input data-dojo-attach-point="rdo_round" type="radio" class="jimu-radio-btn" id="rdo-round" name="modifyOptions"
+              data-dojo-type="dijit/form/RadioButton"/>
+            <label data-dojo-attach-point="roundLabel" for="rdo-round">${nls.roundValue}</label>
+          </div>
+        </td>
+        <td>
+          <div>
+            <div data-dojo-attach-point="roundPlaces"></div>
+          </div>
+        </td>
+        <td>
+          <div data-dojo-attach-point="roundSignificantFigures">
+            <label>${nls.significantFigures}</label>
+          </div>
+        </td>
+      </tr>
+  
+      <tr>
+        <td>
+          <div>
+            <input data-dojo-attach-point="rdo_truncate" type="radio" class="jimu-radio-btn" id="rdo-truncate" name="modifyOptions"
+              data-dojo-type="dijit/form/RadioButton"/>
+            <label data-dojo-attach-point="truncateLabel" for="rdo-truncate">${nls.truncateValue}</label>
+          </div>
+        </td>
+        <td>
+          <div>
+            <div data-dojo-attach-point="truncatePlaces"></div>
+          </div>
+        </td>
+        <td>
+          <div data-dojo-attach-point="truncateSignificantFigures">
+            <label>${nls.significantFigures}</label>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="field-options-footer">
+    <div class="jimu-btn ok" data-dojo-attach-point="btnOk">${nls.common.ok}</div>
+    <div class="jimu-btn cancel" data-dojo-attach-point="btnCancel">${nls.common.cancel}</div>
+  </div>
+
+</div>

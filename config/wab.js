@@ -115,7 +115,7 @@ define([
                 type: 'titlePane',
                 position: 0,
                 title: 'Basemap Gallery',
-                iconClass: 'fa fa-map',
+                iconClass: 'fas fa-fw fa-map',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -136,7 +136,7 @@ define([
                 type: 'titlePane',
                 position: 0,
                 title: 'Bookmarks',
-                iconClass: 'fa fa-bookmark',
+                iconClass: 'fas fa-fw fa-bookmark',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -157,7 +157,7 @@ define([
                 type: 'titlePane',
                 position: 1,
                 title: 'Charts',
-                iconClass: 'fa fa-bar-chart',
+                iconClass: 'fas fa-fw fa-chart-bar',
                 open: false,
                 canFloat: true,
                 resizable: true,
@@ -183,7 +183,7 @@ define([
                 type: 'titlePane',
                 position: 2,
                 title: 'Directions',
-                iconClass: 'fa fa-map-signs',
+                iconClass: 'fas fa-fw fa-map-signs',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -218,7 +218,7 @@ define([
                 type: 'titlePane',
                 position: 3,
                 title: 'Draw',
-                iconClass: 'fa fa-paint-brush',
+                iconClass: 'fas fa-fw fa-paint-brush',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -239,7 +239,7 @@ define([
                 type: 'titlePane',
                 position: 4,
                 title: 'LayerList',
-                iconClass: 'fa fa-th-list',
+                iconClass: 'fas fa-fw fa-th-list',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -261,7 +261,7 @@ define([
                 type: 'titlePane',
                 position: 5,
                 title: 'Legend',
-                iconClass: 'fa fa-picture-o',
+                iconClass: 'far fa-fw fa-images',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -289,7 +289,7 @@ define([
                 type: 'titlePane',
                 position: 6,
                 title: 'Measurement',
-                iconClass: 'fa fa-expand',
+                iconClass: 'fas fa-fw fa-expand',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -316,7 +316,7 @@ define([
                 type: 'titlePane',
                 position: 7,
                 title: 'Print',
-                iconClass: 'fa fa-print',
+                iconClass: 'fas fa-fw fa-print',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -345,7 +345,7 @@ define([
                 type: 'titlePane',
                 position: 8,
                 title: 'Edit',
-                iconClass: 'fa fa-pencil',
+                iconClass: 'fas fa-fw fa-pencil-alt',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -367,7 +367,7 @@ define([
                 type: 'titlePane',
                 position: 9,
                 title: 'Query',
-                iconClass: 'fa fa-search',
+                iconClass: 'fas fa-fw fa-search',
                 open: false,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -454,7 +454,7 @@ define([
                 include: true,
                 id: 'filter',
                 type: 'titlePane',
-                iconClass: 'fa fa-filter',
+                iconClass: 'fas fa-fw fa-filter',
                 position: 10,
                 title: 'Filter',
                 path: 'jimu/BaseWidgetPanel',

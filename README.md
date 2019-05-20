@@ -96,12 +96,13 @@ Both of these widgets have been modified from the original to provide additional
 
 - This method supports the following versions of the WebApp Builder:
 
+    - version 2.12 released April 2019
     - version 2.11 released January 2019
     - version 2.10 released October 2018
-    - version 2.9 released July 2018
 
 - The following versions of the WebApp Builder may also work but are no longer supported:
 
+    - version 2.9 released July 2018
     - version 2.8 released April 2018
     - version 2.7 released January 2018
     - version 2.6 released October 2017
@@ -127,13 +128,13 @@ Currently, the process requires 3 simple changes to your CMV application. I anti
         /* customizations for WAB widgets */
         },{
             name: 'jimu',
-            location: path + 'wab/2.11/jimu.js'
+            location: path + 'wab/2.12/jimu.js'
         },{
             name: 'libs',
-            location: path + 'wab/2.11/libs'
+            location: path + 'wab/2.12/libs'
         },{
             name: 'wabwidgets',
-            location: path + 'wab/2.11/widgets'
+            location: path + 'wab/2.12/widgets'
         /* end customizations for WAB widgets */
         ```
 

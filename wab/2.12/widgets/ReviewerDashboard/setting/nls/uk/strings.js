@@ -1,0 +1,22 @@
+define({
+  "drsSOEURL": "URL серверу Data Reviewer",
+  "chartSection": "Кількість сегментів/стовпців на діаграмі",
+  "selectByGeography": "Включити фільтрацію за географією",
+  "selectUrl": "Шар сервісу для фільтрації за географією",
+  "selectMapUrl": "Сервіс для фільтрації за географією",
+  "geometryServiceURL": "URL сервісу геометрії",
+  "includeFieldNames": "Вибрати поля",
+  "fieldNames": "Назви полів",
+  "lifecyclePhaseFieldName": "ФАЗА ЖИТТЄВОГО ЦИКЛУ",
+  "setSource": "Задати",
+  "defaultFieldName": "ступінь серйозності",
+  "warning": "Некоректне введення",
+  "includeDefaultFieldName": "Повинна бути вибрана назва поля за замовчуванням",
+  "selectFieldWarning": "Щонайменше одне поле повинне бути видимим",
+  "defaultFieldNotVisible": "Поле за замовчуванням повинне бути видимим",
+  "batchJobCheckGroup": "група перевірки пакетного завдання",
+  "defaultColumn": "За замовчуванням",
+  "visibleColumn": "Видимий",
+  "fieldNameColumn": "Назва поля інформаційної панелі",
+  "aliasColumn": "Псевдонім"
+});

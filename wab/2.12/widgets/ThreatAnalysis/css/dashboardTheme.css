@@ -1,0 +1,353 @@
+/* dropdown / select menus */
+.jimu-widget-threatAnalysis .dijitSelect .dijitArrowButton {
+  background-color: transparent;
+  border-color: #fafafc;
+}
+
+.jimu-widget-threatAnalysis .dijitSelect .dijitButtonContents {
+  background-color: transparent;
+}
+
+/* disabled input boxes */
+.jimu-widget-threatAnalysis .claro .dijitSelectHover,
+.jimu-widget-threatAnalysis .claro .dijitSelectFocused {
+  border: 1px solid #00f;
+}
+
+.jimu-widget-threatAnalysis .dijitTextBoxDisabled .dijitInputContainer {
+  background-color: transparent;
+}
+
+.claro .dijitTextBoxHover {
+  background-color: #222;
+}
+
+.claro .dijitTextBoxFocused .dijitInputContainer {
+  background: #222;
+}
+
+/* button icons */
+.jimu-widget-threatAnalysis .LabelSettingsDownButton {
+  background: url("./images/arrow-down_white.png") no-repeat;
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsDownButton:hover {
+  background: url("./images/arrow-down_white_hover.png") no-repeat;
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsRightButton {
+  background: url("./images/arrow-right_white.png") no-repeat;
+}
+
+.jimu-widget-threatAnalysis .LabelSettingsRightButton:hover {
+  background: url("./images/arrow-right_white_hover.png") no-repeat;
+}
+
+.jimu-widget-threatAnalysis .ItemLeftArrow {
+  background-image: url('./images/left-arrow_white.png');
+}
+
+.jimu-widget-threatAnalysis .ItemLeftArrow:hover {
+  background-image: url('./images/left-arrow_white_hover.png');
+}
+
+.jimu-widget-threatAnalysis .SettingsIcon {
+  background-image: url('./images/settings_white.png');
+}
+
+.jimu-widget-threatAnalysis .SettingsIcon:hover {
+  background-image: url('./images/settings_white_hover.png');
+  background-repeat: no-repeat;
+}
+
+.jimu-widget-threatAnalysis .settingBtn {
+  background: url(./images/settings_white.png);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  width: 15px;
+  height: 15px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: -4px;
+}
+
+.jimu-widget-threatAnalysis .settingBtn:hover {
+  background: url('./images/settings_white_hover.png');
+}
+
+.jimu-widget-threatAnalysis .SelectStyle {
+  height: 30px;
+  color: unset;
+  padding-left: 5px;
+  font-size: 13px;
+  width: 100%;
+  font-family: 'Avenir Medium';
+  background-color: #222222;
+}
+
+.jimu-widget-threatAnalysis .editBtn {
+  float: right;
+  background: url(./images/draw_white.png);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  width: 16px;
+  height: 16px;
+  margin-top: 7px;
+}
+
+.jimu-widget-threatAnalysis .editBtn:hover {
+  background: url('./images/draw_white_hover.png');
+  background-repeat: no-repeat;
+}
+
+.jimu-widget-threatAnalysis .jimu-edit-active {
+  background: url('./images/draw_white_hover.png');
+  background-repeat: no-repeat;
+  border: none;
+}
+
+.jimu-widget-threatAnalysis .helpBtn {
+  float: right;
+  background: url(./images/help_white.png);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  width: 16px;
+  height: 16px;
+  margin-top: 6px;
+}
+
+.jimu-widget-threatAnalysis .helpBtn:hover {
+  background: url(./images/help_white_hover.png);
+}
+
+.jimu-widget-threatAnalysis .dijitSliderThumbHover {
+  background-image: url("../images/sliderball_white.svg");
+  background-position: 0 0;
+}
+
+.jimu-widget-threatAnalysis .dijitSliderImageHandle.dijitSliderImageHandleH {
+  background-image: url("../images/sliderball_white.svg");
+  background-position: 0 0;
+}
+
+.jimu-widget-threatAnalysis .dijitSliderImageHandle.dijitSliderImageHandleH.dojoMoveItem {
+  background-image: url("../images/sliderball_white.svg");
+  background-position: 0 0;
+}
+
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderProgressBarH,
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderLeftBumper {
+  border-color: #fff;
+  background-color: #fff;
+  background-image: -webkit-linear-gradient(top, #fff 0px, #fff 1px, rgba(255, 255, 255, 0) 2px);
+  background-image: -o-linear-gradient(top, #fff 0px, #fff 1px, rgba(255, 255, 255, 0) 2px);
+  background-image: linear-gradient(top, #fff 0px, #fff 1px, rgba(255, 255, 255, 0) 2px);
+}
+
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderRemainingBarH,
+.jimu-widget-threatAnalysis .dijitSlider .dijitSliderRightBumper {
+  border-color: #000;
+  background-color: #000;
+}
+
+/* dojo color picker */
+.jimu-colorpalette {
+  background-color: #222;
+}
+
+.jimu-color-picker-dialog .dijitTooltipContainer {
+  background-color: #222 !important;
+}
+
+.claro .dojoxColorPicker {
+  background: #222;
+}
+
+/* dojo select */
+.claro .dijitSelect {
+  background-color: #222;
+}
+
+.claro .dijitSelectHover,
+.claro .dijitSelectFocused {
+  border-color: #51b1fe !important;
+  box-shadow: 0px 0px 5px #51b1fe;
+}
+
+.claro .dijitSelect .dijitArrowButton {
+  background-color: #222;
+}
+
+.claro .dijitMenu {
+  border: 1px solid #999;
+}
+
+.claro .dijitMenu .dijitMenuItem {
+  color: #fff;
+}
+
+.claro .dijitMenu .dijitMenuItem,
+.claro .dijitMenu .dijitMenuItem td {
+  background-color: #222;
+  border: 1px solid #222;
+  font-weight: normal;
+}
+
+.claro .dijitMenu .dijitMenuItem:hover,
+.claro .dijitMenu .dijitMenuItem:hover td {
+  background: none;
+  background-color: #1e90ff;
+}
+
+.claro .dijitMenu .dijitMenuItemSelected td {
+  background: none;
+  background-color: #1e90ff;
+  font-weight: normal;
+  color: #fff;
+}
+
+.claro .dijitMenuItem .esriTravelModesTypeName {
+  color: #fff;
+}
+
+.claro .dijitMenuItem .dijitMenuItemSelected td:hover .esriTravelModesTypeName {
+  color: #666;
+}
+
+/*dojo dialog box*/
+.claro .dijitDialog {
+  background-color: #222;
+}
+
+.claro .dijitDialogTitle {
+  color: #fff;
+}
+
+.claro .dijitDialogPaneActionBar {
+  background-color: #222;
+  border-top: none;
+}
+
+.claro .dijitDialogTitleBar {
+  border: 0px solid #222;
+  border-bottom: 1px solid #000;
+  background-color: #222;
+  background-image: none;
+}
+
+.claro .dijitTooltipContainer {
+  background-color: #222;
+  border: 1px solid #9a9a9a;
+  color: #fff;
+}
+
+.claro .dijitDialogPaneContent {
+  background-color: #222;
+  border: 0px solid #9a9a9a;
+  color: #fff;
+}
+
+.claro .dijitDialogPaneContent {
+  float: right;
+}
+
+/*tab*/
+.claro .dijitTab {
+  background: #222;
+  color: white;
+}
+
+.claro .dijitTabContainerTop-tabs .dijitTabChecked {
+  background: #333;
+}
+
+.claro .dijitTabContainerTop-dijitContentPane {
+  background: #222;
+  color: white;
+}
+
+/*ComboBox*/
+.claro .dijitComboBox .dijitButtonNode,
+.claro .dijitSelect .dijitArrowButton {
+  background-image: none;
+  background-color: transparent;
+}
+
+.claro .dijitComboBox .dijitArrowButtonContainer,
+.claro .dijitSelect .dijitArrowButtonContainer {
+  border-width: 0 !important;
+}
+
+.claro .dijitSelect .dijitButtonContents {
+  border-style: none;
+}
+
+/*Button*/
+.claro .dijitButton .dijitButtonNode {
+  border: 0px solid #000000;
+  background-image: none;
+  background-color: #666;
+  padding: 5px 18px 8px 18px;
+  font-size: 14px;
+}
+
+.claro .dijitButtonHover .dijitButtonNode {
+  background-color: #333;
+}
+
+/*tree*/
+.claro .dijitTreeRow {
+  background-color: #333;
+  color: white;
+}
+
+.claro .dijitTabPaneWrapper,
+.claro .dijitToolbar {
+  background-color: #222;
+}
+
+.claro .dijitToolbar .dijitToggleButtonChecked .dijitButtonNode {
+  background-color: #666;
+}
+
+.claro .dijitDropDownButton .dijitButtonNode,
+.claro .dijitButton .dijitButtonNode,
+.claro .dijitToggleButton .dijitButtonNode {
+  color: white;
+}
+
+.claro .dijitButtonDisabled .dijitButtonNode {
+  color: #bbb;
+}
+
+.claro .dgrid-header,
+.dgrid-header-row,
+.dgrid-footer {
+  background-color: #222;
+}
+
+.claro .dijitTooltipConnector {
+  background-image: url(images/tooltip_dark.png);
+}
+
+.easy-autocomplete input {
+  background-color: #222;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.easy-autocomplete-container ul {
+  background: none repeat scroll 0 0 #222;
+}
+
+.easy-autocomplete-container ul li.selected {
+  background: none repeat scroll 0 0 #1e90ff;
+}
+
+.easy-autocomplete input:focus {
+  border-color: #51b1fe !important;
+  box-shadow: 0px 0px 5px #51b1fe;
+}
+
+.dijitRuleLabelH {
+  color: #fff;
+}

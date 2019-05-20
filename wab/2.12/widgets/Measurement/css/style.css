@@ -1,0 +1,26 @@
+.jimu-widget-Measurement .operations{
+  margin-top: 10px;
+  text-align: center;
+}
+
+.jimu-widget-Measurement .operations .jimu-btn{
+  padding: 0 18px;
+  height: 32px;
+  line-height: 33px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  min-width: 10px;
+}
+
+.jimu-widget-frame.jimu-container .snapingLabel{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  font-size: smaller;
+  padding: 5px 5px;
+}
+
+.jimu-rtl .jimu-widget-frame.jimu-container .snapingLabel{
+  left: inherit;
+  right: 0;
+}

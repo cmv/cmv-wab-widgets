@@ -1,0 +1,35 @@
+<div data-dojo-attach-point="ProjectSettings" class="esriCTProjectSettings">
+    <div data-dojo-attach-point="layerSelectorWrapper" class="esriCTWrapper">
+        <div class="esriCTLabel">${nls.projectSetting.projectPolygonLayer}</div>
+        <div class="esriCTSelect">
+            <div class="esriCTlayerField" style="width: 100%">
+                <select data-dojo-attach-point="projetPolygonLayerSelect" data-dojo-type="dijit/form/Select"
+                    data-dojo-attach-event="change:projectSettingsChanged" style="width: 100%">
+                </select>
+            </div>
+        </div>
+        <div class="esriCTHelpIcon" data-dojo-attach-point="polygonLayerHelp"></div>
+    </div>
+    <div class="esriCTWrapper">
+        <div class="esriCTLabel">${nls.projectSetting.outputParameterName}</div>
+        <div class="esriCTSelect">
+            <div class="esriCTlayerField" style="width: 100%">
+                <select data-dojo-attach-point="outputParameters" data-dojo-type="dijit/form/Select"
+                    data-dojo-attach-event="change:projectSettingsChanged" style="width: 100%">
+                </select>
+            </div>
+        </div>
+        <div class="esriCTHelpIcon" data-dojo-attach-point="outputParameterHelp"></div>
+    </div>
+    <div class="esriCTWrapper">
+        <div class="esriCTLabel">${nls.projectSetting.projectPointLayer}</div>
+        <div class="esriCTSelect">
+            <div class="esriCTlayerField" style="width: 100%">
+                <select data-dojo-attach-point="projectPointLayerSelect" data-dojo-type="dijit/form/Select"
+                    data-dojo-attach-event="change:projectSettingsChanged" style="width: 100%">
+                </select>
+            </div>
+        </div>
+        <div class="esriCTHelpIcon" data-dojo-attach-point="pointLayerHelp"></div>
+    </div>
+</div>

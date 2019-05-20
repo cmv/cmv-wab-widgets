@@ -1,0 +1,25 @@
+<div>
+	<div class="label-col">
+		<div class="radio-td">
+			<input data-dojo-attach-point="labelRadio" data-dojo-attach-event="change:_onLabelRadioChanged" checked name="sortaxis" data-dojo-type="dijit/form/RadioButton">
+			<label class="radio-label text-ellipsis margin-left-20" title="${nls.label}">${nls.label}</label>
+		</div>
+		<div class="actions-div" data-dojo-attach-point="labelActionDiv">
+			<div data-dojo-attach-point="labelSortArrowDiv" class="sort-td"></div>
+		</div>
+	</div>
+	<div class="value-col">
+		<div class="radio-td">
+			<input data-dojo-attach-point="valueRadio" name="sortaxis" data-dojo-type="dijit/form/RadioButton">
+			<label class="radio-label text-ellipsis margin-left-20" title="${nls.valueStr}">${nls.valueStr}</label>
+		</div>
+		
+		<div class="actions-div hide" data-dojo-attach-point="valueActionDiv">
+			<div data-dojo-attach-point="valueSortArrowDiv" class="sort-td"></div>
+			<div  data-dojo-attach-point="sortFieldDiv" class="field-td margin-left-20 hide">
+				<select data-dojo-attach-point="sortField" data-dojo-type="dijit/form/Select" class="restrict-select-width sort-filed"></select>
+			</div>
+		</div>
+		
+	</div>
+</div>

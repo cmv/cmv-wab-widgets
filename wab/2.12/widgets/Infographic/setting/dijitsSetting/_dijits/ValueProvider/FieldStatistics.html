@@ -1,0 +1,25 @@
+<div>
+  <div class="row stat-row">
+    <div class="col-2">
+      <span class="label">${nls.statistic}</span>
+    </div>
+    <div class="col-2">
+        <select data-dojo-type="dijit/form/Select" data-dojo-props='style:{width:"99%"}' data-dojo-attach-point="operationSelect" data-dojo-attach-event="change:_onOperationChanged" class="restrict-select-width">
+            <option value="count">${nls.countString}</option>
+            <option value="sum">${nls.sumOption}</option>
+            <option value="avg">${nls.averageOption}</option>
+            <option value="max">${nls.maxOption}</option>
+            <option value="min">${nls.minOption}</option>
+        </select>
+    </div>
+  </div>
+  <div data-dojo-attach-point="fieldContaiber" class="row hide">
+    <div class="col-2">
+        <span class="label">${nls.valueField}</span>
+    </div>
+    <div class="col-2">
+        <select data-dojo-type="dijit/form/Select" data-dojo-props='style:{width:"99%"}' data-dojo-attach-point="fieldSelect" data-dojo-attach-event="change:_onFieldSelectChanged" class="restrict-select-width">
+        </select>
+    </div>
+  </div>
+</div>

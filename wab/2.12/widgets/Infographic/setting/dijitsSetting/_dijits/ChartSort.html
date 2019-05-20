@@ -1,0 +1,48 @@
+<div>
+
+	<div style="margin-bottom: 10px;" data-dojo-attach-point="radioDiv" class="part-item other-mode-sort radio-div">
+		
+		<div class="axis-tr">
+			<div class="flex-left-center td-item other-mode-sort">
+				<input type="radio" data-dojo-attach-point="xAxisRadio" data-dojo-attach-event="change:_onXaxisRadioChanged" checked="true" name="sortaxis" data-dojo-type="dijit/form/RadioButton">
+	   			<label class="marginleft10">${nls.labelAxis}</label>
+			</div>
+			<div data-dojo-attach-point="xAxisSortDiv" class="td-item other-mode-sort">
+				<div style="width: 39px;" class="flex-sb-center" data-dojo-attach-event="click:_onSortBtnClicked" data-dojo-attach-point="xSortBtn">
+					<div class="sort-icon asc selected"></div>
+					<div class="sort-icon desc"></div>
+				</div>
+			</div>
+		</div>
+
+		<div style="margin-top: 10px;" class="axis-tr">
+			<div class="flex-left-center td-item other-mode-sort">
+				<input data-dojo-attach-point="yAxisRadio" type="radio" name="sortaxis" data-dojo-type="dijit/form/RadioButton">
+   				<label class="marginleft10">${nls.valueAxis}</label>
+			</div>
+			<div data-dojo-attach-point="yAxisSortDiv" class="flex-left-center td-item">
+				<div style="width: 39px;" class="flex-sb-center" data-dojo-attach-event="click:_onSortBtnClicked" data-dojo-attach-point="ySortBtn">
+					<div class="sort-icon asc selected"></div>
+					<div class="sort-icon desc"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div  data-dojo-attach-point="fieldSortPart" class="part-item feature-mode-sort">
+		<div class="axis-tr">
+			<div class="down-select-div td-item feature-mode-sort" data-dojo-attach-point="sortFieldDiv">
+				<select data-dojo-attach-event="change:_onSortFieldsChanged" data-dojo-attach-point="sortField" data-dojo-type="dijit/form/Select" class="restrict-select-width sort-filed"></select>
+			</div>
+			
+			<div data-dojo-attach-point="zAxisSortDiv" class="z-axis-container td-item feature-mode-sort">
+				<div style="width: 39px;" class="flex-sb-center" data-dojo-attach-event="click:_onSortBtnClicked" data-dojo-attach-point="zSortBtn">
+					<div class="sort-icon asc selected"></div>
+					<div class="sort-icon desc"></div>
+				</div>				
+			</div>
+		</div>
+	</div>
+
+
+</div>
