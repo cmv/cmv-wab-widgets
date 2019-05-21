@@ -55,6 +55,11 @@ define([
 
         startup: function () {
             this.inherited(arguments);
+
+            if (!document.getElementById('theme_cmv_style_common')) {
+                throw new Error('WAB Widgets require the cmv app.css file to have an id of "theme_cmv_style_common"');
+            }
+            
             if (this.mapDeferred) {
                 this.mapDeferred.then(lang.hitch(this, '_configureWAB'));
             }
