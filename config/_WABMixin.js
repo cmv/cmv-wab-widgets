@@ -56,8 +56,9 @@ define([
         startup: function () {
             this.inherited(arguments);
 
-            if (!document.getElementById('theme_cmv_style_common')) {
-                throw new Error('WAB Widgets require the cmv app.css file to have an id of "theme_cmv_style_common"');
+            var themeLinkIid = 'theme_' + wabConfig.theme.name + '_style_common';
+            if (!document.getElementById(themeLinkIid)) {
+                throw new Error('WAB Widgets require the cmv app.css file to have an id of "' + themeLinkIid + '"');
             }
             
             if (this.mapDeferred) {
