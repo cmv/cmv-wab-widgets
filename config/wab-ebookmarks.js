@@ -34,7 +34,7 @@ define([], function () {
                 type: 'titlePane',
                 position: 0,
                 title: 'Enhanced Bookmarks',
-                iconClass: 'fa-bookmark',
+                iconClass: 'fas fa-bookmark',
                 canFloat: true,
                 resizable: true,
                 open: true,

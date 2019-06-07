@@ -34,7 +34,7 @@ define([], function () {
                 type: 'titlePane',
                 position: 0,
                 title: 'Aloha Threat Zone',
-                iconClass: 'fa-thumb-tack',
+                iconClass: 'fas fa-thumbtack',
                 canFloat: true,
                 resizable: true,
                 open: true,

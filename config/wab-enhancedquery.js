@@ -34,7 +34,7 @@ define([], function () {
                 type: 'titlePane',
                 position: 0,
                 title: 'Enhanced Query',
-                iconClass: 'fa-search',
+                iconClass: 'fas fa-search',
                 canFloat: true,
                 resizable: true,
                 open: true,

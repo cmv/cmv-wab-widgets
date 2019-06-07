@@ -39,6 +39,7 @@ define([
                 type: 'titlePane',
                 position: 0,
                 title: 'Wikipedia Search',
+                iconClass: 'fas fa-search',
                 canFloat: true,
                 resizable: true,
                 open: true,

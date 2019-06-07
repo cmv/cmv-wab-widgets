@@ -34,7 +34,7 @@ define([], function () {
                 type: 'titlePane',
                 position: 0,
                 title: 'Enhanced Measure',
-                iconClass: 'fa-expand',
+                iconClass: 'fas fa-fw fa-paint-brush',
                 open: true,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
@@ -55,7 +55,7 @@ define([], function () {
                 type: 'titlePane',
                 position: 0,
                 title: 'Save Session',
-                iconClass: 'fa-save',
+                iconClass: 'fas fa-save',
                 open: true,
                 path: 'jimu/BaseWidgetPanel',
                 options: {
