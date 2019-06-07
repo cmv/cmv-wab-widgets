@@ -24,6 +24,10 @@
     display: none;
 }
 
+.cmv .jimu-color-selector .dojoxColorPickerUnderlay {
+    border: 1px solid white;
+}
+
 .cmv .jimu-widget-measure .jimu-color-picker {
     width: 36px !important;
 }
