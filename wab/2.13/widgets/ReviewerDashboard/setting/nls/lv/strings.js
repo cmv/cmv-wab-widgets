@@ -1,0 +1,22 @@
+define({
+  "drsSOEURL": "Datu pārskatītāja servera URL",
+  "chartSection": "Sektoru/joslu skaits diagrammā",
+  "selectByGeography": "Iekļaut filtrēšanu pēc ģeogrāfijas",
+  "selectUrl": "Servisa slānis filtrēšanai pēc ģeogrāfijas",
+  "selectMapUrl": "Serviss filtrēšanai pēc ģeogrāfijas",
+  "geometryServiceURL": "Ģeometrijas servisa URL",
+  "includeFieldNames": "Atlasīt laukus",
+  "fieldNames": "Lauku nosaukumi",
+  "lifecyclePhaseFieldName": "DZĪVES CIKLA FĀZE",
+  "setSource": "Iestatīt",
+  "defaultFieldName": "nozīmīgums",
+  "warning": "Nepareiza ievade",
+  "includeDefaultFieldName": "Jāatlasa noklusējuma lauka nosaukums",
+  "selectFieldWarning": "Jābūt redzamam vismaz vienam laukam",
+  "defaultFieldNotVisible": "Jābūt redzamam noklusējuma laukam",
+  "batchJobCheckGroup": "pakešdarba pārbaudes grupa",
+  "defaultColumn": "Noklusējums",
+  "visibleColumn": "Redzams",
+  "fieldNameColumn": "Informācijas paneļa lauka nosaukums",
+  "aliasColumn": "Aizstājvārds"
+});

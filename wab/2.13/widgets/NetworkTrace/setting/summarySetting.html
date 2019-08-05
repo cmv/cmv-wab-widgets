@@ -1,0 +1,33 @@
+﻿<div class="ParameterDiv">
+    <div class="esriCTSummaryParentDiv">
+        <fieldset class="esriCTFieldset">
+            <legend class="esriCTLegendTitle">${nls.summaryTab.summaryEditorText}</legend>
+
+            <div class="esriCTSummaryEditor">
+                <div data-dojo-attach-point="editorContainer">
+                </div>
+                <div class="esriCTButtonContainer">
+                    <div style="float: left;margin-top: 5px;" title="${nls.summaryTab.expressionVerifyButtonText}"
+                        data-dojo-attach-event="onclick:_onClickVerifyExpressionBtn"
+                        data-dojo-attach-point="verifySummaryExpression"
+                        class="jimu-state-disabled jimu-btn jimu-float-trailing esriSetButton jimu-leading-margin1">
+                        ${nls.summaryTab.expressionVerifyButtonText}
+                    </div>
+                </div>
+            <div class="esriCTSummaryHintField">
+                    ${nls.hintText.inputTextHint}
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="esriCTFieldset">
+            <legend class="esriCTLegendTitle"> ${nls.summaryTab.autoZoomAfterTrace}</legend>
+            <div class="esriCTOthersData">
+                <div class="field">
+                    <div data-dojo-type="jimu/dijit/CheckBox" data-dojo-attach-point="autoZoomAfterTrace"
+                        class="jimu-checkbox" title="${nls.summaryTab.zoomText}" label="${nls.summaryTab.zoomText}">
+                </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>

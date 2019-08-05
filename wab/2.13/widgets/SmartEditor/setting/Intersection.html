@@ -1,0 +1,50 @@
+<div class="esriCTIntersectionMainContainer">
+    <div syle="width:100%">
+        <div data-dojo-attach-point="groupInfoNode1">
+          <div class="esriCTRowContainer row">
+            <div class="esriCTIntersectionGroupName">
+              <div class="esriCTlabel">
+                ${nls.intersectionPage.groupNameLabel}
+              </div>
+              <div class="esriCTGroupInfoContainer">
+                <div style="width: 75%;" data-dojo-attach-point="groupNameTextBoxNode">
+                </div>
+              </div>
+            </div>
+            <div class="esriCTIntersectionDatatype">
+              <div class="esriCTlabel">
+                ${nls.intersectionPage.dataTypeLabel}
+              </div>
+              <div class="esriCTGroupInfoContainer">
+                <div style="width: 75%;" data-dojo-attach-point="dataTypeDropDownNode">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  <div class="esriCTRowContainer row">
+    <div data-dojo-attach-point="ignoreLayerRankingNode" class="esriCTlabel esriCTIgnoreLayerRankingLabel">
+    </div>
+  </div>
+  <div class="esriCTRowContainer row">
+    <fieldset class="esriCTFieldset">
+      <legend class="esriCTLegendTitle">${nls.intersectionPage.intersectingLayersLabel}</legend>
+      <div class="addLayerLink">
+        <div class="add-with-icon" data-dojo-attach-point="addLayer">
+          <span class="jimu-icon jimu-icon-add"></span><span class="add-label">
+            ${nls.intersectionPage.addLayerLinkText}</span>
+        </div>
+      </div>
+      <div data-dojo-attach-point="layerTableNode">
+      </div>
+    </fieldset>
+  </div>
+  <div class="esriCTRowContainer row"  data-dojo-attach-point="groupInfoNode2">
+    <fieldset class="esriCTFieldset">
+      <legend class="esriCTLegendTitle">${nls.intersectionPage.layerAndFieldsApplyLabel}</legend>
+      <div class="esriCTTableParentContainer" data-dojo-attach-point="tableParentContainer">
+      </div>
+    </fieldset>
+  </div>
+</div>

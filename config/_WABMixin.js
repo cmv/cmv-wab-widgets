@@ -60,13 +60,22 @@ define([
             if (!document.getElementById(themeLinkIid)) {
                 throw new Error('WAB Widgets require the cmv app.css file to have an id of "' + themeLinkIid + '"');
             }
-            
+
             if (this.mapDeferred) {
                 this.mapDeferred.then(lang.hitch(this, '_configureWAB'));
             }
             aspect.after(this, '_setWidgetOptions', function (options) {
                 if (options.widgetManager && this.wabWidgetManager) {
                     options.widgetManager = this.wabWidgetManager;
+
+                    /*
+                        needed to support generic 'BaseWidgetPanel'
+                        which broke at WAB version 2.13
+                    */
+                    if (options.config && options.config.widgets && options.config.widgets.length > 1) {
+                        options._addTagToGroupPanel = function () {};
+                    }
+
                     if (options.parentWidget && options.parentWidget.toggleable) {
                         aspect.after(options.parentWidget, 'toggle', lang.hitch(this, function () {
                             this._toggleWABChildWidgets(options);
@@ -87,6 +96,7 @@ define([
             window.jimuNls = window.jimuNls || mainBundle;
             window.apiNls = window.apiNls || esriMain.bundle;
             window.isRTL = window.isRTL || wabConfig.isRTL;
+            window.wabVersion = wabConfig.wabVersion;
             window.deployVersion = wabConfig.wabVersion;
 
             var pathparts = window.location.pathname.split('/');

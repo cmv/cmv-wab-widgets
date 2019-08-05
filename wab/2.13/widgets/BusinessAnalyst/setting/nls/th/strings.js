@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "การวิเคราะห์ทางธุรกิจ",
+  "defineWhichInfographics": "กำหนดอินโฟกราฟิกที่สามารถใช้งานได้ในวิดเจ็ท:",
+  "defineWhichReports": "กำหนดรายงานที่สามารถใช้งานได้ในวิดเจ็ท:",
+  "defaultValues": "ค่าเริ่มต้น:",
+  "disable": "ปิดการใช้งาน",
+  "driveTime": "ระยะทางขับรถ",
+  "infographics": "แผนภูมิ",
+  "invalidValueRing": "ค่าต้องอยู่ในช่วง 0 ถึง 1,000",
+  "invalidValueDTWT": "ค่าต้องอยู่ในช่วง 0 ถึง 300",
+  "km": "กม",
+  "miles": "ไมล์",
+  "minutes": "นาที",
+  "radius": "รัศมี",
+  "reports": "รายงาน",
+  "rings": "วงแหวน",
+  "selectCountry": "เลือกประเทศ:",
+  "thisEntryIsNotValid": "รายการนี้ไม่ถูกต้อง",
+  "time": "เวลา",
+  "walkTime": "เวลาเดิน"
+});

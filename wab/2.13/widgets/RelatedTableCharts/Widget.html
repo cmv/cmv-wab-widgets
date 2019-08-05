@@ -1,0 +1,30 @@
+<div class="esriCTMainContainer esriCTFullHeight" data-dojo-attach-point="mainNode">
+    <div class="esriCTFullHeight" data-dojo-attach-point="widgetMainNode">
+        <!-- search panel -->
+        <div class="esriCTSearchOuterContainer">
+            <div class="esriCTSearchHeader">
+                ${nls.searchHeaderText}</div>
+            <div class="esriCTSearchContainer">
+                <div class="esriCTSearchDiv">
+                    <div data-dojo-attach-point="searchDiv">
+                    </div>
+                </div>
+                <div class="esriCTSelectLocationDiv esriCTImgButtons esriCTSelectLocation esriCTHidden"
+                    data-dojo-attach-point="selectLocation" role="button" tabindex="0"
+                    aria-label="${nls.locationButtonAriaLabel}">
+                </div>
+            </div>
+        </div>
+        <!-- result panel -->
+        <div class="esriCTResultsPanel" data-dojo-attach-point="resultsPanel">
+            <div class="esriCTResultContent">
+                <div class="esriCTErrorNode esriCTHidden" data-dojo-attach-point="errorNode" tabindex="0"
+                    aria-label="${nls.errMsgNoResultsFound}">
+                    ${nls.errMsgNoResultsFound}
+                </div>
+                <div data-dojo-attach-point="accordionContainer" class="esriCTHidden esriCTAccordionContainer">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

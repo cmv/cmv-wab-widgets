@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "ウィジェットで利用可能なインフォグラフィックスを定義:",
+  "defineWhichReports": "ウィジェットで利用可能なレポートを定義:",
+  "defaultValues": "デフォルト値:",
+  "disable": "無効化",
+  "driveTime": "運転時間",
+  "infographics": "インフォグラフィックス",
+  "invalidValueRing": "値 は 0 ～ 1,000 の範囲内でなければなりません。",
+  "invalidValueDTWT": "値 は 0 ～ 300 の範囲内でなければなりません。",
+  "km": "キロメートル",
+  "miles": "マイル",
+  "minutes": "分",
+  "radius": "半径",
+  "reports": "レポート",
+  "rings": "複数のリング",
+  "selectCountry": "国の選択:",
+  "thisEntryIsNotValid": "このエントリは有効ではありません。",
+  "time": "時間",
+  "walkTime": "徒歩時間"
+});

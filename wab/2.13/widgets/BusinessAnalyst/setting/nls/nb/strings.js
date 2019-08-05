@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "Definer hvilken infografikk som er tilgjengelig i miniprogrammet:",
+  "defineWhichReports": "Definer hvilke rapporter som er tilgjengelige i miniprogrammet:",
+  "defaultValues": "Standardverdier:",
+  "disable": "Deaktiver",
+  "driveTime": "Kjøretid",
+  "infographics": "Infografikk",
+  "invalidValueRing": "Verdiene må være fra 0 til 1000.",
+  "invalidValueDTWT": "Verdiene må være fra 0 til 300.",
+  "km": "km",
+  "miles": "miles",
+  "minutes": "minutter",
+  "radius": "Radius",
+  "reports": "Rapporter",
+  "rings": "Ringer",
+  "selectCountry": "Velg land:",
+  "thisEntryIsNotValid": "Denne oppføringen er ikke gyldig.",
+  "time": "Tid",
+  "walkTime": "Gåtid"
+});

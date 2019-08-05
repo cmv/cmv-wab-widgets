@@ -1,0 +1,16 @@
+<div>
+  <div class="esriCTUploadShapefileText">
+    ${label}
+  </div>
+  <div class="esriCTUploadShapefileButtonDiv">
+    <form enctype="multipart/form-data" method="post" data-dojo-attach-point="uploadForm">
+      <div class='jimu-btn jimu-float-trailing jimu-trailing-margin1 esriCTUploadShapefileButton'
+        title="${nls.shapefileWidget.uploadShapefileButtonText}" data-dojo-attach-point="uploadShapefileButton"
+        role="button" aria-label="${nls.shapefileWidget.uploadShapefileButtonText}" tabindex="0">
+        ${nls.shapefileWidget.uploadShapefileButtonText}
+      </div>
+      <input title="${nls.shapefileWidget.uploadShapefileButtonText}" data-dojo-attach-point="shapefileInput"
+        type="file" name="file" accept=".zip" tabindex="-1" class="esriCTHidden" />
+    </form>
+  </div>
+</div>

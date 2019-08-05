@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "定义在微件中可用的信息图表：",
+  "defineWhichReports": "定义在微件中可用的报表：",
+  "defaultValues": "默认值：",
+  "disable": "禁用",
+  "driveTime": "行驶时间",
+  "infographics": "信息图表",
+  "invalidValueRing": "值的取值范围是 0 到 1,000。",
+  "invalidValueDTWT": "值的取值范围是 0 到 300。",
+  "km": "千米",
+  "miles": "英里",
+  "minutes": "分钟",
+  "radius": "半径",
+  "reports": "报表",
+  "rings": "环",
+  "selectCountry": "选择国家/地区：",
+  "thisEntryIsNotValid": "此条目无效。",
+  "time": "时间",
+  "walkTime": "步行时间"
+});

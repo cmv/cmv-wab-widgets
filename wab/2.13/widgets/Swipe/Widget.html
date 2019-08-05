@@ -1,0 +1,22 @@
+<div class="jimu-widget-swipe">
+	<div class="swipe-layer-menu" data-dojo-attach-point="swipeLayersMenu">
+		<div class="swipe-icon jimu-float-trailing" data-dojo-attach-point="swipeIcon">
+			<div class="swipe-icon-inner" data-dojo-attach-point="swipeImg"></div>
+		</div>
+
+		<div class="titles" data-dojo-attach-point="titlesNode ">
+			<div class="hint" data-dojo-attach-point="hintNode"></div>
+			<div class="show-detail-icon" data-dojo-attach-point="showDetailIcon" title="${nls.hideList}" tabindex="0"></div>
+		</div>
+
+		<div class="selectors" data-dojo-attach-point="selectorsContainer">
+			<div data-dojo-attach-point="singleLayersContainer">
+				<div data-dojo-attach-point="singleSelectorContainer" tabindex="0"></div>
+			</div>
+			<div data-dojo-attach-point="multLayersContainer" class="hide mult-layers-container">
+				<div data-dojo-attach-point="multSelectorContainer" tabindex="0"></div>
+			</div>
+		</div>
+	</div>
+	<div data-dojo-attach-point="layerSwipe"></div>
+</div>

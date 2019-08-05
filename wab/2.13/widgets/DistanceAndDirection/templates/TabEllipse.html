@@ -1,0 +1,94 @@
+<div class="tabPanel" data-dojo-attach-point="ellipseContainer">
+  <div class="controls">
+    <div class="controlGroup">
+      <label>${nls.ellipseTypeLabel}</label>
+      <div class="controlItem">
+        <select aria-label="${nls.ellipseTypeLabel}" style="width: 100%;" data-dojo-type="jimu/dijit/formSelect"
+          data-dojo-attach-point="ellipseType" class="esriCTDropdownObj">
+          <option value="semi">${nls.ellipseSemiLabel}</option>
+          <option value="full">${nls.ellipseFullLabel}</option>
+        </select>
+      </div>
+    </div>
+    <div class="controlGroup">
+      <label data-dojo-attach-point="coordInputLabel">${nls.centerPointLabel}</label>
+      <div class="controlItem">
+        <div class="jimu-input coordInput" data-dojo-attach-point="startPointCoords"
+          placeholder="${nls.startPointPlaceHolderLabel}">
+        </div>
+        <div class="controlItem paddedLeft">
+          <div class='add-with-icon'>
+            <span title="${nls.formatInputLabel}" class="jimu-icon settingBtn safariOnly"
+              data-dojo-attach-point="coordinateFormatButton" tabindex="0" role="button"
+              aria-label="${nls.formatInputLabel}"></span>
+          </div>
+          <div class='add-with-icon'>
+            <div title="${nls.drawEllipseLabel}" class="drawPointBtn" data-dojo-attach-point="addPointBtn" tabindex="0"
+              role="button" aria-label="${nls.drawEllipseLabel}"></div>
+          </div>
+        </div>
+      </div>
+      <div class="controlGroup">
+        <input aria-label="${nls.createEllipseInteractively}" class="interactive-checkbox esriCTCheckboxObj"
+          type="checkbox" data-dojo-attach-point="interactiveEllipse" aria-label="${nls.createEllipseInteractively}" />
+        <label data-dojo-attach-point="interactiveLabel">${nls.createEllipseInteractively}</label>
+      </div>
+    </div>
+    <fieldset>
+      <legend>${nls.axisLabel}</legend>
+      <div class="controlGroup" data-dojo-attach-point="majorAxisInputDiv">
+        <label data-dojo-attach-point="majorAxisLabel">${nls.majorRadiusLabel}</label>
+        <div class="controlItem">
+          <input aria-label="${nls.majorRadiusLabel}" data-dojo-type="dijit/form/NumberTextBox" required='true' ,
+            value='100' , data-dojo-props="constraints:{min:1}" data-dojo-attach-point="majorAxisInput"
+            style="width: 100%;" />
+        </div>
+      </div>
+      <div class="controlGroup" data-dojo-attach-point="minorAxisInputDiv">
+        <label data-dojo-attach-point="minorAxisLabel">${nls.minorRadiusLabel}</label>
+        <div class="controlItem">
+          <input aria-label="${nls.minorRadiusLabel}" data-dojo-type="dijit/form/NumberTextBox" required='true' ,
+            value='50' , data-dojo-props="constraints:{min:1}" data-dojo-attach-point="minorAxisInput"
+            style="width: 100%;" />
+        </div>
+      </div>
+      <div class="controlGroup">
+        <label>${nls.unitLabel}</label>
+        <div class="controlItem">
+          <select aria-label="${nls.unitLabel}" style="width: 100%;" data-dojo-type="jimu/dijit/formSelect"
+            id="lengthUnitDD" data-dojo-attach-point="lengthUnitDD">
+            <option value="feet">${nls.units.feet}</option>
+            <option value="kilometers" selected="selected">${nls.units.kilometers}</option>
+            <option value="miles">${nls.units.miles}</option>
+            <option value="meters">${nls.units.meters}</option>
+            <option value="nautical-miles">${nls.units.nauticalMiles}</option>
+            <option value="yards">${nls.units.yards}</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+    <div class="controlGroup">
+      <label>${nls.orientationLabel}</label>
+      <div class="controlItem" data-dojo-attach-point="angleInputDiv">
+        <input aria-label="${nls.orientationLabel}" data-dojo-type="dijit/form/NumberTextBox" style="width: 100%;"
+          required='true' , value='0' , data-dojo-props="constraints:{min:0, max:360}"
+          data-dojo-attach-point="angleInput" />
+        <select aria-label="${nls.orientationLabel}" style="width: 100px" class="controlSpace"
+          data-dojo-type="jimu/dijit/formSelect" id="angleUnitDD" data-dojo-attach-point="angleUnitDD">
+          <option value="degrees">${nls.degreesLabel}</option>
+          <option value="mils">${nls.milsLabel}</option>
+        </select>
+      </div>
+    </div>
+    <div class="controlGroup">
+      <label class="warning">${nls.warningMessage}</label>
+    </div>
+    <div class="buttonContainer">
+      <div class='jimu-btn jimu-state-disabled' data-dojo-attach-point='okButton' style="width: 49%;"
+        data-dojo-attach-event="onclick: okButtonClicked" aria-label="${nls.common.ok}" role="button">${nls.common.ok}
+      </div>
+      <div class='jimu-btn' tabindex="0" role="button" aria-label="${nls.clearGraphicsLabel}" style="width: 49%;"
+        data-dojo-attach-point='clearGraphicsButton'>${nls.clearGraphicsLabel}</div>
+    </div>
+  </div>
+</div>

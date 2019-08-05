@@ -1,0 +1,122 @@
+<div>
+    <div data-dojo-attach-point="reportInfographicTabContainer" style="width: 100%; height: 520px;">
+        <div data-dojo-attach-point="infographicsContentPane" title="${nls.infographics}">
+            <div style="margin-top: 15px; margin-left: 15px;">
+                <div style="margin-top: 10px">
+                    <input data-dojo-type="dijit/form/CheckBox" id="disabledInfographicsOption"
+                        data-dojo-attach-point="disabledInfographicsOption">
+                    <label for="disabledInfographicsOption">${nls.disable}</label>
+                </div>
+                <br>
+                <!--
+                    Use jimuNls.featureSetChooser.select as the label is a temp fix.
+                    We should use a dedicated string in next release
+                 -->
+                <span style="float: left; margin-top: 3px;">${jimuNls.featureSetChooser.select}</span>
+                <div style="float:left; margin-left: 5px;" data-dojo-attach-point="countryDropDownContainerInfographics"></div>
+                <br>
+                <br>
+                <br>
+                <div>${nls.defineWhichInfographics}</div>
+                <div style="height: 40px;" data-dojo-attach-point="infographicTreeGridContainer"></div>
+            </div>
+        </div>
+        <div data-dojo-attach-point="reportsContentPane" title="${nls.reports}">
+            <div style="margin-top: 15px; margin-left: 15px;">
+                <div style="margin-top: 10px">
+                    <input data-dojo-type="dijit/form/CheckBox" id="disabledReportsOption"
+                        data-dojo-attach-point="disabledReportsOption">
+                    <label for="disabledReportsOption">${nls.disable}</label>
+                </div>
+                <br>
+                <span style="float: left; margin-top: 3px;">${jimuNls.featureSetChooser.select}</span>
+                <div style="float:left; margin-left: 5px;" data-dojo-attach-point="countryDropDownContainerReports"></div>
+                <br>
+                <br>
+                <br>
+                <div>${nls.defineWhichReports}</div>
+                <div style="height: 40px;" data-dojo-attach-point="reportTreeGridContainer"></div>
+            </div>
+        </div>
+        <div data-dojo-attach-point="ringsContentPane" title="${nls.rings}">
+            <div style="margin-top: 15px; margin-left: 15px;">
+                <span>${nls.defaultValues}</span>
+                <br>
+                <br>
+                ${nls.radius}
+                <div data-dojo-type="dijit/form/TextBox" style="width: 50px;" data-dojo-props="value: 1"
+                    data-dojo-attach-point="ringsBufferRadii1"></div>
+                <div data-dojo-type="dijit/form/TextBox" style="width: 50px;" data-dojo-props="value: 3"
+                    data-dojo-attach-point="ringsBufferRadii2"></div>
+                <div data-dojo-type="dijit/form/TextBox" style="width: 50px;" data-dojo-props="value: 5"
+                    data-dojo-attach-point="ringsBufferRadii3"></div>
+                <select data-dojo-type="dijit/form/Select" data-dojo-attach-point="ringsBufferUnits">
+                    <option value="esriMiles" selected="selected">${nls.miles}</option>
+                    <option value="esriKilometers">${nls.km}</option>
+                </select>
+                <div data-dojo-attach-point="ringValidationErrorMessage" class="validationErrorMessage hidden"></div>
+                <br />
+                <br />
+                <div style="margin-top: 10px">
+                    <input data-dojo-type="dijit/form/CheckBox" id="disabledRingsOption"
+                        data-dojo-attach-point="disabledRingsOption">
+                    <label for="disabledRingsOption">${nls.disable}</label>
+                </div>
+            </div>
+        </div>
+        <div data-dojo-attach-point="driveTimeContentPane" title="${nls.driveTime}">
+            <div style="margin-top: 15px; margin-left: 15px;">
+                <span>${nls.defaultValues}</span>
+                <br>
+                <br>
+                ${nls.time}
+                <div data-dojo-type="dijit/form/TextBox" style="width: 50px;" data-dojo-props="value: 5"
+                    data-dojo-attach-point="driveTimeBufferRadii1"></div>
+                <div data-dojo-type="dijit/form/TextBox" style="width: 50px;" data-dojo-props="value: 10"
+                    data-dojo-attach-point="driveTimeBufferRadii2"></div>
+                <div data-dojo-type="dijit/form/TextBox" style="width: 50px;" data-dojo-props="value: 15"
+                    data-dojo-attach-point="driveTimeBufferRadii3"></div>
+                <select data-dojo-type="dijit/form/Select" data-dojo-attach-point="driveTimeBufferUnits">
+                    <option value="Minutes" selected="selected">${nls.minutes}</option>
+                    <option value="esriMiles">${nls.miles}</option>
+                    <option value="esriKilometers">${nls.km}</option>
+                </select>
+                <div data-dojo-attach-point="driveTimeValidationErrorMessage" class="validationErrorMessage hidden"></div>
+                <br />
+                <br />
+                <div style="margin-top: 10px">
+                    <input data-dojo-type="dijit/form/CheckBox" data-dojo-attach-point="disabledDriveTimeOption"
+                        id="disabledDriveTimeOption">
+                    <label for="disabledDriveTimeOption">${nls.disable}</label>
+                </div>
+            </div>
+        </div>
+        <div data-dojo-attach-point="walkTimeContentPane" title="${nls.walkTime}">
+            <div style="margin-top: 15px; margin-left: 15px;">
+                <span>${nls.defaultValues}</span>
+                <br>
+                <br>
+                ${nls.time}
+                <div data-dojo-type="dijit/form/TextBox" style="width: 50px;" data-dojo-props="value: 5"
+                    data-dojo-attach-point="walkTimeBufferRadii1"></div>
+                <div data-dojo-type="dijit/form/TextBox" style="width: 50px;" data-dojo-props="value: 10"
+                    data-dojo-attach-point="walkTimeBufferRadii2"></div>
+                <div data-dojo-type="dijit/form/TextBox" style="width: 50px;" data-dojo-props="value: 15"
+                    data-dojo-attach-point="walkTimeBufferRadii3"></div>
+                <select data-dojo-type="dijit/form/Select" data-dojo-attach-point="walkTimeBufferUnits">
+                    <option value="Minutes" selected="selected">${nls.minutes}</option>
+                    <option value="esriMiles">${nls.miles}</option>
+                    <option value="esriKilometers">${nls.km}</option>
+                </select>
+                <div data-dojo-attach-point="walkTimeValidationErrorMessage" class="validationErrorMessage hidden"></div>
+                <br />
+                <br />
+                <div style="margin-top: 10px">
+                    <input data-dojo-type="dijit/form/CheckBox" id="disabledWalkTimeOption"
+                        data-dojo-attach-point="disabledWalkTimeOption">
+                    <label for="disabledWalkTimeOption">${nls.disable}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

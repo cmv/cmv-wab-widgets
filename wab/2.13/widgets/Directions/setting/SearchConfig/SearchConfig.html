@@ -1,0 +1,19 @@
+<div>
+  <div class="search-config">
+    <div class="dropdown-button" role="button">
+      <div class="button">
+        <span class="button-text">${nls.add}</span>
+      </div>
+      <ul class="dropdown-menu" role="menu" data-dojo-attach-event="click:_onMenuItemClick">
+        <li class="dropdown-item" type="query">${nls.searchableLayer}</li>
+        <li class="dropdown-item" type="locator">${nls.geocoder}</li>
+      </ul>
+    </div>
+    <div class="sources">
+      <div class="source-list jimu-float-leading">
+        <div class="source-list-table" data-dojo-attach-point="sourceList"></div>
+      </div>
+      <div class="source-setting jimu-float-trailing" data-dojo-attach-point="sourceSettingNode"></div>
+    </div>
+  </div>
+</div>

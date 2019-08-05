@@ -1,0 +1,22 @@
+define({
+  "_widgetLabel": "Інформаційна панель Reviewer",
+  "spatialFilterSelection": "Фільтрувати результати за географією",
+  "drawSelectionArea": "Намалювати область вибору результату на карті",
+  "currentSelection": "Показати результати тільки у поточному екстенті карти",
+  "censusBlockGroup": "Показати результати за географією",
+  "noSpatialFilter": " Не використовувати просторовий фільтр",
+  "reviewerSessionFilter": "Фільтрувати результати за сеансом інформаційної панелі",
+  "selectAttributeFilters": "Вибрати інформацію для відображення",
+  "phaseFieldName": "фаза життєвого циклу",
+  "statusFieldName": "стан життєвого циклу",
+  "allSessions": "Всі сеанси",
+  "dashboardTab": "Інформаційна панель",
+  "filtersTab": "Налаштування",
+  "noResults": "Результати не знайдено",
+  "resultsBy": "Результати за: ",
+  "reviewed": "Перегляд",
+  "corrected": "Коригування",
+  "verified": "Підтвердження",
+  "OtherCategory": "Інше",
+  "backButton": "Назад"
+});

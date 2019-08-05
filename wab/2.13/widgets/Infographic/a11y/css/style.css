@@ -1,0 +1,9 @@
+.jimu-widget-infographic *:focus {
+  outline-offset: -2px !important;
+}
+
+.ie-gte-10 .infographic-text-dijit:focus {
+	width: 99%!important;
+	height: 95%!important;
+	margin: 1px!important;
+}

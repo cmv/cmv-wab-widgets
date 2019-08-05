@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "حدد أي مخططات معلومات بيانية متوفرة في عنصر واجهة المستخدم:",
+  "defineWhichReports": "حدد أي تقارير متوفرة في عنصر واجهة المستخدم:",
+  "defaultValues": "القيم الافتراضية:",
+  "disable": "تعطيل",
+  "driveTime": "وقت القيادة",
+  "infographics": "إنفوجرافكس",
+  "invalidValueRing": "يجب أن تكون القيم ضمن نطاق من 0 إلى 1000.",
+  "invalidValueDTWT": "يجب أن تكون القيم ضمن نطاق من 0 إلى 300.",
+  "km": "كيلومتر",
+  "miles": "أميال",
+  "minutes": "دقائق",
+  "radius": "نصف القطر",
+  "reports": "تقارير",
+  "rings": "حلقات",
+  "selectCountry": "حدد بلد:",
+  "thisEntryIsNotValid": "هذا الإدخال غير صالح.",
+  "time": "الوقت",
+  "walkTime": "زمن السير"
+});

@@ -1,0 +1,27 @@
+{
+    "defaultCountryID": "US",
+    "infographicsDisabled": false,
+    "reportsDisabled": false,
+    "ringDefaults": [1, 3, 5],
+    "ringUnitDefault": "Miles",
+    "ringDisabled": false,
+    "driveTimeDefaults": [5, 10, 15],
+    "driveTimeUnitDefault": "Minutes",
+    "driveTimeDisabled": false,
+    "walkTimeDefaults": [5, 10, 15],
+    "walkTimeUnitDefault": "Minutes",
+    "walkTimeDisabled": false,
+    "countryConfig": [
+        {
+            "countryID": "US",
+            "allowEsriReports": true,
+            "allowEsriInfographics": true,
+            "allowMyReports": true,
+            "allowMyInfographics": true,
+            "allowSharedReports": true,
+            "allowSharedInfographics": true,
+            "disabledReports": [],
+            "disabledInfographics": []
+        }
+    ]
+}
