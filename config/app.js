@@ -12,10 +12,10 @@
         async: true,
         packages: [{
             name: 'viewer',
-            location: 'https://cdn.rawgit.com/cmv/cmv-app/' + versions.cmv + '/viewer/js/viewer'
+            location: 'https://cdn.jsdelivr.net/gh/cmv/cmv-app@' + versions.cmv + '/viewer/js/viewer'
         }, {
             name: 'gis',
-            location: 'https://cdn.rawgit.com/cmv/cmv-app/' + versions.cmv + '/viewer/js/gis'
+            location: 'https://cdn.jsdelivr.net/gh/cmv/cmv-app@' + versions.cmv + '/viewer/js/gis'
         }, {
             name: 'proj4js',
             location: '//cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15'
