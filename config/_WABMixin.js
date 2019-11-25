@@ -205,7 +205,7 @@ define([
 
         // get all the operational layers
         _getOperationalLayers: function () {
-            var layers = [], layer;
+            var layers = [], layer = null;
             array.forEach(this.config.operationalLayers, lang.hitch(this, function (opLayer) {
                 layer = this.map.getLayer(opLayer.options.id);
                 if (layer) {
@@ -224,7 +224,7 @@ define([
 
         // get the basemap layer(s)
         _getBaseMapLayers: function () {
-            var layers = [], layer;
+            var layers = [], layer = null;
             array.forEach(this.map.basemapLayerIds, lang.hitch(this, function (layerId) {
                 layer = this.map.getLayer(layerId);
                 if (layer) {

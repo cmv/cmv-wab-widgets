@@ -1,5 +1,5 @@
 (function () {
-    var path = location.pathname.replace(/[^\/]+$/, '');
+    var path = location.pathname.replace(/[^/]+$/, '');
 
     // make it easier to update the demo. optional
     var versions = {
