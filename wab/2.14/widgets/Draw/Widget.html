@@ -1,0 +1,135 @@
+<div>
+  <div class="selectModeContainer firstFocusNode" data-a11y-label-by="selectModeLabel" tabindex="0">
+    <label data-a11y-label-id="selectModeLabel">${nls.selectDrawMode}</label>
+    <div data-dojo-attach-point="drawBox" data-dojo-type="jimu/dijit/DrawBox" data-dojo-props='types:["point","arrow","polyline","polygon","text"],showClear:false,deactivateAfterDrawing:false' style="margin-top:5px;"></div>
+  </div>
+  <div data-dojo-attach-point="settingContent" style="width:100%;">
+    <div class="point-section" data-dojo-attach-point="pointSection">
+      <div data-dojo-attach-point="pointSymChooser" data-dojo-type="jimu/dijit/SymbolChooser" data-dojo-props='type:"marker",isRenderIdForAttrs:true'></div>
+    </div>
+
+    <div class="line-section" data-dojo-attach-point="lineSection">
+      <div data-dojo-attach-point="lineSymChooser" data-dojo-type="jimu/dijit/SymbolChooser" data-dojo-props='type:"line",isRenderIdForAttrs:true'></div>
+    </div>
+
+    <div class="polygon-section" data-dojo-attach-point="polygonSection">
+      <div data-dojo-attach-point="fillSymChooser" data-dojo-type="jimu/dijit/SymbolChooser" data-dojo-props='type:"fill",isRenderIdForAttrs:true'></div>
+    </div>
+
+    <div class="text-section" data-dojo-attach-point="textSection">
+      <div data-dojo-attach-point="textSymChooser" data-dojo-type="jimu/dijit/SymbolChooser" data-dojo-props='type:"text",isRenderIdForAttrs:true'></div>
+    </div>
+  </div>
+  <div data-dojo-attach-point="locationMeasure" class="draw-item jimu-symbol-chooser">
+    <div class="header" data-dojo-attach-point="locationMeasureHeader"  data-index="locationMeasure">
+      <span class="item-title">${nls.showLocationMeasurement}</span>
+      <span class="toggle-draw jimu-trailing-margin1" data-dojo-attach-point="locationToggleDraw"></span>
+    </div>
+    <div class="body" style="display:none;" data-dojo-attach-point="locationMeasureBody">
+      <table class="symbol-set-table" cellspacing="0">
+        <colgroup>
+          <col width="130px"></col>
+          <col width="auto"></col>
+        </colgroup>
+        <tbody>
+          <tr>
+            <td><span data-a11y-label-id="locationLabel_unit">${jimuNls.common.unit}:</span></td>
+            <td>
+              <select data-dojo-attach-point="locationUnitSelect" data-dojo-type="jimu/dijit/formSelect" data-a11y-label-by="locationLabel_unit" class="jimu-float-trailing"></select>
+            </td>
+          </tr>
+          <tr>
+            <td><span data-a11y-label-id="locationLabel_fontColor">${jimuNls.symbolChooser.fontColor}:</span></td>
+            <td>
+              <div data-dojo-attach-point="locationTextColor" data-dojo-type="jimu/dijit/ColorPicker" data-a11y-label-by="locationLabel_fontColor" style="width:100%;height:30px;"  data-dojo-props='color:"#000"'></div>
+            </td>
+          </tr>
+          <tr>
+            <td><span data-a11y-label-id="locationLabel_fontSize">${jimuNls.symbolChooser.fontSize}:</span></td>
+            <td>
+              <input data-dojo-attach-point="locationTextFontSize" data-dojo-type="dijit/form/NumberSpinner"
+              data-a11y-label-by="locationLabel_fontSize" style="width:100%;" data-dojo-props='value:16,smallDelta:1,constraints:{min:1,max:100},intermediateChanges:true'></input>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div data-dojo-attach-point="areaMeasure" class="draw-item jimu-symbol-chooser">
+    <div class="header" data-dojo-attach-point="areaMeasureHeader"  data-index="areaMeasure">
+      <!-- <span class="arrow jimu-float-leading jimu-trailing-margin05" ></span> -->
+      <span class="item-title">${nls.showAreaMeasurement}</span>
+      <span class="toggle-draw jimu-trailing-margin1" data-dojo-attach-point="areaToggleDraw"></span>
+    </div>
+    <div class="body" style="display:none;" data-dojo-attach-point="areaMeasureBody">
+      <table class="symbol-set-table" cellspacing="0">
+        <colgroup>
+          <col width="130px"></col>
+          <col width="auto"></col>
+        </colgroup>
+        <tbody>
+          <tr>
+            <td><span data-a11y-label-id="areaLabel_unit">${jimuNls.common.unit}:</span></td>
+            <td>
+              <select data-dojo-attach-point="areaUnitSelect" data-a11y-label-by="areaLabel_unit" data-dojo-type="jimu/dijit/formSelect" class="jimu-float-trailing"></select>
+            </td>
+          </tr>
+          <tr>
+            <td><span data-a11y-label-id="areaLabel_fontColor">${jimuNls.symbolChooser.fontColor}:</span></td>
+            <td>
+              <div data-dojo-attach-point="areaTextColor" data-dojo-type="jimu/dijit/ColorPicker" data-a11y-label-by="areaLabel_fontColor" style="width:100%;height:30px;"  data-dojo-props='color:"#000"'></div>
+            </td>
+          </tr>
+          <tr>
+            <td><span data-a11y-label-id="areaLabel_fontSize">${jimuNls.symbolChooser.fontSize}:</span></td>
+            <td>
+              <input data-dojo-attach-point="areaTextFontSize" data-a11y-label-by="areaLabel_fontSize" data-dojo-type="dijit/form/NumberSpinner" style="width:100%;" data-dojo-props='value:16,smallDelta:1,constraints:{min:1,max:100},intermediateChanges:true'></input>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div data-dojo-attach-point="distanceMeasure" class="draw-item jimu-symbol-chooser">
+    <div class="header" data-dojo-attach-point="distanceMeasureHeader" data-index="distanceMeasure" >
+      <!-- <span class="arrow jimu-float-leading jimu-trailing-margin05"></span> -->
+      <span class="item-title" data-dojo-attach-point="distanceMeasureTitle">${nls.showDistanceMeasurementForLine}</span>
+      <span class="toggle-draw jimu-trailing-margin1" data-dojo-attach-point="distanceToggleDraw"></span>
+    </div>
+    <div class="body" style="display:none;" data-dojo-attach-point="distanceMeasureBody">
+      <table class="symbol-set-table" cellspacing="0">
+        <colgroup>
+          <col width="130px"></col>
+          <col width="auto"></col>
+        </colgroup>
+        <tbody>
+          <tr>
+            <td><span data-a11y-label-id="distanceLabel_unit">${jimuNls.common.unit}:</span></td>
+            <td>
+              <select data-dojo-attach-point="distanceUnitSelect" data-dojo-type="jimu/dijit/formSelect" data-a11y-label-by="distanceLabel_unit" class="jimu-float-trailing"></select>
+            </td>
+          </tr>
+          <tr>
+            <td><span data-a11y-label-id="distanceLabel_fontColor">${jimuNls.symbolChooser.fontColor}:</span></td>
+            <td>
+              <div data-dojo-attach-point="distanceTextColor" data-dojo-type="jimu/dijit/ColorPicker" data-a11y-label-by="distanceLabel_fontColor" style="width:100%;height:30px;"  data-dojo-props='color:"#000"'></div>
+            </td>
+          </tr>
+          <tr>
+            <td><span data-a11y-label-id="distanceLabel_fontSize">${jimuNls.symbolChooser.fontSize}:</span></td>
+            <td>
+              <input data-dojo-attach-point="distanceTextFontSize" data-dojo-type="dijit/form/NumberSpinner"
+              data-a11y-label-by="distanceLabel_fontSize" style="width:100%;" data-dojo-props='value:16,smallDelta:1,constraints:{min:1,max:100},intermediateChanges:true'></input>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="operations" onselectstart="return false;">
+    <div role="button" class="jimu-btn" data-dojo-attach-point="btnUndo" data-dojo-attach-event="onclick:_onBtnUndoClicked" tabindex="0">${nls.undo}</div>
+    <div role="button" class="jimu-btn" data-dojo-attach-point="btnRedo" data-dojo-attach-event="onclick:_onBtnRedoClicked" tabindex="0">${nls.redo}</div>
+    <div role="button" class="jimu-btn last-btn lastFocusNode" data-dojo-attach-point="btnClear" data-dojo-attach-event="onclick:_onBtnClearClicked" tabindex="0">${nls.clear}</div>
+  </div>
+</div>

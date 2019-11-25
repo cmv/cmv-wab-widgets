@@ -1,0 +1,234 @@
+<div>
+    <div class="item esriCTMainParentContainer">
+        <div class="content esriCTMainParentContentContainer" data-dojo-attach-point="mainParentContentContainer">
+            <!-- Loading indicator starts -->
+            <div class="runIconidle" data-dojo-attach-point="loadingIcon"></div>
+            <!-- Loading indicator ends -->
+            <!-- New Or Load Project starts -->
+            <div class="esriCTLoadProjectParentContainer esriCTHidden" data-dojo-attach-point="loadProjectParentContainer">
+                <div class="esriCTLoadProjectDropDownContainer" data-dojo-attach-point="loadProjectDropdownContainer">
+                </div>
+                <div class="esriCTDisableEditProjectBtn" title="${nls.editProjectAttributesToolTip}"
+                    data-dojo-attach-event="onclick:_editProjectAttributes" data-dojo-attach-point="editProjectAttributes"
+                    role="button" tabindex="-1" aria-label="${nls.editProjectAttributesToolTip}"></div>
+            </div>
+            <!-- New Or Load Project ends -->
+            <!-- Tab starts -->
+            <div class="esriCTInputOutputTabParentContainer esriCTHidden" data-dojo-attach-point="inputOutputTabParentContainer">
+                <div class="esriCTTabParentContainer" data-dojo-attach-point="tabContainerNetworkTrace">
+                    <!-- Input tab main container starts -->
+                    <div class="esriCTInputParentMainContainer" data-dojo-attach-point="inputTabPanel">
+                        <!-- Trace panel starts -->
+                        <div class="tracePanel" data-dojo-attach-point="tracePanel">
+                            <div class="traceControls">
+                                <!-- Flag icon starts -->
+                                <div class="btnFlagStyle" data-dojo-attach-point="flagIconMainContainer">
+                                    <!-- aria-label added at runtime as it needs to fetched from config -->
+                                    <div class="flagbutton esriCTHidden" data-dojo-attach-point="btnFlag" aria-pressed="false" role="button" tabindex="0"
+                                        data-dojo-attach-event="onclick:_onFlagButtonClick">
+                                    </div>
+                                    <label class="flagLabel" data-dojo-attach-point="flagLabel" for="btnFlag">
+                                    </label>
+                                </div>
+                                <!-- Flag icon ends -->
+                                <!-- Barrier icon starts -->
+                                <div class="btnBarrierStyle" data-dojo-attach-point="barrierIconMainContainer">
+                                    <!-- aria-label added at runtime as it needs to fetched from config -->
+                                    <div class="barrierButton esriCTHidden" data-dojo-attach-point="btnBarrier" aria-pressed="false" role="button" tabindex="0"
+                                        data-dojo-attach-event="onclick:_onBarrierButtonClick">
+                                    </div>
+                                    <label class="barrierLabel" data-dojo-attach-point="barrierLabel" for="btnBarrier">
+                                    </label>
+                                </div>
+                                <!-- Barrier icon ends -->
+                            </div>
+                            <div class="traceButtons">
+                                <div class="esriCTRunButtonContainer">
+                                    <div class="jimu-btn jimu-state-disabled esriCTBtnRunTrace" data-dojo-attach-point="btnTrace"
+                                        role="button" tabindex="-1" aria-label="${nls.defaultValueForRunButton}"
+                                        type="submit" disabled data-dojo-attach-event="onclick:_onTraceButtonClick">
+                                        ${nls.defaultValueForRunButton}
+                                    </div>
+                                </div>
+                                <div class="esriCTClearButtonContainer">
+                                    <div class="jimu-btn esriCTBtnClear" data-dojo-attach-point="btnClear" type="submit"
+                                        role="button" tabindex="0" aria-label="${nls.clearButtonValue}"
+                                        data-dojo-attach-event="onclick:_onClearButtonClick">
+                                        ${nls.clearButtonValue}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Trace panel ends -->
+                        <!-- Input, Barrier & Skip Location on main page starts -->
+                        <div class="esriCTFlagBarrierSkipLocationMainPage" data-dojo-attach-point="flagBarrierSkipLocationMainPageContainer">
+                            <!-- Input text -->
+                            <div class="esriCTInputLocationTab esriCTHidden" data-dojo-attach-point="inputLocTab"
+                                data-dojo-attach-event="onclick:_onInputLocTabClick"
+                                role="button" tabindex="0"  aria-label="${nls.lblInputLocHeader}">
+                                <div class="esriCTlblLoc" data-dojo-attach-point="lblInputLoc">
+                                    ${nls.lblInputLocHeader}</div>
+                                <div class="esriCTTabRightimg" data-dojo-attach-point="inputLocRightCaretIcon">
+                                </div>
+                            </div>
+                            <!-- Barrier text -->
+                            <div class="esriCTBarrierLocationTab esriCTHidden" data-dojo-attach-point="barrierLocTab"
+                                data-dojo-attach-event="onclick:_onBarrierLocTabClick"
+                                role="button" tabindex="0"  aria-label="${nls.lblBlockLocHeader}">
+                                <div class="esriCTlblLoc" data-dojo-attach-point="lblBlockLoc">
+                                    ${nls.lblBlockLocHeader}</div>
+                                <div class="esriCTTabRightimg">
+                                </div>
+                            </div>
+                            <!-- Skip Location text -->
+                            <div class="esriCTSkipLocationTab esriCTHidden" data-dojo-attach-point="skipLocationTab"
+                                data-dojo-attach-event="onclick:_onSkipLocationTabClick"
+                                role="button" tabindex="0"  aria-label="${nls.lblSkipLocHeader}">
+                                <div class="esriCTlblLoc" data-dojo-attach-point="lblSkipLoc">
+                                    ${nls.lblSkipLocHeader}</div>
+                                <div class="esriCTTabRightimg">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Input, Barrier & Skip Location on main page ends -->
+                    </div>
+                    <!-- Input tab main container starts -->
+                    <!-- Output tab main container starts -->
+                    <div class="esriCTOutputParentMainContainer esriCTHidden" data-dojo-attach-point="outputTab">
+                        <div class="esriCTLayerInformationContainer esriCTHidden" data-dojo-attach-point="resultLayersInformationContainer"
+                        role="presentation" tabindex="0">
+                        </div>
+                        <div class="esriCTResultsLayerNamesContainer esriCTHidden" data-dojo-attach-point="resultsLayerNamesContainer">
+                        </div>
+                    </div>
+                    <!-- Output tab main container ends -->
+                </div>
+            </div>
+            <!-- Tab ends -->
+            <div class="esriCTResultsLayerFeaturesContainer esriCTHidden" data-dojo-attach-point="layerFeaturesContainer">
+            </div>
+            <!-- Edit project starts -->
+            <div class="esriCTEditProjectAttributeContainer esriCTHidden" data-dojo-attach-point="editAttributeContainer">
+                <!-- Attribute Inspector -->
+                <div class="esriCTAttributeInspectorContainer" data-dojo-attach-point="attributeInspectorContainer"></div>
+                <!-- Ok & Cancel button -->
+                <div class="esriCTEditProjectOkAndCancelBtnParentContainer">
+                    <div class="esriCTEditProjectAttributeOkButtonContainer">
+                        <div class="jimu-btn esriCTEditProjectAttributeOkButton" data-dojo-attach-point="editProjectAttributeOkButtonNode"
+                         data-dojo-attach-event="onClick:_onOkButtonClick"
+                        role="button" tabindex="0" aria-label="${nls.ok}">
+                            ${nls.ok}
+                        </div>
+                    </div>
+                    <div class="esriCTEditProjectAttributeCancelButtonContainer">
+                        <div class="jimu-btn esriCTEditProjectAttributeCancelButton" data-dojo-attach-event="onClick:_hideAttributeInspector"
+                        data-dojo-attach-point="editProjectAttributeCancelButtonNode"
+                        role="button" tabindex="0" aria-label="${nls.cancel}">
+                            ${nls.cancel}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Input -->
+            <div class="esriCTFlagsList esriCTHidden" data-dojo-attach-point="inputLocDiv">
+                <div class="esriCTBackButtonContainer">
+                    <div class="esriCTFlagsListBackButton">
+                        <div class="esriCTFlagsBackText" data-dojo-attach-point="inputBackClick" role="button" tabindex="0" aria-label="${nls.backButtonValue}">
+                            &lt;${nls.backButtonValue}
+                        </div>
+                    </div>
+                    <div class="esriCTFlagsCountText" data-dojo-attach-point="flagCountLabel">
+                        ${nls.lblBlockLocHeader}
+                    </div>
+                </div>
+                <div class="esriCTFlagsContent" data-dojo-attach-point="flagLocContent">
+                </div>
+            </div>
+            <!-- Barrier -->
+            <div class="esriCTBarrierLocationList esriCTHidden" data-dojo-attach-point="barrierLocDiv">
+                <div class="esriCTBackButtonContainer">
+                    <div class="esriCTBarrierListBackButton">
+                        <div class="esriCTBarrierBackText" data-dojo-attach-point="barrierBackClick" role="button" tabindex="0" aria-label="${nls.backButtonValue}">
+                            &lt;${nls.backButtonValue}
+                        </div>
+                    </div>
+                    <div class="esriCTBarrierCountText" data-dojo-attach-point="barrierCountLabel">
+                        ${nls.lblBlockLocHeader}
+                    </div>
+                </div>
+                <div class="esriCTBarrierContent" data-dojo-attach-point="barrierLocContent">
+                </div>
+            </div>
+            <!-- Skip Location -->
+            <div class="esriCTSkipLocationList esriCTHidden" data-dojo-attach-point="skipLocDiv">
+                <div class="esriCTBackButtonContainer">
+                    <div class="esriCTSkipLocationListBackButton">
+                        <div class="esriCTSkipLocationBackText" data-dojo-attach-point="skipLocationBackClick" role="button" tabindex="0" aria-label="${nls.backButtonValue}">
+                            &lt;${nls.backButtonValue}
+                        </div>
+                    </div>
+                    <div class="esriCTSkipLocationsCountText" data-dojo-attach-point="skipLocationCountLabel">
+                        ${nls.lblSkipLocHeader}
+                    </div>
+                </div>
+                <div class="esriCTRemoveSkipAllLocationParentContainer" data-dojo-attach-point="removeSkipAllLocationParentContainer">
+                    <div class="jimu-btn esriCTRemoveSkipLocationButton" data-dojo-attach-point="removeSkipAllButton"
+                        data-dojo-attach-event="onclick:_onRemoveSkipAllButtonClick"
+                        role="button" tabindex="0" aria-label="${nls.removeAllSkipLocationLabel}">
+                        ${nls.removeAllSkipLocationLabel}
+                    </div>
+                </div>
+                <div class="esriCTSkipContent" data-dojo-attach-point="skipLocationsListContainer">
+                </div>
+            </div>
+            <!-- Export to CSV form starts -->
+            <div class="esriCTExportToCSVFormParentContainer esriCTHidden" data-dojo-attach-point="exportToCSVFormParentContainer">
+                <!-- Export to CSV form -->
+                <div class="esriCTBackButtonContainer">
+                    <div class="esriCTExportBackButton">
+                        <div class="esriCTExportBackText" data-dojo-attach-point="exportBackNode" data-dojo-attach-event="onClick:_onExportToCSVFormBackBtnClick"
+                        role="button" tabindex="0" aria-label="${nls.backButtonValue}">
+                            &lt;${nls.backButtonValue}
+                        </div>
+                    </div>
+                    <div class="esriCTExportToCsvText">
+                        ${nls.exportToCSVText}
+                    </div>
+                </div>
+                <!-- Export to CSV form -->
+                <div class="esriCTExportToCSVFormContainer" data-dojo-attach-point="exportToCSVFormContainer"></div>
+                <!-- Export OK button button -->
+                <div class="esriCTExportToCsvOkBtnParentContainer esriCTTextCenter">
+                    <div class="esriCTExportToCsvOkButtonContainer esriCTExportToCSVOkBtnCenterContainer">
+                        <div class="jimu-btn esriCTExportToCSVOkBtn" data-dojo-attach-event="onClick:_onExportToCSVFormOkBtnClick" data-dojo-attach-point="exportToCsvFileMainButton"
+                        role="button" tabindex="0" aria-label="${nls.ok}">
+                            ${nls.ok}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Export to CSV form ends -->
+             <!-- Save project, Export to CSV starts -->
+             <div class="esriCTSaveAndExportParentContainer esriCTHidden" data-dojo-attach-point="saveAndExportParentContainer">
+                <div class="esriCTSaveButtonContainer esriCTHidden" data-dojo-attach-point="saveButtonContainer">
+                    <div class="jimu-btn jimu-state-disabled esriCTProjectSaveButton" data-dojo-attach-point="projectSaveButton"
+                        data-dojo-attach-event="onClick:_onProjectSaveButtonClick"
+                        role="button" tabindex="0" aria-label="${nls.saveButtonLabel}">
+                        ${nls.saveButtonLabel}
+                    </div>
+                </div>
+                <div class="esriCTExportButtonContainer esriCTHidden" data-dojo-attach-point="exportButtonContainer">
+                    <div class="jimu-btn jimu-state-disabled esriCTExportToCSVBtn" data-dojo-attach-event="onClick:_onExportToLayerButtonClick" data-dojo-attach-point="exportToCsvMainScreenButton"
+                    role="button" tabindex="0" aria-label="${nls.exportToCSVText}">
+                        ${nls.exportToCSVText}
+                    </div>
+                </div>
+            </div>
+            <!-- Save project, Export to CSV ends -->
+        </div>
+        <div class="esriCTHidden" data-dojo-attach-point="errorNode">
+            ${nls.gpServiceNotAccessible}
+        </div>
+    </div>
+    <div class="supports-508-node lastFocusNode" tabindex="0" data-dojo-attach-point="supports508Node"></div>
+</div>

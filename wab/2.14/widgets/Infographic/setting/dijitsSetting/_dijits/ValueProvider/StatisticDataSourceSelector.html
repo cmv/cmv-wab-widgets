@@ -1,0 +1,7 @@
+<div>
+	<div data-dojo-attach-point="message" class="message note" title="${nls.sdsTip}">${nls.sdsTip}</div>
+    <select data-dojo-props='style:{width:"99.5%"}'  emptyLabel="${nls.noSdsTip}" data-dojo-type="dijit/form/Select" data-dojo-attach-point="sourceSelect" data-dojo-attach-event="change:_onSourceSelectChanged" class="restrict-select-width">
+    </select>
+    <div class="state-icon small-loading hide" data-dojo-attach-point="loading"></div>
+    <div class="state-icon error-icon hide" data-dojo-attach-point="errorIcon" title="${nls.noDataReturned}"></div>
+</div>

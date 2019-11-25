@@ -1,0 +1,57 @@
+<div>
+    <div id="activeWidgetSection" style="display:none">
+        <div id="sourceInputsSection">
+            <div>${nls.groupingLabels.searchHeaderText}</div>
+            <div class="section">
+                <div data-dojo-attach-point="searchNode" class="search-node searchDijitFillsContainer">
+                </div>
+                <div tabindex="-1" data-dojo-attach-point="searchResultsNode" class="searchResults arcgisSearch"></div>
+            </div>
+
+            <div class="section" data-dojo-attach-point="drawBoxDijit">
+                <div data-dojo-attach-point="drawBoxDiv">
+                </div>
+            </div>
+
+            <div class="section" data-dojo-attach-point="searchDistanceDijit" style="height:68px">
+                <div data-dojo-attach-point="searchDistanceDiv" class="section entryFullWidth">
+                </div>
+            </div>
+        </div>
+        <div id="sourceInputsSectionScrim" class='scrim hidden'></div>
+
+        <div id="addresseeSourceSection" class="section">
+            <div>${nls.groupingLabels.addresseeSource}</div>
+            <div class="entryFullWidth">
+                <select aria-label="${nls.groupingLabels.addresseeSource}" data-dojo-attach-point="addresseeSelect"
+                    data-dojo-type="jimu/dijit/formSelect"></select>
+            </div>
+        </div>
+
+        <div class="section">
+            <div>${nls.groupingLabels.formatHeaderText}</div>
+            <div class="entryFullWidth">
+                <select aria-label="${nls.groupingLabels.formatHeaderText}" class="lastFocusNode" data-dojo-attach-point="formatSelect"
+                    data-dojo-type="jimu/dijit/formSelect"></select>
+            </div>
+        </div>
+
+        <div class="section">
+            <div id="numAddresseesFound"></div>
+            <!-- aria-label added at runtime -->
+            <div tabindex="0" role="button" data-dojo-attach-point="downloadBtn"
+                data-dojo-attach-event="onclick:_onDownloadBtnClicked"
+                class="jimu-btn jimu-float-trailing focusableItem hidden"></div>
+        </div>
+
+        <div class="section">
+            <div data-dojo-type="dijit/ProgressBar" class="progressbar"
+                data-dojo-attach-point="indeterminateProgress" id="indeterminateProgress"></div>
+            <div data-dojo-type="dijit/ProgressBar" class="progressbar"
+                data-dojo-attach-point="determinateProgress" id="downloadProgress"></div>
+        </div>
+    </div>
+    <div id="nothingConfiguredSection" style="display:none">
+        <div>${nls.tooltips.nothingConfigured}</div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "Araçta hangi bilgi grafiklerinin kullanılabilir olduğunu tanımlayın:",
+  "defineWhichReports": "Araçta hangi raporların kullanılabilir olduğunu tanımlayın:",
+  "defaultValues": "Varsayılan değerler:",
+  "disable": "Devre Dışı Bırak",
+  "driveTime": "Sürüş zamanı",
+  "infographics": "Bilgi Grafikleri",
+  "invalidValueRing": "Değerler 0 - 1.000 aralığında olmalıdır.",
+  "invalidValueDTWT": "Değerler 0 - 300 aralığında olmalıdır.",
+  "km": "km",
+  "miles": "mil",
+  "minutes": "dakika",
+  "radius": "Yarıçap",
+  "reports": "Raporlar",
+  "rings": "Halkalar",
+  "selectCountryOrRegion": "Ülke veya bölge seçin:",
+  "thisEntryIsNotValid": "Giriş geçerli değil.",
+  "time": "Saat",
+  "walkTime": "Yürüme süresi"
+});

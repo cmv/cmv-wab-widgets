@@ -1,0 +1,255 @@
+.jimu-widget-visibility-control .controls {
+  margin: 0;
+}
+
+.jimu-widget-visibility-control .inputNumberTextbox {
+  width: calc(100% - 120px) !important;
+  margin: 0px;
+}
+
+.jimu-widget-visibility-control .controlGroup {
+  padding: 4px 2px;
+}
+
+.jimu-widget-visibility-control .buttonContainer {
+  display: flex;
+}
+
+.jimu-widget-visibility-control .controlSpace {
+  margin-left: unset;
+}
+
+.jimu-widget-visibility-control .titleLabel {
+  padding-bottom: 5px;
+  display: block;
+}
+
+.jimu-widget-visibility-control .noResize .dijitSelectLabel,
+.jimu-widget-visibility-control .noResize .dijitTextBox .dijitInputInner,
+.jimu-widget-visibility-control .noResize.dijitValidationTextBox .dijitValidationContainer {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 60px;
+  text-align: initial;
+  padding-top: 5px;
+}
+
+.jimu-widget-visibility-control .claro .dijitSelect {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.jimu-widget-visibility-control .dijitSelect .dijitButtonContents {
+  border-style: none none none none;
+  background-color: #ffffff;
+}
+
+.jimu-widget-visibility-control .dijitSelect .dijitButtonContentsDartTheme {
+  background-color: inherit;
+}
+
+.jimu-widget-visibility-control .dijitSelect .dijitArrowButton {
+  background-color: #ffffff;
+  background-image: none;
+  border-color: #ffffff;
+}
+
+.jimu-widget-visibility-control .dijitSelect .dijitArrowButtonDartTheme {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.jimu-widget-visibility-control .dijitMenuItem {
+  color: #7989a0;
+}
+
+.jimu-widget-visibility-control .dijitSelect .dijitInputField {
+  margin-right: 8px;
+}
+
+.jimu-widget-visibility-control .cursortooltip {
+  z-index: 10;
+  position: fixed;
+  border: 1px solid #777;
+  color: black;
+  background-color: white;
+  margin: 2px;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.jimu-widget-visibility-control .center {
+  display: table !important;
+  margin: 0 auto;
+}
+
+/* Buttons */
+
+.jimu-widget-visibility-control .btnContainer {
+  text-align: right;
+  margin-top: 15px;
+  display: grid;
+  padding: 15px 4px;
+}
+
+.jimu-widget-visibility-control .HalfWidthLeft {
+  width: 50%;
+}
+
+.jimu-widget-visibility-control .HalfWidthRight {
+  width: 50%;
+}
+
+.jimu-widget-visibility-control .jimu-coordinate-control textarea {
+  width: 100%;
+}
+
+.jimu-widget-visibility-control .jimu-coordinate-control .add-with-icon.coordInput {
+  width: calc(100% - 60px);
+}
+
+.jimu-widget-visibility-control .jimu-coordinate-control .coordLabel {
+  font-size: 12px;
+}
+
+/* Toggle switch */
+
+.jimu-widget-visibility-control .switch-toggle-group {
+  padding: 5px;
+}
+
+.jimu-widget-visibility-control .switch-toggle-group .checkbox-inline {
+  padding-left: 36px;
+  vertical-align: top;
+}
+
+.jimu-widget-visibility-control .switch-toggle-group .switch-toggle.dijitCheckBox {
+  margin-left: -36px;
+}
+
+.jimu-widget-visibility-control .switch-toggle.dijitCheckBox {
+  height: 16px;
+  width: 28px;
+  border: 0 none;
+  background: #adadad;
+  position: relative;
+  float: right;
+  cursor: pointer;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.jimu-rtl .jimu-widget-visibility-control .switch-toggle.dijitCheckBox {
+  float: left;
+}
+
+.jimu-widget-visibility-control .switch-toggle.dijitCheckBox:before {
+  content: "";
+  background: #f8f8f8;
+  position: absolute;
+  padding: 0;
+  height: 12px;
+  width: 12px;
+  left: auto;
+  right: 14px;
+  top: 2px;
+  z-index: 1;
+  -webkit-transition: right 0.3s;
+  -moz-transition: right 0.3s;
+  -o-transition: right 0.3s;
+  transition: right 0.3s;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+
+.jimu-widget-visibility-control .switch-toggle.dijitCheckBox input {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  z-index: 2;
+}
+
+.jimu-widget-visibility-control .switch-toggle.dijitCheckBox.dijitCheckBoxChecked {
+  background: #50ad4e;
+}
+
+.jimu-widget-visibility-control .switch-toggle.dijitCheckBox.dijitCheckBoxChecked:before {
+  right: 2px;
+}
+
+
+/**
+ * Coordinate Format Dialog
+ **/
+
+.btnContainer {
+  text-align: right;
+  margin-top: 6px;
+}
+
+.settingsContainer {
+  margin-top: 6px;
+}
+
+.checkBoxText {
+  padding: 0 5px 0 5px;
+}
+
+.controlContainer {
+  margin-top: 6px;
+}
+
+.customFormatTextbox {
+  height: 30px;
+  background-color: transparent;
+  border: 1px solid #d2dae2;
+  padding: 5px;
+  margin: 0 3px 0 3px;
+  width: 55%;
+  font-family: 'Avenir Light', Verdana, Geneva, sans-serif;
+}
+
+.coordNotationSelect {
+  background-color: transparent;
+  height: 30px;
+  user-select: none;
+  width: 40%;
+  float: left;
+  border: 1px solid #d2dae2;
+  font-family: 'Avenir Light', Verdana, Geneva, sans-serif;
+  margin-bottom: 5px;
+}
+
+.jimu-rtl .coordNotationSelect {
+  float: right;
+}
+
+/****** Dart Theme Overrides ******/
+
+.DartTheme .jimu-widget-visibility-control .cusrortooltip {
+  background-color: #4c4c4c;
+}
+
+.claro .dartThemeClaroDijitTooltipContainerOverride .dijitTooltipContainer {
+  background-color: #4c4c4c;
+  background-image: -webkit-linear-gradient(bottom, rgb(76, 76, 76) 0px, #4c4c4c 10px);
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+.claro .dartThemeClaroDijitTooltipContainerOverride .jimu-widget-subtitle {
+  color: #ffffff;
+}
+
+.claro .dartThemeClaroDijitTooltipContainerOverride .dijitTooltipConnector {
+  background-image: url('images/tooltip.png');
+}
+
+.jimu-widget-visibility-control .jimu-coordinate-control .settingBtn {
+  margin-left: 1px;
+}
+
+.jimu-widget-visibility-control .jimu-coordinate-control .drawPointBtn {
+  margin-left: 2px;
+}

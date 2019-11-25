@@ -1,0 +1,48 @@
+.jimu-widget-chart .charts:focus,
+.jimu-widget-chart .params-container:focus,
+.jimu-widget-chart .params-back:focus,
+.jimu-widget-chart .apply:focus,
+.jimu-widget-chart .results-container:focus,
+.jimu-widget-chart .params-back:focus,
+.jimu-widget-chart .spatial-section .jimu-checkbox:focus,
+.jimu-widget-chart .btn-clear-all:focus{
+  outline-offset: -2px !important;
+}
+
+.ie-gte-10 .jimu-widget-chart .btn-section .btn-clear-all {
+  margin-bottom: 2px;
+} 
+
+.ie-gte-10 .jimu-widget-chart > .chart-widget-content > .chart-list > .charts{
+  width: 99%;
+  height: 99%;
+  left: 2px;
+  top: 2px;
+}
+
+.ie-gte-10 .jimu-widget-chart .spatial-section .jimu-checkbox {
+	margin-left: 2px;
+}
+
+.jimu-rtl .ie-gte-10 .jimu-widget-chart .spatial-section .jimu-checkbox {
+	margin-left: 0;
+	margin-right: 2px;
+}
+
+.ie-gte-10 .jimu-widget-chart .apply {
+	margin: 2px;
+}
+
+.ie-gte-10 .jimu-widget-chart .params-back {
+	margin: 2px;
+}
+
+.ie-gte-10 .jimu-widget-chart > .chart-widget-content > .chart-params > .params-container,
+.ie-gte-10 .jimu-widget-chart > .chart-widget-content > .chart-results > .results-container {
+	width: 99%;
+	left: 2px;
+}
+
+.ie-gte-10 .jimu-widget-chart > .chart-widget-content > .chart-results > .results-container {
+	overflow: hidden;
+}

@@ -1,0 +1,28 @@
+<div class="esriCTTabNode">
+    <!--Add Layers section -->
+    <div class="esriCTTabContainer row">
+        <div class="esriCTManageScenarioButtonContainer">
+            <div class="esriCTMangeScenarios">
+                <div data-dojo-attach-point="btnManageScenarios" class="esriCTBtnAddSection esriCTEllipsis">
+                    <span class="esriCTBtnAddIcon"></span>
+                    <span class="esriCTBtnAddLabel esriCTEllipsis">${nls.costingInfo.manageScenariosTitle}</span>
+                </div>
+            </div>
+        </div>
+        <div class="esriCTHidden esriCTNoEditableLayersAvailable" data-dojo-attach-point="noEditableLayersAvailable">
+            ${nls.costingInfo.noEditableLayersAvailable}
+        </div>
+        <!-- Update cost equation checkbox parent node -->
+        <div class="esriCTUpdateCostCheckBoxParentContainer esriCTHidden" data-dojo-attach-point="updateCostEquationChkContainer">
+            <!-- checkbox container -->
+            <div class="esriCTUpdateCheckBoxContainer">
+                <!-- checkbox -->
+                <input id="esrict-update-costequation-check" data-dojo-attach-point="updateCostEquationCheckBox"
+                    data-dojo-type="dijit/form/CheckBox" type="checkbox" checked="false" />
+                <span>${nls.costingInfo.updateProjectCostCheckboxLabel}</span>
+            </div>
+            <div class="esriCTUpdateEquationHint esriCTNote">${nls.costingInfo.updateProjectCostEquationHint}</div>
+        </div>
+        <div data-dojo-attach-point="costingTemplateContainer"></div>
+    </div>
+</div>

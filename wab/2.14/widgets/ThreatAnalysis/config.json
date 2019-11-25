@@ -1,0 +1,30 @@
+{
+  "threatAnalysis": {
+    "symbology": {
+      "mandatoryOutlineColor": {
+        "color": "#d10e40",
+        "transparency": 0,
+        "type": "esriSLSSolid"
+      },
+      "mandatoryFillColor": {
+        "color": "#d10e40",
+        "transparency": 0.88,
+        "type": "esriSFSSolid"
+      },
+      "safeOutlineColor": {
+        "color": "#ffffff",
+        "transparency": 0,
+        "type": "esriSLSNull"
+      },
+      "safeFillColor": {
+        "color": "#ffd700",
+        "transparency": 0.78,
+        "type": "esriSFSSolid"
+      }
+    },
+    "operationalLayer": {
+      "name": ""
+    },
+    "unit": "feet"
+  }
+}

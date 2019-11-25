@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "Definirajte koje su infografike dostupne u widgetu:",
+  "defineWhichReports": "Definirajte koja su izvješća dostupna u widgetu:",
+  "defaultValues": "Zadane vrijednosti:",
+  "disable": "Onemogući",
+  "driveTime": "Vrijeme vožnje",
+  "infographics": "Grafički prikaz",
+  "invalidValueRing": "Vrijednosti moraju biti u rasponu od 0 do 1000.",
+  "invalidValueDTWT": "Vrijednosti moraju biti u rasponu od 0 do 300.",
+  "km": "km",
+  "miles": "milja",
+  "minutes": "minuta",
+  "radius": "Polumjer",
+  "reports": "Izvješća",
+  "rings": "Prsteni",
+  "selectCountryOrRegion": "Odaberite državu ili regiju:",
+  "thisEntryIsNotValid": "Unos nije važeći.",
+  "time": "Vrijeme",
+  "walkTime": "Vrijeme hodanja"
+});

@@ -1,0 +1,77 @@
+.jimu-widget-visibility-control .controls {
+  display: table;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+/* Buttons */
+.jimu-widget-visibility-control .dijitSelect .dijitButtonContents {
+  border-style: none;
+  background-color: transparent;
+}
+
+.jimu-widget-visibility-control .inputNumberTextbox {
+  width: calc(100% - 105px);
+}
+
+/*dojo dialog box*/
+.claro .dijitDialog {
+  background-color: #4c4c4c;
+}
+
+.claro .dijitDialogTitle {
+  color: #fff;
+}
+
+.claro .dijitDialogPaneActionBar {
+  background-color: #4c4c4c;
+  border-top: none;
+}
+
+.claro .jimu-widget-subtitle {
+  color: #ffffff;
+}
+
+.claro .dijitDialogTitleBar {
+  border: 0px solid #222;
+  border-bottom: 1px solid #000;
+  background-color: #222;
+  background-image: none;
+}
+
+.claro .dijitDialogPaneContent {
+  background-color: #4c4c4c;
+  border: 0px solid #222;
+  color: #fff;
+}
+
+.claro .dijitDialogPaneContent {
+  float: right;
+}
+
+.claro .dijitButton .dijitButtonNode {
+  color: #ffffff !important;
+  border: 0px solid #000000;
+  background-image: none;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  padding: 5px 18px 8px 18px;
+  font-size: 14px;
+}
+
+.claro .dijitButtonHover .dijitButtonNode {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+/**
+ * Coordinate Format Dialog
+ **/
+.customFormatTextbox {
+  background-color: transparent;
+  border: 1px solid #7f8183;
+  color: #ffffff;
+}
+
+.coordNotationSelect {
+  margin-bottom: 5px;
+  background-color: #4c4c4c;
+}

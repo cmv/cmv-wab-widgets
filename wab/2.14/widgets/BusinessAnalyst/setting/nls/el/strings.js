@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "Καθορίστε ποια infographic θα είναι διαθέσιμα στο widget:",
+  "defineWhichReports": "Καθορίστε ποιες αναφορές θα είναι διαθέσιμες στο widget:",
+  "defaultValues": "Προεπιλεγμένες τιμές",
+  "disable": "Απενεργοποίηση",
+  "driveTime": "Χρόνος οδήγησης",
+  "infographics": "Γραφικές αναπαραστάσεις δεδομένων (Infographics)",
+  "invalidValueRing": "Οι τιμές πρέπει να είναι από 0 έως 1.000.",
+  "invalidValueDTWT": "Οι τιμές πρέπει να είναι από 0 έως 300.",
+  "km": "km",
+  "miles": "μίλια",
+  "minutes": "λεπτά",
+  "radius": "Ακτίνα",
+  "reports": "Αναφορές",
+  "rings": "Δακτύλιοι",
+  "selectCountryOrRegion": "Επιλογή χώρας ή περιοχής:",
+  "thisEntryIsNotValid": "Η καταχώριση αυτή δεν είναι έγκυρη.",
+  "time": "Χρόνος",
+  "walkTime": "Χρόνος πεζοπορίας"
+});

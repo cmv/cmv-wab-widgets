@@ -1,0 +1,15 @@
+{
+  "name": "BusinessAnalyst",
+  "label": "Business Analyst",
+  "2D": true,
+  "3D": false,
+  "platform": "HTML",
+  "version": "2.14",
+  "wabVersion": "2.14",
+  "author": "Esri Inc",
+  "description": "Business Analyst",
+  "copyright": "Copyright 2019 Esri Inc.",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {
+  }
+}

@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "定義 widget 中的可用資訊圖表:",
+  "defineWhichReports": "定義 widget 中的可用報告:",
+  "defaultValues": "預設值:",
+  "disable": "停用",
+  "driveTime": "行駛時間",
+  "infographics": "資訊圖表",
+  "invalidValueRing": "值必須位於範圍 0 到 1,000。",
+  "invalidValueDTWT": "值必須位於範圍 0 到 300。",
+  "km": "km",
+  "miles": "英哩",
+  "minutes": "分鐘",
+  "radius": "半徑",
+  "reports": "報告",
+  "rings": "圓環",
+  "selectCountryOrRegion": "選擇國家或地區:",
+  "thisEntryIsNotValid": "此項目無效。",
+  "time": "時間",
+  "walkTime": "步行時間"
+});

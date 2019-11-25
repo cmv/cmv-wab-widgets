@@ -1,0 +1,21 @@
+define({
+  "_widgetLabel": "Düzenle",
+  "_featureAction_Edit": "Düzenle",
+  "title": "Detay oluşturmak için şablon seç",
+  "pressStr": "Bas ",
+  "ctrlStr": " CTRL ",
+  "snapStr": " yakalamayı etkinleştirmek için",
+  "close": "Kapat",
+  "featureLayers": "Detay katmanları",
+  "searchTemplates": "Şablonda ara",
+  "noAvailableTempaltes": "Kullanılabilir şablon yok",
+  "noCanCreateLayerAreCurrentlyVisible": "Şu anda görünen oluşturulabilir katman yok.",
+  "layersAreInvisibleOrOutOfScaleRange": "Katmanlar görünür değil veya ölçek aralığı dışında.",
+  "relatedTables": "İlgili tablolar:",
+  "relatedRecords": "İlgili kayıtlar:",
+  "noRelatedRecotds": "İlgili kayıt bulunamadı.",
+  "startToDraw": "Çizmeye başlamak için tıklayın",
+  "startToAddPoint": "Nokta eklemek için tıklayın",
+  "editRelatedFeature": "İlgili detayları düzenle",
+  "duplicateValueWarning": " ${tableName} ögesinin ${fieldName} alanına yinelenen değer eklenemiyor. Yinelenen değer şudur: ${value}"
+});

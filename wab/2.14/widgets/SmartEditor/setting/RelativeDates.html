@@ -1,0 +1,97 @@
+<div>
+    <div>
+        <div class="esriCTLabel">${nls.relativeDates.dateTypeLabel}</div>
+        <div class="esriCTRadioButtonContainer">
+            <div class="esriCTRadioBtn">
+                <input data-dojo-type="jimu/dijit/RadioBtn" data-dojo-props="group: 'g1'" type="radio" name="jimuradiobtn" id="fixedRadioButton" checked
+                    data-dojo-attach-point="fixedRadioButton" tabindex="0" role="button" aria-label="${nls.relativeDates.dateTypeLabel}${nls.relativeDates.fixed}">
+                <label class="esriCTRadioLabel" for="fixedRadioButton">
+                    ${nls.relativeDates.fixed}
+                </label>
+            </div>
+            <div class="esriCTRadioBtn">
+                <input data-dojo-type="jimu/dijit/RadioBtn" data-dojo-props="group: 'g1'" type="radio" name="jimuradiobtn" id="currentRadioButton"  data-dojo-attach-point="currentRadioButton" tabindex="0" role="button" aria-label="${nls.relativeDates.dateTypeLabel}${nls.relativeDates.current}">
+                <label class="esriCTRadioLabel" for="currentRadioButton">
+                    ${nls.relativeDates.current}
+                </label>
+            </div>
+            <div class="esriCTRadioBtn">
+                <input data-dojo-type="jimu/dijit/RadioBtn" data-dojo-props="group: 'g1'" type="radio" name="jimuradiobtn" id="PastRadioButton"  data-dojo-attach-point="PastRadioButton" tabindex="0" role="button" aria-label="${nls.relativeDates.dateTypeLabel}${nls.relativeDates.past}">
+                <label class="esriCTRadioLabel" for="PastRadioButton">
+                    ${nls.relativeDates.past}
+                </label>
+            </div>
+            <div class="esriCTRadioBtn">
+                <input data-dojo-type="jimu/dijit/RadioBtn" data-dojo-props="group: 'g1'" type="radio" name="jimuradiobtn" id="futureRadioButton"  data-dojo-attach-point="futureRadioButton" tabindex="0" role="button" aria-label="${nls.relativeDates.dateTypeLabel}${nls.relativeDates.future}">
+                <label class="esriCTRadioLabel" for="futureRadioButton">
+                    ${nls.relativeDates.future}
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="esriCTRelativeDatesHint" data-dojo-attach-point="hintForDateType">${nls.relativeDates.hintForFixedDateType}</div>
+    <div class="esriCTLabel" style="margin-top:10px;" data-dojo-attach-point="valueLabel">${nls.relativeDates.valueLabel}</div>
+    <div class="esriCTFixedDateContent" data-dojo-attach-point="fixedDateContent">
+        <div class="esriCTFixedContentWrappper">
+            <div class="esriCTFixedContentLabel">${nls.date}</div>
+            <div class="esriCTFixedContentDijit">
+                <div style="width:85%" data-dojo-type="dijit/form/DateTextBox" required="false" data-dojo-attach-point="dateTextBox" tabindex="0" aria-label="${nls.date}"></div>
+            </div>
+
+        </div>
+        <div class="esriCTFixedContentWrappper">
+            <div class="esriCTFixedContentLabel">${nls.time}</div>
+            <div class="esriCTFixedContentDijit">
+                <div style="width:85%" data-dojo-type="dijit/form/TimeTextBox" required="false" data-dojo-attach-point="timeTextBox" tabindex="0" aria-label="${nls.time}"></div>
+            </div>
+        </div>
+    </div>
+    <div class="esriCTHidden" style="width:100%" data-dojo-attach-point="currentDateContent">
+    </div>
+    <div class="esriCTHidden esriCTPastOrFutureDateContent" data-dojo-attach-point="pastOrFutureDateContent">
+        <div class="esriCTMarginForLabel">
+        </div>
+        <div class="esriCTMarginForLabel">
+            <div class="esriCTFloatLeft">
+                <div class="esriCTValueLabel">${nls.years}</div>
+                <div style="width:112px" data-dojo-type="dijit/form/NumberSpinner" required="true" value="0"
+                    data-dojo-props="constraints:{min:0,places:0}" data-dojo-attach-point="yearsTextBox" tabindex="0"
+                    aria-label="${nls.years}"></div>
+            </div>
+            <div class="esriCTFloatLeft">
+                <div class="esriCTValueLabel">${nls.months}</div>
+                <div style="width:112px" data-dojo-type="dijit/form/NumberSpinner" required="true" value="0"
+                    data-dojo-props="constraints:{min:0,places:0}" data-dojo-attach-point="monthsTextBox" tabindex="0"
+                    aria-label="${nls.months}"></div>
+            </div>
+            <div class="esriCTFloatLeft">
+                <div class="esriCTValueLabel">${nls.days}</div>
+                <div style="width:112px" data-dojo-type="dijit/form/NumberSpinner" required="true" value="0"
+                    data-dojo-props="constraints:{min:0,places:0}" data-dojo-attach-point="daysTextBox" tabindex="0"
+                    aria-label="${nls.days}"></div>
+            </div>
+        </div>
+        <div class="esriCTMarginForLabel" style="margin-top: 5px;">
+        </div>
+        <div class="esriCTMarginForLabel">
+            <div class="esriCTFloatLeft">
+                <div class="esriCTValueLabel">${nls.hours}</div>
+                <div style="width:112px" data-dojo-type="dijit/form/NumberSpinner" required="true" value="0"
+                    data-dojo-props="constraints:{min:0,places:0}" data-dojo-attach-point="hoursTextBox" tabindex="0"
+                    aria-label="${nls.hours}"></div>
+            </div>
+            <div class="esriCTFloatLeft">
+                <div class="esriCTValueLabel">${nls.minutes}</div>
+                <div style="width:112px" data-dojo-type="dijit/form/NumberSpinner" required="true" value="0"
+                    data-dojo-props="constraints:{min:0,places:0}" data-dojo-attach-point="minutesTextBox" tabindex="0"
+                    aria-label="${nls.minutes}"></div>
+            </div>
+            <div class="esriCTFloatLeft">
+                <div class="esriCTValueLabel">${nls.seconds}</div>
+                <div style="width:112px" data-dojo-type="dijit/form/NumberSpinner" required="true" value="0"
+                    data-dojo-props="constraints:{min:0,places:0}" data-dojo-attach-point="secondsTextBox" tabindex="0"
+                    aria-label="${nls.seconds}"></div>
+            </div>
+        </div>
+    </div>
+</div>

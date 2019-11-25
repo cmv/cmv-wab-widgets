@@ -1,0 +1,27 @@
+<div>
+  <table style="width: 100%;">
+    <tr>
+      <td>
+        <div class="ERGSymbologyContainer" data-dojo-attach-point="SettingsNode"></div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label class="opLayerlabelSettings">${nls.selectOpLayerLabel}</label>
+        <br>
+        <select class="opLayerSelectSettings" data-dojo-attach-point="opLayerList" aria-label="${nls.selectOpLayerLabel}"></select>
+        <div title="${nls.helpIconTooltip}" class="jimu-icon helpBtn" data-dojo-attach-point="helpBtn" aria-label="${nls.helpIconTooltip}" tabindex="0" role="tooltip"></div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label class="opLayerlabelSettings">${nls.selectDefaultMeasurementLabel}</label>
+        <br>
+        <select class="opLayerSelectSettings" data-dojo-attach-point="unitType" aria-label="${nls.selectDefaultMeasurementLabel}">
+          <option value="feet" selected>${nls.feet}</option>
+          <option value="meters">${nls.meters}</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+</div>

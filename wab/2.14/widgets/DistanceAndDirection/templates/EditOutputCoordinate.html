@@ -1,0 +1,31 @@
+<div>
+  <span class='jimu-widget-subtitle'>${nls.setCoordFormatStringMessage}</span>
+  <div class="controlContainer">
+    <select class="selectFormat esriCTDropdownObj" name="test" data-dojo-type='jimu/dijit/formSelect'
+      data-dojo-attach-point="frmtSelect" aria-label="${nls.setCoordFormatStringMessage}">
+      <option value="DD">${nls.ddLabel}</option>
+      <option value="DDM">${nls.ddmLabel}</option>
+      <option value="DMS">${nls.dmsLabel}</option>
+      <option value="GARS">${nls.garsLabel}</option>
+      <option value="GEOREF">${nls.georefLabel}</option>
+      <option value="MGRS">${nls.mgrsLabel}</option>
+      <option value="USNG">${nls.usngLabel}</option>
+      <option value="UTM">${nls.utmLabel}</option>
+      <option value="UTM (H)">${nls.utmhLabel}</option>
+    </select>
+    <input type="text" data-dojo-attach-point="frmtVal" class="formatInput esriCTInputObj"
+      aria-label="${nls.setCoordFormatStringMessage}"></input>
+    <div class='settingsContainer' data-dojo-attach-point="prefixContainer">
+      <input data-dojo-attach-point="addSignChkBox" type="checkbox" aria-label="${nls.prefixMessage}"
+        class="esriCTCheckboxObj">
+      <label class="formatText">${nls.prefixMessage}</label>
+    </div>
+  </div>
+  <div class="btnContainer">
+    <div data-dojo-attach-point="applyButton" class='jimu-btn esriCTButtonObj' tabindex="0"
+      aria-label="${nls.common.ok}" role="button">
+      ${nls.common.ok}</div>
+    <div data-dojo-attach-point="cancelButton" class='jimu-btn esriCTButtonObj' tabindex="0"
+      aria-label="${nls.common.cancel}" role="button">${nls.common.cancel}</div>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+@import url('../common.css');
+
+.grid-overlay-widget {
+  position: relative;
+}
+
+.grid-overlay-widget .btnContainer {
+  text-align: center;
+  margin: 6px 0 6px 0;
+  padding-right: 10px;
+}
+
+.grid-overlay-widget .neo {
+  width: 100%;
+}
