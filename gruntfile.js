@@ -34,14 +34,14 @@ module.exports = function (grunt) {
             build: {
                 expand: true,
                 cwd: 'dist',
-                src: ['**/*.css'],
+                src: ['css/*.css'],
                 dest: 'dist'
             }
         },
 
         csslint: {
             build: {
-                src: ['widgets/**/*.css'],
+                src: ['css/*.css'],
                 options: {
                     csslintrc: '.csslintrc'
                 }
@@ -62,7 +62,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: 'dist',
-                    src: ['**/*.js', '!**/config/**', '!**/cmv/**', '!**/wab/**'],
+                    src: ['**/*.js', '!**/config/**', '!**/cmv/**', '!**/wab/**', '!**/widgets/**'],
                     dest: 'dist',
                     ext: '.js'
                 }],
@@ -79,11 +79,11 @@ module.exports = function (grunt) {
 
         watch: {
             dev: {
-                files: ['widgets/**'],
+                files: ['config/**', 'css/**'],
                 tasks: ['eslint', 'csslint']
             },
             build: {
-                files: ['widgets/**'],
+                files: ['config/**', 'css/**'],
                 tasks: ['eslint', 'csslint']
             }
         },
@@ -119,7 +119,8 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: 'dist'
+                    cwd: 'dist',
+                    src: ['**']
                 }]
             }
         }

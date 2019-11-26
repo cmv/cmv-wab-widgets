@@ -1,14 +1,14 @@
 /* optional customizations for jimu and WAB widgets in cmv */
 .cmv .jimu-btn {
-    font-family: Tahoma;
-    min-width: 50px;
     background-color: #F0F0F0;
-    color: #000;
     border-color: #BBB;
-    padding: 6px;
-    line-height: 100%;
-    -webkit-border-radius: 3px;
     border-radius: 3px;
+    -webkit-border-radius: 3px;
+    color: #000;
+    font-family: Tahoma;
+    line-height: 100%;
+    min-width: 50px;
+    padding: 6px;
 }
 
 .cmv .jimu-btn.jimu-state-disabled {
