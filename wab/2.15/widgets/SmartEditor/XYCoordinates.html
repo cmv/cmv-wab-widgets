@@ -1,0 +1,27 @@
+<div class="esriCTPopupContainer" data-dojo-attach-point="coordinatesPopup">
+    <div class="esriCTFieldDropdownContainer">
+        <div class="esriCTSelectTitle" title="${nls.coordinatesSelectTitle}">${nls.coordinatesSelectTitle}</div>
+        <div class="esriCTFieldInput" style="width: 100%;">
+            <select aria-label="${nls.coordinatesSelectTitle}" class="esriCTControlWidth" data-dojo-attach-point="coordinatesDropDown" data-dojo-type="dijit/form/Select">
+                <option value="Map Spatial Reference">${nls.mapSpecialReferenceDropdownOption}</option>
+                <option value="Latitude/Longitude">${nls.latLongDropdownOption}</option>
+            </select>
+        </div>
+    </div>
+    <div class="esriCTControlWidth">
+        <div class="esriCTSelectTitle" data-dojo-attach-point="xAttributeTextBoxLabel">${nls.xAttributeTextBoxLabel}</div>
+        <div>
+            <div aria-label="${nls.xAttributeTextBoxLabel}" class="esriCTControlWidth" data-dojo-attach-point="xAttributeTextBox" data-dojo-type="dijit/form/NumberTextBox"
+                data-dojo-props="intermediateChanges:true" trim="true">
+            </div>
+        </div>
+    </div>
+    <div style="padding-bottom: 5px;">
+        <div for="yAttributeTextBox" class="esriCTSelectTitle" data-dojo-attach-point="yAttributeTextBoxLabel">${nls.yAttributeTextBoxLabel}</div>
+        <div class="esriCTControlWidth">
+            <div aria-label="${nls.yAttributeTextBoxLabel}" class="esriCTControlWidth" data-dojo-attach-point="yAttributeTextBox" data-dojo-type="dijit/form/NumberTextBox"
+                data-dojo-props="intermediateChanges:true" trim="true">
+            </div>
+        </div>
+    </div>
+</div>

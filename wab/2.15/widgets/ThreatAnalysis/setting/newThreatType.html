@@ -1,0 +1,53 @@
+<div>
+
+  <div class="esriCTWrapper">
+    <div class="esriCTDeafultIconWrapper">
+      <span class="esriCTDefaultLabel">${nls.chooseDefaultThreatTypeIconLabel}</span>
+      <div class="esriCTDefaultIcon" data-dojo-attach-point="defaultThreatTypeIcon"
+        title="${nls.defaultThreatTypeIconTooltip}"></div>
+    </div>
+  </div>
+
+  <div class="esriCTWrapper">
+    <div class="esriCTLabel">${nls.threatTypeColLabel}</div>
+    <div class="esriCTDijitControl">
+      <div class="esriCTDijitWrapper">
+        <div class="esriCTDijitWrapper" data-dojo-attach-point="threatTypeTextBox"
+          data-dojo-type="dijit/form/ValidationTextBox" trim="true" required="true">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="esriCTWrapper">
+    <div class="esriCTLabel">${nls.mandatoryDistance}</div>
+    <div class="esriCTDijitControl">
+      <div class="esriCTDijitWrapper">
+        <div class="esriCTDijitWrapper" data-dojo-attach-point="mandatoryEvacuationDistance"
+          data-dojo-type="dijit/form/NumberTextBox" data-dojo-props="constraints:{min: 0.01}" required="true">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="esriCTWrapper">
+    <div class="esriCTLabel">${nls.safeDistance}</div>
+    <div class="esriCTDijitControl">
+      <div class="esriCTDijitWrapper">
+        <div class="esriCTDijitWrapper" data-dojo-attach-point="safeEvacuationDistance"
+          data-dojo-type="dijit/form/NumberTextBox" data-dojo-props="constraints:{min: 0.01}" required="true">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="esriCTWrapper">
+    <div class="esriCTLabel">${nls.units}</div>
+    <div class="esriCTDijitControl">
+      <div class="esriCTDijitWrapper" data-dojo-attach-point="unitType" data-dojo-props="trim:true, propercase:true"
+        data-dojo-type="dijit/form/TextBox" disabled>
+      </div>
+    </div>
+  </div>
+  <div data-dojo-attach-point="newThreatTypeDiv"></div>
+</div>

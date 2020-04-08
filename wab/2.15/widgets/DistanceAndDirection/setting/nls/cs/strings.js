@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Styl grafiky vzdálenosti a směru",
+  "showTabLabel": "Zobrazit kartu",
+  "feedbackShapeLabel": "Tvar grafiky",
+  "lineColorLabel": "Barva linie",
+  "lineWidthLabel": "Šířka linie",
+  "feedbackLabel": "Popisek grafiky",
+  "textColorLabel": "Barva textu",
+  "textSizeLabel": "Velikost textu",
+  "tabErrorMessage": "Widget je třeba konfigurovat tak, aby obsahoval alespoň jednu zobrazenou kartu",
+  "lineLabel": "Linie",
+  "circleLabel": "Kruh",
+  "ellipseLabel": "Elipsa",
+  "ringsLabel": "Kružnice",
+  "transparency": "Průhlednost",
+  "ddFeedbackStyleTabLabel": "Nastavení symbolů",
+  "miscellaneousTabLabel": "Různé",
+  "operationalLineLayerSelectLabel": "Pokud chcete vytvořit linie nebo kružnice, vyberte pracovní vrstvu polylinií.",
+  "operationalPolygonLayerSelectLabel": "Pokud chcete vytvořit kružnice nebo elipsy, vyberte pracovní polygonovou vrstvu.",
+  "helpIconPolylineTooltip": "Seznam pracovních vrstev je vyplněn vrstvami polylinií z aktuální webové mapy.",
+  "helpIconPolygonTooltip": "Seznam provozních vrstev je vyplněn vrstvami z aktuální webové mapy, které jsou typu polygonové geometrie."
+});

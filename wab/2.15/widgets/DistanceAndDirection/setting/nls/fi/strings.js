@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Etäisyyden ja suunnan palautteen tyyli",
+  "showTabLabel": "Näytä välilehti",
+  "feedbackShapeLabel": "Palautteen muoto",
+  "lineColorLabel": "Viivan väri",
+  "lineWidthLabel": "Viivan leveys",
+  "feedbackLabel": "Palautteen tunnusteksti",
+  "textColorLabel": "Tekstin väri",
+  "textSizeLabel": "Tekstin koko",
+  "tabErrorMessage": "Pienoisohjelma on määritettävä siten, että siinä näkyy vähintään yksi välilehti",
+  "lineLabel": "Viiva",
+  "circleLabel": "Ympyrä",
+  "ellipseLabel": "Ellipsi",
+  "ringsLabel": "Renkaat",
+  "transparency": "Läpinäkyvyys",
+  "ddFeedbackStyleTabLabel": "Symbolit",
+  "miscellaneousTabLabel": "Muut",
+  "operationalLineLayerSelectLabel": "Valitse toiminnallinen taiteviivakarttataso viiva- ja rengastuloksille",
+  "operationalPolygonLayerSelectLabel": "Valitse toiminnallinen aluekohdekarttataso ympyrä- ja ellipsituloksille",
+  "helpIconPolylineTooltip": "Toiminnallisten karttatasojen luettelo täytetään nykyisen web-kartan karttatasoilla, jotka ovat tyypiltään taiteviivageometrioita.",
+  "helpIconPolygonTooltip": "Toiminnallisten karttatasojen luettelo täytetään nykyisen web-kartan karttatasoilla, jotka ovat tyypiltään aluekohdegeometrioita."
+});

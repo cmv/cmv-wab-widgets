@@ -1,0 +1,79 @@
+/*
+NOTE: This file has been altered from the original file in the BA web app, please make note of changes when
+overriding as a comparison is needed to ensure changes get added back
+*/
+
+/* Commented out for Web App Builder Widget Dart Theme
+.esriMapsAnalystXFilteringSelect.dijitTextBox {
+    font-size: 12px;
+    background-color: white;
+}
+*/
+
+    .esriMapsAnalystXFilteringSelect.dijitTextBox .dijitInputField {
+        /*height: 19px;*/  /* Commented out for Web App Builder Widget*/
+        margin-top: 1px; /* Added for Web App Builder Widget to center align in large select box */
+        padding: 0 2px;
+        overflow: hidden;
+        background-color: transparent;
+        text-overflow: ellipsis;
+    }
+
+        .esriMapsAnalystXFilteringSelect.dijitTextBox .dijitInputField:hover {
+            background-color: transparent;
+        }
+
+/*
+Commented out for Web App Builder Widget Dart Theme
+.esriMapsAnalystXFilteringSelect.dijitComboBox .dijitButtonNode {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    width: 16px;
+    padding: 0 2px 1px 2px;
+}*/
+
+.esriMapsAnalystXFilteringSelect .dijitMenuItem {
+    overflow: hidden;
+    text-overflow: ellipsis; /* TODO: need support trim with ellipses */
+}
+
+/* In IE, hide the X that appears in text inputs for the dojo filtering select dropdown */
+.esriMapsAnalystXFilteringSelect.dijitTextBox .dijitInputInner::-ms-clear {
+    display: none;
+}
+
+.esriMapsAnalystXFilteringSelect_separatorItem {
+    background-color: #E0E0E0;
+}
+
+
+/* Select Tree */
+
+.esriMapsAnalystXFilteringSelect_treeGrid.esriMapsAnalystXSelectableTreeGrid.dgrid {
+    width: 400px;
+    height: 300px;
+    margin: 0px;
+    margin-top: 0px;
+    background-color: white;
+}
+
+    .esriMapsAnalystXFilteringSelect_treeGrid.esriMapsAnalystXSelectableTreeGrid.dgrid .dgrid-header {
+        display: none;
+    }
+
+    .esriMapsAnalystXFilteringSelect_treeGrid.esriMapsAnalystXSelectableTreeGrid.dgrid .dgrid-content {
+        width: auto !important;
+    }
+
+    .esriMapsAnalystXFilteringSelect_treeGrid.esriMapsAnalystXSelectableTreeGrid.dgrid .dgrid-scroller {
+        margin-top: 0px !important;
+    }
+
+    .esriMapsAnalystXFilteringSelect_treeGrid.esriMapsAnalystXSelectableTreeGrid.dgrid .dgrid-cell {
+        border: none;
+    }
+
+    .esriMapsAnalystXFilteringSelect_treeGrid.esriMapsAnalystXSelectableTreeGrid.dgrid .dgrid-row.row-selected.row-level-1 {
+        background-color: #CCCCCC;
+    }

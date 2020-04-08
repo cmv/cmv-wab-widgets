@@ -1,0 +1,16 @@
+<div class="esriCTAlignCenter" data-dojo-attach-point="newTraverseXYInputNode">
+  <div class="xyRowWrapper" data-dojo-attach-point="xRowWrapper">
+    X:
+    <div data-dojo-attach-point="newTraverseX" data-dojo-type="dijit/form/ValidationTextBox"
+      data-dojo-props="intermediateChanges:true,regExp:'^[+-]?\\d+(\\.\\d+)?$'" trim="true" required="true"></div>
+  </div>
+  <div class="xyRowWrapper" data-dojo-attach-point="yRowWrapper">
+    Y:
+    <div data-dojo-attach-point="newTraverseY" data-dojo-type="dijit/form/ValidationTextBox"
+      data-dojo-props="intermediateChanges:true,regExp:'^[+-]?\\d+(\\.\\d+)?$'" trim="true" required="true"></div>
+  </div>
+  <div class="jimu-btn jimu-trailing-margin1 jimu-state-disabled" title="${nls.newTraverseButtonLabel}"
+    data-dojo-attach-point="xyStartButton" tabindex="-1" role="button" aria-label="${nls.newTraverseButtonLabel}">
+    ${nls.newTraverseButtonLabel}
+  </div>
+</div>

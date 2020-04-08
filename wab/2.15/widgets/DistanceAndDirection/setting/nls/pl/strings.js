@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Styl opinii o odległości i kierunku",
+  "showTabLabel": "Pokaż tabelę",
+  "feedbackShapeLabel": "Kształt opinii",
+  "lineColorLabel": "Kolor linii",
+  "lineWidthLabel": "Szerokość linii",
+  "feedbackLabel": "Etykieta opinii",
+  "textColorLabel": "Kolor tekstu",
+  "textSizeLabel": "Wielkość tekstu",
+  "tabErrorMessage": "Widżet musi być skonfigurowany z co najmniej jedną widoczną tabelą",
+  "lineLabel": "Linia",
+  "circleLabel": "Okrąg",
+  "ellipseLabel": "Elipsa",
+  "ringsLabel": "Pierścienie",
+  "transparency": "Przezroczystość",
+  "ddFeedbackStyleTabLabel": "Symbolizacja",
+  "miscellaneousTabLabel": "Różne",
+  "operationalLineLayerSelectLabel": "Wybierz operacyjną warstwę poliliniową dla wyników w postaci linii i pierścieni.",
+  "operationalPolygonLayerSelectLabel": "Wybierz operacyjną warstwę poligonową dla wyników w postaci okręgów i elips.",
+  "helpIconPolylineTooltip": "Lista warstw operacyjnych jest zapełniana warstwami z bieżącej mapy internetowej o poliliniowym typie geometrii.",
+  "helpIconPolygonTooltip": "Lista warstw operacyjnych jest zapełniana warstwami z bieżącej mapy internetowej o poligonowym typie geometrii."
+});

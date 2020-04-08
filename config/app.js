@@ -4,7 +4,7 @@
     // make it easier to update the demo. optional
     var versions = {
         cmv: 'develop',
-        wab: '2.14'
+        wab: '2.15'
     };
 
     window.dojoConfig = {

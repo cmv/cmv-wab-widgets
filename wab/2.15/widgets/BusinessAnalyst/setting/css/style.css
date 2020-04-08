@@ -1,0 +1,95 @@
+.widget-setting-page .esriMapsAnalystXSelectableTreeGrid.dgrid {
+    position: absolute;
+    top: 33px;
+    right: 0;
+    left: 0px;
+    bottom: 0;
+    height: auto;
+    width: auto;
+}
+
+.jimu-widget-business-analyst-setting .tabs {
+    font-family: "Avenir Light";
+    color: #000000;
+      height: 100%;
+  }
+  
+  .jimu-widget-business-analyst-setting .tabs .tab-description {
+      margin: 10px 0;
+  }
+  
+  .jimu-widget-business-analyst-setting .jimu-tab>.control>.tab{
+      background-color: #fff;
+      border-top: 0;
+      border-left: 0;
+      border-right: 0;
+      border-bottom: 1px solid #dedede;
+      color:#898989;
+      font-family: "Avenir Medium";
+      font-size: 14px;
+      /*letter-spacing: 0.38px;*/
+  }
+  .jimu-widget-business-analyst-setting .jimu-tab>.control>.tab.jimu-state-selected {
+      border-bottom: 3px solid #24b5cc;
+      font-family: "Avenir Heavy";
+      color: #000000;
+  }
+  
+  
+  .jimu-widget-business-analyst-setting .tabs .titles {
+      font-weight: bold;
+      font-family: "Avenir Medium";
+      font-size: 14px;
+    /*color: #000000;
+    letter-spacing: 0.38px;*/
+      margin: 20px 0 10px 0;
+  }
+  .jimu-widget-business-analyst-setting .tabs .hide{
+      display: none;
+  }
+
+  .jimu-widget-business-analyst-setting .tabs .indent{
+      margin-left: 20px;
+      margin-top: 10px;
+  }
+  
+  .jimu-widget-business-analyst-setting .tabs .unit-item{
+      margin: 15px 5px 5px 5px;
+      line-height: 18px;
+      height: 18px;
+      vertical-align: middle;
+  }
+  
+  .jimu-widget-business-analyst-setting .tabs .clearFix {
+      *overflow: hidden;
+      *zoom: 1;
+  }
+  
+  .jimu-widget-business-analyst-setting .tabs .clearFix:after {
+      display: table;
+      content: "";
+      width: 0;
+      clear: both;
+  }
+  .jimu-widget-business-analyst-setting .tabs .view{
+      height: 100%;
+      overflow-y: auto;
+  }
+  .jimu-widget-business-analyst-setting .tabs .jimu-tab>.jimu-viewstack{
+  /*	min-height: 100000px;
+      overflow-y: auto;*/
+      padding-bottom: 30px;
+  }
+
+  .jimu-widget-business-analyst-setting .validationErrorMessage {
+      color: #FF0000;
+      margin-top: 10px;
+  }
+
+  .jimu-widget-business-analyst-setting .validationErrorMessage.hidden {
+      display: none;
+  }
+
+  .jimu-widget-business-analyst-setting .invalidValue {
+      outline: 3px solid #FF0000;
+  }

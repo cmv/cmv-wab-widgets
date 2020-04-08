@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Slog povratnih informacij razdalje in navodil za pot",
+  "showTabLabel": "Pokaži zavihek",
+  "feedbackShapeLabel": "Oblika povratnih informacij",
+  "lineColorLabel": "Barva linije",
+  "lineWidthLabel": "Debelina obrobe linije",
+  "feedbackLabel": "Napis za povratne informacije",
+  "textColorLabel": "Barva besedila",
+  "textSizeLabel": "Velikost besedila",
+  "tabErrorMessage": "Pripomoček mora biti konfiguriran tako, da je prikazan vsaj en zavihek",
+  "lineLabel": "Črta",
+  "circleLabel": "Krog",
+  "ellipseLabel": "Elipsa",
+  "ringsLabel": "Obroči",
+  "transparency": "Prosojnost",
+  "ddFeedbackStyleTabLabel": "Simbologija",
+  "miscellaneousTabLabel": "Razno",
+  "operationalLineLayerSelectLabel": "Izberite operativni sloj polilinije za rezultate linije in obročev",
+  "operationalPolygonLayerSelectLabel": "Izberite operativni sloj polilinije za rezultate kroga in elipse",
+  "helpIconPolylineTooltip": "Seznam operativnega sloja je izpolnjen s sloji iz trenutne spletne karte, ki so polilinijske geometrijske vrste.",
+  "helpIconPolygonTooltip": "Seznam operativnega sloja je izpolnjen s sloji iz trenutne spletne karte, ki so poligonske geometrijske vrste."
+});

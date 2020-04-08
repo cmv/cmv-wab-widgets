@@ -1,0 +1,47 @@
+.jimu-widget-visibility-control .controls {
+  display: table;
+  margin: 0 auto;
+  padding-bottom: 20px;
+  margin-top: 12px;
+}
+
+/* Buttons */
+.jimu-widget-visibility-control .settingBtn {
+  background: url('./images/settings_white.png');
+}
+
+.jimu-widget-visibility-control .settingBtn:hover {
+  background: url('./images/settings_white_hover.png');
+}
+
+.jimu-widget-visibility-control .editBtn {
+  background: url('./images/draw_white.png');
+  background-repeat: no-repeat;
+}
+
+.jimu-widget-visibility-control .editBtn:hover {
+  background: url('./images/draw_white_hover.png');
+  background-repeat: no-repeat;
+}
+
+.jimu-widget-visibility-control .jimu-edit-active {
+  background: url('./images/draw_white_hover.png');
+  background-repeat: no-repeat;
+}
+
+.jimu-widget-visibility-control .dijitSelect .dijitButtonContents {
+  border-style: none;
+  background-color: transparent;
+}
+
+.jimu-widget-visibility-control .inputNumberTextbox {
+  width: calc(100% - 125px);
+}
+
+.customFormatTextbox {
+  color: #ffffff;
+}
+
+.coordNotationSelect {
+  background-color: #222222;
+}

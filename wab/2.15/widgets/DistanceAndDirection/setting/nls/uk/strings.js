@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Стиль зворотнього зв’язку для відстані та напрямку",
+  "showTabLabel": "Показати вкладку",
+  "feedbackShapeLabel": "Форма зворотнього зв’язку",
+  "lineColorLabel": "Колір лінії",
+  "lineWidthLabel": "Ширина лінії",
+  "feedbackLabel": "Напис зворотнього зв’язку",
+  "textColorLabel": "Колір тексту",
+  "textSizeLabel": "Розмір тексту",
+  "tabErrorMessage": "Для віджету повинна бути налаштована щонайменше одна показана вкладка",
+  "lineLabel": "Лінія",
+  "circleLabel": "Коло",
+  "ellipseLabel": "Еліпс",
+  "ringsLabel": "Кільця",
+  "transparency": "Прозорість",
+  "ddFeedbackStyleTabLabel": "Умовні позначення",
+  "miscellaneousTabLabel": "Різне",
+  "operationalLineLayerSelectLabel": "Оберіть робочий шар полілінії для лінійних і кільцевих результатів",
+  "operationalPolygonLayerSelectLabel": "Оберіть робочий шар полігону для кругових і еліптичних результатів",
+  "helpIconPolylineTooltip": "Робочий шар заповнюється шарами з поточної веб-карти, що відносяться до типу геометрії «полілінія».",
+  "helpIconPolygonTooltip": "Робочий шар заповнюється шарами з поточної веб-карти, що відносяться до типу геометрії «полігон»."
+});

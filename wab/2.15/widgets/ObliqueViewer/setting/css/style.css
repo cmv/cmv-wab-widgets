@@ -1,0 +1,77 @@
+/* jimu-widget-coordinate-setting */
+.jimu-widget-ObliqueViewer-setting{
+  margin:0;
+  padding:0;
+  font-size:15px;
+}
+.jimu-widget-ObliqueViewer-setting .dijitArrowButtonContainer{
+  width: 17px;
+}
+.jimu-widget-ObliqueViewer-setting .dijitSelect{
+  height: 30px;
+  width: 96%;
+}
+.jimu-widget-ObliqueViewer-setting .dijitTextBox {
+    margin-left: 10px;
+    width: 17em;
+}
+
+.jimu-widget-ObliqueViewer-setting .setting-table > thead > tr > th,
+.jimu-widget-ObliqueViewer-setting .setting-table > tbody > tr > td{
+  height:40px;
+  vertical-align:middle;
+}
+
+.jimu-widget-ObliqueViewer-setting .input-table > tbody > tr > .first{
+  width:auto;
+  padding-right:15px;
+}
+
+.jimu-widget-ObliqueViewer-setting .input-table > tbody > tr > .second{
+  width:200px;
+}
+
+.jimu-widget-ObliqueViewer-setting .input-table > tbody > tr > .third{
+  width:35px;
+}
+
+.settingsHidden {
+  display: none !important;
+}
+
+.dojoxCheckedMultiSelect {
+  margin-top: 4px;
+  margin-bottom: 3px;
+}
+
+.jimu-widget-ObliqueViewer-setting .dojoxCheckedMultiSelect .dojoxCheckedMultiSelectWrapper {
+  height: 175px;
+  margin: 0px;
+  width: 270px;
+}
+
+.jimu-widget-ObliqueViewer-setting .esriObliqueViewerFieldFormat .formatTime,
+.jimu-widget-ObliqueViewer-setting .esriObliqueViewerFieldFormat .formatTime > table{
+  margin-top: 12px;
+}
+
+.jimu-widget-ObliqueViewer-setting .esriObliqueViewerFieldFormat .esriObliqueViewerFormatDate table {
+  table-layout: fixed;
+  width: 230px;
+}
+
+.jimu-widget-ObliqueViewer-setting .dojoxCheckedMultiSelectHover .dojoxCheckedMultiSelectWrapper {
+  border: 1px solid #b5bcc7;
+  background-color: transparent;
+}
+
+.jimu-widget-ObliqueViewer-setting .dojoxMultiSelectItem:hover {
+  background-color: #a8d6f1;
+}
+
+.jimu-widget-ObliqueViewer-setting .dojoxCheckedMultiSelect .dojoxCheckedMultiSelectWrapper>div {
+  width: 110%;
+}
+.jimu-widget-ObliqueViewer-setting .dojoxMultiSelectItemLabel {
+  width: 100%;
+}

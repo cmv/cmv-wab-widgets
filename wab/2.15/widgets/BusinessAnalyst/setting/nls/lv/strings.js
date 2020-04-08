@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "Norādiet, kāda infografika ir pieejama logrīkā:",
+  "defineWhichReports": "Norādiet, kādi pārskati ir pieejami logrīkā:",
+  "defaultValues": "Noklusētā vērtības:",
+  "disable": "Atspējot",
+  "driveTime": "Braukšanas laiks",
+  "infographics": "Infografika",
+  "invalidValueRing": "Vērtībām jābūt diapazonā no 0 līdz 1000.",
+  "invalidValueDTWT": "Vērtībām jābūt diapazonā no 0 līdz 300.",
+  "km": "km",
+  "miles": "jūdzes",
+  "minutes": "minūtes",
+  "radius": "Rādiuss",
+  "reports": "Pārskati",
+  "rings": "Apļi",
+  "selectCountryOrRegion": "Izvēlieties valsti vai reģionu:",
+  "thisEntryIsNotValid": "Šis ieraksts nav derīgs.",
+  "time": "Laiks",
+  "walkTime": "Iešanas laiks"
+});

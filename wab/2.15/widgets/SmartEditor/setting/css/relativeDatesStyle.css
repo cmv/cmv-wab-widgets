@@ -1,0 +1,119 @@
+.jimu-widget-smartEditor-setting-relativeDates .esriCTRadioBtn {
+  width: 25%;
+  float: left;
+  text-indent: 20px;
+  padding: 5px 0px 5px 0px;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTLabel,
+.jimu-widget-smartEditor-setting-relativeDates .esriCTFixedContentWrappper {
+  padding: 5px 0px 5px 0px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTValueLabel {
+  margin-bottom: 5px;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTPastOrFutureDateContent {
+  width: 100%;
+  margin-left: 20px;
+}
+
+.jimu-rtl .jimu-widget-smartEditor-setting-relativeDates .esriCTPastOrFutureDateContent {
+  margin-left: none;
+  margin-right: 20px;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTFixedContentLabel {
+  width: 25%;
+  float: left;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTFixedContentDijit {
+  width: 75%;
+  float: right;
+}
+
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTFloatLeft {
+  width: 33%;
+  float: left;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTFloatRight {
+  width: 33%;
+  float: right;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTHidden {
+  display: none;
+}
+.jimu-widget-smartEditor-setting-relativeDates .esriCTRadioButtonContainer {
+  width: 100%;
+  height: 30px;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTMarginForLabel {
+  width: 100%;
+  padding: 2px 0px 1px 0px;
+  overflow: hidden;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTFixedDateContent {
+  text-indent: 20px;
+  width:100%;
+}
+
+.jimu-rtl .jimu-widget-smartEditor-setting-relativeDates .esriCTFloatRight,
+.jimu-rtl .jimu-widget-smartEditor-setting-relativeDates .esriCTFixedContentDijit {
+  float:left;
+}
+
+.jimu-rtl .jimu-widget-smartEditor-setting-relativeDates .esriCTRadioBtn,
+.jimu-rtl .jimu-widget-smartEditor-setting-relativeDates .esriCTFixedContentLabel,
+.jimu-rtl .jimu-widget-smartEditor-setting-relativeDates .esriCTFloatLeft {
+  float: right;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTRelativeDatesHint {
+  font-size: 12px;
+  color: #a0acbf;
+  font-style: oblique;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.jimu-widget-smartEditor-setting-relativeDates .esriCTDatesWarningContainer {
+  font-size: 12px;
+  color: red;
+  width: 100%;
+  margin-top: 5px;
+  padding: 5px 0px 5px 0px;
+  overflow: hidden;
+  font-style: italic;
+}
+
+/* Styles for arranging radio buttons and number spinner inside popup */
+
+@media (max-width: 600px) {
+  .jimu-widget-smartEditor-setting-relativeDates .esriCTRadioBtn {
+    width: 50%;
+  }
+
+  .jimu-widget-smartEditor-setting-relativeDates .esriCTFloatLeft {
+    width: 50%;
+  }
+}
+
+@media (max-width: 320px) {
+  .jimu-widget-smartEditor-setting-relativeDates .esriCTRadioBtn {
+    width: 100%;
+  }
+  .jimu-widget-smartEditor-setting-relativeDates .esriCTFloatLeft {
+    width:100%;
+  }
+}
+
+/* End of styles for arranging radio buttons and number spinner inside popup */

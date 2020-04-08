@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "Määritä, mikä infografiikka on käytettävissä pienoisohjelmassa:",
+  "defineWhichReports": "Määritä, mitkä raportit ovat käytettävissä pienoisohjelmassa:",
+  "defaultValues": "Oletusarvot:",
+  "disable": "Poista käytöstä",
+  "driveTime": "Ajoaika",
+  "infographics": "Infografiikka",
+  "invalidValueRing": "Arvojen on oltava välillä 0–1 000.",
+  "invalidValueDTWT": "Arvojen on oltava välillä 0–300.",
+  "km": "km",
+  "miles": "mailia",
+  "minutes": "minuuttia",
+  "radius": "Säde",
+  "reports": "Raportit",
+  "rings": "Renkaat",
+  "selectCountryOrRegion": "Valitse maa tai alue:",
+  "thisEntryIsNotValid": "Tämä merkintä ei kelpaa.",
+  "time": "Kellonaika",
+  "walkTime": "Kävelyaika"
+});

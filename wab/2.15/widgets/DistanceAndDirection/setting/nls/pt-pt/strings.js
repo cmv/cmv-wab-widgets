@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Estilo de Feedback de Distância e Direção",
+  "showTabLabel": "Exibir Separador",
+  "feedbackShapeLabel": "Formato de Feedback",
+  "lineColorLabel": "Cor de Linha",
+  "lineWidthLabel": "Largura de Linha",
+  "feedbackLabel": "Rótulo de Feedback",
+  "textColorLabel": "Cor do Texto",
+  "textSizeLabel": "Tamanho do Texto",
+  "tabErrorMessage": "O widget tem de ser configurado com o mínimo de um separador visível",
+  "lineLabel": "Linha",
+  "circleLabel": "Círculo",
+  "ellipseLabel": "Elipse",
+  "ringsLabel": "Anéis",
+  "transparency": "Transparência",
+  "ddFeedbackStyleTabLabel": "Simbologia",
+  "miscellaneousTabLabel": "Diversos",
+  "operationalLineLayerSelectLabel": "Selecionar uma camada de polilinhas operacional para resultados de linha e anéis",
+  "operationalPolygonLayerSelectLabel": "Selecionar uma camada de polígonos operacional para resultados de círculo e elipse",
+  "helpIconPolylineTooltip": "A lista de camadas operacionais é preenchida com camadas do mapa web atual do tipo de geometria de polilinha.",
+  "helpIconPolygonTooltip": "A lista de camadas operacionais é preenchida com camadas do mapa web atual do tipo de geometria de polígono."
+});

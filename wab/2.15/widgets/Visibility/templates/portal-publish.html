@@ -1,0 +1,26 @@
+<div class="esriCTFullHeight" data-dojo-attach-point="resultsPageNode">
+    <div class="esriCTFullWidth esriCTSettingHeader">
+      <div class="esriCTBackButton" title="${nls.back}">
+        <div class="esriCTItemLeftArrow" data-dojo-attach-point="resultsPanelBackButton" tabindex="0" aria-label="${nls.back}" role="button"></div>
+        <div class="esriCTTitleDiv esriCTEllipsis" title="${nls.resultsTitle}">${nls.resultsTitle}</div>
+      </div>
+      <div class="esriCTMainPageRow">
+        <!-- esriCT Layer Name -->
+        <div class="esriCTFullWidth esriCTSettingRow">
+          <div class="esriCTInputLabel esriCTEllipsis" title="${nls.layerName}">${nls.layerName}</div>
+          <input aria-label="${nls.layerName}" class="esriCTHidden" style="width: 100%; margin-bottom: 8px;" data-dojo-type="dijit/form/ValidationTextBox"
+            data-dojo-attach-point="addLayerNameArea" data-dojo-props="regExp:'[a-zA-Z0-9_ -]*', invalidMessage:'${nls.invalidLayerName}', missingMessage:'${nls.missingLayerName}'"
+            required="true" tabindex="0" ></input>
+            <select class="SelectStyle" aria-label="${nls.layerName}" data-dojo-type="jimu/dijit/formSelect" tabindex="0" data-dojo-attach-point="featureLayerList"></select>
+            <div class="esriCTCheckBoxNode" data-dojo-attach-point="checkBoxParentContainer"></div>
+        </div>
+        <!-- Publish esriCT Button -->
+        <div class="esriCTPublishBtnContainer">
+          <div class='jimu-btn' data-dojo-attach-point='publishButton' tabindex="0" aria-label="${nls.publishBtnLabel}" role="button">${nls.publishBtnLabel}</div>
+        </div>
+
+        <!-- Publishing Message -->
+        <div class="esriCTPublishMessage" data-dojo-attach-point="publishMessage"></div>
+      </div>
+    </div>
+  </div>

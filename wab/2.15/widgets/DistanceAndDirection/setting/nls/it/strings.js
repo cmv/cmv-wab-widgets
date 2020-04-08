@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Stile del feedback di distanza e direzione",
+  "showTabLabel": "Mostra scheda",
+  "feedbackShapeLabel": "Forma del feedback",
+  "lineColorLabel": "Colore linea",
+  "lineWidthLabel": "Larghezza linea",
+  "feedbackLabel": "Etichetta del feedback",
+  "textColorLabel": "Colore del testo",
+  "textSizeLabel": "Dimensione testo",
+  "tabErrorMessage": "Il widget deve essere configurato con almeno una scheda mostrata",
+  "lineLabel": "Linea",
+  "circleLabel": "Cerchio",
+  "ellipseLabel": "Ellisse",
+  "ringsLabel": "Anelli",
+  "transparency": "Trasparenza",
+  "ddFeedbackStyleTabLabel": "Simbologia",
+  "miscellaneousTabLabel": "Varie",
+  "operationalLineLayerSelectLabel": "Selezionare un layer polilineare operativo per i risultati di linee e anelli",
+  "operationalPolygonLayerSelectLabel": "Selezionare un layer poligonale operativo per i risultati di cerchi ed ellissi",
+  "helpIconPolylineTooltip": "L'elenco dei layer operativi è popolato con i layer della mappa Web corrente che sono di tipo a geometria polilineare.",
+  "helpIconPolygonTooltip": "L'elenco dei layer operativi è popolato con i layer della mappa Web corrente che sono di tipo a geometria poligonale."
+});

@@ -1,0 +1,176 @@
+/**************************************************************************/
+/*
+   CSS added from different .css files in the BA web app, needs to be added
+   back if this file is overwritten from BA web app in future releases.
+*/
+/**************************************************************************/
+.esriMapsAnalystXClickable {
+    cursor: pointer;
+}
+
+.esriMapsAnalystXSelectableTreeGrid.dgrid .selected,
+.esriMapsAnalystXSelectableTreeGrid.dgrid .dgrid-scroller .dgrid-row-table:hover {
+    background-color: #E1F0FB;
+}
+/**************************************************************************/
+
+
+
+.esriMapsAnalystXSelectableTreeGrid.dgrid {
+    height: 250px;
+    width: 400px;
+    margin: 105px 23px 8px 23px;
+    border-color: #D3D3D3;
+}
+
+.esriMapsAnalystXSelectableTreeGrid.dgrid.fitParentSize {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    border: none;
+    overflow: hidden;
+}
+
+.esriMapsAnalystXSelectableTreeGrid:not(.fitParentSize) .dgrid-header-row {
+    right: 0;
+    left: 0;
+}
+
+.esriMapsAnalystXSelectableTreeGrid .dgrid-scroller {
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-top: 44px !important;
+}
+
+.esriMapsAnalystXGridNoHeader .esriMapsAnalystXSelectableTreeGrid .dgrid-scroller {
+    margin-top: 0px !important;
+}
+
+.esriMapsAnalystXSelectableTreeGrid.fitParentSize .dgrid-scroller {
+    overflow-x: auto;
+}
+
+.esriMapsAnalystXSelectableTreeGrid.fitParentSize .dgrid-content {
+    height: 100%;
+}
+
+.esriMapsAnalystXSelectableTreeGrid .dgrid-header-scroll {
+    display: none;
+}
+
+.esriMapsAnalystXSelectableTreeGrid .field-label {
+    padding-top: 5px;
+    vertical-align: middle;
+}
+
+.esriMapsAnalystXSelectableTreeGrid .field-checkbox {
+    width: 22px;
+    vertical-align: middle;
+}
+
+
+/* No border */
+
+.noCellBorder.esriMapsAnalystXSelectableTreeGrid.dgrid .dgrid-cell {
+    border: none;
+}
+
+/* No Checkbox border */
+
+.noCheckBoxBorder.esriMapsAnalystXSelectableTreeGrid .field-checkbox {
+    border-right: none;
+}
+
+.noCheckBoxBorder.dgrid-rtl.esriMapsAnalystXSelectableTreeGrid .field-checkbox {
+    border-right: inherit;
+    border-left: none;
+}
+
+.noCheckBoxBorder.esriMapsAnalystXSelectableTreeGrid .field-checkbox + th,
+.noCheckBoxBorder.esriMapsAnalystXSelectableTreeGrid .field-checkbox + td {
+    border-left: none;
+}
+
+.noCheckBoxBorder.dgrid-rtl.esriMapsAnalystXSelectableTreeGrid .field-checkbox + th,
+.noCheckBoxBorder.dgrid-rtl.esriMapsAnalystXSelectableTreeGrid .field-checkbox + td {
+    border-left: inherit;
+    border-right: none;
+}
+
+.esriMapsAnalystXSelectableTreeGrid .dgrid-header th {
+    background: #f0efef;
+    font-weight: normal;
+    font-size: 12px;
+    height: 44px;
+    vertical-align: middle;
+}
+
+.esriMapsAnalystXSelectableTreeGrid .dgrid-row {
+    height: 44px;
+}
+/*
+.touch .esriMapsAnalystXSelectableTreeGrid .dgrid-row {
+    height: 36px;
+}
+*/
+.esriMapsAnalystXSelectableTreeGrid .dgrid-row-table {
+}
+
+.esriMapsAnalystXSelectableTreeGrid .dgrid-row-odd {
+    background: #f4f4f5;
+}
+
+.esriMapsAnalystXSelectableTreeGrid .dgrid-row-even {
+    background: #FFFFFF;
+}
+
+.esriMapsAnalystXSelectableTreeLabel {
+}
+
+.esriMapsAnalystXSelectableTreeCounter {
+    font-size: 14px;
+    display: inline-block;
+    position: absolute;
+    left: 17px;
+    bottom: -20px;
+}
+
+.dj_rtl .esriMapsAnalystXSelectableTreeCounter {
+    right: 17px;
+    left: auto; /* IE fallback */
+    left: initial;
+}
+
+.esriMapsAnalystXSelectableTreeGrid {
+    overflow: visible;
+}
+
+    .esriMapsAnalystXSelectableTreeGrid .selected {
+        background-color: #d1d1d1;
+    }
+
+
+/* DnD */
+
+.esriMapsAnalystXSelectableTreeDnDBoxRoot {
+    font-size: 12px;
+    padding: 5px;
+    background-color: rgba(130, 130, 130, 0.5);
+    border: 2px solid #AAAAAA;
+}
+
+.esriMapsAnalystXSelectableTreeDnDRowHighlightedAllowedBefore {
+    border-top: 2px solid #00FF00 !important;
+}
+
+.esriMapsAnalystXSelectableTreeDnDRowHighlightedAllowedAfter {
+    border-bottom: 2px solid #00FF00 !important;
+}
+
+.esriMapsAnalystXSelectableTreeDnDRowHighlightedForbiddenBefore {
+    border-top: 2px solid #FF0000 !important;
+}
+
+.esriMapsAnalystXSelectableTreeDnDRowHighlightedForbiddenAfter {
+    border-bottom: 2px solid #FF0000 !important;
+}

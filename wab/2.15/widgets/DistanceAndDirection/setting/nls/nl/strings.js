@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Afstand en richting feedbackstijl",
+  "showTabLabel": "Tabblad tonen",
+  "feedbackShapeLabel": "Feedbackvorm",
+  "lineColorLabel": "Lijnkleur",
+  "lineWidthLabel": "Lijnbreedte",
+  "feedbackLabel": "Feedbacklabel",
+  "textColorLabel": "Tekstkleur",
+  "textSizeLabel": "Tekstgrootte",
+  "tabErrorMessage": "De widget moet geconfigureerd zijn met ten minste één weergegeven tabblad",
+  "lineLabel": "Lijn",
+  "circleLabel": "Cirkel",
+  "ellipseLabel": "Ellips",
+  "ringsLabel": "Ringen",
+  "transparency": "Transparantie",
+  "ddFeedbackStyleTabLabel": "Symbologie",
+  "miscellaneousTabLabel": "Diversen",
+  "operationalLineLayerSelectLabel": "Selecteer een operationele polylijnlaag voor lijn- en ringresultaten",
+  "operationalPolygonLayerSelectLabel": "Selecteer een operationele polygoonlaag voor cirkel- en ellipsresultaten",
+  "helpIconPolylineTooltip": "De lijst met operationele lagen is gevuld met lagen van de huidige webmap van het type polygoongeometrie.",
+  "helpIconPolygonTooltip": "De lijst met operationele lagen is bevolkt met lagen van de huidige web map van het type polygoongeometrie."
+});

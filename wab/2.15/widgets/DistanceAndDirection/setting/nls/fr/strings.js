@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Style de commentaires sur la distance et la direction",
+  "showTabLabel": "Afficher l’onglet",
+  "feedbackShapeLabel": "Forme de commentaires",
+  "lineColorLabel": "Couleur de ligne",
+  "lineWidthLabel": "Largeur de la ligne",
+  "feedbackLabel": "Étiquette de commentaires",
+  "textColorLabel": "Couleur de texte",
+  "textSizeLabel": "Taille de texte",
+  "tabErrorMessage": "Le widget doit être configuré avec au moins un onglet affiché",
+  "lineLabel": "Ligne",
+  "circleLabel": "Cercle",
+  "ellipseLabel": "Ellipse",
+  "ringsLabel": "Anneaux",
+  "transparency": "Transparence",
+  "ddFeedbackStyleTabLabel": "Symbologie",
+  "miscellaneousTabLabel": "Divers",
+  "operationalLineLayerSelectLabel": "Sélectionnez une couche de polylignes opérationnelle pour obtenir des lignes et des anneaux",
+  "operationalPolygonLayerSelectLabel": "Sélectionnez une couche de polygones opérationnelle pour obtenir des cercles et des ellipses",
+  "helpIconPolylineTooltip": "La liste des couches opérationnelles est renseignée à l’aide des couches de la carte Web actuelle dont le type de géométrie est polyligne.",
+  "helpIconPolygonTooltip": "La liste des couches opérationnelles est renseignée à l’aide des couches de la carte Web actuelle dont le type de géométrie est polygone."
+});

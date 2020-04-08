@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Estil de comentaris de distància i direcció",
+  "showTabLabel": "Mostra la pestanya",
+  "feedbackShapeLabel": "Forma dels comentaris",
+  "lineColorLabel": "Color de línia",
+  "lineWidthLabel": "Amplada de línia",
+  "feedbackLabel": "Etiqueta de comentaris",
+  "textColorLabel": "Color de text",
+  "textSizeLabel": "Mida de text",
+  "tabErrorMessage": "El widget ha d'estar configurat com a mínim amb una de les pestanyes que es mostren",
+  "lineLabel": "Línia",
+  "circleLabel": "Cercle",
+  "ellipseLabel": "El·lipse",
+  "ringsLabel": "Anells",
+  "transparency": "Transparència",
+  "ddFeedbackStyleTabLabel": "Simbologia",
+  "miscellaneousTabLabel": "Diversos",
+  "operationalLineLayerSelectLabel": "Seleccioneu una capa de polilínia operativa per als resultats de la línia i els anells",
+  "operationalPolygonLayerSelectLabel": "Seleccioneu una capa de polígon operativa per als resultats del cercle i l'el·lipse",
+  "helpIconPolylineTooltip": "La llista de capes operatives s'emplena amb capes del mapa web actual amb el tipus de geometria de polilínia.",
+  "helpIconPolygonTooltip": "La llista de capes operatives s'emplena amb capes del mapa web actual amb el tipus de geometria de polígon."
+});

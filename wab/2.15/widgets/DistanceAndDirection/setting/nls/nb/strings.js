@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Stil for tilbakemelding for avstand og retning",
+  "showTabLabel": "Vis fane",
+  "feedbackShapeLabel": "Tilbakemeldingsform",
+  "lineColorLabel": "Linjefarge",
+  "lineWidthLabel": "Linjebredde",
+  "feedbackLabel": "Tilbakemeldingsetikett",
+  "textColorLabel": "Tekstfarge",
+  "textSizeLabel": "Tekststørrelse",
+  "tabErrorMessage": "Miniprogrammet må konfigureres med minst én fane som vises",
+  "lineLabel": "Linje",
+  "circleLabel": "Sirkel",
+  "ellipseLabel": "Ellipse",
+  "ringsLabel": "Ringer",
+  "transparency": "Gjennomsiktighet",
+  "ddFeedbackStyleTabLabel": "Symboler",
+  "miscellaneousTabLabel": "Diverse",
+  "operationalLineLayerSelectLabel": "Velg et operativt polylinjelag for linje- og ringresultater",
+  "operationalPolygonLayerSelectLabel": "Velg et operativt polygonlag for sirkel- og ellipseresultater",
+  "helpIconPolylineTooltip": "Listen med operative lag fylles med lagene fra gjeldende webkart som er av geometritypen polylinje.",
+  "helpIconPolygonTooltip": "Listen med operative lag fylles med lagene fra gjeldende webkart som er av geometritypen polygon."
+});

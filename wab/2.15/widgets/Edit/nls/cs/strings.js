@@ -1,0 +1,21 @@
+define({
+  "_widgetLabel": "Editace",
+  "_featureAction_Edit": "Editace",
+  "title": "Zvolte šablonu, podle které chcete vytvářet prvky.",
+  "pressStr": "Stisknutím ",
+  "ctrlStr": " CTRL ",
+  "snapStr": " aktivujete přichytávání.",
+  "close": "Zavřít",
+  "featureLayers": "Vrstvy prvků",
+  "searchTemplates": "Vyhledávání šablon",
+  "noAvailableTempaltes": "Žádné šablony nejsou k dispozici.",
+  "noCanCreateLayerAreCurrentlyVisible": "Momentálně nejsou viditelné žádné vrstvy, které lze vytvořit.",
+  "layersAreInvisibleOrOutOfScaleRange": "Vrstvy nejsou viditelné nebo jsou mimo rozsah měřítka.",
+  "relatedTables": "Související tabulky:",
+  "relatedRecords": "Související záznamy:",
+  "noRelatedRecotds": "Nebyly nalezeny žádné související záznamy.",
+  "startToDraw": "Kliknutím zahájíte kreslení.",
+  "startToAddPoint": "Kliknutím přidáte bod.",
+  "editRelatedFeature": "Editace relačně připojeného prvku",
+  "duplicateValueWarning": " Nelze vložit duplicitní hodnotu do ${fieldName} v ${tableName}. Duplicitní hodnota je: ${value}"
+});

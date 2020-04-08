@@ -1,0 +1,192 @@
+.esriBusinessAnalystPinButton {
+    background: #fff;
+    border: 1px solid #c5c5c5;
+    color: #555;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 12px;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.125);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.125);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.125);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -webkit-transition: all .05s linear;
+    -moz-transition: all .05s linear;
+    -o-transition: all .05s linear;
+    transition: all .05s linear;
+    padding: 5px 10px;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    letter-spacing: 1px;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+    width: 34px;
+    height: 34px;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-left: 1px;
+    background-image: url("../../../jimu.js/css/images/grey_pin.png");
+}
+
+.esriBusinessAnalystPinButton {
+    top: 42px;
+}
+.esriBusinessAnalystPinPressedButton{
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+.esriBusinessAnalystPinPressedButton,
+.esriBusinessAnalystPinPressedButton:hover {
+    background-color: #DDE8F2;
+}
+
+.esriBusinessAnalystSearchContainer {
+    width: 255px;
+    float:left;
+}
+
+.esriGETooltip {
+    /* Override Jimu box sizing, this is needed for correct sizing of tooltips  */
+    box-sizing: initial !important;
+}
+
+/* Override toolbar color to inherit from WAB jimu-main-background value set at outer toolbar level */
+.esriGEPlayerToolbar.playerThemeDark {
+    background-color: inherit !important;
+}
+
+.runReportButton {
+    display: block;
+    margin-top: 15px;
+    width: max-content;
+}
+
+.jimu-btn.runReportButton.jimu-state-disabled {
+    cursor: default;
+}
+
+.jimu-widget-business-analyst .tabs {
+    font-family: "Avenir Light";
+    color: #000000;
+      height: 100%;
+  }
+  
+  .jimu-widget-business-analyst .tabs .tab-description {
+      margin: 10px 0;
+  }
+  
+  .jimu-widget-business-analyst .jimu-tab3>.control>.tab{
+      background-color: #fff;
+      border-top: 0;
+      border-left: 0;
+      border-right: 0;
+      border-bottom: 1px solid #dedede;
+      color:#898989;
+      font-family: "Avenir Medium";
+      font-size: 14px;
+      /*letter-spacing: 0.38px;*/
+  }
+  .jimu-widget-business-analyst .jimu-tab3 .tab-item-td.jimu-state-active {
+      border-bottom: 3px solid #24b5cc;
+      font-family: "Avenir Heavy";
+      color: #000000;
+  }
+
+  /* Override for Dashboard Theme (Dark) */
+  .DashboardTheme .jimu-widget-business-analyst .jimu-tab3 .tab-item-td.jimu-state-active {
+    color: #FFFFFF;
+  }
+
+  /* Override for Dashboard Theme (Light) */
+  .DashboardTheme.light .jimu-widget-business-analyst .jimu-tab3 .tab-item-td.jimu-state-active {
+    color: #000000;
+  }
+  
+  .jimu-widget-business-analyst .tabs .titles {
+      font-weight: bold;
+      font-family: "Avenir Medium";
+      font-size: 14px;
+    /*color: #000000;
+    letter-spacing: 0.38px;*/
+      margin: 20px 0 10px 0;
+  }
+  .jimu-widget-business-analyst .tabs .hide{
+      display: none;
+  }
+
+  .jimu-widget-business-analyst .tabs .indent{
+      margin-left: 20px;
+      margin-top: 10px;
+  }
+  
+  .jimu-widget-business-analyst .tabs .unit-item{
+      margin: 15px 5px 5px 5px;
+      line-height: 18px;
+      height: 18px;
+      vertical-align: middle;
+  }
+  
+  .jimu-widget-business-analyst .tabs .clearFix {
+      *overflow: hidden;
+      *zoom: 1;
+  }
+  
+  .jimu-widget-business-analyst .tabs .clearFix:after {
+      display: table;
+      content: "";
+      width: 0;
+      clear: both;
+  }
+  .jimu-widget-business-analyst .tabs .view{
+      height: 100%;
+      overflow-y: auto;
+  }
+  .jimu-widget-business-analyst .tabs .jimu-tab3>.jimu-viewstack{
+  /*	min-height: 100000px;
+      overflow-y: auto;*/
+      padding-bottom: 30px;
+  }
+
+
+  /* Override from Launch Pad theme */
+  .claro .jimu-widget-business-analyst .dijitTextBox,
+  .claro .esriGEReportPlayer .esriGEPlayerToolbar .dijitTextBox {
+      height: 30px;
+  }
+
+  /* Override from Launch Pad theme.  This is the expandable arrow indicator in the report/infographics drop down selectable tree grid */
+  .claro .jimu-widget-business-analyst .ui-icon {
+      background-image: inherit;
+  }
+
+  /* Need to set this on a few elements in order for the search box to extend past the widget box container when search
+   suggestions box pops up */
+  .business-analyst-search-suggestions-overflow {
+      overflow: visible !important;
+  }
+
+  /* Fix alignment of X icon in search box in Launchpad theme */
+  .claro .jimu-widget-business-analyst .arcgisSearch .searchClear {
+      top: 2px;
+  }
+
+  .jimu-widget-business-analyst .validationErrorMessage {
+      color: #FF0000;
+      margin-top: 10px;
+  }
+
+  .jimu-widget-business-analyst .validationErrorMessage.hidden {
+      display: none;
+  }
+
+  .jimu-widget-business-analyst .invalidValue {
+      outline: 3px solid #FF0000;
+  }

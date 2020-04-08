@@ -1,0 +1,41 @@
+<div>
+  <div data-dojo-attach-point="tabDiv" class="esriCTTabsDiv">
+    <div>
+      <div class="esriCTWrapper" data-dojo-attach-point="threatTypeTab">
+        <div class="esriCTThreatTypeNode" data-dojo-attach-point="threatTypeSettingsNode">
+          <!-- threat type button -->
+          <div class="esriCTAddBtnWrapper">
+            <div class="esriCTAddThreatTypeBtn" data-dojo-attach-point="addThreatTypeButton">
+              <span class="esriCTBtnAddIcon"></span>
+              <span class="esriCTBtnAddLabel">${nls.addThreatTypesLabel}</span>
+            </div>
+          </div>
+
+          <!-- threat types -->
+          <div class="esriCTThreatTypeWrapper" data-dojo-attach-point="threatTypesTableNode">
+          </div>
+
+          <!-- measure of unit label -->
+          <label class="unitMeasureLabel" data-dojo-attach-point="unitMeasureLabel">{$nls.unitMeasureLabel}</label>
+        </div>
+      </div>
+
+      <div class="esriCTWrapper" data-dojo-attach-point="symbologyTab">
+        <div class="SymbologyContainer" data-dojo-attach-point="SettingsNode"></div>
+      </div>
+
+      <div class="esriCTWrapper esriCTMiscTabWrapperWidth" data-dojo-attach-point="MiscTab">
+        <div class="esriCTMiscWrapper">
+          <label class="opLayerlabelSettings">${nls.selectOpLayerLabel}</label>
+          <select class="opLayerSelectSettings" data-dojo-attach-point="opLayerList"></select>
+          <div title="${nls.helpIconTooltip}" class="jimu-icon helpBtn" data-dojo-attach-point="helpBtn"></div>
+          <label class="opLayerlabelSettings">${nls.selectDefaultMeasurementLabel}</label>
+          <select class="opLayerSelectSettings" data-dojo-attach-point="unitType">
+            <option value="feet" selected>${nls.feet}</option>
+            <option value="meters">${nls.meters}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "距离和方向反馈样式",
+  "showTabLabel": "显示选项卡",
+  "feedbackShapeLabel": "反馈形状",
+  "lineColorLabel": "线颜色",
+  "lineWidthLabel": "线宽度",
+  "feedbackLabel": "反馈标注",
+  "textColorLabel": "文本颜色",
+  "textSizeLabel": "文本大小",
+  "tabErrorMessage": "该微件必须至少配置一个显示的选项卡",
+  "lineLabel": "线",
+  "circleLabel": "圆形",
+  "ellipseLabel": "椭圆",
+  "ringsLabel": "环",
+  "transparency": "透明度",
+  "ddFeedbackStyleTabLabel": "符号系统",
+  "miscellaneousTabLabel": "其他",
+  "operationalLineLayerSelectLabel": "为线和环结果选择业务折线图层",
+  "operationalPolygonLayerSelectLabel": "为圆形和椭圆形结果选择业务面图层",
+  "helpIconPolylineTooltip": "使用当前 web 地图中折线几何类型的图层来填充业务图层列表。",
+  "helpIconPolygonTooltip": "使用当前 web 地图中面几何类型的图层来填充业务图层列表。"
+});

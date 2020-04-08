@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "Задайте инфографику, которая будет доступна в виджете:",
+  "defineWhichReports": "Задайте отчеты, которые будут доступны в виджете:",
+  "defaultValues": "Значения по умолчанию:",
+  "disable": "Выключить",
+  "driveTime": "Время в пути",
+  "infographics": "Инфографика",
+  "invalidValueRing": "Значение должно быть в диапазоне от 0 до 1000.",
+  "invalidValueDTWT": "Значение должно быть в диапазоне от 0 до 300.",
+  "km": "км",
+  "miles": "миль",
+  "minutes": "минуты",
+  "radius": "Радиус",
+  "reports": "Отчеты",
+  "rings": "Кольца",
+  "selectCountryOrRegion": "Выберите страну или регион:",
+  "thisEntryIsNotValid": "Элемент некорректный.",
+  "time": "Время",
+  "walkTime": "Время пешком"
+});

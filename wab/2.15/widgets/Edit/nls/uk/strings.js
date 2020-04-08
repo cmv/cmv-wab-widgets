@@ -1,0 +1,21 @@
+define({
+  "_widgetLabel": "Редагування",
+  "_featureAction_Edit": "Редагувати",
+  "title": "Вибрати шаблон для створення об'єктів",
+  "pressStr": "Натиснути ",
+  "ctrlStr": " CTRL ",
+  "snapStr": " для активації замикання",
+  "close": "Закрити",
+  "featureLayers": "Векторні шари",
+  "searchTemplates": "Пошук шаблонів",
+  "noAvailableTempaltes": "Немає доступних шаблонів",
+  "noCanCreateLayerAreCurrentlyVisible": "Створювані шари зараз невидимі.",
+  "layersAreInvisibleOrOutOfScaleRange": "Шари невидимі або знаходяться поза діапазоном масштабів.",
+  "relatedTables": "Пов’язані таблиці:",
+  "relatedRecords": "Пов’язані записи:",
+  "noRelatedRecotds": "Пов’язані записи не знайдено.",
+  "startToDraw": "Клацніть, щоб почати малювання",
+  "startToAddPoint": "Клацніть, щоб додати точку",
+  "editRelatedFeature": "Виконується редагування пов’язаного об’єкту",
+  "duplicateValueWarning": " Неможливо вставити повторюване значення у ${fieldName} із ${tableName}. Повторюване значення: ${value}"
+});

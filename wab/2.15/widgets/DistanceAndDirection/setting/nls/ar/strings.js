@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "نمط ملاحظات المسافة والاتجاه",
+  "showTabLabel": "عرض علامة التبويب",
+  "feedbackShapeLabel": "شكل الملاحظات",
+  "lineColorLabel": "لون الخط",
+  "lineWidthLabel": "عرض الخط",
+  "feedbackLabel": "تسمية الملاحظات",
+  "textColorLabel": "لون النص",
+  "textSizeLabel": "حجم النص",
+  "tabErrorMessage": "يجب تكوين عنصر واجهة المستخدم بعلامة تبويب معروضة واحدة على الأقل",
+  "lineLabel": "خط",
+  "circleLabel": "دائرة",
+  "ellipseLabel": "قطع ناقص",
+  "ringsLabel": "حلقات",
+  "transparency": "الشفافية",
+  "ddFeedbackStyleTabLabel": "الترميز",
+  "miscellaneousTabLabel": "متنوع",
+  "operationalLineLayerSelectLabel": "تحديد طبقة خط متصل تشغيلية لنتائج الحلقات والخط",
+  "operationalPolygonLayerSelectLabel": "تحديد طبقة مضلع تشغيلية لنتائج المجسم الناقص",
+  "helpIconPolylineTooltip": "يتم ملء قائمة الطبقة التشغيلية بالطبقات من خريطة الويب الحالية التي تكون من نوع شكل الخط المتصل الهندسي.",
+  "helpIconPolygonTooltip": "يتم ملء الطبقة التشغيلية بالطبقات من خريطة الويب الحالية التي تكون من نوع شكل المضلع الهندسي."
+});

@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Typografi på feedback for afstand og retning",
+  "showTabLabel": "Fanen Vis",
+  "feedbackShapeLabel": "Feedback-form",
+  "lineColorLabel": "Linjefarve",
+  "lineWidthLabel": "Linjebredde",
+  "feedbackLabel": "Feedback-etiket",
+  "textColorLabel": "Tekstfarve",
+  "textSizeLabel": "Tekststørrelse",
+  "tabErrorMessage": "Widget'en skal være konfigureret med mindst en fane vist",
+  "lineLabel": "Linje",
+  "circleLabel": "Cirkel",
+  "ellipseLabel": "Ellipse",
+  "ringsLabel": "Ringe",
+  "transparency": "Gennemsigtighed",
+  "ddFeedbackStyleTabLabel": "Symbologi",
+  "miscellaneousTabLabel": "Diverse",
+  "operationalLineLayerSelectLabel": "Vælg et operationelt polylinje-lag til linje- og ringe-resultater",
+  "operationalPolygonLayerSelectLabel": "Vælg et operationelt polylinje-lag til cirkel- og ellipse-resultater",
+  "helpIconPolylineTooltip": "Listen med operationelle lag består af lag fra det aktuelle webkort, der er af geometritypen polylinje.",
+  "helpIconPolygonTooltip": "Listen med operationelle lag består af lag fra det aktuelle webkort, der er af geometritypen polygon."
+});

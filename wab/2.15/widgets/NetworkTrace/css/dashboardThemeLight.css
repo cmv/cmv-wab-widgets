@@ -1,0 +1,23 @@
+.jimu-widget-NetworkTrace .esriCTFlagBarrierSkipLocationMainPage,
+.jimu-widget-NetworkTrace .esriCTResultContainer {
+    background-color: #fff;
+}
+
+.jimu-widget-NetworkTrace .esriCTLayerName,
+.jimu-widget-NetworkTrace .esriCTInputLocationTab, 
+.jimu-widget-NetworkTrace .esriCTFlagsBarriersSkipLocationsLabelContainer,
+.jimu-widget-NetworkTrace .esriCTBackButtonContainer,
+.jimu-widget-NetworkTrace .esriCTResultContainerHeader,
+.jimu-widget-NetworkTrace .esriCTBarrierLocationTab,
+.jimu-widget-NetworkTrace .esriCTSkipLocationTab,
+.jimu-widget-NetworkTrace .resultItemLabel {
+    color: #000000;
+}
+
+.jimu-widget-NetworkTrace .esriCTEditProjectBtn {
+    background-image: url(../images/edit-project-attributes.png);
+}
+
+.jimu-widget-NetworkTrace .esriCTHighlightedGraphic {
+    background-color: #E2F0FB;
+}

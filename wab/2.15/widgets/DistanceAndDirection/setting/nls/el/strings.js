@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Στιλ σχολίων για αποστάσεις και κατευθύνσεις",
+  "showTabLabel": "Εμφάνιση καρτέλας",
+  "feedbackShapeLabel": "Σχήμα σχολίων",
+  "lineColorLabel": "Χρώμα γραμμής",
+  "lineWidthLabel": "Πλάτος γραμμής",
+  "feedbackLabel": "Ετικέτα σχολίων",
+  "textColorLabel": "Χρώμα κειμένου",
+  "textSizeLabel": "Μέγεθος κειμένου",
+  "tabErrorMessage": "Πρέπει να παραμετροποιήσετε το widget έτσι ώστε να εμφανίζεται τουλάχιστον μία καρτέλα.",
+  "lineLabel": "Γραμμή",
+  "circleLabel": "Κύκλος",
+  "ellipseLabel": "Έλλειψη",
+  "ringsLabel": "Δακτύλιοι",
+  "transparency": "Διαφάνεια",
+  "ddFeedbackStyleTabLabel": "Συμβολολογία",
+  "miscellaneousTabLabel": "Διάφορα",
+  "operationalLineLayerSelectLabel": "Επιλέξτε ένα λειτουργικό θεματικό επίπεδο πολυγραμμής για αποτελέσματα σε γραμμές και δακτυλίους.",
+  "operationalPolygonLayerSelectLabel": "Επιλέξτε ένα λειτουργικό θεματικό επίπεδο πολυγώνου για αποτελέσματα σε κύκλους και έλλειψη.",
+  "helpIconPolylineTooltip": "Η λίστα των λειτουργικών θεματικών επιπέδων συμπληρώνεται με θεματικά επίπεδα τύπου γεωμετρίας πολυγραμμής από τον τρέχοντα web χάρτη.",
+  "helpIconPolygonTooltip": "Η λίστα των λειτουργικών θεματικών επιπέδων συμπληρώνεται με θεματικά επίπεδα τύπου γεωμετρίας πολυγώνου από τον τρέχοντα web χάρτη."
+});

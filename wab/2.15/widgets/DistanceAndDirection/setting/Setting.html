@@ -1,0 +1,24 @@
+<div style="width:100%;height:100%;" class="nihilo">
+<div class = "tabConfigurationContainer">
+  <!-- tabs -->
+  <div class="tabConfigurationContainer" data-dojo-attach-point="tabsContainer">
+      <div class="ddfeedbackStyle-tab" data-dojo-attach-point="ddFeedbackStyleTab">
+          <div>
+              <h3 class="distance-and-direction-setting-h3">${nls.feedbackStyleLabel}</h3>
+              <div data-dojo-attach-point="feedbackTable" class="table-feedbacks"></div>
+              <div data-dojo-attach-point="labelTable" class="table-labels"></div>
+            </div>
+      </div>
+      <div class="miscellaneous-tab" data-dojo-attach-point="miscellaneousTab">
+          <div class="miscellaneousTabContainer">
+            <label class="opLayerlabelSettings">${nls.operationalLineLayerSelectLabel}</label>
+            <select class="opLayerSelectSettings" data-dojo-attach-point="opLineLayerList"></select>
+            <div title="${nls.helpIconPolylineTooltip}" class="jimu-icon helpBtn" data-dojo-attach-point="helpLineBtn"></div>
+
+            <label class="opLayerlabelSettings">${nls.operationalPolygonLayerSelectLabel}</label>
+            <select class="opLayerSelectSettings" data-dojo-attach-point="opPolygonLayerList"></select>
+            <div title="${nls.helpIconPolygonTooltip}" class="jimu-icon helpBtn" data-dojo-attach-point="helpPolygonBtn"></div>
+          </div>
+  </div>
+</div>
+</div>

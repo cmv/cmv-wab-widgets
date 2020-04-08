@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Estilo de comentarios de distancia y dirección",
+  "showTabLabel": "Mostrar pestaña",
+  "feedbackShapeLabel": "Forma de comentarios",
+  "lineColorLabel": "Color de línea",
+  "lineWidthLabel": "Ancho de línea",
+  "feedbackLabel": "Etiqueta de comentarios",
+  "textColorLabel": "Color del texto",
+  "textSizeLabel": "Tamaño de texto",
+  "tabErrorMessage": "El widget se debe configurar con al menos una pestaña visible",
+  "lineLabel": "Línea",
+  "circleLabel": "Círculo",
+  "ellipseLabel": "Elipse",
+  "ringsLabel": "Anillos",
+  "transparency": "Transparencia",
+  "ddFeedbackStyleTabLabel": "Simbología",
+  "miscellaneousTabLabel": "Varios",
+  "operationalLineLayerSelectLabel": "Seleccionar una capa operativa de polilíneas para resultados de línea y anillos",
+  "operationalPolygonLayerSelectLabel": "Seleccionar una capa operativa de polígonos para resultados de círculo y elipse",
+  "helpIconPolylineTooltip": "La lista de capas operativas se rellena con las capas del mapa web actual que corresponden al tipo de geometría de polilínea.",
+  "helpIconPolygonTooltip": "La lista de capas operativas se rellena con las capas del mapa web actual que corresponden al tipo de geometría de polígono."
+});

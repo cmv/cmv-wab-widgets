@@ -1,0 +1,82 @@
+<div>
+  <div class="chart-widget-content">
+    <div data-dojo-attach-point="chartList" class="chart-step chart-list">
+      <div data-dojo-attach-point="chartsNode" class="charts firstFocusNode" tabindex="0" data-a11y-label-by="chart-execute-tip">
+        <div class="execute-tip" data-a11y-label-id="chart-execute-tip">
+          ${nls.executeChartTip}
+        </div>
+        <div class="charts-table-container">
+          <table data-dojo-attach-event="onclick:_onChartListClicked, onkeydown:_onChartListKeydown" cellpadding="0" cellspacing="0" class="charts-table" onselectstart="return false;">
+            <colgroup>
+              <col width="14px"></col>
+              <col width="auto"></col>
+              <col width="30px"></col>
+            </colgroup>
+            <tbody data-dojo-attach-point="chartsTbody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div data-dojo-attach-point="invalidConfigNode" class="invalid-config">
+        <div class="error">
+          ${nls.invalidConfig}
+        </div>
+      </div>
+      <div data-dojo-attach-point="noChartTipSection" class="no-chart-tip">
+        ${nls.noneChartTip}
+      </div>
+    </div>
+
+    <div data-dojo-attach-point="chartParams" data-dojo-attach-event="onkeydown: _onChartParamsKeydown" class="chart-step chart-params" style="display: none;">
+      <div class="step-head chart-params-head">
+        <div class="step-title params-title" data-a11y-label-id="chart-chart-params">${nls.chartParams}</div>
+        <div class="operations">
+          <div role="button" aria-label="${nls.backCharts}" tabindex="0" data-dojo-attach-point="paramsBack" class="params-back jimu-float-leading" data-dojo-attach-event="onclick:_onBtnParamsBackClicked, onkeydown:_onBtnParamsBackKeydown">
+            <div class="back-icon"></div>
+            <div class="back-tip">${nls.charts}</div>
+          </div>
+          <div role="button" aria-label="${nls.apply}" tabindex="0" class="apply jimu-float-trailing" data-dojo-attach-point="btnApply" data-dojo-attach-event="onclick:_onBtnApplyClicked, onkeydown:_onApplyBtnKeydown">${nls.apply}</div>
+        </div>
+      </div>
+      <div class="params-container" tabindex="0" data-a11y-label-by="chart-chart-params" data-dojo-attach-point="paramsContainer">
+        <div class="spatial-section" style="margin-top:20px; margin-bottom:20px;">
+          <div class="use-spatial-div" data-dojo-attach-point="cbxUseSpatialDiv"></div>
+          <div data-dojo-attach-point="selectSpatialDiv" class="select-spatial">
+            <div class="special-tr">
+              <div class="radio-div">
+                <input data-dojo-type="dijit/form/RadioButton" data-label-id="chart-params-map-extent" data-dojo-attach-point="cbxUseMapExtent" data-dojo-attach-event="change:_onCbxUseMapExtentClicked" checked/>
+              </div>
+              <label data-label-for="chart-params-map-extent">${nls.useCurrentMapExtent}</label>
+            </div>
+            <div class="special-tr">
+              <div class="radio-div">
+                <input data-dojo-type="dijit/form/RadioButton" data-label-id="chart-params-draw-graphic" data-dojo-attach-point="cbxDrawGraphic" data-dojo-attach-event="change:_onCbxDrawGraphicClicked"/>
+              </div>
+              <label data-label-for="chart-params-draw-graphic">${nls.drawGraphicOnMap}</label>
+            </div>
+            <div class="draw-graphic" data-dojo-attach-point="drawBoxDiv"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div data-dojo-attach-point="chartResults" data-dojo-attach-event="onkeydown: _onChartResultsKeydown" class="chart-step chart-results" style="display: none;">
+      <div class="step-head chart-results-head">
+        <div class="step-title results-title" data-a11y-label-id="chart-chart-result">${nls.chartResults}</div>
+        <div class="operations">
+          <div role="button" data-dojo-attach-point="backOptions" tabindex="0" aria-label="${nls.backOptions}" class="params-back jimu-float-leading" data-dojo-attach-event="onclick:_onBtnResultsBackClicked, onkeydown:_onResultsBackKeydown">
+            <div class="back-icon"></div>
+            <div class="back-tip" data-dojo-attach-point="btnResultsBack">${nls.chartParams}</div>
+          </div>
+        </div>
+      </div>
+      <div tabindex="0" class="results-container" data-dojo-attach-point="resultsContainer" data-a11y-label-by="chart-chart-result">
+      </div>
+    </div>
+  </div>
+  <div class="btn-section">
+      <!-- aria-disabled="true" aria-pressed="true"  -->
+    <div role="button" aria-label="${nls.clearCharts}" tabindex="0" data-dojo-attach-point="btnClearAll" data-dojo-attach-event="onclick:_onBtnClearAllClicked, onkeydown:_onClearBtnKeydown" class="jimu-btn jimu-priority-secondary btn-clear-all lastFocusNode" title="${nls.clearResults}">${nls.clearResults}</div>
+  </div>
+  <div data-dojo-attach-point="shelter" data-dojo-type="jimu/dijit/LoadingIndicator" data-dojo-props='hidden:true'></div>
+</div>

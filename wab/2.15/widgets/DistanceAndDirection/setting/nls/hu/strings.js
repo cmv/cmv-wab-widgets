@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Távolság és irány visszajelzési stílusa",
+  "showTabLabel": "Fül megjelenítése",
+  "feedbackShapeLabel": "Visszajelzés alakzata",
+  "lineColorLabel": "Vonalszín",
+  "lineWidthLabel": "Vonalvastagság",
+  "feedbackLabel": "Visszajelzés felirata",
+  "textColorLabel": "Szövegszín",
+  "textSizeLabel": "Szövegméret",
+  "tabErrorMessage": "A widgetet úgy kell konfigurálni, hogy legalább egy fül látható legyen",
+  "lineLabel": "Vonal",
+  "circleLabel": "Kör",
+  "ellipseLabel": "Ellipszis",
+  "ringsLabel": "Gyűrűk",
+  "transparency": "Átlátszóság",
+  "ddFeedbackStyleTabLabel": "Szimbólumrendszer",
+  "miscellaneousTabLabel": "Vegyes",
+  "operationalLineLayerSelectLabel": "Válasszon operatív vonalláncos réteget a gyűrűk és a vonalak eredményei számára",
+  "operationalPolygonLayerSelectLabel": "Válasszon operatív poligonréteget a körök és az ellipszisek eredményei számára",
+  "helpIconPolylineTooltip": "Az operatív réteget a rendszer olyan rétegekkel tölti fel az aktuális webtérképből, amelyek vonallánc típusú geometriával rendelkeznek.",
+  "helpIconPolygonTooltip": "Az operatív réteget a rendszer olyan rétegekkel tölti fel az aktuális webtérképből, amelyek poligon típusú geometriával rendelkeznek."
+});

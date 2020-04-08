@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Rastojanje i smer stila povratnih informacija",
+  "showTabLabel": "Prikaži karticu",
+  "feedbackShapeLabel": "Oblik povratnih informacija",
+  "lineColorLabel": "Boja linije",
+  "lineWidthLabel": "Širina linije",
+  "feedbackLabel": "Oznaka povratnih informacija",
+  "textColorLabel": "Boja teksta",
+  "textSizeLabel": "Veličina teksta",
+  "tabErrorMessage": "Vidžet mora da se konfiguriše sa prikazanom barem jednom karticom",
+  "lineLabel": "Linija",
+  "circleLabel": "Krug",
+  "ellipseLabel": "Elipsa",
+  "ringsLabel": "Prstenovi",
+  "transparency": "Prozirnost",
+  "ddFeedbackStyleTabLabel": "Simbologija",
+  "miscellaneousTabLabel": "Razno",
+  "operationalLineLayerSelectLabel": "Izaberite operativni polilinijski sloj za rezultate za liniju i prsten",
+  "operationalPolygonLayerSelectLabel": "Izaberite operativni poligonski sloj za rezultate za krug i elipsu",
+  "helpIconPolylineTooltip": "Lista operativnih slojeva se popunjava slojevima iz trenutne veb mape koji su tipa polilinijske geometrije.",
+  "helpIconPolygonTooltip": "Lista operativnih slojeva se popunjava slojevima iz trenutne veb mape koji su tipa poligonalne geometrije."
+});

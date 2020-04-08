@@ -1,0 +1,21 @@
+define({
+  "_widgetLabel": "Editar",
+  "_featureAction_Edit": "Editar",
+  "title": "Selecione um modelo para criar feições",
+  "pressStr": "Pressionar ",
+  "ctrlStr": " CTRL ",
+  "snapStr": " para habilitar o ajuste",
+  "close": "Fechar",
+  "featureLayers": "Camadas de feição",
+  "searchTemplates": "Pesquisar modelos",
+  "noAvailableTempaltes": "Nenhum modelo disponível",
+  "noCanCreateLayerAreCurrentlyVisible": "Nenhuma camada editável está atualmente visível.",
+  "layersAreInvisibleOrOutOfScaleRange": "As camadas estão invisíveis ou fora da faixa de escala.",
+  "relatedTables": "Tabelas relacionadas:",
+  "relatedRecords": "Registros relacionados:",
+  "noRelatedRecotds": "Nenhum registro relacionado foi encontrado.",
+  "startToDraw": "Clique para começar a desenhar",
+  "startToAddPoint": "Clique para adicionar um ponto",
+  "editRelatedFeature": "Editando feição relacionada",
+  "duplicateValueWarning": " Não é possível inserir valor duplicado em ${fieldName} de ${tableName}. O valor duplicado é: ${value}"
+});

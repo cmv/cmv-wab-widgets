@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "รูปแบบผลตอบกลับของระยะทางและทิศทาง",
+  "showTabLabel": "แสดงแท็บ",
+  "feedbackShapeLabel": "รูปแบบผลตอบกลับ",
+  "lineColorLabel": "สีของเส้น",
+  "lineWidthLabel": "ความหนาของเส้น",
+  "feedbackLabel": "ป้ายผลตอบกลับ",
+  "textColorLabel": "สีตัวอักษร",
+  "textSizeLabel": "ขนาดข้อความ",
+  "tabErrorMessage": "ต้องมีการกำหนดค่าวิดเจ็ตด้วยอย่างน้อยหนึ่งแท็บที่แสดง",
+  "lineLabel": "เส้น",
+  "circleLabel": "วงกลม",
+  "ellipseLabel": "วงรี",
+  "ringsLabel": "วงแหวน",
+  "transparency": "โปร่งแสง",
+  "ddFeedbackStyleTabLabel": "เกี่ยวกับสัญลักษณ์",
+  "miscellaneousTabLabel": "เบ็ดเตล็ด",
+  "operationalLineLayerSelectLabel": "เลือกชั้นข้อมูลโพลีไลน์ดำเนินการสำหรับผลลัพธ์ไลน์และวงแหวน",
+  "operationalPolygonLayerSelectLabel": "เลือกชั้นข้อมูลโพลีไลน์ดำเนินการสำหรับผลลัพธ์วงกลมและวงรี",
+  "helpIconPolylineTooltip": "รายการชั้นข้อมูลดำเนินการจะถูกเติมด้วยชั้นข้อมูลจากเว็บแมปปัจจุบันที่เป็นประเภทรูปทรงเรขาคณิตโพลีไลน์",
+  "helpIconPolygonTooltip": "รายการชั้นข้อมูลดำเนินการ จะถูกนำเข้าแบบอัตโนมัติพร้อมชั้นข้อมูลจากเว็บแมปปัจจุบัน ซึ่งเป็นประเภทรูปทรงเรขาคณิตโพลีกอน"
+});

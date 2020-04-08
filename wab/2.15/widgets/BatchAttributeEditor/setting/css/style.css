@@ -1,0 +1,183 @@
+.solutions-widget-batcheditor-setting {
+	margin: 0;
+	padding: 0;
+	font-size: 15px;
+}
+
+.solutions-widget-batcheditor-setting .dijitArrowButtonContainer {
+	width: 17px;
+}
+
+.solutions-widget-batcheditor-setting .dijitSelect {
+	height: 30px;
+	width: 100%;
+}
+.solutions-widget-batcheditor-setting .editable {
+	width: 100px;
+}
+.solutions-widget-batcheditor-setting .symbolselector {
+	width: 140px;
+}
+.hide {
+	display: none;
+}
+
+/*Shared Page*/
+.solutions-widget-batcheditor-setting .settings-heading {
+	font-size: 14px;
+	margin-top: 15px;
+	color: #2b2d39;
+}
+.solutions-widget-batcheditor-setting .settings-description {
+	font-size: 12px;
+	margin-top: 15px;
+	margin-left: 10px;
+	margin-right: 10px;
+	color: #2b2d39;
+}
+.solutions-widget-batcheditor-setting .settings-error {
+	font-size: 12px;
+	font-style: italic;
+	color: #999999;
+}
+.solutions-widget-batcheditor-setting .settings-nolayer-error {
+	font-size: 12px;
+	font-style: italic;
+	color: #999999;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.batcheditor-settings-error {
+  float:left;
+	font-size: 12px;
+	font-style: italic;
+  color: #999999;
+}
+
+/*Navigation Buttons*/
+.solutions-widget-batcheditor-setting .settings-navigation-table > tbody > tr > .controls {
+	width: 100%;
+}
+.solutions-widget-batcheditor-setting .settings-navigation-table > tbody > tr > td {
+
+	vertical-align: middle;
+	font-size: 1em;
+}
+
+/*Page 1*/
+.solutions-widget-batcheditor-setting .setting-tool-table {
+	margin-top: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	border-width: 0px;
+}
+.solutions-widget-batcheditor-setting .setting-tool-table > tbody > tr > .controls {
+	width: 100%;
+}
+.solutions-widget-batcheditor-setting .setting-tool-table > tbody > tr > td > span {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+.solutions-widget-batcheditor-setting .setting-tool-table > tbody > tr > td > input {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+.solutions-widget-batcheditor-setting  .setting-tool-table > thead > tr > th, .solutions-widget-batcheditor-setting  .setting-tool-table > tbody > tr > td {
+	line-height: 22px;
+	vertical-align: middle;
+	font-size: 12px;
+}
+
+/*Page 2*/
+.solutions-widget-batcheditor-setting .setting-layer-table {
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+.solutions-widget-batcheditor-setting .setting-layer-toggle-checkbox-group {
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 15px;
+}
+.solutions-widget-batcheditor-setting .setting-layer-toggle-checkbox {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+.solutions-widget-batcheditor-setting .setting-layer-toggle-checkbox-text {
+	font-size: 12px;
+	color: #2b2d39;
+}
+
+/*Page 3*/
+.solutions-widget-batcheditor-setting .setting-common-fields-table {
+	margin: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.solutions-widget-batcheditor-setting .draw-item {
+	width: 40px;
+	height: 40px;
+	background-repeat: no-repeat;
+	text-align: center;
+	float: left;
+	margin: 7px;
+}
+
+.solutions-widget-batcheditor-setting .point-icon {
+	background-image: url(../images/point.png);
+}
+
+.solutions-widget-batcheditor-setting .line-icon {
+	background-image: url(../images/line.png);
+}
+
+.solutions-widget-batcheditor-setting .polyline-icon {
+	background-image: url(../images/polyline.png);
+}
+
+.solutions-widget-batcheditor-setting .freehand-polyline-icon {
+	background-image: url(../images/freehand_polyline.png);
+}
+
+.solutions-widget-batcheditor-setting .extent-icon {
+	background-image: url(../images/extent.png);
+}
+
+.solutions-widget-batcheditor-setting .polygon-icon {
+	background-image: url(../images/polygon.png);
+}
+
+.solutions-widget-batcheditor-setting .freehand-polygon-icon {
+  background-image: url(../images/freehand_polygon.png);
+}
+
+.solutions-widget-batcheditor-setting .selected {
+	background-color: #38b5ca !important;
+}
+
+.solutions-widget-batcheditor-setting .footer {
+	text-align: right;
+}
+
+.solutions-widget-batcheditor-setting .divider {
+  padding-top: 15px;
+  width: "100%";
+  height: "5px";
+  border-style: none none solid none;
+  border-width: 2px;
+  border-color: #c1c1c1;
+}
+
+.solutions-widget-batcheditor-setting .editorDiv {
+  padding-top: "50px";
+}
+
+.footer {
+	padding-top: 5px;
+	width: 100%;
+	height: 30px;
+}

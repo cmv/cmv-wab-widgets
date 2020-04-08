@@ -1,0 +1,1356 @@
+.jimu-widget-NetworkTrace .flagbutton
+{
+    float: left;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-image: url("../images/add-flags.png");
+    background-size: 40px 40px;
+}
+
+.jimu-widget-NetworkTrace .barrierButton
+{
+    float: left;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-image: url("../images/add-barriers.png");
+    background-size: 40px 40px;
+}
+
+.jimu-widget-NetworkTrace .flagButtonselected
+{
+    float: left;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-image: url("../images/add-flags-select.png");
+    background-color: #858585;
+    background-size: 40px 40px;
+}
+
+.jimu-widget-NetworkTrace .barrierButtonselected
+{
+    float: left;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+    background-image: url("../images/add-barriers-select.png");
+    background-color: #858585;
+    background-size: 40px 40px;
+}
+
+.jimu-widget-NetworkTrace .traceControl
+{
+    float: left;
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .btnFlagStyle
+{
+    width: 100%;
+    float: left;
+    margin-bottom: 5px;
+    height: 40px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .btnFlagStyle
+{
+   padding: 2px 2px 0px 0px;
+}
+
+.jimu-widget-NetworkTrace .btnBarrierStyle
+{
+    width: 100%;
+    float: left;
+    margin-bottom: 5px;
+    height: 40px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .btnBarrierStyle
+{
+   padding: 2px 2px 0px 0px;
+}
+
+.jimu-widget-NetworkTrace .flagLabel
+{
+    float: left;
+    padding: 13px 0px 13px 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 85%;
+}
+
+.jimu-widget-NetworkTrace .barrierLabel
+{
+    float: left;
+    padding: 13px 0px 13px 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 85%;
+}
+
+.jimu-widget-NetworkTrace .traceButtons
+{
+    width: 100%;
+    clear: both;
+}
+
+.resultItemButton
+{
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    cursor: pointer;
+    outline: none;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    border: 0;
+    margin-right: 5px;
+    float: left;
+}
+
+.resultItemLabel
+{
+    width: calc(100% - 30px);
+    cursor: pointer;
+    font-size: 14px;
+    color: #3e3e3e;
+    font-family: Avenir LT 35 Light;
+    float: left;
+    word-break: break-word;
+    min-height: 19px;
+}
+
+.resultItemSubDiv
+{
+    clear: both;
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 0px 10px 0px;
+}
+
+.jimu-widget-NetworkTrace .resultItemButtonSkipIcon
+{
+    background-image: url("../images/skip.png");
+    background-color: #666666;
+    border-radius:2px;
+}
+
+.jimu-widget-NetworkTrace .alreadySkippedLocation
+{
+    background-color: #ebdd22;
+    cursor: default;
+}
+
+.jimu-widget-NetworkTrace .runIconidle
+{
+    display: none;
+}
+
+.boxPanel
+{
+    top: 140px !important;
+}
+
+.jimu-widget-NetworkTrace .runIconProcessing
+{
+    position: absolute;
+    z-index: 999;
+    background-image: url(../images/loading.gif);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 40px;
+    height: 100%;
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .traceControlDisabledDiv
+{
+    pointer-events: none;
+}
+
+.claro .dijitTitlePaneContentInner
+{
+    padding: 0px;
+}
+
+.dijitButtonNode
+{
+    border: 0px solid gray;
+}
+
+.dijitValidationTextBoxError input.dijitValidationInner, .dijitSelect input, .dijitTextBox input.dijitArrowButtonInner
+{
+    height: 28px !important;
+}
+
+.dijitTimeTextBox
+{
+    width: 12em !important;
+}
+
+.dijitDateTextBox
+{
+    width: 12em !important;
+}
+
+.dijitArrowNode
+{
+    float: right;
+}
+
+.claro .dijitTitlePaneTitleOpen, .claro .dijitTitlePaneTitleFixedOpen
+{
+    background-color: #E9EEF4;
+    color: Black;
+}
+
+.dijitTitlePane
+{
+    background-color: #fff;
+}
+
+.claro .dijitTitlePaneTitle
+{
+    background-color: #efefef;
+    background-image: none;
+    background-repeat: repeat-x;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: 1px solid #b5bcc7;
+    color: #494949;
+    min-height: 17px;
+    padding: 7px 15px;
+}
+
+.claro .dijitTitlePaneContentOuter
+{
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: 1px solid #b5bcc7;
+}
+
+.dijitheadPaneTitle
+{
+    background-image: none;
+    background-repeat: repeat-x;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top: 1px solid #e5e5e5;
+    color: #494949;
+    min-height: 17px;
+}
+
+.jimu-widget-NetworkTrace .dijitheadPanelIcons
+{
+    float: right;
+}
+
+.claro .dijitTitlePaneTitleFocus
+{
+    outline: none;
+}
+
+.jimu-widget-NetworkTrace .esriCTHidden
+{
+    display: none;
+}
+
+.claro .dijitSelect, .claro .dijitTextBox
+{
+    width: 144px;
+}
+
+.attrResultInfoTable
+{
+    border-collapse: collapse;
+}
+
+.attrResultInfoTable td.attrName
+{
+    color: #888888;
+    padding-right: 5px;
+}
+
+.attrResultInfoTable td
+{
+    padding: 2px;
+    padding-bottom: 5px;
+}
+
+.attrHeader
+{
+    font-weight: bold;
+}
+
+.attrSeparator
+{
+    border: none;
+    border-top: 1px solid #333333;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.resultItem
+{
+    border-bottom: 1px solid #f5f5f5;
+}
+
+/** Input tab starts **/
+
+.jimu-widget-NetworkTrace .esriCTInputLocationTab,
+.jimu-widget-NetworkTrace .esriCTBarrierLocationTab,
+.jimu-widget-NetworkTrace .esriCTSkipLocationTab {
+    color: #3e3e3e;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: Avenir LT 35 Light;
+    height: 42px;
+}
+
+.jimu-widget-NetworkTrace .esriCTTabRightimg
+{
+    margin: 10px auto;
+    position: relative;
+    float: right;
+    width: 14px;
+    height: 14px;
+    background-repeat: no-repeat;
+    background-image: url("../images/right-arrow.png");
+    background-size: 14px 14px;
+}
+
+.jimu-widget-NetworkTrace .esriCTBarrierLocationTab,
+.jimu-widget-NetworkTrace .esriCTSkipLocationTab {
+    border-top: none;
+}
+
+
+
+.jimu-widget-NetworkTrace .esriCTResultContainer
+{
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    z-index: 998;
+    clear: both;
+}
+
+.jimu-widget-NetworkTrace .esriCTResultContainerHeader
+{
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid #B5BCC9;
+    color: #3e3e3e;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.jimu-widget-NetworkTrace .esriCTResultContainerBack
+{
+    position: relative;
+    float: left;
+    margin: 10px 0px 10px 0px;
+    cursor: pointer;
+}
+
+.jimu-widget-NetworkTrace .esriCTResultContainerBack:hover,
+.jimu-widget-NetworkTrace .esriCTExportBackText:hover,
+.jimu-widget-NetworkTrace .esriCTSkipLocationBackText:hover,
+.jimu-widget-NetworkTrace .esriCTFlagsBackText:hover,
+.jimu-widget-NetworkTrace .esriCTBarrierBackText:hover {
+    text-decoration: underline;
+}
+
+.jimu-widget-NetworkTrace .esriCTResultContainerLbl
+{
+    position: relative;
+    float: right;
+    margin: 10px 10px 10px 0px;
+    max-width: 75%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.jimu-widget-NetworkTrace .esriCTFlagsBarriersSkipLocationsMainDiv
+{
+    width: 100%;
+    padding: 10px 5px 10px 5px;
+    float: left;
+    box-sizing: border-box;
+    border-bottom: 1px solid #f5f5f5;
+    height: 40px;
+}
+
+.jimu-widget-NetworkTrace .esriCTFlagsBarriersSkipLocationsLabelContainer
+{
+    float: left;
+    cursor: pointer;
+    font-size: 14px;
+    color: #3e3e3e;
+    font-family: Avenir LT 35 Light;
+    width: calc(100% - 16px);
+    word-break: break-word;
+}
+
+.jimu-widget-NetworkTrace .esriCTInputFlagCloseDiv,
+.jimu-widget-NetworkTrace .esriCTRemoveSkipLocationIcon {
+    background-image: url(../images/delete.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px;
+    position: relative;
+    float: right;
+    padding: 0px 0px 0px 10px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.jimu-widget-NetworkTrace .esriCTlblLoc
+{
+    margin: 10px auto;
+    position: relative;
+    float: left;
+    width: 90%;
+}
+
+/** Input tab ends **/
+
+/** Output tab starts **/
+
+.jimu-widget-NetworkTrace .esriCTLayerNameContainer
+{
+    float: left;
+    width: 100%;
+    cursor: pointer;
+    padding: 10px 0;
+}
+
+.jimu-widget-NetworkTrace .esriCTLayerName
+{
+    float: left;
+    width: calc(100% - 34px);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #3e3e3e;
+    font-size: 14px;
+    font-family: Avenir LT 35 Light;
+    padding-left: 5px;
+}
+
+.jimu-widget-NetworkTrace .esriCTRightCaretIcon
+{
+    float: right;
+    width: 14px;
+    height: 14px;
+    color: #3e3e3e;
+    font-size: 14px;
+    font-family: Avenir LT 35 Light;
+    background-repeat: no-repeat;
+    background-image: url("../images/right-arrow.png");
+    background-size: 14px 14px;
+}
+
+.jimu-widget-NetworkTrace .esriCTResultsLayerFeaturesContainer
+{
+    clear: both;
+    width: 100%;
+    height: 100%;
+}
+
+/** Output tab ends **/
+
+
+.claro .dijitSelect .dijitArrowButtonInner, .claro .dijitComboBox .dijitArrowButtonInner
+{
+    border: none !important;
+}
+
+
+.esriCTDartBackgroudColor
+{
+    background-color: transparent !important;
+}
+
+/* Updated UI starts */
+
+.jimu-widget-NetworkTrace .traceControls
+{
+    float: left;
+    width: 100%;
+}
+
+.esriCTDisableScroll
+{
+    overflow-y: hidden !important;
+}
+
+/* Updated UI ends */
+
+/* Save to layer section starts */
+
+.claro .dijitTextBoxIE9
+{
+    background-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.claro .dijitDateTextBox .dijitArrowButtonIE9::before
+{
+    content: inherit !important;
+}
+
+.claro .dijitComboBox .dijitButtonNodeIE9
+{
+    background-image: none !important;
+    background-repeat: no-repeat;
+    background-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.claro .dijitTextBoxFocusedIE9 .dijitInputContainer
+{
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.claro .dijitDateTextBox .dijitArrowButtonBlankContent::before
+{
+    content: none !important;
+}
+
+.jimu-popup .content-static
+{
+    margin: 15px 30px 0 !important;
+    padding-top: 5px !important;
+}
+
+/* Save to layer section ends */
+
+/* Skip location starts */
+
+.jimu-widget-NetworkTrace .esriCTSkipAllLocationParentContainer {
+    width: 100%;
+    overflow: hidden;
+    clear: both;
+}
+
+.jimu-widget-NetworkTrace .esriCTSkipLocationButton {
+    margin: 5px auto;
+    display: table;
+    float: none;
+}
+
+
+
+.jimu-widget-NetworkTrace .esriCTRemoveSkipLocationButton {
+    margin: 10px auto;
+    display: table;
+    float: none;
+}
+
+/* Skip location ends */
+
+/* RTL Mode starts */
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTRightCaretIcon {
+    float: right;
+    transform: rotateY(180deg);
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTLayerName {
+    float: right;
+    padding-left: 0px;
+    padding-right: 5px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .resultItemButton {
+    float: right;
+    margin-right: 0px;
+    margin-left: 5px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .resultItemLabel {
+    float: right;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTTabRightimg {
+    float: left;
+    transform: rotateY(180deg);
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTlblLoc {
+    float: right;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTFlagsBarriersSkipLocationsLabelContainer {
+    float: right;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTRemoveSkipLocationIcon {
+    float: left;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTResultContainerLbl {
+    float: left;
+    margin: 10px 0px 10px 10px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTResultContainerBack {
+    float: right;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTInputFlagCloseDiv {
+    float: left;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTBtnRunTrace {
+    margin-right: 0px;
+    margin-left: 20px;
+    float: right;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTBtnClear {
+    float: right;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .flagbutton {
+    float: right;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .flagLabel {
+    float: right;
+    padding: 13px 10px 13px 0px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .barrierLabel {
+    float: right;
+    padding: 13px 10px 13px 0px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .barrierButton {
+    float: right;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .flagButtonselected {
+    float: right;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .barrierButtonselected {
+    float: right;
+}
+
+/* RTL Mode ends */
+
+/* Widget new or load project section starts */
+
+
+
+.jimu-widget-NetworkTrace .esriCTLoadProjectDropDownContainer {
+    width: calc(100% - 30px);
+    float: left;
+    padding-right: 10px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTLoadProjectDropDownContainer {
+    float: right;
+    padding-right: 0px;
+    padding-left: 10px;
+}
+
+.jimu-widget-NetworkTrace .esriCTLoadProjectDropDown {
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTEditProjectBtn
+{
+    height: 30px;
+    width: 30px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url("../images/edit-project-attributes.png");
+    cursor: pointer;
+    float: left;
+}
+
+.DartTheme .jimu-widget-NetworkTrace .esriCTEditProjectBtn {
+    background-image: url("../images/edit-project-attributes-dart-theme.png");
+}
+
+.jimu-widget-NetworkTrace .esriCTDisableEditProjectBtn
+{
+    height: 30px;
+    width: 30px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-image: url("../images/edit-project-attributes-disable.png");
+    cursor: default;
+    pointer-events: none;
+    float: left;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTEditProjectBtn,
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTDisableEditProjectBtn {
+    float: right;
+}
+
+.jimu-widget-NetworkTrace .esriCTMainParentContainer,
+.jimu-widget-NetworkTrace .esriCTMainParentContentContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTTextCenter {
+    text-align: center;
+}
+
+.jimu-widget-NetworkTrace .esriCTSaveButtonContainer {
+    width: 50%;
+    float: left;
+    padding: 2px 10px 2px 2px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTSaveButtonContainer {
+    float: right;
+    padding-right: 0px;
+    padding-left: 10px;
+}
+
+.jimu-widget-NetworkTrace .esriCTSaveButtonCenterContainer {
+    float: none;
+    display: inline-block;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTSaveButtonCenterContainer {
+    float: none;
+    display: inline-block;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportToCsvOkButtonContainer {
+    width: 50%;
+    float: left;
+    padding: 2px 10px 2px 2px;
+}
+
+.jimu-widget-NetworkTrace .esriCTEditProjectAttributeOkButtonContainer {
+    width: 50%;
+    float: left;
+    padding: 2px 10px 2px 2px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTEditProjectAttributeOkButtonContainer {
+    float: right;
+    padding-right: 0px;
+    padding-left: 10px;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportToCSVOkBtnCenterContainer {
+    float: none;
+    display: inline-block;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportButtonContainer {
+    width: 50%;
+    float: left;
+    padding: 2px 2px 2px 10px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTExportButtonContainer {
+    float: right;
+    padding-left: 0px;
+    padding-right: 10px;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportButtonCenterContainer {
+    float: none;
+    display: inline-block;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTExportButtonCenterContainer {
+    float: none;
+    display: inline-block;
+}
+
+.jimu-widget-NetworkTrace .esriCTEditProjectAttributeCancelButtonContainer {
+    width: 50%;
+    float: left;
+    padding: 2px 2px 2px 10px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTEditProjectAttributeCancelButtonContainer {
+    float: right;
+    padding-left: 0px;
+    padding-right: 10px;
+}
+
+.jimu-widget-NetworkTrace .esriCTRunButtonContainer {
+    width: 50%;
+    float: left;
+    padding-right: 10px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTRunButtonContainer {
+    float: right;
+    padding-right: 0px;
+    padding-left: 10px;
+}
+
+.jimu-widget-NetworkTrace .esriCTClearButtonContainer {
+    width: 50%;
+    float: left;
+    padding-left: 10px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTClearButtonContainer {
+    float: right;
+    padding-left: 0px;
+    padding-right: 10px;
+}
+
+.jimu-widget-NetworkTrace .esriCTProjectSaveButton {
+    margin: 0px;
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportToCSVOkBtn {
+    margin: 0px;
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTEditProjectAttributeOkButton {
+    margin: 0px;
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportToCSVBtn {
+    margin: 0px;
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTEditProjectAttributeCancelButton {
+    margin: 0px;
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTBtnRunTrace {
+    margin: 0px;
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTBtnClear {
+    margin: 0px;
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTCheckboxParentContainer {
+    float: left;
+    margin-left: 2px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTCheckboxParentContainer {
+    float: right;
+    margin-left: 0;
+    margin-right: 2px;
+}
+
+.jimu-widget-NetworkTrace .esriCTEditProjectAttributeContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportToCSVFormParentContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportToCSVFormContainer {
+    width: 100%;
+    height: calc(100% - 73px);
+    overflow: auto;
+}
+
+.jimu-widget-NetworkTrace .esriCTAttributeInspectorWidgetContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTAttributeInspectorContainer {
+    width: 100%;
+    height: calc(100% - 35px);
+    overflow: auto;
+}
+
+.jimu-widget-NetworkTrace  .atiButton,
+.jimu-widget-NetworkTrace .esriCTAttributeInspectorContainer .atiLayerName
+{
+    display: none;
+}
+
+.jimu-widget-NetworkTrace .esriCTAttributeInspectorContainer .atiButtons
+{
+    display: none;
+}
+
+.jimu-widget-NetworkTrace .esriCTAttributeInspectorContainer td {
+    display: block;
+    clear: both;
+    height: auto;
+    width: 100%;
+    float: left;
+}
+
+.jimu-widget-NetworkTrace .esriCTAttributeInspectorContainer table {
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTAttributeInspectorContainer .atiField {
+    width: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTAttributeInspectorContainer .atiLabel {
+    margin-top: 6px !important;
+    margin-bottom: 3px !important;
+}
+
+.jimu-widget-NetworkTrace .esriCTAttributeInspectorContainer .dijitTextBox {
+    width: 100% !important;
+}
+
+.jimu-widget-NetworkTrace .esriCTAttributeInspectorContainer .dijitTextArea {
+    width: 100% !important;
+    min-height: 70px;
+    resize: vertical;
+    overflow: auto;
+    font-family: inherit;
+    line-height: 20px !important;
+    font-size: 14px;
+}
+
+.jimu-widget-NetworkTrace .atiAttributes {
+    height: 100%;
+    padding-right: 2px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .atiAttributes {
+    padding-right: 0px;
+    padding-left: 2px;
+}
+
+/* Save As popup css starts */
+
+.jimu-widget-NetworkTrace .esriCTSaveAsPopupContainer,
+.jimu-widget-NetworkTrace .esriCTSaveProjectPopupContainer
+{
+    width: 100%;
+    overflow: hidden;
+}
+
+.jimu-widget-NetworkTrace .esriCTprojectNameTextBoxContainer {
+    width: 70%;
+    float: right;
+}
+
+.jimu-widget-NetworkTrace .esriCTProjectNameLabel {
+    width: 30%;
+    float: left;
+    padding: 5px 10px;
+    word-break: break-word;
+    font-size: 14px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTProjectNameLabel {
+    float: right;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportToCsvParentNode {
+    width: 100%;
+    clear: both;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+    padding-left: 18px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTExportToCsvParentNode {
+    padding-left: 0px;
+    padding-right: 18px;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportToCsvSelectAll {
+    padding-left: 3px;
+    padding-right: 0px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTExportToCsvSelectAll {
+    padding-left: 0px;
+    padding-right: 3px;
+}
+
+.jimu-widget-NetworkTrace .esriCTBackButtonContainer {
+    width: 100%;
+    clear: both;
+    overflow: hidden;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #B5BCC9;
+    color: #3e3e3e;
+    font-weight: bold;
+    font-size: 14px;
+    padding-left: 2px;
+}
+
+.jimu-rtl  .jimu-widget-NetworkTrace .esriCTBackButtonContainer {
+    padding-right: 2px;
+}
+
+
+.jimu-widget-NetworkTrace .esriCTExportBackButton {
+    width: 50%;
+    text-align: left;
+    float: left;
+    padding-left: 3px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTExportBackButton {
+    text-align: right;
+    float: right;
+    padding-right: 3px;
+}
+
+.jimu-widget-NetworkTrace .esriCTSkipLocationListBackButton {
+    width: 50%;
+    text-align: left;
+    float: left;
+    padding-left: 2px;
+}
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTSkipLocationListBackButton {
+    text-align: right;
+    float: right;
+    padding-right: 2px;
+}
+
+.jimu-widget-NetworkTrace .esriCTBarrierListBackButton {
+    width: 50%;
+    text-align: left;
+    float: left;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTBarrierListBackButton {
+    text-align: right;
+    float: right;
+}
+
+.jimu-widget-NetworkTrace .esriCTFlagsListBackButton {
+    width: 50%;
+    text-align: left;
+    float: left;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTFlagsListBackButton {
+    text-align: right;
+    float: right;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportBackText {
+    cursor: pointer;
+    width: fit-content;
+}
+
+.jimu-widget-NetworkTrace .esriCTSkipLocationBackText {
+    cursor: pointer;
+    width: fit-content;
+}
+
+.jimu-widget-NetworkTrace .esriCTBarrierBackText {
+    cursor: pointer;
+    width: fit-content;
+}
+
+.jimu-widget-NetworkTrace .esriCTFlagsBackText {
+    cursor: pointer;
+    width: fit-content;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportToCsvText {
+    width: 50%;
+    text-align: right;
+    float: left;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTExportToCsvText {
+    text-align: left;
+    float: right;
+}
+
+.jimu-widget-NetworkTrace .esriCTSkipLocationsCountText {
+    width: 50%;
+    text-align: right;
+    float: left;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTSkipLocationsCountText {
+    text-align: left;
+    float: right;
+}
+
+.jimu-widget-NetworkTrace .esriCTBarrierCountText {
+    width: 50%;
+    text-align: right;
+    float: left;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTBarrierCountText {
+    text-align: left;
+    float: right;
+}
+
+.jimu-widget-NetworkTrace .esriCTFlagsCountText {
+    width: 50%;
+    text-align: right;
+    float: left;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTFlagsCountText {
+    text-align: left;
+    float: right;
+}
+
+.jimu-widget-NetworkTrace .esriCTSkipLocationList {
+    width: 100%;
+    height: 100%;
+    clear: both;
+}
+
+.jimu-widget-NetworkTrace .esriCTBarrierLocationList {
+    width: 100%;
+    height: 100%;
+    clear: both;
+}
+
+.jimu-widget-NetworkTrace .esriCTFlagsList {
+    width: 100%;
+    height: 100%;
+    clear: both;
+}
+
+.jimu-widget-NetworkTrace .esriCTRemoveSkipAllLocationParentContainer {
+    width: 100%;
+    overflow: hidden;
+    clear: both;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.jimu-widget-NetworkTrace .esriCTLoadProjectParentContainer {
+    width: 100%;
+    overflow: hidden;
+    clear: both;
+    padding: 3px 2px 2px 0px;
+}
+
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTLoadProjectParentContainer {
+    padding: 3px 0px 2px 2px;
+}
+
+.jimu-widget-NetworkTrace .esriCTInputOutputTabParentContainer {
+    width: 100%;
+    height: 100%;
+    clear: both;
+}
+
+.jimu-widget-NetworkTrace .esriCTSaveAndExportParentContainer {
+    width: 100%;
+    overflow: hidden;
+    clear: both;
+    position: absolute;
+    bottom: 0;
+}
+
+.jimu-widget-NetworkTrace .esriCTEditProjectOkAndCancelBtnParentContainer {
+    width: 100%;
+    overflow: hidden;
+    clear: both;
+    position: absolute;
+    bottom: 0;
+}
+
+.jimu-widget-NetworkTrace .esriCTExportToCsvOkBtnParentContainer {
+    width: 100%;
+    overflow: hidden;
+    clear: both;
+    position: absolute;
+    bottom: 0;
+}
+
+.jimu-widget-NetworkTrace .esriCTTabParentContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTTabContainer {
+    width: 100%;
+    height: 100%;
+}
+
+.jimu-widget-NetworkTrace .esriCTInputParentMainContainer {
+    width: 100%;
+    height: 100%;
+    clear: both;
+}
+
+.jimu-widget-NetworkTrace .esriCTInputParentMainContainerMobileMode {
+    max-height: 135px;
+    overflow: auto;
+}
+
+.jimu-widget-NetworkTrace .tracePanel
+{
+    width: 100%;
+    height: 135px;
+    clear: both;
+    padding-bottom: 10px;
+}
+
+.jimu-widget-NetworkTrace .esriCTFlagBarrierSkipLocationMainPage
+{
+    clear: both;
+    width: 100%;
+    height: calc(100% - 135px);
+    background-color: #FFFFFF;
+    border-top: 1px solid #e5e5e5;
+    overflow: auto;
+    padding: 2px;
+}
+
+.jimu-widget-NetworkTrace .esriCTFlagBarrierSkipLocationMainPageMobileMode {
+    min-height: 112px;
+}
+
+.jimu-widget-NetworkTrace .esriCTOutputParentMainContainer
+{
+    width: 100%;
+    height: 100%;
+    clear: both;
+    overflow: auto;
+}
+
+.jimu-widget-NetworkTrace .esriCTLayerInformationContainer
+{
+    clear: both;
+    width: calc(100% - 4px);
+    margin: 2px;
+    padding: 5px 0px 5px 0px;
+    color: #3e3e3e;
+    font-size: 14px;
+    font-family: Avenir LT 35 Light;
+    border-bottom: 1px solid #B5BCC9;
+}
+
+.jimu-widget-NetworkTrace .esriCTResultsLayerNamesContainer
+{
+    clear: both;
+    width: 100%;
+    background-color: #fff;
+    margin: 2px 0;
+}
+
+.jimu-widget-NetworkTrace .esriCTFlagsContent
+{
+    clear: both;
+    width: 100%;
+    height: calc(100% - 38px);
+    overflow: auto;
+}
+
+.jimu-widget-NetworkTrace .esriCTBarrierContent
+{
+    clear: both;
+    width: 100%;
+    height: calc(100% - 38px);
+    overflow: auto;
+}
+
+.jimu-widget-NetworkTrace .esriCTSkipContent
+{
+    clear: both;
+    width: 100%;
+    height: calc(100% - 94px);
+    overflow: auto;
+    padding-top: 2px;
+}
+
+.jimu-widget-NetworkTrace .esriCTFeaturesListParentContainer
+{
+    clear: both;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: 2px 0;
+}
+
+.jimu-widget-NetworkTrace .esriCTTabLineHeight {
+    line-height: 28px !important;
+}
+
+.jimu-widget-NetworkTrace .esriCTResultLayerNameParent
+{
+    margin-left: 20px;
+    width: calc(100% - 22px);
+    height: 18px;
+}
+
+.jimu-rtl .jimu-widget-NetworkTrace .esriCTResultLayerNameParent
+{
+    margin-left: 0px;
+    margin-right: 20px;
+}
+
+/* Save As popup css ends */
+/* Widget new or load project section ends */
+
+/* Highlight result row starts */
+.jimu-widget-NetworkTrace .esriCTHighlightedGraphic {
+    background-color: #E2F0FB;
+}
+
+.dart-panel .jimu-widget-NetworkTrace .esriCTHighlightedGraphic {
+    background-color: #000000;
+}
+
+/* Highlight result row ends */
+
+/* Feature Action Icons*/
+.esriCT-feature-action-skip-icon {
+    background-image: url("../images/skip.png");
+    height: 16px;
+    width: 16px;
+    background-color: rgb(102, 102, 102);
+    background-size: 16px;
+    background-repeat: no-repeat;
+}
+
+.esriCT-feature-action-skip-icon:hover {
+    background-color: rgb(0, 0, 0);
+}
+
+.esriCT-feature-action-unskip-icon {
+    background-image: url("../images/unskip.png");
+    height: 16px;
+    width: 16px;
+    background-color: rgb(240, 205, 8);
+    background-size: 16px;
+    background-repeat: no-repeat;
+}

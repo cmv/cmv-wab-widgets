@@ -1,0 +1,22 @@
+define({
+  "feedbackStyleLabel": "Entfernung und Richtung - Darstellungs-Style",
+  "showTabLabel": "Registerkarte anzeigen",
+  "feedbackShapeLabel": "Darstellungsform",
+  "lineColorLabel": "Linienfarbe",
+  "lineWidthLabel": "Linienbreite",
+  "feedbackLabel": "Feedback-Beschriftung",
+  "textColorLabel": "Textfarbe",
+  "textSizeLabel": "Textgröße",
+  "tabErrorMessage": "Beim Konfigurieren des Widgets muss mindestens eine Registerkarte angezeigt werden.",
+  "lineLabel": "Linie",
+  "circleLabel": "Kreis",
+  "ellipseLabel": "Ellipse",
+  "ringsLabel": "Ringe",
+  "transparency": "Transparenz",
+  "ddFeedbackStyleTabLabel": "Symbolisierung",
+  "miscellaneousTabLabel": "Verschiedenes",
+  "operationalLineLayerSelectLabel": "Operationalen Polygon-Layer für linien- und ringförmige Ergebnisse auswählen",
+  "operationalPolygonLayerSelectLabel": "Operationalen Polygon-Layer für kreis- und ellipsenförmige Ergebnisse auswählen",
+  "helpIconPolylineTooltip": "Die Liste der operationalen Layer wird mit Layern der aktuellen Webkarte, die einen Polylinien-Geometrietyp aufweisen, gefüllt.",
+  "helpIconPolygonTooltip": "Die Liste der operationalen Layer wird mit Layern der aktuellen Webkarte, die einen Polygon-Geometrietyp aufweisen, gefüllt."
+});

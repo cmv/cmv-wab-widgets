@@ -1,0 +1,54 @@
+<div>
+<div data-dojo-attach-point="mainPageNode">
+
+  <div id="DDTabContainer" class="tabsContainer" data-dojo-attach-point="DDTabContainer"></div>
+
+  <div data-dojo-attach-point="lineTabNode"></div>
+
+  <div data-dojo-attach-point="circleTabNode"></div>
+
+  <div data-dojo-attach-point="ellipseTabNode"></div>
+
+  <div data-dojo-attach-point="rangeTabNode"></div>
+</div>
+  <!--------
+    Publish
+  ---------->
+  <div class="DDHidden DDFullHeight" data-dojo-attach-point="publishPageNode">
+    <div class="DDFullWidth DDSettingHeader">
+      <div class="DDBackButton DDPointer" title="${nls.common.back}"
+        data-dojo-attach-point="publishPanelBackButton" tabindex="0" role="button" aria-label="${nls.common.back}">
+        <div class="DDItemLeftArrow">
+        </div>
+      </div>
+      <div class="DDTitleDiv DDEllipsis" title="${nls.publishTitle}">
+        ${nls.publishTitle}
+      </div>
+      <div class="DDPanelRow">
+        <!-- DD Layer Name -->
+        <div class="DDFullWidth DDSettingRow">
+          <div class="DDInputLabel DDEllipsis" title="${nls.ddLayerName}">${nls.ddLayerName}</div>
+          <input class="jimu-input textInput DDHidden" style="width: 100%;"
+            data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="addDDNameArea"
+            data-dojo-props="regExp:'[a-zA-Z0-9_ -]*', missingMessage:'${nls.missingDDLayerName}'"
+            required="true" aria-label="${nls.ddLayerName}"></input>
+          <select class="SelectStyle" aria-label="${nls.ddLayerName}" data-dojo-type="jimu/dijit/formSelect" tabindex="0"
+            data-dojo-attach-point="featureLayerList"></select>
+        </div>
+
+        <!-- Publish to new layer -->
+        <div class="DDFullWidth DDSettingRow">
+            <div class="DDCheckBoxNode" data-dojo-attach-point="checkBoxParentContainer"></div>
+        </div>
+        <!-- Publish DD Button -->
+        <div class="ddBtnContainer">
+          <div class='jimu-btn' data-dojo-attach-point='ddPublishButton'
+          tabindex="0" role="button" aria-label="${nls.publishDDBtn}">${nls.publishDDBtn}</div>
+        </div>
+        <!-- Publishing Message -->
+        <div class="ddPublishMessage" data-dojo-attach-point="publishMessage"></div>
+      </div>
+    </div>
+  </div>
+  
+</div>

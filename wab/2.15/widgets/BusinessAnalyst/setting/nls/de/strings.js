@@ -1,0 +1,21 @@
+define({
+  "businessAnalyst": "Business Analyst",
+  "defineWhichInfographics": "Definieren Sie, welche Infografiken im Widget verfügbar sein sollen:",
+  "defineWhichReports": "Definieren Sie, welche Berichte im Widget verfügbar sein sollen:",
+  "defaultValues": "Standardwerte:",
+  "disable": "Deaktivieren",
+  "driveTime": "Fahrzeit",
+  "infographics": "Infografiken",
+  "invalidValueRing": "Die Werte müssen im Bereich von 0 bis 1.000 liegen.",
+  "invalidValueDTWT": "Die Werte müssen im Bereich von 0 bis 300 liegen.",
+  "km": "km",
+  "miles": "Meilen",
+  "minutes": "Minuten",
+  "radius": "Radius",
+  "reports": "Berichte",
+  "rings": "Ringe",
+  "selectCountryOrRegion": "Land oder Region auswählen:",
+  "thisEntryIsNotValid": "Dieser Eintrag ist ungültig.",
+  "time": "Zeit",
+  "walkTime": "Gehzeit"
+});
